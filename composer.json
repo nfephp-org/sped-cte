@@ -44,20 +44,19 @@
     },
     "autoload": {
         "psr-4": {
-          "Sped\\CTe\\": "src/" 
+          "NFePHP\\CTe\\": "src/"
         } 
     },
     "extra": {
         "branch-alias": {
             "dev-master": "2.1-dev",
-            "dev-develop": "2.2-dev"
         }
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload-dev": {
         "psr-4": {
-            "SpedTest\\CTe\\": "test"
+            "NFePHPTest\\CTe\\": "test"
         }
     }
 }
