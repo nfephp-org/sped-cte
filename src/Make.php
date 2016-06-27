@@ -531,6 +531,9 @@ class Make extends BaseMake
         $this->dom->appChild($this->infCTeNorm, $this->infDoc, 'Falta tag "infDoc"');
         $this->dom->appChild($this->infDoc, $this->infNFe, 'Falta tag "infNFe"');
 
+        $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
+        $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
+
         $this->dom->appChild($this->CTe, $this->infCte, 'Falta tag "CTe"');
         $this->dom->appChild($this->dom, $this->CTe, 'Falta tag "DOMDocument"');
         $this->xml = $this->dom->saveXML();
@@ -2686,6 +2689,27 @@ class Make extends BaseMake
         $this->dom->addChild($this->infNFe, 'dPrev', $dPrev, false, $identificador . 'Data prevista de entrega');
 
         return $this->infNFe;
+    }
+
+    public function infModalTag($versaoModal = '')
+    {
+        $identificador = '#366 <infModal> - ';
+        $this->infModal = $this->dom->createElement('infModal');
+        $this->infModal->setAttribute('versaoModal', $versaoModal);
+
+        return $this->infModal;
+    }
+
+    public function rodoTag($RNTRC = '', $dPrev = '', $lota = '', $CIOT = '')
+    {
+        $identificador = '#1 <rodo> - ';
+        $this->rodo = $this->dom->createElement('rodo');
+        $this->dom->addChild($this->rodo, 'RNTRN', $RNTRC, true, $identificador . 'Registro nacional de transportadores rodoviários de carga');
+        $this->dom->addChild($this->rodo, 'dPrev', $dPrev, true, $identificador . 'Data prevista para entrega da carga no recebedor');
+        $this->dom->addChild($this->rodo, 'lota', $lota, true, $identificador . 'Indicador de lotação');
+        $this->dom->addChild($this->rodo, 'CIOT', $CIOT, false, $identificador . 'Codigo identificador da operacao de transporte');
+
+        return $this->rodo;
     }
 
 }

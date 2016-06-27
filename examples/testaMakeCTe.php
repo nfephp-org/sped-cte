@@ -119,7 +119,7 @@ $resp = $cte->destTag(
     $CNPJ = $cteTools->aConfig['cnpj'],
     $CPF = '',
     $IE = $cteTools->aConfig['ie'],
-    $xNome = $cteTools->aConfig['razaosocial'],
+    $xNome = 'CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL',
     $fone = '5434627788',
     $ISUF = '',
     $email = 'contato@otimizy.com.br'
@@ -173,7 +173,18 @@ $resp = $cte->infDocTag();
 $resp = $cte->infNFeTag(
     $chave = '43160672044530000142570010000000101000000101',
     $PIN = '',
-    $dPrev = $dhEmi
+    $dPrev = '2016-06-30'
+);
+
+$resp = $cte->infModalTag(
+    $versaoModal = '2.00'
+);
+
+$resp = $cte->rodoTag(
+    $RNTRC = '43160672',
+    $dPrev = '2016-06-30',
+    $lota = '1',
+    $CIOT = ''
 );
 
 
