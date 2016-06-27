@@ -10,7 +10,7 @@ $cteTools = new Tools('../config/config.json');
 
 $aResposta = array();
 $chave = '43160672044530000142570010000000101000000101';
-$nProt = '431000008774668';
+$nProt = '431000008784504';
 $tpAmb = '2';
 $xJust = 'Teste de cancelamento em ambiente de homologação';
 $retorno = $cteTools->sefazCancela($chave, $tpAmb, $xJust, $nProt, $aResposta);
