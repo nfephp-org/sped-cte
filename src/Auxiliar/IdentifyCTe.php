@@ -1,6 +1,6 @@
 <?php
 
-namespace NFePHP\CTe;
+namespace NFePHP\CTe\Auxiliar;
 
 /**
  * Classe para a identificação do documento eletrônico da NFe
@@ -13,10 +13,9 @@ namespace NFePHP\CTe;
  * @link      http://github.com/nfephp-org/nfephp for the canonical source repository
  */
 
-use \DOMDocument;
 use NFePHP\Common\Identify\Identify;
 
-class Identify
+class IdentifyCTe
 {
     public static function identificar($xml = '', &$aResp = array())
     {
@@ -27,7 +26,7 @@ class Identify
             'enviCTe' => 'enviCTe',
             'evCancCTe' => 'evCancCTe',
             'evEncCTe' => 'evEncCTe',
-            'CTe' => 'mdfe',
+            'CTe' => 'cte',
             'eventoCTe' => 'eventoCTe',
             'procEventoCTe' => 'procEventoCTe',
             'mdfeProc' => 'procCTe',
@@ -44,7 +43,7 @@ class Identify
         if ($schem == 'cte') {
             //se for um nfe então é necessário pegar a versão
             // em outro node infNFe
-            $node1 = $dom->getElementsByTagName('infCTe')->item(0);
+            $node1 = $dom->getElementsByTagName('infCte')->item(0);
             $versao = $node1->getAttribute('versao');
         } else {
             $versao = $node->getAttribute('versao');
