@@ -26,4 +26,4 @@ if (! $cteTools->validarXml($filename) || sizeof($cteTools->errors)) {
     }
     exit;
 }
-echo "NFe Valida !";
+echo "CT-e Válido!";
