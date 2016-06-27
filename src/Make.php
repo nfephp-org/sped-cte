@@ -45,481 +45,402 @@ class Make extends BaseMake
     /**
      * versao
      * numero da versão do xml da CTe
-     *
      * @var string
      */
     public $versao = '2.00';
     /**
      * mod
      * modelo da CTe 57
-     *
      * @var integer
      */
     public $mod = 57;
     /**
      * chave da MDFe
-     *
      * @var string
      */
     public $chCTe = '';
     /**
      * xml
      * String com o xml do documento fiscal montado
-     *
      * @var string
      */
     public $xml = '';
     /**
      * dom
      * Variável onde será montado o xml do documento fiscal
-     *
      * @var \NFePHP\Common\Dom\Dom
      */
     public $dom;
     /**
      * tpAmb
      * tipo de ambiente
-     *
      * @var string
      */
     public $tpAmb = '2';
     /**
      * Modal do Cte
-     *
      * @var integer
      */
     private $modal = 0;
     /**
      * Tag CTe
-     *
      * @var \DOMNode
      */
     private $CTe = '';
     /**
      * Informações do CT-e
-     *
      * @var \DOMNode
      */
     private $infCte = '';
     /**
      * Identificação do CT-e
-     *
      * @var \DOMNode
      */
     private $ide = '';
     /**
      * Tipo do Serviço
-     *
      * @var integer
      */
     private $tpServ = 0;
     /**
      * Indicador do "papel" do tomador do serviço no CT-e
-     *
      * @var \DOMNode
      */
     private $toma03 = '';
     /**
      * Indicador do "papel" do tomador do serviço no CT-e
-     *
      * @var \DOMNode
      */
     private $toma4 = '';
     /**
      * Dados do endereço
-     *
      * @var \DOMNode
      */
     private $enderToma = '';
     /**
      * Dados complementares do CT-e para fins operacionais ou comerciais
-     *
      * @var \DOMNode
      */
     private $compl = '';
     /**
      * Previsão do fluxo da carga
-     *
      * @var \DOMNode
      */
     private $fluxo = '';
     /**
      * Passagem
-     *
      * @var array
      */
     private $pass = array();
     /**
      * Informações ref. a previsão de entrega
-     *
      * @var \DOMNode
      */
     private $entrega = '';
     /**
      * Entrega sem data definida
-     *
      * @var \DOMNode
      */
     private $semData = '';
     /**
      * Entrega com data definida
-     *
      * @var \DOMNode
      */
     private $comData = '';
     /**
      * Entrega no período definido
-     *
      * @var \DOMNode
      */
     private $noPeriodo = '';
     /**
      * Entrega sem hora definida
-     *
      * @var \DOMNode
      */
     private $semHora = '';
     /**
      * Entrega com hora definida
-     *
      * @var \DOMNode
      */
     private $comHora = '';
     /**
      * Entrega no intervalo de horário definido
-     *
      * @var \DOMNode
      */
     private $noInter = '';
     /**
      * Campo de uso livre do contribuinte
-     *
      * @var array
      */
     private $obsCont = array();
     /**
      * Campo de uso livre do contribuinte
-     *
      * @var array
      */
     private $obsFisco = array();
     /**
      * Identificação do Emitente do CT-e
-     *
      * @var \DOMNode
      */
     private $emit = '';
     /**
      * Endereço do emitente
-     *
      * @var \DOMNode
      */
     private $enderEmit = '';
     /**
      * Informações do Remetente das mercadorias transportadas pelo CT-e
-     *
      * @var \DOMNode
      */
     private $rem = '';
     /**
      * Dados do endereço
-     *
      * @var \DOMNode
      */
     private $enderReme = '';
     /**
      * Informações do Expedidor da Carga
-     *
      * @var \DOMNode
      */
     private $exped = '';
     /**
      * Dados do endereço
-     *
      * @var \DOMNode
      */
     private $enderExped = '';
     /**
      * Informações do Recebedor da Carga
-     *
      * @var \DOMNode
      */
     private $receb = '';
     /**
      * Dados do endereço
-     *
      * @var \DOMNode
      */
     private $enderReceb = '';
     /**
      * Informações do Destinatário do CT-e
-     *
      * @var \DOMNode
      */
     private $dest = '';
     /**
      * Dados do endereço
-     *
      * @var \DOMNode
      */
     private $enderDest = '';
     /**
      * Valores da Prestação de Serviço
-     *
      * @var \DOMNode
      */
     private $vPrest = '';
     /**
      * Componentes do Valor da Prestação
-     *
      * @var array
      */
     private $comp = array();
     /**
      * Informações relativas aos Impostos
-     *
      * @var \DOMNode
      */
     private $imp = '';
     /**
      * Informações relativas ao ICMS
-     *
      * @var \DOMNode
      */
     private $ICMS = '';
     /**
      * Prestação sujeito à tributação normal do ICMS
-     *
      * @var \DOMNode
      */
     private $ICMS00 = '';
     /**
      * Prestação sujeito à tributação com redução de BC do ICMS
-     *
      * @var \DOMNode
      */
     private $ICMS20 = '';
     /**
      * ICMS Isento, não Tributado ou diferido
-     *
      * @var \DOMNode
      */
     private $ICMS45 = '';
     /**
      * Tributação pelo ICMS60 - ICMS cobrado por substituição tributária.
      * Responsabilidade do recolhimento do ICMS atribuído ao tomador ou 3º por ST
-     *
      * @var \DOMNode
      */
     private $ICMS60 = '';
     /**
      * ICMS Outros
-     *
      * @var \DOMNode
      */
     private $ICMS90 = '';
     /**
      * ICMS devido à UF de origem da prestação, quando diferente da UF do emitente
-     *
      * @var \DOMNode
      */
     private $ICMSOutraUF = '';
     /**
      * Simples Nacional
-     *
      * @var \DOMNode
      */
     private $ICMSSN = '';
     /**
      * Grupo de informações do CT-e Normal e Substituto
-     *
      * @var \DOMNode
      */
     private $infCTeNorm = '';
     /**
      * Informações da Carga do CT-e
-     *
      * @var \DOMNode
      */
     private $infCarga = '';
     /**
      * Informações de quantidades da Carga do CT-e
-     *
      * @var \DOMNode
      */
     private $infQ = array();
     /**
      * Informações dos documentos transportados pelo CT-e Opcional para Redespacho Intermediario
      * e Serviço vinculado a multimodal.
-     *
      * @var \DOMNode
      */
     private $infDoc = '';
     /**
      * Informações das NF
-     *
      * @var array
      */
     private $infNF = array();
     /**
      * Informações das NF-e
-     *
      * @var array
      */
     private $infNFe = array();
     /**
      * Informações dos demais documentos
-     *
      * @var array
      */
     private $infOutros = array();
     /**
      * Informações das Unidades de Transporte (Carreta/Reboque/Vagão)
-     *
      * @var array
      */
     private $infUnidTransp = array();
     /**
      * Lacres das Unidades de Transporte
-     *
      * @var array
      */
     private $lacUnidTransp = array();
     /**
      * Informações das Unidades de Carga (Containeres/ULD/Outros)
-     *
      * @var array
      */
     private $infUnidCarga = array();
     /**
      * Lacres das Unidades de Carga
-     *
      * @var array
      */
     private $lacUnidCarga = array();
     /**
      * Documentos de Transporte Anterior
-     *
      * @var \DOMNode
      */
     private $docAnt = '';
     /**
      * Emissor do documento anterior
-     *
      * @var array
      */
     private $emiDocAnt = array();
     /**
      * Informações de identificação dos documentos de Transporte Anterior
-     *
      * @var array
      */
     private $idDocAnt = array();
     /**
      * Documentos de transporte anterior em papel
-     *
      * @var array
      */
     private $idDocAntPap = array();
     /**
      * Documentos de transporte anterior eletrônicos
-     *
      * @var array
      */
     private $idDocAntEle = array();
     /**
      * Informações de Seguro da Carga
-     *
      * @var array
      */
     private $seg = array();
     /**
      * Informações do modal
-     *
      * @var \DOMNode
      */
     private $infModal = '';
     /**
      * Preenchido quando for transporte de produtos classificados pela ONU como perigosos.
-     *
      * @var array
      */
     private $peri = array();
     /**
      * informações dos veículos transportados
-     *
      * @var array
      */
     private $veicNovos = array();
     /**
      * Dados da cobrança do CT-e
-     *
      * @var \DOMNode
      */
     private $cobr = '';
     /**
      * Dados da fatura
-     *
      * @var \DOMNode
      */
     private $fat = '';
     /**
      * Dados das duplicatas
-     *
      * @var array
      */
     private $dup = array();
     /**
      * Informações do CT-e de substituição
-     *
      * @var \DOMNode
      */
     private $infCteSub = '';
     /**
      * Tomador é contribuinte do ICMS
-     *
      * @var \DOMNode
      */
     private $tomaICMS = '';
     /**
      * Tomador não é contribuinte do ICMS
-     *
      * @var \DOMNode
      */
     private $tomaNaoICMS = '';
     /**
      * Informação da NF ou CT emitido pelo Tomador
-     *
      * @var \DOMNode
      */
     private $refNF = '';
     /**
      * Informação do CTe emitido pelo Tomador
-     *
      * @var \DOMNode
      */
     private $refCte = '';
     /**
      * Informação da NF ou CT emitido pelo Tomador
-     *
      * @var \DOMNode
      */
     private $infCteComp = '';
     /**
      * Detalhamento do CT-e do tipo Anulação
-     *
      * @var \DOMNode
      */
     private $infCteAnu = '';
     /**
      * Informações do modal Rodoviário
-     *
      * @var \DOMNode
      */
     private $rodo = '';
     /**
      * Ordens de Coleta associados
-     *
      * @var array
      */
     private $occ = array();
@@ -529,31 +450,26 @@ class Make extends BaseMake
     private $emiOcc = array();
     /**
      * Informações de Vale Pedágio
-     *
      * @var array
      */
     private $valePed = array();
     /**
      * Dados dos Veículos
-     *
      * @var array
      */
     private $veic = array();
     /**
      * Proprietários do Veículo. Só preenchido quando o veículo não pertencer à empresa emitente do CT-e
-     *
      * @var array
      */
     private $prop = array();
     /**
      * Dados dos Veículos
-     *
      * @var array
      */
     private $lacRodo = array();
     /**
      * Informações do(s) Motorista(s)
-     *
      * @var array
      */
     private $moto = array();
@@ -632,6 +548,7 @@ class Make extends BaseMake
             $this->dom->appChild($this->vPrest, $comp, 'Falta tag "vPrest"');
         }
         $this->dom->appChild($this->infCte, $this->vPrest, 'Falta tag "infCte"');
+        $this->dom->appChild($this->infCte, $this->imp, 'Falta tag "imp"');
         $this->dom->appChild($this->CTe, $this->infCte, 'Falta tag "CTe"');
         $this->dom->appChild($this->dom, $this->CTe, 'Falta tag "DOMDocument"');
         $this->xml = $this->dom->saveXML();
@@ -701,6 +618,7 @@ class Make extends BaseMake
         $cCT = '',
         $CFOP = '',
         $natOp = '',
+        $forPag = '',
         $mod = '',
         $serie = '',
         $nCT = '',
@@ -759,6 +677,13 @@ class Make extends BaseMake
             $natOp,
             true,
             $identificador . 'Natureza da Operação'
+        );
+        $this->dom->addChild(
+            $this->ide,
+            'forPag',
+            $forPag,
+            true,
+            $identificador . 'Forma de pagamento do serviço'
         );
         $this->dom->addChild(
             $this->ide,
@@ -2492,6 +2417,8 @@ class Make extends BaseMake
             false,
             $identificador . 'Nome do país'
         );
+        $node = $this->dest->getElementsByTagName("email")->item(0);
+        $this->dest->insertBefore($this->enderDest, $node);
         return $this->enderDest;
     }
 
@@ -2525,6 +2452,93 @@ class Make extends BaseMake
             $identificador . 'Valor a Receber'
         );
         return $this->vPrest;
+    }
+
+
+    /**
+     * tagICMS
+     * Informações do ICMS da Operação própria e ST N01 pai M01
+     * tag NFe/infNFe/det[]/imposto/ICMS
+     * @param string $nItem
+     * @param string $orig
+     * @param string $CST
+     * @param string $modBC
+     * @param string $vBC
+     * @param string $pICMS
+     * @param string $vICMS
+     * @param string $vICMSDeson
+     * @param string $motDesICMS
+     * @param string $modBCST
+     * @param string $pMVAST
+     * @param string $pRedBCST
+     * @param string $vBCST
+     * @param string $pICMSST
+     * @param string $vICMSST
+     * @param string $pDif
+     * @param string $vICMSDif
+     * @param string $vICMSOp
+     * @param string $vBCSTRet
+     * @param string $vICMSSTRet
+     * @return DOMElement
+     */
+    public function icmsTag(
+        $cst = '',
+        $pRedBC = '',
+        $vBC = '',
+        $pICMS = '',
+        $vICMS = '',
+        $vBCSTRet = '',
+        $vICMSSTRet = '',
+        $pICMSSTRet = ''
+    ) {
+        $identificador = 'N01 <ICMSxx> - ';
+        switch ($cst) {
+            case '00':
+                $icms = $this->dom->createElement("ICMS00");
+                $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 00");
+                $this->dom->addChild($icms, 'vBC', $vBC, true, "$identificador  Valor da BC do ICMS");
+                $this->dom->addChild($icms, 'pICMS', $pICMS, true, "$identificador  Alíquota do imposto");
+                $this->dom->addChild($icms, 'vICMS', $vICMS, true, "$identificador  Valor do ICMS");
+                break;
+            case '20':
+                $icms = $this->dom->createElement("ICMS20");
+                $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 20");
+                $this->dom->addChild($icms, 'pRedBC', $pRedBC, true, "$identificador  Percentual da Redução de BC");
+                $this->dom->addChild($icms, 'vBC', $vBC, true, "$identificador  Valor da BC do ICMS");
+                $this->dom->addChild($icms, 'pICMS', $pICMS, true, "$identificador  Alíquota do imposto");
+                $this->dom->addChild($icms, 'vICMS', $vICMS, true, "$identificador  Valor do ICMS");
+                break;
+            case '45':
+                $icms = $this->dom->createElement("ICMS45");
+                $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 30");
+                break;
+            case '60':
+                $icms = $this->dom->createElement("ICMS60");
+                $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 60");
+                $this->dom->addChild($icms, 'vBCSTRet', $vBCSTRet, false, "$identificador  Valor da BC do ICMS ST retido");
+                $this->dom->addChild($icms, 'vICMSSTRet', $vICMSSTRet, false, "$identificador  Valor do ICMS ST retido");
+                $this->dom->addChild($icms, 'pICMSSTRet', $pICMSSTRet, false, "$identificador  Valor do ICMS ST retido");
+                break;
+            case '90':
+                $icms = $this->dom->createElement("ICMS90");
+                $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 90");
+                $this->dom->addChild($icms, 'pRedBC', $pRedBC, false, "$identificador  Percentual da Redução de BC");
+                $this->dom->addChild($icms, 'vBC', $vBC, true, "$identificador  Valor da BC do ICMS");
+                $this->dom->addChild($icms, 'pICMS', $pICMS, true, "$identificador  Alíquota do imposto");
+                $this->dom->addChild($icms, 'vICMS', $vICMS, true, "$identificador  Valor do ICMS");
+                break;
+        }
+        $this->imp = $this->dom->createElement('imp');
+        $tagIcms = $this->dom->createElement('ICMS');
+
+        if(isset($icms)){
+            $this->imp->appendChild($tagIcms);
+        }
+
+        if(isset($icms)){
+            $tagIcms->appendChild($icms);
+        }
+        return $tagIcms;
     }
 
     /**
@@ -2563,7 +2577,6 @@ class Make extends BaseMake
     /**
      * Tag raiz do documento xml
      * Função chamada pelo método [ monta ]
-     *
      * @return \DOMElement
      */
     private function zCTeTag()
