@@ -27,7 +27,6 @@ namespace NFePHP\CTe;
  *
  * @package   NFePHP
  * @name      Make
- * @version   0.0.2
  * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL v.3
  * @copyright 2009-2014 &copy; NFePHP
  * @link      http://www.nfephp.org/
