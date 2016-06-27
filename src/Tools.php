@@ -20,6 +20,7 @@ use NFePHP\Common\Files;
 use NFePHP\Common\Exception;
 use NFePHP\CTe\Auxiliar\Response;
 use NFePHP\CTe\Auxiliar\IdentifyCTe;
+use NFePHP\Common\Dom\ValidXsd;
 
 class Tools extends BaseTools
 {
@@ -539,11 +540,9 @@ class Tools extends BaseTools
         }
         $xsdFile = $aResp['Id'].'_v'.$aResp['versao'].'.xsd';
         $xsdPath = NFEPHP_ROOT.DIRECTORY_SEPARATOR .
-            'schemes' .
+            'schemas' .
             DIRECTORY_SEPARATOR .
-            'CTe' .
-            DIRECTORY_SEPARATOR .
-            $this->aConfig['schemesCTe'] .
+            $this->aConfig['schemasCTe'] .
             DIRECTORY_SEPARATOR .
             $xsdFile;
         if (! is_file($xsdPath)) {

@@ -11,8 +11,8 @@ use NFePHP\CTe\Tools;
 $cte = new Make();
 $cteTools = new Tools('../config/config.json');
 
-//$dhEmi = date("Y-m-d\TH:i:sP");
-$dhEmi = date("d/m/Y");
+$dhEmi = date("Y-m-d\TH:i:s");
+//$dhEmi = date("d/m/Y");
 
 $chave = $cte->montaChave(
     $cUF = '43',
@@ -40,8 +40,7 @@ $resp = $cte->ideTag(
     $mod = '57',
     $serie = '1',
     $nCT = '10',
-//    $dhEmi,
-    '26/06/2016',
+    $dhEmi,
     $tpImp = '1',
     $tpEmis = '1',
     $cDV,
@@ -146,8 +145,38 @@ $resp = $cte->vPrestTag(
 );
 
 $resp = $cte->icmsTag(
-    
+    $cst = '00',
+    $pRedBC = '',
+    $pRedBC = 200.00,
+    $pRedBC = 17,
+    $pRedBC = 34.00,
+    $pRedBC = '',
+    $pRedBC = ''
 );
+
+$resp = $cte->infCTeNormTag();
+
+$resp = $cte->infCargaTag(
+    $vCarga = 200.00,
+    $prodPred = 'ESPETOS',
+    $xOutCat = 'OUTRAS CARACTERÍSTICAS'
+);
+
+$resp = $cte->infQTag(
+    $cUnid = '00',
+    $tpMed = 'PESO BRUTO',
+    $qCarga = 1
+);
+
+$resp = $cte->infDocTag();
+
+$resp = $cte->infNFeTag(
+    $chave = '43160672044530000142570010000000101000000101',
+    $PIN = '',
+    $dPrev = $dhEmi
+);
+
+
 
 $resp = $cte->montaCTe();
 
