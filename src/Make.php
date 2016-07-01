@@ -3,38 +3,14 @@
 namespace NFePHP\CTe;
 
 /**
- * Este arquivo é parte do projeto NFePHP - Nota Fiscal eletrônica em PHP.
  *
- * Este programa é um software livre: você pode redistribuir e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU (GPL)como é publicada pela Fundação
- * para o Software Livre, na versão 3 da licença, ou qualquer versão posterior
- * e/ou
- * sob os termos da Licença Pública Geral Menor GNU (LGPL) como é publicada pela Fundação
- * para o Software Livre, na versão 3 da licença, ou qualquer versão posterior.
- *
- *
- * Este programa é distribuído na esperança que será útil, mas SEM NENHUMA
- * GARANTIA; nem mesmo a garantia explícita definida por qualquer VALOR COMERCIAL
- * ou de ADEQUAÇÃO PARA UM PROPÓSITO EM PARTICULAR,
- * veja a Licença Pública Geral GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Publica GNU e da
- * Licença Pública Geral Menor GNU (LGPL) junto com este programa.
- * Caso contrário consulte <http://www.fsfla.org/svnwiki/trad/GPLv3> ou
- * <http://www.fsfla.org/svnwiki/trad/LGPLv3>.
- *
- * Estrutura baseada nas notas técnicas:
- *
- * @package   NFePHP
- * @name      Make
+ * @category  Library
+ * @package   nfephp-org/sped-cte
+ * @copyright 2009-2016 NFePHP
+ * @name      Make.php
  * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL v.3
- * @copyright 2009-2014 &copy; NFePHP
- * @link      http://www.nfephp.org/
+ * @link      http://github.com/nfephp-org/sped-cte for the canonical source repository
  * @author    Roberto L. Machado <linux.rlm at gmail dot com>
- *
- *        CONTRIBUIDORES (em ordem alfabetica):
- *
- *              Renato R. Oliveira <developer.delliriun@gmail.com>
  */
 
 use NFePHP\Common\Base\BaseMake;
@@ -881,10 +857,12 @@ class Make extends BaseMake
     }
 
     /**
-     * Gera as tags para o elemento: toma03 (Indicador do "papel" do tomador do serviço no CT-e) e adiciona ao grupo ide
+     * Gera as tags para o elemento: toma03 (Indicador do "papel" do tomador do serviço no CT-e)
+     * e adiciona ao grupo ide
      * #35
      * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "toma03" do tipo elemento (Ele = E|CE|A) e nível 3
+     * Os parâmetros para esta função são todos os elementos da tag "toma03" do
+     * tipo elemento (Ele = E|CE|A) e nível 3
      *
      * @param string $toma Tomador do Serviço
      *
@@ -905,10 +883,12 @@ class Make extends BaseMake
     }
 
     /**
-     * Gera as tags para o elemento: toma4 (Indicador do "papel" do tomador do serviço no CT-e) e adiciona ao grupo ide
+     * Gera as tags para o elemento: toma4 (Indicador do "papel" do tomador
+     * do serviço no CT-e) e adiciona ao grupo ide
      * #37
      * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "toma4" do tipo elemento (Ele = E|CE|A) e nível 3
+     * Os parâmetros para esta função são todos os elementos da tag "toma4" do
+     * tipo elemento (Ele = E|CE|A) e nível 3
      *
      * @param string $toma  Tomador do Serviço
      * @param string $CNPJ  Número do CNPJ
@@ -1014,7 +994,8 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "enderToma" (Dados do endereço) e adiciona ao grupo "toma4"
      * #45
      * Nível: 3
-     * Os parâmetros para esta função são todos os elementos da tag "enderToma" do tipo elemento (Ele = E|CE|A) e nível 4
+     * Os parâmetros para esta função são todos os elementos da tag "enderToma"
+     * do tipo elemento (Ele = E|CE|A) e nível 4
      *
      * @param string $xLgr    Logradouro
      * @param string $nro     Número
@@ -1120,7 +1101,8 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "compl" (Dados complementares do CT-e para fins operacionais ou comerciais)
      * #59
      * Nível: 1
-     * Os parâmetros para esta função são todos os elementos da tag "compl" do tipo elemento (Ele = E|CE|A) e nível 2
+     * Os parâmetros para esta função são todos os elementos da tag "compl" do
+     * tipo elemento (Ele = E|CE|A) e nível 2
      *
      * @param string $xCaracAd  Característica adicional do transporte
      * @param string $xCaracSer Característica adicional do serviço
@@ -1184,7 +1166,8 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "fluxo" (Previsão do fluxo da carga)
      * #63
      * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "fluxo" do tipo elemento (Ele = E|CE|A) e nível 3
+     * Os parâmetros para esta função são todos os elementos da tag "fluxo" do
+     * tipo elemento (Ele = E|CE|A) e nível 3
      *
      * @param string $xOrig Sigla ou código interno da Filial/Porto/Estação/ Aeroporto de Origem
      * @param string $xDest Sigla ou código interno da Filial/Porto/Estação/Aeroporto de Destino
@@ -1224,7 +1207,8 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "pass"
      * #65
      * Nível: 3
-     * Os parâmetros para esta função são todos os elementos da tag "pass" do tipo elemento (Ele = E|CE|A) e nível 4
+     * Os parâmetros para esta função são todos os elementos da tag "pass" do
+     * tipo elemento (Ele = E|CE|A) e nível 4
      *
      * @param string $xPass Sigla ou código interno da Filial/Porto/Estação/Aeroporto de Passagem
      *
@@ -1249,7 +1233,8 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "semData" (Entrega sem data definida)
      * #70
      * Nível: 3
-     * Os parâmetros para esta função são todos os elementos da tag "semData" do tipo elemento (Ele = E|CE|A) e nível 4
+     * Os parâmetros para esta função são todos os elementos da tag "semData" do
+     * tipo elemento (Ele = E|CE|A) e nível 4
      *
      * @param string $tpPer Tipo de data/período programado para entrega
      *
@@ -1273,7 +1258,8 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "comData" (Entrega com data definida)
      * #72
      * Nível: 3
-     * Os parâmetros para esta função são todos os elementos da tag "comData" do tipo elemento (Ele = E|CE|A) e nível 4
+     * Os parâmetros para esta função são todos os elementos da tag "comData" do
+     * tipo elemento (Ele = E|CE|A) e nível 4
      *
      * @param string $tpPer Tipo de data/período programado para entrega
      * @param string $dProg Data programada
@@ -1305,7 +1291,8 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "noPeriodo" (Entrega no período definido)
      * #75
      * Nível: 3
-     * Os parâmetros para esta função são todos os elementos da tag "noPeriodo" do tipo elemento (Ele = E|CE|A) e nível 4
+     * Os parâmetros para esta função são todos os elementos da tag "noPeriodo" do tipo
+     * elemento (Ele = E|CE|A) e nível 4
      *
      * @param string $tpPer Tipo de data/período programado para entrega
      * @param string $dIni  Data inicial
@@ -1345,7 +1332,8 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "semHora" (Entrega sem hora definida)
      * #79
      * Nível: 3
-     * Os parâmetros para esta função são todos os elementos da tag "semHora" do tipo elemento (Ele = E|CE|A) e nível 4
+     * Os parâmetros para esta função são todos os elementos da tag "semHora" do
+     * tipo elemento (Ele = E|CE|A) e nível 4
      *
      * @param string $tpHor Tipo de hora
      *
@@ -1369,7 +1357,8 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "comHora" (Entrega sem hora definida)
      * # = 81
      * Nível = 3
-     * Os parâmetros para esta função são todos os elementos da tag "comHora" do tipo elemento (Ele = E|CE|A) e nível 4
+     * Os parâmetros para esta função são todos os elementos da tag "comHora" do
+     * tipo elemento (Ele = E|CE|A) e nível 4
      *
      * @param string $tpHor Tipo de hora
      * @param string $hProg Hora programada
@@ -1401,7 +1390,8 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "noInter" (Entrega no intervalo de horário definido)
      * #84
      * Nível: 3
-     * Os parâmetros para esta função são todos os elementos da tag "noInter" do tipo elemento (Ele = E|CE|A) e nível 4
+     * Os parâmetros para esta função são todos os elementos da tag "noInter" do
+     * tipo elemento (Ele = E|CE|A) e nível 4
      *
      * @param string $tpHor Tipo de hora
      * @param string $hIni  Hora inicial
@@ -1441,7 +1431,8 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "ObsCont" (Campo de uso livre do contribuinte)
      * #91
      * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "ObsCont" do tipo elemento (Ele = E|CE|A) e nível 3
+     * Os parâmetros para esta função são todos os elementos da tag "ObsCont" do
+     * tipo elemento (Ele = E|CE|A) e nível 3
      *
      * @param string $xCampo Identificação do campo
      * @param string $xTexto Conteúdo do campo
@@ -1476,7 +1467,8 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "ObsFisco" (Campo de uso livre do contribuinte)
      * #94
      * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "ObsFisco" do tipo elemento (Ele = E|CE|A) e nível 3
+     * Os parâmetros para esta função são todos os elementos da tag "ObsFisco" do tipo
+     * elemento (Ele = E|CE|A) e nível 3
      *
      * @param string $xCampo Identificação do campo
      * @param string $xTexto Conteúdo do campo
@@ -1511,7 +1503,8 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "emit" (Identificação do Emitente do CT-e)
      * #97
      * Nível: 1
-     * Os parâmetros para esta função são todos os elementos da tag "emit" do tipo elemento (Ele = E|CE|A) e nível 2
+     * Os parâmetros para esta função são todos os elementos da tag "emit" do
+     * tipo elemento (Ele = E|CE|A) e nível 2
      *
      * @param string $CNPJ  CNPJ do emitente
      * @param string $IE    Inscrição Estadual do Emitente
@@ -1559,7 +1552,8 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "enderEmit" (Endereço do emitente)
      * #102
      * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "enderEmit" do tipo elemento (Ele = E|CE|A) e nível 3
+     * Os parâmetros para esta função são todos os elementos da tag "enderEmit" do
+     * tipo elemento (Ele = E|CE|A) e nível 3
      *
      * @param string $xLgr    Logradouro
      * @param string $nro     Número
@@ -1653,10 +1647,12 @@ class Make extends BaseMake
     }
 
     /**
-     * Gera as tags para o elemento: "rem" (Informações do Remetente das mercadorias transportadas pelo CT-e)
+     * Gera as tags para o elemento: "rem" (Informações do Remetente das mercadorias
+     * transportadas pelo CT-e)
      * #112
      * Nível = 1
-     * Os parâmetros para esta função são todos os elementos da tag "rem" do tipo elemento (Ele = E|CE|A) e nível 2
+     * Os parâmetros para esta função são todos os elementos da tag "rem" do
+     * tipo elemento (Ele = E|CE|A) e nível 2
      *
      * @param string $CNPJ  Número do CNPJ
      * @param string $CPF   Número do CPF
@@ -1746,7 +1742,8 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "enderReme" (Dados do endereço)
      * #119
      * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "enderReme" do tipo elemento (Ele = E|CE|A) e nível 3
+     * Os parâmetros para esta função são todos os elementos da tag "enderReme" do
+     * tipo elemento (Ele = E|CE|A) e nível 3
      *
      * @param string $xLgr    Logradouro
      * @param string $nro     Número
@@ -1852,7 +1849,8 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "exped" (Informações do Expedidor da Carga)
      * #142
      * Nível: 1
-     * Os parâmetros para esta função são todos os elementos da tag "exped" do tipo elemento (Ele = E|CE|A) e nível 2
+     * Os parâmetros para esta função são todos os elementos da tag "exped" do
+     * tipo elemento (Ele = E|CE|A) e nível 2
      *
      * @param string $CNPJ  Número do CNPJ
      * @param string $CPF   Número do CPF
@@ -1934,7 +1932,8 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "enderExped" (Dados do endereço)
      * #148
      * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "enderExped" do tipo elemento (Ele = E|CE|A) e nível 3
+     * Os parâmetros para esta função são todos os elementos da tag "enderExped" do
+     * tipo elemento (Ele = E|CE|A) e nível 3
      *
      * @param string $xLgr    Logradouro
      * @param string $nro     Número
@@ -2040,7 +2039,8 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "receb" (Informações do Recebedor da Carga)
      * #160
      * Nível: 1
-     * Os parâmetros para esta função são todos os elementos da tag "receb" do tipo elemento (Ele = E|CE|A) e nível 2
+     * Os parâmetros para esta função são todos os elementos da tag "receb" do
+     * tipo elemento (Ele = E|CE|A) e nível 2
      *
      * @param string $CNPJ  Número do CNPJ
      * @param string $CPF   Número do CPF
@@ -2122,7 +2122,8 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "enderReceb" (Informações do Recebedor da Carga)
      * #166
      * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "enderReceb" do tipo elemento (Ele = E|CE|A) e nível 3
+     * Os parâmetros para esta função são todos os elementos da tag "enderReceb" do
+     * tipo elemento (Ele = E|CE|A) e nível 3
      *
      * @param string $xLgr    Logradouro
      * @param string $nro     Número
@@ -2228,7 +2229,8 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "dest" (Informações do Destinatário do CT-e)
      * #178
      * Nível: 1
-     * Os parâmetros para esta função são todos os elementos da tag "dest" do tipo elemento (Ele = E|CE|A) e nível 2
+     * Os parâmetros para esta função são todos os elementos da tag "dest" do
+     * tipo elemento (Ele = E|CE|A) e nível 2
      *
      * @param string $CNPJ  Número do CNPJ
      * @param string $CPF   Número do CPF
@@ -2318,7 +2320,8 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "enderDest" (Informações do Recebedor da Carga)
      * # = 185
      * Nível = 2
-     * Os parâmetros para esta função são todos os elementos da tag "enderDest" do tipo elemento (Ele = E|CE|A) e nível 3
+     * Os parâmetros para esta função são todos os elementos da tag "enderDest" do
+     * tipo elemento (Ele = E|CE|A) e nível 3
      *
      * @param string $xLgr    Logradouro
      * @param string $nro     Número
@@ -2426,7 +2429,8 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "vPrest" (Local de Entrega constante na Nota Fiscal)
      * #208
      * Nível: 1
-     * Os parâmetros para esta função são todos os elementos da tag "vPrest" do tipo elemento (Ele = E|CE|A) e nível 2
+     * Os parâmetros para esta função são todos os elementos da tag "vPrest" do
+     * tipo elemento (Ele = E|CE|A) e nível 2
      *
      * @param string $vTPrest Valor Total da Prestação do Serviço
      * @param string $vRec    Valor a Receber
@@ -2515,9 +2519,27 @@ class Make extends BaseMake
             case '60':
                 $icms = $this->dom->createElement("ICMS60");
                 $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 60");
-                $this->dom->addChild($icms, 'vBCSTRet', $vBCSTRet, false, "$identificador  Valor da BC do ICMS ST retido");
-                $this->dom->addChild($icms, 'vICMSSTRet', $vICMSSTRet, false, "$identificador  Valor do ICMS ST retido");
-                $this->dom->addChild($icms, 'pICMSSTRet', $pICMSSTRet, false, "$identificador  Valor do ICMS ST retido");
+                $this->dom->addChild(
+                    $icms,
+                    'vBCSTRet',
+                    $vBCSTRet,
+                    false,
+                    "$identificador  Valor da BC do ICMS ST retido"
+                );
+                $this->dom->addChild(
+                    $icms,
+                    'vICMSSTRet',
+                    $vICMSSTRet,
+                    false,
+                    "$identificador  Valor do ICMS ST retido"
+                );
+                $this->dom->addChild(
+                    $icms,
+                    'pICMSSTRet',
+                    $pICMSSTRet,
+                    false,
+                    "$identificador  Valor do ICMS ST retido"
+                );
                 break;
             case '90':
                 $icms = $this->dom->createElement("ICMS90");
@@ -2531,11 +2553,11 @@ class Make extends BaseMake
         $this->imp = $this->dom->createElement('imp');
         $tagIcms = $this->dom->createElement('ICMS');
 
-        if(isset($icms)){
+        if (isset($icms)) {
             $this->imp->appendChild($tagIcms);
         }
 
-        if(isset($icms)){
+        if (isset($icms)) {
             $tagIcms->appendChild($icms);
         }
         return $tagIcms;
@@ -2545,7 +2567,8 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "Comp" (Local de Entrega constante na Nota Fiscal)
      * #211
      * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "Comp" do tipo elemento (Ele = E|CE|A) e nível 3
+     * Os parâmetros para esta função são todos os elementos da tag "Comp" do
+     * tipo elemento (Ele = E|CE|A) e nível 3
      *
      * @param string $xNome Nome do componente
      * @param string $vComp Valor do componente
@@ -2592,7 +2615,8 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "Entrega" (Informações ref. a previsão de entrega)
      * #69
      * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "Entrega" do tipo elemento (Ele = E|CE|A) e nível 3
+     * Os parâmetros para esta função são todos os elementos da tag "Entrega" do
+     * tipo elemento (Ele = E|CE|A) e nível 3
      *
      * @return \DOMElement
      */

@@ -5,13 +5,13 @@ namespace NFePHP\CTe;
 /**
  * Classe principal para a comunicação com a SEFAZ
  *
- * @category  NFePHP
- * @package   NFePHP\CTe\ToolsCTe
- * @copyright Copyright (c) 2008-2015
+ * @category  Library
+ * @package   nfephp-org/sped-cte
+ * @copyright 2009-2016 NFePHP
  * @license   http://www.gnu.org/licenses/lesser.html LGPL v3
+ * @link      http://github.com/nfephp-org/sped-cte for the canonical source repository
  * @author    Roberto L. Machado <linux.rlm at gmail dot com>
- * @link      http://github.com/nfephp-org/nfephp for the canonical source repository
- */
+  */
 
 use NFePHP\Common\Base\BaseTools;
 use NFePHP\Common\LotNumber\LotNumber;
@@ -20,10 +20,6 @@ use NFePHP\Common\Files;
 use NFePHP\Common\Exception;
 use NFePHP\CTe\Auxiliar\Response;
 use NFePHP\CTe\Auxiliar\IdentifyCTe;
-
-if (!defined('NFEPHP_ROOT')) {
-    define('NFEPHP_ROOT', dirname(dirname(__FILE__)));
-}
 
 class Tools extends BaseTools
 {
@@ -37,12 +33,10 @@ class Tools extends BaseTools
 
     public function printCTe()
     {
-
     }
 
     public function mailCTe()
     {
-
     }
 
     /**
@@ -56,7 +50,6 @@ class Tools extends BaseTools
     {
         return $this->assinaDoc($xml, 'CTe', 'infCte', $saveFile);
     }
-
 
     public function sefazEnvia(
         $aXml,
@@ -140,7 +133,6 @@ class Tools extends BaseTools
         //caso o envio seja recebido com sucesso mover a NFe da pasta
         //das assinadas para a pasta das enviadas
         return (string) $retorno;
-
     }
 
     public function sefazConsultaRecibo($recibo = '', $tpAmb = '2', &$aRetorno = array())
@@ -331,11 +323,14 @@ class Tools extends BaseTools
         $descEvento = 'Cancelamento';
         $nSeqEvento = 1;
         //monta mensagem
-        $tagAdic = "<evCancCTe><descEvento>$descEvento</descEvento><nProt>$nProt</nProt><xJust>$xJust</xJust></evCancCTe>";
+        $tagAdic = "<evCancCTe>"
+            . "<descEvento>$descEvento</descEvento>"
+            . "<nProt>$nProt</nProt>"
+            . "<xJust>$xJust</xJust>"
+            . "</evCancCTe>";
         $retorno = $this->zSefazEvento($siglaUF, $chCTe, $tpAmb, $tpEvento, $nSeqEvento, $tagAdic);
         $aRetorno = $this->aLastRetEvent;
         return $retorno;
-
     }
 
     /**
@@ -561,5 +556,4 @@ class Tools extends BaseTools
         }
         return true;
     }
-
 }
