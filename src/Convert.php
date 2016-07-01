@@ -43,6 +43,5 @@ class Convert
      */
     public function txt2xml($txt)
     {
-        
     }
 }
