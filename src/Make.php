@@ -531,7 +531,9 @@ class Make extends BaseMake
         $this->dom->appChild($this->infCTeNorm, $this->infDoc, 'Falta tag "infDoc"');
         $this->dom->appChild($this->infDoc, $this->infNFe, 'Falta tag "infNFe"');
 
+        $this->dom->appChild($this->infCTeNorm, $this->seg, 'Falta tag "seg"');
         $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
+
         $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
 
         $this->dom->appChild($this->CTe, $this->infCte, 'Falta tag "CTe"');
@@ -2691,6 +2693,14 @@ class Make extends BaseMake
         return $this->infNFe;
     }
 
+    public function segTag($respSeg = 0)
+    {
+        $identificador = '#360 <seg> - ';
+        $this->seg = $this->dom->createElement('seg');
+        $this->dom->addChild($this->seg, 'respSeg', $respSeg, true, $identificador . 'Responsável pelo Seguro');
+        return $this->seg;
+    }
+
     public function infModalTag($versaoModal = '')
     {
         $identificador = '#366 <infModal> - ';
@@ -2704,7 +2714,7 @@ class Make extends BaseMake
     {
         $identificador = '#1 <rodo> - ';
         $this->rodo = $this->dom->createElement('rodo');
-        $this->dom->addChild($this->rodo, 'RNTRN', $RNTRC, true, $identificador . 'Registro nacional de transportadores rodoviários de carga');
+        $this->dom->addChild($this->rodo, 'RNTRC', $RNTRC, true, $identificador . 'Registro nacional de transportadores rodoviários de carga');
         $this->dom->addChild($this->rodo, 'dPrev', $dPrev, true, $identificador . 'Data prevista para entrega da carga no recebedor');
         $this->dom->addChild($this->rodo, 'lota', $lota, true, $identificador . 'Indicador de lotação');
         $this->dom->addChild($this->rodo, 'CIOT', $CIOT, false, $identificador . 'Codigo identificador da operacao de transporte');

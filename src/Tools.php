@@ -36,7 +36,7 @@ class Tools extends BaseTools
      * @var string
      */
     public $erros = array();
-
+    
     protected $modelo = '65';
 
     public function printCTe()

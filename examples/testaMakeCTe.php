@@ -67,7 +67,7 @@ $resp = $cte->ideTag(
 );
 
 $resp = $cte->toma03Tag(
-    $toma = '0'
+    $toma = '3'
 );
 
 $resp = $cte->toma4Tag(
@@ -176,6 +176,10 @@ $resp = $cte->infNFeTag(
     $dPrev = '2016-06-30'
 );
 
+$resp = $cte->segTag(
+    $respSeg = 0
+);
+
 $resp = $cte->infModalTag(
     $versaoModal = '2.00'
 );
@@ -183,11 +187,9 @@ $resp = $cte->infModalTag(
 $resp = $cte->rodoTag(
     $RNTRC = '43160672',
     $dPrev = '2016-06-30',
-    $lota = '1',
+    $lota = '0',
     $CIOT = ''
 );
-
-
 
 $resp = $cte->montaCTe();
 
