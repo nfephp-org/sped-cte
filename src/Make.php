@@ -505,7 +505,7 @@ class Make extends BaseMake
         $this->dom->appChild($this->emit, $this->enderEmit, 'Falta tag "emit"');
         $this->dom->appChild($this->infCte, $this->emit, 'Falta tag "infCte"');
         if ($this->rem != '') {
-            $this->dom->appChild($this->rem, $this->enderReme, 'Falta tag "rem"');
+        //    $this->dom->appChild($this->rem, $this->enderReme, 'Falta tag "rem"');
             $this->dom->appChild($this->infCte, $this->rem, 'Falta tag "infCte"');
         }
         if ($this->exped != '') {
@@ -517,7 +517,7 @@ class Make extends BaseMake
             $this->dom->appChild($this->infCte, $this->receb, 'Falta tag "infCte"');
         }
         if ($this->dest != '') {
-            $this->dom->appChild($this->dest, $this->enderDest, 'Falta tag "dest"');
+        //    $this->dom->appChild($this->dest, $this->enderDest, 'Falta tag "dest"');
             $this->dom->appChild($this->infCte, $this->dest, 'Falta tag "infCte"');
         }
         foreach ($this->comp as $comp) {
@@ -525,6 +525,17 @@ class Make extends BaseMake
         }
         $this->dom->appChild($this->infCte, $this->vPrest, 'Falta tag "infCte"');
         $this->dom->appChild($this->infCte, $this->imp, 'Falta tag "imp"');
+        $this->dom->appChild($this->infCte, $this->infCTeNorm, 'Falta tag "infCTeNorm"');
+        $this->dom->appChild($this->infCTeNorm, $this->infCarga, 'Falta tag "infCarga"');
+        $this->dom->appChild($this->infCarga, $this->infQ, 'Falta tag "infQ"');
+        $this->dom->appChild($this->infCTeNorm, $this->infDoc, 'Falta tag "infDoc"');
+        $this->dom->appChild($this->infDoc, $this->infNFe, 'Falta tag "infNFe"');
+
+        $this->dom->appChild($this->infCTeNorm, $this->seg, 'Falta tag "seg"');
+        $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
+
+        $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
+
         $this->dom->appChild($this->CTe, $this->infCte, 'Falta tag "CTe"');
         $this->dom->appChild($this->dom, $this->CTe, 'Falta tag "DOMDocument"');
         $this->xml = $this->dom->saveXML();
@@ -1842,7 +1853,12 @@ class Make extends BaseMake
             false,
             $identificador . 'Nome do país'
         );
+
+        $node = $this->rem->getElementsByTagName("email")->item(0);
+        $this->rem->insertBefore($this->enderReme, $node);
         return $this->enderReme;
+
+
     }
 
     /**
@@ -2625,4 +2641,90 @@ class Make extends BaseMake
         $this->entrega = $this->dom->createElement('Entrega');
         return $this->entrega;
     }
+
+    public function infCTeNormTag()
+    {
+        $this->infCTeNorm = $this->dom->createElement('infCTeNorm');
+        return $this->infCTeNorm;
+    }
+
+    public function infCargaTag($vCarga = '', $proPred = '', $xOutCat = '')
+    {
+        $identificador = '#253 <infCarga> - ';
+        $this->infCarga = $this->dom->createElement('infCarga');
+        $this->dom->addChild($this->infCarga, 'vCarga', $vCarga, false, $identificador . 'Valor Total da Carga');
+        $this->dom->addChild($this->infCarga, 'proPred', $proPred, true, $identificador . 'Produto Predominante');
+        $this->dom->addChild($this->infCarga, 'xOutCat', $xOutCat, false, $identificador . 'Outras Características da Carga');
+
+        return $this->infCarga;
+    }
+
+    public function infQTag($cUnid = '', $tpMed = '', $qCarga = '')
+    {
+        $identificador = '#257 <infQ> - ';
+        $this->infQ = $this->dom->createElement('infQ');
+        $this->dom->addChild($this->infQ, 'cUnid', $cUnid, true, $identificador . 'Código da Unidade de Medida');
+        $this->dom->addChild($this->infQ, 'tpMed', $tpMed, true, $identificador . 'Tipo da Medida');
+        $this->dom->addChild($this->infQ, 'qCarga', $qCarga, true, $identificador . 'Quantidade');
+
+        return $this->infQ;
+    }
+
+    public function infDocTag()
+    {
+        $this->infDoc = $this->dom->createElement('infDoc');
+        return $this->infDoc;
+    }
+
+    public function infNFTag($vCarga = '', $proPred = '', $xOutCat = '')
+    {
+        $identificador = '#262 <infNF> - ';
+        $this->infCarga = $this->dom->createElement('infNF');
+        $this->dom->addChild($this->infCarga, 'vCarga', $vCarga, false, $identificador . 'Valor Total da Carga');
+        $this->dom->addChild($this->infCarga, 'proPred', $proPred, true, $identificador . 'Produto Predominante');
+        $this->dom->addChild($this->infCarga, 'xOutCat', $xOutCat, false, $identificador . 'Outras Características da Carga');
+
+        return $this->infCarga;
+    }
+
+    public function infNFeTag($chave = '', $PIN = '', $dPrev = '')
+    {
+        $identificador = '#262 <infNFe> - ';
+        $this->infNFe = $this->dom->createElement('infNFe');
+        $this->dom->addChild($this->infNFe, 'chave', $chave, true, $identificador . 'Chave de acesso da NF-e');
+        $this->dom->addChild($this->infNFe, 'PIN', $PIN, false, $identificador . 'PIN SUFRAMA');
+        $this->dom->addChild($this->infNFe, 'dPrev', $dPrev, false, $identificador . 'Data prevista de entrega');
+
+        return $this->infNFe;
+    }
+
+    public function segTag($respSeg = 4)
+    {
+        $identificador = '#360 <seg> - ';
+        $this->seg = $this->dom->createElement('seg');
+        $this->dom->addChild($this->seg, 'respSeg', $respSeg, true, $identificador . 'Responsável pelo Seguro');
+        return $this->seg;
+    }
+
+    public function infModalTag($versaoModal = '')
+    {
+        $identificador = '#366 <infModal> - ';
+        $this->infModal = $this->dom->createElement('infModal');
+        $this->infModal->setAttribute('versaoModal', $versaoModal);
+
+        return $this->infModal;
+    }
+
+    public function rodoTag($RNTRC = '', $dPrev = '', $lota = '', $CIOT = '')
+    {
+        $identificador = '#1 <rodo> - ';
+        $this->rodo = $this->dom->createElement('rodo');
+        $this->dom->addChild($this->rodo, 'RNTRC', $RNTRC, true, $identificador . 'Registro nacional de transportadores rodoviários de carga');
+        $this->dom->addChild($this->rodo, 'dPrev', $dPrev, true, $identificador . 'Data prevista para entrega da carga no recebedor');
+        $this->dom->addChild($this->rodo, 'lota', $lota, true, $identificador . 'Indicador de lotação');
+        $this->dom->addChild($this->rodo, 'CIOT', $CIOT, false, $identificador . 'Codigo identificador da operacao de transporte');
+
+        return $this->rodo;
+    }
+
 }

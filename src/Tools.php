@@ -20,6 +20,11 @@ use NFePHP\Common\Files;
 use NFePHP\Common\Exception;
 use NFePHP\CTe\Auxiliar\Response;
 use NFePHP\CTe\Auxiliar\IdentifyCTe;
+use NFePHP\Common\Dom\ValidXsd;
+
+if (!defined('NFEPHP_ROOT')) {
+    define('NFEPHP_ROOT', dirname(dirname(__FILE__)));
+}
 
 class Tools extends BaseTools
 {
@@ -29,6 +34,13 @@ class Tools extends BaseTools
      * @var string
      */
     protected $urlPortal = 'http://www.portalfiscal.inf.br/cte';
+
+    /**
+     * errrors
+     * @var string
+     */
+    public $erros = array();
+    
     protected $modelo = '65';
 
     public function printCTe()
@@ -67,7 +79,7 @@ class Tools extends BaseTools
         }
         if (is_array($aXml)) {
             if (count($aXml) > 1) {
-                //multiplas nfes, não pode ser sincrono
+                //multiplas cte, não pode ser sincrono
                 $indSinc = 0;
             }
             $sxml = implode("", $sxml);
@@ -539,19 +551,17 @@ class Tools extends BaseTools
         }
         $xsdFile = $aResp['Id'].'_v'.$aResp['versao'].'.xsd';
         $xsdPath = NFEPHP_ROOT.DIRECTORY_SEPARATOR .
-            'schemes' .
+            'schemas' .
             DIRECTORY_SEPARATOR .
-            'CTe' .
-            DIRECTORY_SEPARATOR .
-            $this->aConfig['schemesCTe'] .
+            $this->aConfig['schemasCTe'] .
             DIRECTORY_SEPARATOR .
             $xsdFile;
         if (! is_file($xsdPath)) {
-            $this->errors[] = "O arquivo XSD $xsdFile não foi localizado.";
+            $this->erros[] = "O arquivo XSD $xsdFile não foi localizado.";
             return false;
         }
         if (! ValidXsd::validar($aResp['xml'], $xsdPath)) {
-            $this->errors[] = ValidXsd::$errors;
+            $this->erros[] = ValidXsd::$errors;
             return false;
         }
         return true;

@@ -11,8 +11,8 @@ use NFePHP\CTe\Tools;
 $cte = new Make();
 $cteTools = new Tools('../config/config.json');
 
-//$dhEmi = date("Y-m-d\TH:i:sP");
-$dhEmi = date("d/m/Y");
+$dhEmi = date("Y-m-d\TH:i:s");
+//$dhEmi = date("d/m/Y");
 
 $chave = $cte->montaChave(
     $cUF = '43',
@@ -40,8 +40,7 @@ $resp = $cte->ideTag(
     $mod = '57',
     $serie = '1',
     $nCT = '10',
-//    $dhEmi,
-    '26/06/2016',
+    $dhEmi,
     $tpImp = '1',
     $tpEmis = '1',
     $cDV,
@@ -68,7 +67,7 @@ $resp = $cte->ideTag(
 );
 
 $resp = $cte->toma03Tag(
-    $toma = '0'
+    $toma = '3'
 );
 
 $resp = $cte->toma4Tag(
@@ -116,11 +115,35 @@ $resp = $cte->enderEmitTag(
     $fone = '5434621111'
 );
 
+$resp = $cte->remTag(
+    $CNPJ = '',
+    $CPF = '00670965065',
+    $IE = $cteTools->aConfig['ie'],
+    $xNome = 'CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL',
+    $Fant = 'Otimizy',
+    $fone = '99887766',
+    $email = 'contato@otimizy.com.br'
+);
+
+
+$resp = $cte->enderRemeTag(
+    $xLgr = 'Avenida Independência',
+    $nro = '482',
+    $xCpl = 'Sala 109',
+    $xBairro = 'Centro',
+    $cMun = '4308607',
+    $xMun = 'Garibaldi',
+    $CEP = '95720000',
+    $UF = $cteTools->aConfig['siglaUF'],
+    $cPais = '1058',
+    $xPais = 'Brasil'
+);
+
 $resp = $cte->destTag(
     $CNPJ = $cteTools->aConfig['cnpj'],
     $CPF = '',
     $IE = $cteTools->aConfig['ie'],
-    $xNome = $cteTools->aConfig['razaosocial'],
+    $xNome = 'CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL',
     $fone = '5434627788',
     $ISUF = '',
     $email = 'contato@otimizy.com.br'
@@ -146,7 +169,50 @@ $resp = $cte->vPrestTag(
 );
 
 $resp = $cte->icmsTag(
-    
+    $cst = '00',
+    $pRedBC = '',
+    $pRedBC = 200.00,
+    $pRedBC = 17,
+    $pRedBC = 34.00,
+    $pRedBC = '',
+    $pRedBC = ''
+);
+
+$resp = $cte->infCTeNormTag();
+
+$resp = $cte->infCargaTag(
+    $vCarga = 200.00,
+    $prodPred = 'ESPETOS',
+    $xOutCat = 'OUTRAS CARACTERÍSTICAS'
+);
+
+$resp = $cte->infQTag(
+    $cUnid = '00',
+    $tpMed = 'PESO BRUTO',
+    $qCarga = 1
+);
+
+$resp = $cte->infDocTag();
+
+$resp = $cte->infNFeTag(
+    $chave = '43160472202112000136550000000010571048440722',
+    $PIN = '',
+    $dPrev = '2016-06-30'
+);
+
+$resp = $cte->segTag(
+    $respSeg = 4
+);
+
+$resp = $cte->infModalTag(
+    $versaoModal = '2.00'
+);
+
+$resp = $cte->rodoTag(
+    $RNTRC = '43160672',
+    $dPrev = '2016-06-30',
+    $lota = '0',
+    $CIOT = ''
 );
 
 $resp = $cte->montaCTe();

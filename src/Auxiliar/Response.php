@@ -37,7 +37,7 @@ class Response
             case 'cteRecepcaoLote':
                 return self::zReadRecepcaoLote($dom);
                 break;
-            case 'cteRetRecepcao':
+            case 'CteRetRecepcao':
                 return self::zReadRetRecepcao($dom);
                 break;
             case 'consultaCadastro2':
@@ -402,13 +402,14 @@ class Response
     private static function zGetProt($tag)
     {
         $aProt = array();
-        $infProt = $tag->getElementsByTagName('infProt');
-        if (! empty($infProt)) {
+        $infProt = $tag->getElementsByTagName('infProt')->item(0);
+        if (isset($infProt)) {
             $aProt['tpAmb'] = $infProt->getElementsByTagName('tpAmb')->item(0)->nodeValue;
             $aProt['verAplic'] = $infProt->getElementsByTagName('verAplic')->item(0)->nodeValue;
             $aProt['chCTe'] = $infProt->getElementsByTagName('chCTe')->item(0)->nodeValue;
             $aProt['dhRecbto'] = $infProt->getElementsByTagName('dhRecbto')->item(0)->nodeValue;
-            $aProt['nProt'] = $infProt->getElementsByTagName('nProt')->item(0)->nodeValue;
+            $aProt['nProt'] = isset($infProt->getElementsByTagName('nProt')->item(0)->nodeValue) ?
+                isset($infProt->getElementsByTagName('nProt')->item(0)->nodeValue) : '';
             $aProt['digVal'] = $infProt->getElementsByTagName('digVal')->item(0)->nodeValue;
             $aProt['cStat'] = $infProt->getElementsByTagName('cStat')->item(0)->nodeValue;
             $aProt['xMotivo'] = $infProt->getElementsByTagName('xMotivo')->item(0)->nodeValue;

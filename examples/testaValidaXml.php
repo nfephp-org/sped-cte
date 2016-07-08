@@ -13,9 +13,9 @@ $tpAmb = '2';
 
 $filename = "/Applications/XAMPP/xamppfiles/htdocs/projetos/sped-cte/xml/cte/{$chave}-cte.xml";
 
-if (! $cteTools->validarXml($filename) || sizeof($cteTools->errors)) {
+if (! $cteTools->validarXml($filename) || sizeof($cteTools->erros)) {
     echo "<h3>Algum erro ocorreu.... </h3>";
-    foreach ($cteTools->errors as $erro) {
+    foreach ($cteTools->erros as $erro) {
         if (is_array($erro)) { 
             foreach ($erro as $err) {
                 echo "$err <br>";
@@ -26,4 +26,4 @@ if (! $cteTools->validarXml($filename) || sizeof($cteTools->errors)) {
     }
     exit;
 }
-echo "NFe Valida !";
+echo "CT-e Válido!";
