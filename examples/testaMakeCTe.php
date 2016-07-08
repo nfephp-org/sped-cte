@@ -115,6 +115,30 @@ $resp = $cte->enderEmitTag(
     $fone = '5434621111'
 );
 
+$resp = $cte->remTag(
+    $CNPJ = '',
+    $CPF = '00670965065',
+    $IE = $cteTools->aConfig['ie'],
+    $xNome = 'CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL',
+    $Fant = 'Otimizy',
+    $fone = '99887766',
+    $email = 'contato@otimizy.com.br'
+);
+
+
+$resp = $cte->enderRemeTag(
+    $xLgr = 'Avenida Independência',
+    $nro = '482',
+    $xCpl = 'Sala 109',
+    $xBairro = 'Centro',
+    $cMun = '4308607',
+    $xMun = 'Garibaldi',
+    $CEP = '95720000',
+    $UF = $cteTools->aConfig['siglaUF'],
+    $cPais = '1058',
+    $xPais = 'Brasil'
+);
+
 $resp = $cte->destTag(
     $CNPJ = $cteTools->aConfig['cnpj'],
     $CPF = '',
@@ -171,13 +195,13 @@ $resp = $cte->infQTag(
 $resp = $cte->infDocTag();
 
 $resp = $cte->infNFeTag(
-    $chave = '43160672044530000142570010000000101000000101',
+    $chave = '43160472202112000136550000000010571048440722',
     $PIN = '',
     $dPrev = '2016-06-30'
 );
 
 $resp = $cte->segTag(
-    $respSeg = 0
+    $respSeg = 4
 );
 
 $resp = $cte->infModalTag(

@@ -22,6 +22,10 @@ use NFePHP\CTe\Auxiliar\Response;
 use NFePHP\CTe\Auxiliar\IdentifyCTe;
 use NFePHP\Common\Dom\ValidXsd;
 
+if (!defined('NFEPHP_ROOT')) {
+    define('NFEPHP_ROOT', dirname(dirname(__FILE__)));
+}
+
 class Tools extends BaseTools
 {
     /**
@@ -75,7 +79,7 @@ class Tools extends BaseTools
         }
         if (is_array($aXml)) {
             if (count($aXml) > 1) {
-                //multiplas nfes, não pode ser sincrono
+                //multiplas cte, não pode ser sincrono
                 $indSinc = 0;
             }
             $sxml = implode("", $sxml);

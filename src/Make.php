@@ -505,7 +505,7 @@ class Make extends BaseMake
         $this->dom->appChild($this->emit, $this->enderEmit, 'Falta tag "emit"');
         $this->dom->appChild($this->infCte, $this->emit, 'Falta tag "infCte"');
         if ($this->rem != '') {
-            $this->dom->appChild($this->rem, $this->enderReme, 'Falta tag "rem"');
+        //    $this->dom->appChild($this->rem, $this->enderReme, 'Falta tag "rem"');
             $this->dom->appChild($this->infCte, $this->rem, 'Falta tag "infCte"');
         }
         if ($this->exped != '') {
@@ -1853,7 +1853,12 @@ class Make extends BaseMake
             false,
             $identificador . 'Nome do país'
         );
+
+        $node = $this->rem->getElementsByTagName("email")->item(0);
+        $this->rem->insertBefore($this->enderReme, $node);
         return $this->enderReme;
+
+
     }
 
     /**
@@ -2693,7 +2698,7 @@ class Make extends BaseMake
         return $this->infNFe;
     }
 
-    public function segTag($respSeg = 0)
+    public function segTag($respSeg = 4)
     {
         $identificador = '#360 <seg> - ';
         $this->seg = $this->dom->createElement('seg');
