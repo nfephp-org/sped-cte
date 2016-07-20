@@ -9,8 +9,8 @@ use NFePHP\CTe\Tools;
 $cteTools = new Tools('../config/config.json');
 
 $aResposta = array();
-$chave = '43160672044530000142570010000000101000000101';
-$nProt = '431000008784504';
+$chave = '43160711004958000177570010000000101000000109';
+$nProt = '431000008846409';
 $tpAmb = '2';
 $xJust = 'Teste de cancelamento em ambiente de homologação';
 $retorno = $cteTools->sefazCancela($chave, $tpAmb, $xJust, $nProt, $aResposta);
