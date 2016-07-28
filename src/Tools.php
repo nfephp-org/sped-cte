@@ -404,31 +404,23 @@ class Tools extends BaseTools
             . "</detEvento>"
             . "</infEvento>";
 
-
-        //assinatura dos dados
-        //$signedMsg = $this->oCertificate->signXML($mensagem, 'infEvento');
-        //$signedMsg = Strings::clearXml($signedMsg, true);
-        $numLote = LotNumber::geraNumLote();
-
+        //$numLote = LotNumber::geraNumLote();
 
         $cons = "<eventoCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
             . "$mensagem"
             . "</eventoCTe>";
 
-
         $signedMsg = $this->oCertificate->signXML($cons, 'eventoCTe');
         $signedMsg = Strings::clearXml($signedMsg, true);
-
-
-
 
         //valida mensagem com xsd
         //no caso do evento nao tem xsd organizado, esta fragmentado
         //e por vezes incorreto por isso essa validação está desabilitada
-        //if (! $this->zValidMessage($cons, 'nfe', 'envEvento', $version)) {
-        //    $msg = 'Falha na validação. '.$this->error;
-        //    throw new Exception\RuntimeException($msg);
-        //}
+//        if (! $this->zValidMessage($signedMsg, 'cte', 'envEvento', $this->urlVersion)) {
+//            $msg = 'Falha na validação. '.$this->error;
+//            throw new Exception\RuntimeException($msg);
+//        }
+
         $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$signedMsg</cteDadosMsg>";
         //envia a solicitação via SOAP
         $retorno = $this->oSoap->send(
@@ -461,7 +453,7 @@ class Tools extends BaseTools
                     $filename = "$chCTe-$aliasEvento-$nSeqEvento-procEvento.xml";
                 }
                 $retorno = $this->zAddProtMsg('procEventoCTe', 'evento', $signedMsg, 'retEvento', $retorno);
-                $this->zGravaFile('nfe', $tpAmb, $filename, $retorno, $pasta);
+                $this->zGravaFile('cte', $tpAmb, $filename, $retorno, $pasta);
             }
         }
         return (string) $retorno;
