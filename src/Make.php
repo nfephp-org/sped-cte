@@ -1857,8 +1857,6 @@ class Make extends BaseMake
         $node = $this->rem->getElementsByTagName("email")->item(0);
         $this->rem->insertBefore($this->enderReme, $node);
         return $this->enderReme;
-
-
     }
 
     /**
@@ -2711,7 +2709,6 @@ class Make extends BaseMake
         $identificador = '#366 <infModal> - ';
         $this->infModal = $this->dom->createElement('infModal');
         $this->infModal->setAttribute('versaoModal', $versaoModal);
-
         return $this->infModal;
     }
 
@@ -2726,5 +2723,4 @@ class Make extends BaseMake
 
         return $this->rodo;
     }
-
 }
