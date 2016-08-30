@@ -4,7 +4,7 @@
  * Class IdentifyCTeTest
  * @author Roberto L. Machado <linux.rlm at gmail dot com>
  */
-use NFePHP\CTe\Auxiliar\Identify;
+use NFePHP\CTe\Auxiliar\IdentifyCTe;
 
 class IdentifyTest extends PHPUnit_Framework_TestCase
 {
@@ -12,7 +12,7 @@ class IdentifyTest extends PHPUnit_Framework_TestCase
     {
         $aResp = array();
         $filePath = dirname(dirname(__FILE__)) . '/fixtures/xml/0008-cte.xml';
-        $schem = Identify::identificar($filePath, $aResp);
-        $this->assertEquals($schem, 'mdfe');
+        $schem = IdentifyCTe::identificar($filePath, $aResp);
+        $this->assertEquals($schem, 'cte');
     }
 }
