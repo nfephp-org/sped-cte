@@ -34,7 +34,7 @@ class Response
         $dom->loadXML($xmlResp);
         //para cada $method tem um formato de retorno especifico
         switch ($method) {
-            case 'cteRecepcaoLote':
+            case 'CteRecepcao':
                 return self::zReadRecepcaoLote($dom);
                 break;
             case 'CteRetRecepcao':
