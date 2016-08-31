@@ -1729,7 +1729,7 @@ class Make extends BaseMake
             $this->rem,
             'xFant',
             $xFant,
-            true,
+            false,
             $identificador . 'Nome fantasia'
         );
         $this->dom->addChild(
