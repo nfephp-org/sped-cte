@@ -34,7 +34,7 @@ class Response
         $dom->loadXML($xmlResp);
         //para cada $method tem um formato de retorno especifico
         switch ($method) {
-            case 'cteRecepcaoLote':
+            case 'CteRecepcao':
                 return self::zReadRecepcaoLote($dom);
                 break;
             case 'CteRetRecepcao':
@@ -49,8 +49,7 @@ class Response
             case 'cteInutilizacaoCT':
                 return self::zReadInutilizacaoCT($dom);
                 break;
-            case 'cteStatusServicoCT':
-                //NOTA: irá ser desativado
+            case 'CteStatusServico':
                 return self::zReadStatusServico($dom);
                 break;
             case 'cteRecepcaoEvento':
@@ -336,7 +335,7 @@ class Response
             'dhRetorno' => '',
             'xObs' => ''
         );
-        $tag = $dom->getElementsByTagName('consStatServCTe')->item(0);
+        $tag = $dom->getElementsByTagName('retConsStatServCte')->item(0);
         if (! isset($tag)) {
             return $aResposta;
         }
@@ -348,9 +347,7 @@ class Response
             'xMotivo' => $tag->getElementsByTagName('xMotivo')->item(0)->nodeValue,
             'dhRecbto' => $tag->getElementsByTagName('dhRecbto')->item(0)->nodeValue,
             'tMed' => $tag->getElementsByTagName('tMed')->item(0)->nodeValue,
-            'cUF' => $tag->getElementsByTagName('cUF')->item(0)->nodeValue,
-            'dhRetorno' => $tag->getElementsByTagName('dhRetorno')->item(0)->nodeValue,
-            'xObs' => $tag->getElementsByTagName('xObs')->item(0)->nodeValue
+            'cUF' => $tag->getElementsByTagName('cUF')->item(0)->nodeValue
         );
         return $aResposta;
     }
