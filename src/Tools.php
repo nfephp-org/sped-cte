@@ -60,7 +60,7 @@ class Tools extends BaseTools
      */
     public function assina($xml = '', $saveFile = false)
     {
-        return $this->assinaDoc($xml, 'CTe', 'infCte', $saveFile);
+        return $this->assinaDoc($xml, 'cte', 'infCte', $saveFile);
     }
 
     public function sefazEnvia(
