@@ -217,7 +217,7 @@ $resp = $cte->rodoTag(
 
 $resp = $cte->montaCTe();
 
-$filename = "/Applications/XAMPP/xamppfiles/htdocs/projetos/sped-cte/xml/cte/{$chave}-cte.xml";
+$filename = "../xml/{$chave}-cte.xml";
 
 if ($resp) {
     //header('Content-type: text/xml; charset=UTF-8');
@@ -235,7 +235,7 @@ if ($resp) {
 
 $xml = file_get_contents($filename);
 $xml = $cteTools->assina($xml);
-$filename = "/Applications/XAMPP/xamppfiles/htdocs/projetos/sped-cte/xml/cte/{$chave}-cte.xml";
+$filename = "../xml/{$chave}-cte.xml";
 file_put_contents($filename, $xml);
 //chmod($filename, 0777);
 //echo $xml;
@@ -249,7 +249,7 @@ $flagZip = false;
 
 $retorno = $cteTools->sefazEnvia($xml, $tpAmb = '2', $idLote, $retorno, $indSinc, $flagZip);
 echo '<br><br><pre>';
-echo htmlspecialchars($cteTools->soapDebug);
+//echo htmlspecialchars($cteTools->soapDebug);
 echo '</pre><br><br><pre>';
 print_r($retorno);
 echo "</pre><br>";
