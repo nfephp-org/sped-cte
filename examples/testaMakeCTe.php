@@ -195,7 +195,7 @@ $resp = $cte->infQTag(
 $resp = $cte->infDocTag();
 
 $resp = $cte->infNFeTag(
-    $chave = '43160472202112000136550000000010571048440722',
+    $pChave = '43160472202112000136550000000010571048440722',
     $PIN = '',
     $dPrev = '2016-06-30'
 );
@@ -240,7 +240,6 @@ file_put_contents($filename, $xml);
 //chmod($filename, 0777);
 //echo $xml;
 
-
 $aRetorno = array();
 $tpAmb = '2';
 $idLote = '';
@@ -248,8 +247,7 @@ $indSinc = '1';
 $flagZip = false;
 
 $retorno = $cteTools->sefazEnvia($xml, $tpAmb = '2', $idLote, $aRetorno, $indSinc, $flagZip);
-echo '<br><br><pre>';
+echo '<pre>';
 //echo htmlspecialchars($cteTools->soapDebug);
-echo '</pre><br><br><pre>';
 print_r($aRetorno);
-echo "</pre><br>";
+echo "</pre>";
