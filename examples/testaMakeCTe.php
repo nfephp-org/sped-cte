@@ -241,15 +241,15 @@ file_put_contents($filename, $xml);
 //echo $xml;
 
 
-$retorno = array();
+$aRetorno = array();
 $tpAmb = '2';
 $idLote = '';
 $indSinc = '1';
 $flagZip = false;
 
-$retorno = $cteTools->sefazEnvia($xml, $tpAmb = '2', $idLote, $retorno, $indSinc, $flagZip);
+$retorno = $cteTools->sefazEnvia($xml, $tpAmb = '2', $idLote, $aRetorno, $indSinc, $flagZip);
 echo '<br><br><pre>';
 //echo htmlspecialchars($cteTools->soapDebug);
 echo '</pre><br><br><pre>';
-print_r($retorno);
+print_r($aRetorno);
 echo "</pre><br>";

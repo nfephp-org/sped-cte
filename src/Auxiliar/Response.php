@@ -43,16 +43,16 @@ class Response
             case 'consultaCadastro2':
                 return self::zReadConsultaCadastro2($dom);
                 break;
-            case 'cteConsultaCT':
+            case 'CteConsultaCT':
                 return self::zReadConsultaCT($dom);
                 break;
-            case 'cteInutilizacaoCT':
+            case 'CteInutilizacaoCT':
                 return self::zReadInutilizacaoCT($dom);
                 break;
             case 'CteStatusServico':
                 return self::zReadStatusServico($dom);
                 break;
-            case 'cteRecepcaoEvento':
+            case 'CteRecepcaoEvento':
                 return self::zReadRecepcaoEvento($dom);
                 break;
         }
