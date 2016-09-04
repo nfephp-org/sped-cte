@@ -40,6 +40,9 @@ class Response
             case 'CteRetRecepcao':
                 return self::zReadRetRecepcao($dom);
                 break;
+            case 'CteConsultaProtocolo':
+                return self::zReadConsultaProtocolo($dom);
+                break;
             case 'consultaCadastro2':
                 return self::zReadConsultaCadastro2($dom);
                 break;
@@ -216,7 +219,42 @@ class Response
         );
         return $aResposta;
     }
-    
+
+    /**
+     * zReadRetRecepcao
+     *
+     * @param  DOMDocument $dom
+     * @return array
+     */
+    protected static function zReadConsultaProtocolo($dom)
+    {
+        //retorno da funçao
+        $aResposta = array(
+            'bStat'=>false,
+            'versao' => '',
+            'tpAmb' => '',
+            'verAplic' => '',
+            'cStat' => '',
+            'xMotivo' => '',
+            'cUF' => ''
+        );
+        $tag = $dom->getElementsByTagName('retConsSitCTe')->item(0);
+        if (! isset($tag)) {
+            return $aResposta;
+        }
+        $aResposta = array(
+            'bStat'=>true,
+            'versao' => $tag->getAttribute('versao'),
+            'tpAmb' => $tag->getElementsByTagName('tpAmb')->item(0)->nodeValue,
+            'verAplic' => $tag->getElementsByTagName('verAplic')->item(0)->nodeValue,
+            'cStat' => $tag->getElementsByTagName('cStat')->item(0)->nodeValue,
+            'xMotivo' => $tag->getElementsByTagName('xMotivo')->item(0)->nodeValue,
+            'cUF' => $tag->getElementsByTagName('tpAmb')->item(0)->nodeValue
+        );
+        return $aResposta;
+    }
+
+
     /**
      * zReadConsultaCT
      *
@@ -372,20 +410,21 @@ class Response
             'xMotivo' => '',
             'evento' => array()
         );
-        $tag = $dom->getElementsByTagName('retEvento')->item(0);
+        $tag = $dom->getElementsByTagName('retEventoCTe')->item(0);
         if (! isset($tag)) {
             return $aResposta;
         }
         $aResposta = array(
             'bStat' => true,
             'versao' => $tag->getAttribute('versao'),
-            'id' => $tag->getElementsByTagName('id')->item(0)->nodeValue,
+            //'id' => $tag->getElementsByTagName('id')->item(0)->nodeValue,
             'tpAmb' => $tag->getElementsByTagName('tpAmb')->item(0)->nodeValue,
             'verAplic' => $tag->getElementsByTagName('verAplic')->item(0)->nodeValue,
             'cOrgao' => $tag->getElementsByTagName('cOrgao')->item(0)->nodeValue,
             'cStat' => $tag->getElementsByTagName('cStat')->item(0)->nodeValue,
-            'xMotivo' => $tag->getElementsByTagName('xMotivo')->item(0)->nodeValue,
-            'evento' => self::zGetEvent($tag)
+            'xMotivo' => $tag->getElementsByTagName('xMotivo')->item(0)->nodeValue
+        //,
+          //  'evento' => self::zGetEvent($tag)
         );
         return $aResposta;
     }

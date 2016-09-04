@@ -86,7 +86,6 @@ class Tools extends BaseTools
         }
         $sxml = preg_replace("/<\?xml.*\?>/", "", $sxml);
         $siglaUF = $this->aConfig['siglaUF'];
-        $cUF = $this->getcUF($siglaUF);
 
         if ($tpAmb == '') {
             $tpAmb = $this->aConfig['tpAmb'];
@@ -108,12 +107,6 @@ class Tools extends BaseTools
             throw new Exception\RuntimeException($msg);
         }
 
-        // Montagem do cabeçalho da comunicação SOAP
-        $cabec = "<cteCabecMsg xmlns=\"$this->urlNamespace\">"
-            . "<cUF>$cUF</cUF>"
-            . "<versaoDados>$this->urlVersion</versaoDados>"
-            . "</cteCabecMsg>";
-
         // Montagem dos dados da mensagem SOAP
         $dados = "<cteDadosMsg xmlns=\"$this->urlNamespace\">"
             . "<enviCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
@@ -123,14 +116,19 @@ class Tools extends BaseTools
             . "</cteDadosMsg>";
 
         // Envia dados via SOAP
-        $retorno = $this->oSoap->send($this->urlService, $this->urlNamespace, $cabec, $dados, $this->urlMethod);
+        $retorno = $this->oSoap->send(
+            $this->urlService,
+            $this->urlNamespace,
+            $this->urlHeader,
+            $dados,
+            $this->urlMethod
+        );
 
 //        if ($compactarZip) {
 //            $gzdata = base64_encode(gzencode($cons, 9, FORCE_GZIP));
 //            $body = "<cteDadosMsgZip xmlns=\"$this->urlNamespace\">$gzdata</cteDadosMsgZip>";
 //            $method = $this->urlMethod."Zip";
 //        }
-
 
         $lastMsg = $this->oSoap->lastMsg;
         $this->soapDebug = $this->oSoap->soapDebug;
@@ -404,25 +402,22 @@ class Tools extends BaseTools
             . "</detEvento>"
             . "</infEvento>";
 
-        //$numLote = LotNumber::geraNumLote();
-
         $cons = "<eventoCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
+        //$cons = "<eventoCTe versao=\"$this->urlVersion\">"
             . "$mensagem"
             . "</eventoCTe>";
 
         $signedMsg = $this->oCertificate->signXML($cons, 'eventoCTe');
         $signedMsg = Strings::clearXml($signedMsg, true);
 
-        //valida mensagem com xsd
-        //no caso do evento nao tem xsd organizado, esta fragmentado
-        //e por vezes incorreto por isso essa validação está desabilitada
 //        if (! $this->zValidMessage($signedMsg, 'cte', 'envEvento', $this->urlVersion)) {
 //            $msg = 'Falha na validação. '.$this->error;
 //            throw new Exception\RuntimeException($msg);
 //        }
 
+
         $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$signedMsg</cteDadosMsg>";
-        //envia a solicitação via SOAP
+
         $retorno = $this->oSoap->send(
             $this->urlService,
             $this->urlNamespace,

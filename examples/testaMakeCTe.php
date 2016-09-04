@@ -21,7 +21,7 @@ $chave = $cte->montaChave(
     $cnpj = $cteTools->aConfig['cnpj'],
     $mod = '57',
     $serie = '1',
-    $numero = '10',
+    $numero = '11',
     $tpEmis = '1',
     $cNF = '10');
 
