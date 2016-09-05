@@ -9,17 +9,11 @@ use NFePHP\CTe\Tools;
 $cteTools = new Tools('../config/config.json');
 
 $aResposta = array();
-$recibo = '431000010239157';
+$recibo = '431000010352300';
+//$recibo = '431000010352151';
 $tpAmb = '2';
 $retorno = $cteTools->sefazConsultaRecibo($recibo, $tpAmb, $aResposta);
-echo '<br><br><pre>';
-echo htmlspecialchars($cteTools->soapDebug);
-echo '</pre><br>';
-
-//foreach ($aResposta as $key => $value) {
-//    print_r($key . " = " . $value . "</br>");
-//}
-
-//print_r($aResposta);
-//print_r($retorno);
-echo "<br>";
+echo '<pre>';
+//echo htmlspecialchars($cteTools->soapDebug);
+print_r($aResposta);
+echo "</pre>";

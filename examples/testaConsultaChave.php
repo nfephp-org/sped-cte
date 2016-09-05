@@ -9,12 +9,12 @@ use NFePHP\CTe\Tools;
 $cteTools = new Tools('../config/config.json');
 
 $aResposta = array();
-$chave = '43160711004958000177570010000000101000000109';
+$chave = '43160911004958000177570010000000111000000103';
 $tpAmb = '2';
 $retorno = $cteTools->sefazConsultaChave($chave, $tpAmb, $aResposta);
-echo '<br><br><PRE>';
-echo htmlspecialchars($cteTools->soapDebug);
-echo '</PRE><BR>';
-//print_r($aResposta);
-print_r($retorno);
-echo "<br>";
+echo '<pre>';
+//echo htmlspecialchars($cteTools->soapDebug);
+print_r($aResposta);
+//print_r($retorno);
+echo '</pre>';
+

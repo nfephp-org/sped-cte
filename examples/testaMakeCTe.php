@@ -21,7 +21,7 @@ $chave = $cte->montaChave(
     $cnpj = $cteTools->aConfig['cnpj'],
     $mod = '57',
     $serie = '1',
-    $numero = '10',
+    $numero = '11',
     $tpEmis = '1',
     $cNF = '10');
 
@@ -39,7 +39,7 @@ $resp = $cte->ideTag(
     $forPag = '0',
     $mod = '57',
     $serie = '1',
-    $nCT = '10',
+    $nCT = '11',
     $dhEmi,
     $tpImp = '1',
     $tpEmis = '1',
@@ -195,7 +195,7 @@ $resp = $cte->infQTag(
 $resp = $cte->infDocTag();
 
 $resp = $cte->infNFeTag(
-    $chave = '43160472202112000136550000000010571048440722',
+    $pChave = '43160472202112000136550000000010571048440722',
     $PIN = '',
     $dPrev = '2016-06-30'
 );
@@ -217,13 +217,13 @@ $resp = $cte->rodoTag(
 
 $resp = $cte->montaCTe();
 
-$filename = "/Applications/XAMPP/xamppfiles/htdocs/projetos/sped-cte/xml/cte/{$chave}-cte.xml";
+$filename = "../xml/{$chave}-cte.xml";
 
 if ($resp) {
     //header('Content-type: text/xml; charset=UTF-8');
     $xml = $cte->getXML();
     file_put_contents($filename, $xml);
-    //chmod($filename, 0777);
+    chmod($filename, 0777);
     //echo $xml;
 } else {
     header('Content-type: text/html; charset=UTF-8');
@@ -235,21 +235,19 @@ if ($resp) {
 
 $xml = file_get_contents($filename);
 $xml = $cteTools->assina($xml);
-$filename = "/Applications/XAMPP/xamppfiles/htdocs/projetos/sped-cte/xml/cte/{$chave}-cte.xml";
+$filename = "../xml/{$chave}-cte.xml";
 file_put_contents($filename, $xml);
 //chmod($filename, 0777);
 //echo $xml;
 
-
-$retorno = array();
+$aRetorno = array();
 $tpAmb = '2';
 $idLote = '';
 $indSinc = '1';
 $flagZip = false;
 
-$retorno = $cteTools->sefazEnvia($xml, $tpAmb = '2', $idLote, $retorno, $indSinc, $flagZip);
-echo '<br><br><pre>';
-echo htmlspecialchars($cteTools->soapDebug);
-echo '</pre><br><br><pre>';
-print_r($retorno);
-echo "</pre><br>";
+$retorno = $cteTools->sefazEnvia($xml, $tpAmb = '2', $idLote, $aRetorno, $indSinc, $flagZip);
+echo '<pre>';
+//echo htmlspecialchars($cteTools->soapDebug);
+print_r($aRetorno);
+echo "</pre>";
