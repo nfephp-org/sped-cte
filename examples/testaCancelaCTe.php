@@ -9,9 +9,8 @@ use NFePHP\CTe\Tools;
 $cteTools = new Tools('../config/config.json');
 
 $aResposta = array();
-$chave = '43160911004958000177570010000000101000000106';
-$nProt = '431000008846409';
-
+$chave = '43160911004958000177570010000000111000000103';
+$nProt = '143160000453731';
 $tpAmb = '2';
 $xJust = 'testandohahahahhahahahahahhahahahhahaha';
 $retorno = $cteTools->sefazCancela($chave, $tpAmb, $xJust, $nProt, $aResposta);

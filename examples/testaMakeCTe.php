@@ -39,7 +39,7 @@ $resp = $cte->ideTag(
     $forPag = '0',
     $mod = '57',
     $serie = '1',
-    $nCT = '10',
+    $nCT = '11',
     $dhEmi,
     $tpImp = '1',
     $tpEmis = '1',
@@ -223,7 +223,7 @@ if ($resp) {
     //header('Content-type: text/xml; charset=UTF-8');
     $xml = $cte->getXML();
     file_put_contents($filename, $xml);
-    //chmod($filename, 0777);
+    chmod($filename, 0777);
     //echo $xml;
 } else {
     header('Content-type: text/html; charset=UTF-8');

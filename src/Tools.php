@@ -382,7 +382,8 @@ class Tools extends BaseTools
         $aliasEvento = $aRet['alias'];
         $descEvento = $aRet['desc'];
         $cnpj = $this->aConfig['cnpj'];
-        $dhEvento = (string) str_replace(' ', 'T', date('Y-m-d H:i:sP'));
+        $dhEvento = (string) str_replace(' ', 'T', date('Y-m-d H:i:s'));
+//        $dhEvento = (string) str_replace(' ', 'T', date('Y-m-d H:i:sP'));
         $sSeqEvento = str_pad($nSeqEvento, 2, "0", STR_PAD_LEFT);
         $eventId = "ID".$tpEvento.$chCTe.$sSeqEvento;
         $cOrgao = $this->urlcUF;
@@ -396,19 +397,21 @@ class Tools extends BaseTools
             . "<chCTe>$chCTe</chCTe>"
             . "<dhEvento>$dhEvento</dhEvento>"
             . "<tpEvento>$tpEvento</tpEvento>"
-            . "<nSeqEvento>$sSeqEvento</nSeqEvento>"
+            . "<nSeqEvento>$nSeqEvento</nSeqEvento>"
+            //. "<nSeqEvento>$sSeqEvento</nSeqEvento>"
             . "<detEvento versaoEvento=\"$this->urlVersion\">"
             . "$tagAdic"
             . "</detEvento>"
             . "</infEvento>";
 
         $cons = "<eventoCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
-        //$cons = "<eventoCTe versao=\"$this->urlVersion\">"
             . "$mensagem"
             . "</eventoCTe>";
 
-        $signedMsg = $this->oCertificate->signXML($cons, 'eventoCTe');
-        $signedMsg = Strings::clearXml($signedMsg, true);
+        $signedMsg = $this->oCertificate->signXML($cons, 'infEvento');
+        $signedMsg = preg_replace("/<\?xml.*\?>/", "", $signedMsg);
+
+        //$signedMsg = Strings::clearXml($signedMsg, true);
 
 //        if (! $this->zValidMessage($signedMsg, 'cte', 'envEvento', $this->urlVersion)) {
 //            $msg = 'Falha na validação. '.$this->error;
@@ -416,6 +419,11 @@ class Tools extends BaseTools
 //        }
 
 
+//        $filename = "../cancelamento.xml";
+//        $xml = file_get_contents($filename);
+
+
+        //$body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$xml</cteDadosMsg>";
         $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$signedMsg</cteDadosMsg>";
 
         $retorno = $this->oSoap->send(

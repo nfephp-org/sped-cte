@@ -9,7 +9,7 @@ use NFePHP\CTe\Tools;
 $cteTools = new Tools('../config/config.json');
 
 $aResposta = array();
-$recibo = '431000010352179';
+$recibo = '431000010352300';
 //$recibo = '431000010352151';
 $tpAmb = '2';
 $retorno = $cteTools->sefazConsultaRecibo($recibo, $tpAmb, $aResposta);
