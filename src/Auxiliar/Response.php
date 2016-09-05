@@ -444,7 +444,8 @@ class Response
             $aProt['verAplic'] = $infProt->getElementsByTagName('verAplic')->item(0)->nodeValue;
             $aProt['chCTe'] = $infProt->getElementsByTagName('chCTe')->item(0)->nodeValue;
             $aProt['dhRecbto'] = $infProt->getElementsByTagName('dhRecbto')->item(0)->nodeValue;
-            $aProt['nProt'] = $infProt->getElementsByTagName('nProt')->item(0)->nodeValue;
+            $aProt['nProt'] = isset($infProt->getElementsByTagName('nProt')->item(0)->nodeValue) ?
+                $infProt->getElementsByTagName('nProt')->item(0)->nodeValue : '';
             $aProt['digVal'] = $infProt->getElementsByTagName('digVal')->item(0)->nodeValue;
             $aProt['cStat'] = $infProt->getElementsByTagName('cStat')->item(0)->nodeValue;
             $aProt['xMotivo'] = $infProt->getElementsByTagName('xMotivo')->item(0)->nodeValue;
