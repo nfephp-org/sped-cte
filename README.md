@@ -2,9 +2,6 @@
 
 API para geração e comunicação das CTe com as SEFAZ autorizadoras.
 
-## APENAS EM DESENVOLVIMENTO !!
-
-Este pacote está em desenvolvimento, não é funcional e não deve ser utilizado para nada além de testes. 
 
 [![Build Status][ico-travis]][link-travis]
 [![Coverage Status][ico-scrutinizer]][link-scrutinizer]
@@ -24,7 +21,7 @@ Este pacote faz parte da API NFePHP e atende aos parâmetros das PSR2 e PSR4, be
 
 ## Install
 
-EM BREVE
+composer nfephp-org/sped-cte
 
 ## Change log
 
