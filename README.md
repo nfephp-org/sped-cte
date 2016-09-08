@@ -2,6 +2,7 @@
 
 API para geração e comunicação das CTe com as SEFAZ autorizadoras.
 
+*sped-nfse é um framework para geração CTe e eventos na comunicação com as SEFAZ autorizadoras.*
 
 [![Build Status][ico-travis]][link-travis]
 [![Coverage Status][ico-scrutinizer]][link-scrutinizer]
@@ -17,7 +18,7 @@ API para geração e comunicação das CTe com as SEFAZ autorizadoras.
 
 Este pacote visa fornecer os meios para gerar, assinar e anviar os dados relativos ao projeto Sped CTe.
 
-Este pacote faz parte da API NFePHP e atende aos parâmetros das PSR2 e PSR4, bem como é desenvolvida para de adequar as versões ATIVAS do PHP e aos layouts da NFe em vigor.
+Este pacote faz parte da API NFePHP e atende aos parâmetros das PSR2 e PSR4, bem como é desenvolvida para de adequar as versões ATIVAS do PHP e aos layouts da CTe em vigor.
 
 ## Install
 
@@ -42,6 +43,9 @@ Para contribuir por favor observe o [CONTRIBUTING](CONTRIBUTING.md) e o  [Códig
 Caso você encontre algum problema relativo a segurança, por favor envie um email diretamente aos mantenedores do pacote ao invés de abrir um ISSUE.
 
 ## Credits
+
+-Desenvolvimento Inicial - Roberto L. Machado <linux_rlm@gmail.com>
+-Demais colaboradores serão indicados oportunamente.
 
 ## License
 
