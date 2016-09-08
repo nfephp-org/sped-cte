@@ -44,8 +44,8 @@ Caso você encontre algum problema relativo a segurança, por favor envie um ema
 
 ## Credits
 
--Desenvolvimento Inicial - Roberto L. Machado <linux_rlm@gmail.com>
--Demais colaboradores serão indicados oportunamente.
+- Desenvolvimento Inicial - Roberto L. Machado <linux_rlm@gmail.com>
+- Demais colaboradores serão indicados oportunamente.
 
 ## License
 
