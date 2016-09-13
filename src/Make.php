@@ -1553,7 +1553,7 @@ class Make extends BaseMake
             $this->emit,
             'xFant',
             $xFant,
-            true,
+            false,
             $identificador . 'Nome fantasia'
         );
         return $this->emit;
@@ -1729,7 +1729,7 @@ class Make extends BaseMake
             $this->rem,
             'xFant',
             $xFant,
-            true,
+            false,
             $identificador . 'Nome fantasia'
         );
         $this->dom->addChild(
