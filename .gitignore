@@ -11,3 +11,4 @@ nbproject
 build
 composer.lock
 config.json
+.vscode/

@@ -352,9 +352,9 @@ class Response
                 $infInut->getElementsByTagName('serie')->item(0)->nodeValue : '';
             $aResposta['nCTIni'] = isset($infInut->getElementsByTagName('nCTIni')->item(0)->nodeValue) ?
                 $infInut->getElementsByTagName('nCTIni')->item(0)->nodeValue : '';
-            $aResposta['nCTFin'] = isset($infInut->getElementsByTagName('nCTFin')->item(0)->nodeValue) ? 
+            $aResposta['nCTFin'] = isset($infInut->getElementsByTagName('nCTFin')->item(0)->nodeValue) ?
                 $infInut->getElementsByTagName('nCTFin')->item(0)->nodeValue : '';
-            $aResposta['nProt'] = isset($infInut->getElementsByTagName('nProt')->item(0)->nodeValue) ? 
+            $aResposta['nProt'] = isset($infInut->getElementsByTagName('nProt')->item(0)->nodeValue) ?
                 $infInut->getElementsByTagName('nProt')->item(0)->nodeValue : '';
         }
         return $aResposta;
