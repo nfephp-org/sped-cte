@@ -309,11 +309,11 @@ class Tools extends BaseTools
     }
 
     public function sefazInutiliza(
-        $nSerie = '1', 
-        $nIni = '', 
-        $nFin = '', 
-        $xJust = '', 
-        $tpAmb = '2', 
+        $nSerie = '1',
+        $nIni = '',
+        $nFin = '',
+        $xJust = '',
+        $tpAmb = '2',
         &$aRetorno = array(),
         $salvarMensagens = true
     ) {
