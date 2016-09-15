@@ -447,6 +447,32 @@ class Tools extends BaseTools
         return $retorno;
     }
 
+    public function enviaMail($pathXml = '', $aMails = array(), $templateFile = '', $comPdf = false, $pathPdf = '')
+    {
+        $mail = new Mail($this->aMailConf);
+        // Se não for informado o caminho do PDF, monta um através do XML
+        /*
+        if ($comPdf && $this->modelo == '55' && $pathPdf == '') {
+            $docxml = Files\FilesFolders::readFile($pathXml);
+            $danfe = new Extras\Danfe($docxml, 'P', 'A4', $this->aDocFormat['pathLogoFile'], 'I', '');
+            $id = $danfe->montaDANFE();
+            $pathPdf = $this->aConfig['pathNFeFiles']
+                . DIRECTORY_SEPARATOR
+                . $this->ambiente
+                . DIRECTORY_SEPARATOR
+                . 'pdf'
+                . DIRECTORY_SEPARATOR
+                . $id . '-danfe.pdf';
+            $pdf = $danfe->printDANFE($pathPdf, 'F');
+        }
+         *
+         */
+        if ($mail->envia($pathXml, $aMails, $comPdf, $pathPdf) === false) {
+            throw new Exception\RuntimeException('Email não enviado. '.$mail->error);
+        }
+        return true;
+    }
+
     /**
      * zSefazEvento
      * @param string $siglaUF
