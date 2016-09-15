@@ -49,8 +49,8 @@ class Response
             case 'CteConsultaCT':
                 return self::zReadConsultaCT($dom);
                 break;
-            case 'CteInutilizacaoCT':
-                return self::zReadInutilizacaoCT($dom);
+            case 'CteInutilizacao':
+                return self::zReadInutilizacao($dom);
                 break;
             case 'CteStatusServico':
                 return self::zReadStatusServico($dom);
@@ -303,12 +303,12 @@ class Response
     }
     
     /**
-     * zReadInutilizacaoCT
+     * zReadInutilizacao
      *
      * @param  DOMDocument $dom
      * @return array
      */
-    protected static function zReadInutilizacaoCT($dom)
+    protected static function zReadInutilizacao($dom)
     {
         $aResposta = array(
             'bStat' => false,
@@ -340,14 +340,22 @@ class Response
         $aResposta['cUF'] = $tag->getElementsByTagName('cUF')->item(0)->nodeValue;
         $infInut = $tag->getElementsByTagName('infInut')->item(0);
         if (! empty($infInut)) {
-            $aResposta['dhRecbto'] = $infInut->getElementsByTagName('dhRecbto')->item(0)->nodeValue;
-            $aResposta['ano'] = $infInut->getElementsByTagName('ano')->item(0)->nodeValue;
-            $aResposta['CNPJ'] = $infInut->getElementsByTagName('CNPJ')->item(0)->nodeValue;
-            $aResposta['mod'] = $infInut->getElementsByTagName('mod')->item(0)->nodeValue;
-            $aResposta['serie'] = $infInut->getElementsByTagName('serie')->item(0)->nodeValue;
-            $aResposta['nCTIni'] = $infInut->getElementsByTagName('nCTIni')->item(0)->nodeValue;
-            $aResposta['nCTFin'] = $infInut->getElementsByTagName('nCTFin')->item(0)->nodeValue;
-            $aResposta['nProt'] = $infInut->getElementsByTagName('nProt')->item(0)->nodeValue;
+            $aResposta['dhRecbto'] = isset($infInut->getElementsByTagName('dhRecbto')->item(0)->nodeValue) ?
+                $infInut->getElementsByTagName('dhRecbto')->item(0)->nodeValue : '';
+            $aResposta['ano'] = isset($infInut->getElementsByTagName('ano')->item(0)->nodeValue) ?
+                $infInut->getElementsByTagName('ano')->item(0)->nodeValue : '';
+            $aResposta['CNPJ'] = isset($infInut->getElementsByTagName('CNPJ')->item(0)->nodeValue) ?
+                $infInut->getElementsByTagName('CNPJ')->item(0)->nodeValue : '';
+            $aResposta['mod'] = isset($infInut->getElementsByTagName('mod')->item(0)->nodeValue) ?
+                $infInut->getElementsByTagName('mod')->item(0)->nodeValue : '';
+            $aResposta['serie'] = isset($infInut->getElementsByTagName('serie')->item(0)->nodeValue) ?
+                $infInut->getElementsByTagName('serie')->item(0)->nodeValue : '';
+            $aResposta['nCTIni'] = isset($infInut->getElementsByTagName('nCTIni')->item(0)->nodeValue) ?
+                $infInut->getElementsByTagName('nCTIni')->item(0)->nodeValue : '';
+            $aResposta['nCTFin'] = isset($infInut->getElementsByTagName('nCTFin')->item(0)->nodeValue) ?
+                $infInut->getElementsByTagName('nCTFin')->item(0)->nodeValue : '';
+            $aResposta['nProt'] = isset($infInut->getElementsByTagName('nProt')->item(0)->nodeValue) ?
+                $infInut->getElementsByTagName('nProt')->item(0)->nodeValue : '';
         }
         return $aResposta;
     }

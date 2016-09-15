@@ -308,6 +308,110 @@ class Tools extends BaseTools
         return (string) $retorno;
     }
 
+    public function sefazInutiliza(
+        $nSerie = '1',
+        $nIni = '',
+        $nFin = '',
+        $xJust = '',
+        $tpAmb = '2',
+        &$aRetorno = array(),
+        $salvarMensagens = true
+    ) {
+        $nSerie = (integer) $nSerie;
+        $nIni = (integer) $nIni;
+        $nFin = (integer) $nFin;
+        $xJust = Strings::cleanString($xJust);
+        $this->zValidParamInut($xJust, $nSerie, $nIni, $nFin);
+        if ($tpAmb == '') {
+            $tpAmb = $this->aConfig['tpAmb'];
+        }
+        
+        // Identificação do serviço
+        $servico = 'CteInutilizacao';
+        //monta serviço
+        $siglaUF = $this->aConfig['siglaUF'];
+        //carrega serviço
+        $servico = 'CteInutilizacao';
+        $this->zLoadServico(
+            'cte',
+            $servico,
+            $siglaUF,
+            $tpAmb
+        );
+
+        if ($this->urlService == '') {
+            $msg = "A inutilização não está disponível na SEFAZ $siglaUF!!!";
+            throw new Exception\RuntimeException($msg);
+        }
+
+        //montagem dos dados da mensagem SOAP
+        $cnpj = $this->aConfig['cnpj'];
+        $sAno = (string) date('y');
+        $sSerie = str_pad($nSerie, 3, '0', STR_PAD_LEFT);
+        $sInicio = str_pad($nIni, 9, '0', STR_PAD_LEFT);
+        $sFinal = str_pad($nFin, 9, '0', STR_PAD_LEFT);
+
+        //limpa os caracteres indesejados da justificativa
+        $xJust = Strings::cleanString($xJust);
+
+        // Identificador da TAG a ser assinada formada com Código da UF +
+        // precedida do literal “ID”
+        // 41 posições
+        $id = 'ID'.$this->urlcUF.$cnpj.'57'.$sSerie.$sInicio.$sFinal;
+
+        // Montagem do corpo da mensagem
+        $dXML = "<inutCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
+            ."<infInut Id=\"$id\">"
+            ."<tpAmb>$tpAmb</tpAmb>"
+            ."<xServ>INUTILIZAR</xServ>"
+            ."<cUF>$this->urlcUF</cUF>"
+            ."<ano>$sAno</ano>"
+            ."<CNPJ>$cnpj</CNPJ>"
+            ."<mod>57</mod>"
+            ."<serie>$nSerie</serie>"
+            ."<nCTIni>$nIni</nCTIni>"
+            ."<nCTFin>$nFin</nCTFin>"
+            ."<xJust>$xJust</xJust>"
+            ."</infInut></inutCTe>";
+
+        //assina a solicitação de inutilização
+        $signedMsg = $this->oCertificate->signXML($dXML, 'infInut');
+        $signedMsg = Strings::clearXml($signedMsg, true);
+
+        $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$signedMsg</cteDadosMsg>";
+
+        //envia a solicitação via SOAP
+        $retorno = $this->oSoap->send(
+            $this->urlService,
+            $this->urlNamespace,
+            $this->urlHeader,
+            $body,
+            $this->urlMethod
+        );
+        $lastMsg = $this->oSoap->lastMsg;
+        $this->soapDebug = $this->oSoap->soapDebug;
+
+        //salva mensagens
+        if ($salvarMensagens) {
+            $filename = "$sAno-$this->modelo-$sSerie-".$sInicio."_".$sFinal."-inutCTe.xml";
+            $this->zGravaFile('cte', $tpAmb, $filename, $lastMsg);
+            $filename = "$sAno-$this->modelo-$sSerie-".$sInicio."_".$sFinal."-retInutCTe.xml";
+            $this->zGravaFile('cte', $tpAmb, $filename, $retorno);
+        }
+
+        //tratar dados de retorno
+        $aRetorno = Response::readReturnSefaz($servico, $retorno);
+        if ($aRetorno['cStat'] == '102') {
+            $retorno = $this->zAddProtMsg('ProcInutCTe', 'inutCTe', $signedMsg, 'retInutCTe', $retorno);
+            if ($salvarMensagens) {
+                $filename = "$sAno-$this->modelo-$sSerie-".$sInicio."_".$sFinal."-procInutCTe.xml";
+                $this->zGravaFile('cte', $tpAmb, $filename, $retorno, 'inutilizadas');
+            }
+        }
+
+        return (string) $retorno;
+    }
+
     public function sefazCancela($chCTe = '', $tpAmb = '2', $xJust = '', $nProt = '', &$aRetorno = array())
     {
         $chCTe = preg_replace('/[^0-9]/', '', $chCTe);
@@ -341,6 +445,32 @@ class Tools extends BaseTools
         $retorno = $this->zSefazEvento($siglaUF, $chCTe, $tpAmb, $tpEvento, $nSeqEvento, $tagAdic);
         $aRetorno = $this->aLastRetEvent;
         return $retorno;
+    }
+
+    public function enviaMail($pathXml = '', $aMails = array(), $templateFile = '', $comPdf = false, $pathPdf = '')
+    {
+        $mail = new Mail($this->aMailConf);
+        // Se não for informado o caminho do PDF, monta um através do XML
+        /*
+        if ($comPdf && $this->modelo == '55' && $pathPdf == '') {
+            $docxml = Files\FilesFolders::readFile($pathXml);
+            $danfe = new Extras\Danfe($docxml, 'P', 'A4', $this->aDocFormat['pathLogoFile'], 'I', '');
+            $id = $danfe->montaDANFE();
+            $pathPdf = $this->aConfig['pathNFeFiles']
+                . DIRECTORY_SEPARATOR
+                . $this->ambiente
+                . DIRECTORY_SEPARATOR
+                . 'pdf'
+                . DIRECTORY_SEPARATOR
+                . $id . '-danfe.pdf';
+            $pdf = $danfe->printDANFE($pathPdf, 'F');
+        }
+         *
+         */
+        if ($mail->envia($pathXml, $aMails, $comPdf, $pathPdf) === false) {
+            throw new Exception\RuntimeException('Email não enviado. '.$mail->error);
+        }
+        return true;
     }
 
     /**
@@ -463,6 +593,53 @@ class Tools extends BaseTools
     }
 
     /**
+     * zAddProtMsg
+     *
+     * @param  string $tagproc
+     * @param  string $tagmsg
+     * @param  string $xmlmsg
+     * @param  string $tagretorno
+     * @param  string $xmlretorno
+     * @return string
+     */
+    protected function zAddProtMsg($tagproc, $tagmsg, $xmlmsg, $tagretorno, $xmlretorno)
+    {
+        $doc = new Dom();
+        $doc->loadXMLString($xmlmsg);
+        $nodedoc = $doc->getNode($tagmsg, 0);
+        $procver = $nodedoc->getAttribute("versao");
+        $procns = $nodedoc->getAttribute("xmlns");
+
+        $doc1 = new Dom();
+        $doc1->loadXMLString($xmlretorno);
+        $nodedoc1 = $doc1->getNode($tagretorno, 0);
+
+        $proc = new \DOMDocument('1.0', 'utf-8');
+        $proc->formatOutput = false;
+        $proc->preserveWhiteSpace = false;
+        //cria a tag nfeProc
+        $procNode = $proc->createElement($tagproc);
+        $proc->appendChild($procNode);
+        //estabele o atributo de versão
+        $procNodeAtt1 = $procNode->appendChild($proc->createAttribute('versao'));
+        $procNodeAtt1->appendChild($proc->createTextNode($procver));
+        //estabelece o atributo xmlns
+        $procNodeAtt2 = $procNode->appendChild($proc->createAttribute('xmlns'));
+        $procNodeAtt2->appendChild($proc->createTextNode($procns));
+        //inclui a tag inutNFe
+        $node = $proc->importNode($nodedoc, true);
+        $procNode->appendChild($node);
+        //inclui a tag retInutNFe
+        $node = $proc->importNode($nodedoc1, true);
+        $procNode->appendChild($node);
+        //salva o xml como string em uma variável
+        $procXML = $proc->saveXML();
+        //remove as informações indesejadas
+        $procXML = Strings::clearProt($procXML);
+        return $procXML;
+    }
+
+    /**
      * zTpEv
      * @param string $tpEvento
      * @return array
@@ -528,6 +705,31 @@ class Tools extends BaseTools
                 throw new Exception\RuntimeException($msg);
         }
         return array('alias' => $aliasEvento, 'desc' => $descEvento);
+    }
+
+    private function zValidParamInut($xJust, $nSerie, $nIni, $nFin)
+    {
+        $msg = '';
+        $nL = strlen($xJust);
+
+        // Valida dos dados de entrada
+        if ($nIni == '' || $nFin == '' || $xJust == '') {
+            $msg = "Não foi passado algum dos parametos necessários"
+                    . "inicio=$nIni fim=$nFin justificativa=$xJust.";
+        } elseif (strlen($nSerie) == 0 || strlen($nSerie) > 3) {
+            $msg = "O campo serie está errado: $nSerie. Corrija e refaça o processo!!";
+        } elseif (strlen($nIni) < 1 || strlen($nIni) > 9) {
+            $msg = "O campo numero inicial está errado: $nIni. Corrija e refaça o processo!!";
+        } elseif (strlen($nFin) < 1 || strlen($nFin) > 9) {
+            $msg = "O campo numero final está errado: $nFin. Corrija e refaça o processo!!";
+        } elseif ($nL < 15 || $nL > 255) {
+            $msg = "A justificativa tem que ter entre 15 e 255 caracteres, encontrado $nL. "
+                . "Corrija e refaça o processo!!";
+        }
+
+        if ($msg != '') {
+            throw new Exception\InvalidArgumentException($msg);
+        }
     }
 
     /**
