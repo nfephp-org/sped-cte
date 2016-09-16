@@ -9,7 +9,7 @@ use NFePHP\CTe\Tools;
 $cteTools = new Tools('../config/config.json');
 
 $aResposta = array();
-$siglaUF = 'RS';
+$siglaUF = 'PR';
 $tpAmb = '2';
 $retorno = $cteTools->sefazStatus($siglaUF, $tpAmb, $aResposta);
 echo '<pre>';
