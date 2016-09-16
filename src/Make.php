@@ -2714,8 +2714,8 @@ class Make extends BaseMake
         $identificador = '#360 <seg> - ';
         $this->seg = $this->dom->createElement('seg');
         $this->dom->addChild($this->seg, 'respSeg', $respSeg, true, $identificador . 'Responsável pelo Seguro');
-        $this->dom->addChild($this->seg, 'xSeg', $xSeg, true, $identificador . 'Nome do Responsavel');
-        $this->dom->addChild($this->seg, 'nApol', $nApol, true, $identificador . 'Valor do seguro');
+        $this->dom->addChild($this->seg, 'xSeg', $xSeg, false, $identificador . 'Nome do Responsavel');
+        $this->dom->addChild($this->seg, 'nApol', $nApol, false, $identificador . 'Valor do seguro');
         return $this->seg;
     }
 
