@@ -236,7 +236,8 @@ class Response
             'verAplic' => '',
             'cStat' => '',
             'xMotivo' => '',
-            'cUF' => ''
+            'cUF' => '',
+            'aProt' => array()
         );
         $tag = $dom->getElementsByTagName('retConsSitCTe')->item(0);
         if (! isset($tag)) {
@@ -249,7 +250,8 @@ class Response
             'verAplic' => $tag->getElementsByTagName('verAplic')->item(0)->nodeValue,
             'cStat' => $tag->getElementsByTagName('cStat')->item(0)->nodeValue,
             'xMotivo' => $tag->getElementsByTagName('xMotivo')->item(0)->nodeValue,
-            'cUF' => $tag->getElementsByTagName('tpAmb')->item(0)->nodeValue
+            'cUF' => $tag->getElementsByTagName('tpAmb')->item(0)->nodeValue,
+            'aProt' => self::zGetProt($tag)
         );
         return $aResposta;
     }
