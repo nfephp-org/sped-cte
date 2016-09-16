@@ -9,7 +9,7 @@ use NFePHP\CTe\Tools;
 $cteTools = new Tools('../config/config.json');
 
 $aResposta = array();
-$chave = '43160911004958000177570010000000111000000103';
+$chave = '41160981450900000132570020000000581000000108';
 $tpAmb = '2';
 $retorno = $cteTools->sefazConsultaChave($chave, $tpAmb, $aResposta);
 echo '<pre>';

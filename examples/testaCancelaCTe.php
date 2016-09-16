@@ -9,10 +9,10 @@ use NFePHP\CTe\Tools;
 $cteTools = new Tools('../config/config.json');
 
 $aResposta = array();
-$chave = '43160911004958000177570010000000111000000103';
-$nProt = '143160000453731';
+$chave = '41160981450900000132570020000000581000000108';
+$nProt = '141160000041280';
 $tpAmb = '2';
-$xJust = 'testandohahahahhahahahahahhahahahhahaha';
+$xJust = 'teste da BTR feito por Maison e Marcio'; // MINIMO DE 15 DIGITOS
 $retorno = $cteTools->sefazCancela($chave, $tpAmb, $xJust, $nProt, $aResposta);
 echo '<pre>';
 //echo htmlspecialchars($cteTools->soapDebug);
