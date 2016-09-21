@@ -2693,9 +2693,11 @@ class Make extends BaseMake
         $identificador = '#262 <infNFe> - ';
         $this->infNFe[] = $this->dom->createElement('infNFe');
         $posicao = (integer) count($this->infNFe) - 1;
-        $this->dom->addChild($this->infNFe[$posicao], 'chave', $chave, true, $identificador . 'Chave de acesso da NF-e');
+        $this->dom->addChild($this->infNFe[$posicao], 'chave', $chave, true, $identificador . 'Chave de acesso 
+            da NF-e');
         $this->dom->addChild($this->infNFe[$posicao], 'PIN', $PIN, false, $identificador . 'PIN SUFRAMA');
-        $this->dom->addChild($this->infNFe[$posicao], 'dPrev', $dPrev, false, $identificador . 'Data prevista de entrega');
+        $this->dom->addChild($this->infNFe[$posicao], 'dPrev', $dPrev, false, $identificador . 'Data prevista de 
+            entrega');
 
         return $this->infNFe[$posicao];
     }
