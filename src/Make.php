@@ -510,7 +510,7 @@ class Make extends BaseMake
         $this->dom->appChild($this->emit, $this->enderEmit, 'Falta tag "emit"');
         $this->dom->appChild($this->infCte, $this->emit, 'Falta tag "infCte"');
         if ($this->rem != '') {
-        //    $this->dom->appChild($this->rem, $this->enderReme, 'Falta tag "rem"');
+            //    $this->dom->appChild($this->rem, $this->enderReme, 'Falta tag "rem"');
             $this->dom->appChild($this->infCte, $this->rem, 'Falta tag "infCte"');
         }
         if ($this->exped != '') {
@@ -522,7 +522,7 @@ class Make extends BaseMake
             $this->dom->appChild($this->infCte, $this->receb, 'Falta tag "infCte"');
         }
         if ($this->dest != '') {
-        //    $this->dom->appChild($this->dest, $this->enderDest, 'Falta tag "dest"');
+            //    $this->dom->appChild($this->dest, $this->enderDest, 'Falta tag "dest"');
             $this->dom->appChild($this->infCte, $this->dest, 'Falta tag "infCte"');
         }
         foreach ($this->comp as $comp) {
@@ -534,7 +534,10 @@ class Make extends BaseMake
         $this->dom->appChild($this->infCTeNorm, $this->infCarga, 'Falta tag "infCarga"');
         $this->dom->appChild($this->infCarga, $this->infQ, 'Falta tag "infQ"');
         $this->dom->appChild($this->infCTeNorm, $this->infDoc, 'Falta tag "infDoc"');
-        $this->dom->appChild($this->infDoc, $this->infNFe, 'Falta tag "infNFe"');
+
+        foreach ($this->infNFe as $infNFe) {
+            $this->dom->appChild($this->infDoc, $infNFe, 'Falta tag "infNFe"');
+        }
 
         $this->dom->appChild($this->infCTeNorm, $this->seg, 'Falta tag "seg"');
         $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
@@ -2701,12 +2704,15 @@ class Make extends BaseMake
     public function infNFeTag($chave = '', $PIN = '', $dPrev = '')
     {
         $identificador = '#262 <infNFe> - ';
-        $this->infNFe = $this->dom->createElement('infNFe');
-        $this->dom->addChild($this->infNFe, 'chave', $chave, true, $identificador . 'Chave de acesso da NF-e');
-        $this->dom->addChild($this->infNFe, 'PIN', $PIN, false, $identificador . 'PIN SUFRAMA');
-        $this->dom->addChild($this->infNFe, 'dPrev', $dPrev, false, $identificador . 'Data prevista de entrega');
+        $this->infNFe[] = $this->dom->createElement('infNFe');
+        $posicao = (integer) count($this->infNFe) - 1;
+        $this->dom->addChild($this->infNFe[$posicao], 'chave', $chave, true, $identificador . 'Chave de acesso 
+            da NF-e');
+        $this->dom->addChild($this->infNFe[$posicao], 'PIN', $PIN, false, $identificador . 'PIN SUFRAMA');
+        $this->dom->addChild($this->infNFe[$posicao], 'dPrev', $dPrev, false, $identificador . 'Data prevista de 
+            entrega');
 
-        return $this->infNFe;
+        return $this->infNFe[$posicao];
     }
 
     public function segTag($respSeg = 4, $xSeg = '', $nApol = '')
