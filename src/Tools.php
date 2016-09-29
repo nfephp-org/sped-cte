@@ -567,12 +567,12 @@ class Tools extends BaseTools
     }
     
     public function sefazInutiliza(
-        $nAno = '', 
-        $nSerie = '1', 
-        $nIni = '', 
-        $nFin = '', 
-        $xJust = '', 
-        $tpAmb = '2', 
+        $nAno = '',
+        $nSerie = '1',
+        $nIni = '',
+        $nFin = '',
+        $xJust = '',
+        $tpAmb = '2',
         &$aRetorno = array()
     ) {
         // Variavel de retorno do metodo
@@ -628,9 +628,9 @@ class Tools extends BaseTools
         // 43 posições
         //     2      4       6       20      22    25       34      43
         //     2      2       2       14       2     3        9       9
-        $id = 'ID' . $this->urlcUF .  $cnpj . '57' . 
-                str_pad($nSerie, 3, '0', STR_PAD_LEFT) . 
-                str_pad($nIni, 9, '0', STR_PAD_LEFT) . 
+        $id = 'ID' . $this->urlcUF .  $cnpj . '57' .
+                str_pad($nSerie, 3, '0', STR_PAD_LEFT) .
+                str_pad($nIni, 9, '0', STR_PAD_LEFT) .
                 str_pad($nFin, 9, '0', STR_PAD_LEFT);
         
         // Montagem do corpo da mensagem
