@@ -18,10 +18,9 @@ $xJust = 'teste de Inutilizacao em ambiente de homologacao(teste)'; // MINIMO DE
 
 $cteTools->aConfig['cnpj']='81450900000132'; // CNPJ DA EMPRESA SERA USADO DENTRO DA CLASSE
 $cteTools->aConfig['siglaUF']='PR';
-$retorno = $cteTools->sefazInutiliza($ano, $serie, $inicio, $fim, $xJust,$tpAmb,$aResposta);
+$retorno = $cteTools->sefazInutiliza($ano, $serie, $inicio, $fim, $xJust, $tpAmb, $aResposta);
 echo '<pre>';
 echo htmlspecialchars($cteTools->soapDebug);
 //print_r($aResposta);
 print_r($retorno);
 echo "</pre>";
-?>

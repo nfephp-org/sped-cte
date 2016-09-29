@@ -564,10 +564,10 @@ class Tools extends BaseTools
             return false;
         }
         return true;
-    }        
+    }
     
-    public function sefazInutiliza($nAno = '', $nSerie = '1', $nIni = '', $nFin = '', $xJust = '',$tpAmb='2', &$aRetorno = array())
-    {     
+    public function sefazInutiliza($nAno = '', $nSerie = '1', $nIni = '', $nFin = '', $xJust = '', $tpAmb = '2', &$aRetorno = array())
+    {
         // Variavel de retorno do metodo
         $aRetorno = array (
             'bStat' => false,
@@ -592,24 +592,24 @@ class Tools extends BaseTools
         if ($this->urlService == '') {
             $msg = "A recepção de eventos não está disponível na SEFAZ $siglaUF!!!";
             throw new Exception\RuntimeException($msg);
-        }                                
+        }
         if (strlen($nAno) != 2) {
             $msg = "Informe o ano com 2 digitos";
             throw new Exception\InvalidArgumentException($msg);
-        }        
-        if (strlen($nSerie) == 0 || strlen($nSerie) > 3) {            
+        }
+        if (strlen($nSerie) == 0 || strlen($nSerie) > 3) {
             $msg = "O campo serie está errado: $nSerie. usar 3 digitos";
             throw new Exception\InvalidArgumentException($msg);
-        }        
-        if (strlen($nIni) < 1 || strlen($nIni) > 9) {                        
+        }
+        if (strlen($nIni) < 1 || strlen($nIni) > 9) {
             $msg = "O campo numero inicial está errado: $nIni. Corrija e refaça o processo!!";
             throw new Exception\InvalidArgumentException($msg);
-        }        
-        if (strlen($nFin) < 1 || strlen($nFin) > 9) {            
+        }
+        if (strlen($nFin) < 1 || strlen($nFin) > 9) {
             $msg = "O campo numero final está errado: $nFin. Corrija e refaça o processo!!";
             throw new Exception\InvalidArgumentException($msg);
-        }                
-        if (strlen($xJust) < 15 || strlen($xJust) > 255) {            
+        }
+        if (strlen($xJust) < 15 || strlen($xJust) > 255) {
             $msg = "O campo justificativa deve ter no minimo 15 chars e no maximo 255, verifique!";
             throw new Exception\InvalidArgumentException($msg);
         }
@@ -629,14 +629,14 @@ class Tools extends BaseTools
         $dXML .= '<xServ>INUTILIZAR</xServ>';
         $dXML .= '<cUF>' . $this->urlcUF . '</cUF>';
         $dXML .= '<ano>' . $nAno . '</ano>';
-        $dXML .= '<CNPJ>' . $cnpj . '</CNPJ>';        
+        $dXML .= '<CNPJ>' . $cnpj . '</CNPJ>';
         $dXML .= '<mod>57</mod>';
         $dXML .= '<serie>' . $nSerie . '</serie>';
         $dXML .= '<nCTIni>' . $nIni . '</nCTIni>';
         $dXML .= '<nCTFin>' . $nFin . '</nCTFin>';
         $dXML .= '<xJust>' . $xJust . '</xJust>';
         $dXML .= '</infInut>';
-        $dXML .= '</inutCTe>';        
+        $dXML .= '</inutCTe>';
         
         // Assina a lsolicitação de inutilização
         $dXML = $this->oCertificate->signXML($dXML, 'infInut');
@@ -660,6 +660,6 @@ class Tools extends BaseTools
         $lastMsg = $this->oSoap->lastMsg;
         $this->soapDebug = $this->oSoap->soapDebug;
         $aRetorno = Response::readReturnSefaz($this->urlOperation, $retorno);
-        return (string) $retorno;           
+        return (string) $retorno;
     }
 }
