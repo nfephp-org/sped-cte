@@ -566,8 +566,15 @@ class Tools extends BaseTools
         return true;
     }
     
-    public function sefazInutiliza($nAno = '', $nSerie = '1', $nIni = '', $nFin = '', $xJust = '', $tpAmb = '2', &$aRetorno = array())
-    {
+    public function sefazInutiliza(
+        $nAno = '', 
+        $nSerie = '1', 
+        $nIni = '', 
+        $nFin = '', 
+        $xJust = '', 
+        $tpAmb = '2', 
+        &$aRetorno = array()
+    ) {
         // Variavel de retorno do metodo
         $aRetorno = array (
             'bStat' => false,
@@ -578,7 +585,8 @@ class Tools extends BaseTools
         // Valida dos dados de entrada
         if ($nAno == '' || $nIni == '' || $nFin == '' || $xJust == '') {
             $this->errStatus = true;
-            $this->errMsg = "Não foi passado algum dos parametos necessários ANO=$nAno inicio=$nIni fim=$nFin justificativa=$xJust.";
+            $this->errMsg = "Não foi passado algum dos parametos necessários "
+                    . "ANO=$nAno inicio=$nIni fim=$nFin justificativa=$xJust.";
             return false;
         }
         
@@ -587,7 +595,7 @@ class Tools extends BaseTools
         $this->urlOperation = 'CteInutilizacao';
         
         $this->zLoadServico('cte', 'CteInutilizacao', $siglaUF, $tpAmb);
-        //$aURL = $this->loadSEFAZ($this->raizDir . 'config' . DIRECTORY_SEPARATOR . "cte_ws2.xml", $this->tpAmb, 'SCAN');
+        
         
         if ($this->urlService == '') {
             $msg = "A recepção de eventos não está disponível na SEFAZ $siglaUF!!!";
@@ -620,7 +628,10 @@ class Tools extends BaseTools
         // 43 posições
         //     2      4       6       20      22    25       34      43
         //     2      2       2       14       2     3        9       9
-        $id = 'ID' . $this->urlcUF .  $cnpj . '57' . str_pad($nSerie, 3, '0', STR_PAD_LEFT) . str_pad($nIni, 9, '0', STR_PAD_LEFT) . str_pad($nFin, 9, '0', STR_PAD_LEFT);
+        $id = 'ID' . $this->urlcUF .  $cnpj . '57' . 
+                str_pad($nSerie, 3, '0', STR_PAD_LEFT) . 
+                str_pad($nIni, 9, '0', STR_PAD_LEFT) . 
+                str_pad($nFin, 9, '0', STR_PAD_LEFT);
         
         // Montagem do corpo da mensagem
         $dXML = '<inutCTe xmlns="' . $this->urlPortal . '" versao="' . $this->urlVersion . '">';
