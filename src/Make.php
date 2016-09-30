@@ -2510,7 +2510,8 @@ class Make extends BaseMake
         $vICMS = '',
         $vBCSTRet = '',
         $vICMSSTRet = '',
-        $pICMSSTRet = ''
+        $pICMSSTRet = '',
+        $vCred = ''
     ) {
         $identificador = 'N01 <ICMSxx> - ';
         switch ($cst) {
@@ -2529,34 +2530,25 @@ class Make extends BaseMake
                 $this->dom->addChild($icms, 'pICMS', $pICMS, true, "$identificador  Alíquota do imposto");
                 $this->dom->addChild($icms, 'vICMS', $vICMS, true, "$identificador  Valor do ICMS");
                 break;
-            case '45':
+            case '40':
                 $icms = $this->dom->createElement("ICMS45");
-                $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 30");
+                $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 40");
+                break;
+            case '41':
+                $icms = $this->dom->createElement("ICMS45");
+                $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 41");
+                break;
+            case '51':
+                $icms = $this->dom->createElement("ICMS45");
+                $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 51");
                 break;
             case '60':
                 $icms = $this->dom->createElement("ICMS60");
                 $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 60");
-                $this->dom->addChild(
-                    $icms,
-                    'vBCSTRet',
-                    $vBCSTRet,
-                    false,
-                    "$identificador  Valor da BC do ICMS ST retido"
-                );
-                $this->dom->addChild(
-                    $icms,
-                    'vICMSSTRet',
-                    $vICMSSTRet,
-                    false,
-                    "$identificador  Valor do ICMS ST retido"
-                );
-                $this->dom->addChild(
-                    $icms,
-                    'pICMSSTRet',
-                    $pICMSSTRet,
-                    false,
-                    "$identificador  Valor do ICMS ST retido"
-                );
+                $this->dom->addChild($icms, 'vBCSTRet', $vBCSTRet, true, "$identificador  Valor BC ICMS ST retido");
+                $this->dom->addChild($icms, 'vICMSSTRet', $vICMSSTRet, true, "$identificador  Valor ICMS ST retido");
+                $this->dom->addChild($icms, 'pICMSSTRet', $pICMSSTRet, true, "$identificador  Valor ICMS ST retido");
+                $this->dom->addChild($icms, 'vCred', $vCred, false, "$identificador  Valor do Crédito");
                 break;
             case '90':
                 $icms = $this->dom->createElement("ICMS90");
@@ -2565,6 +2557,11 @@ class Make extends BaseMake
                 $this->dom->addChild($icms, 'vBC', $vBC, true, "$identificador  Valor da BC do ICMS");
                 $this->dom->addChild($icms, 'pICMS', $pICMS, true, "$identificador  Alíquota do imposto");
                 $this->dom->addChild($icms, 'vICMS', $vICMS, true, "$identificador  Valor do ICMS");
+                $this->dom->addChild($icms, 'vCred', $vCred, false, "$identificador  Valor do Crédido");
+                break;
+            case 'SN':
+                $icms = $this->dom->createElement("ICMSSN");
+                $this->dom->addChild($icms, 'indSN', '1', true, "$identificador  Indica se contribuinte é SN");
                 break;
         }
         $this->imp = $this->dom->createElement('imp');
