@@ -11,11 +11,11 @@ namespace NFePHP\CTe;
  * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
  * @author     Roberto L. Machado <linux.rlm at gmail dot com>
  * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
- * 
+ *
  *        CONTRIBUIDORES (em ordem alfabetica):
  *
  *          Maison K. Sakamoto <maison.sakamoto at gmail do com>
- */ 
+ */
 
 use NFePHP\Common\Certificate\Pkcs12;
 use NFePHP\Common\DateTime\DateTime;
@@ -461,9 +461,9 @@ class BaseTools
         $this->urlcUF = $this->getcUF($siglaUF);
         $pathXmlUrlFile = $this->zGetXmlUrlPath($tipo);
         
-        if ($this->enableSVCAN) {                   
+        if ($this->enableSVCAN) {
             $aURL = self::zLoadSEFAZ($pathXmlUrlFile, $tpAmb, 'SVCAN');
-        } elseif ($this->enableSVCRS) {            
+        } elseif ($this->enableSVCRS) {
             $aURL = self::zLoadSEFAZ($pathXmlUrlFile, $tpAmb, 'SVCRS');
         } else {
             $aURL = self::zLoadSEFAZ($pathXmlUrlFile, $tpAmb, $siglaUF, $tipo);
@@ -473,7 +473,7 @@ class BaseTools
         //recuperação da url do serviço
         $this->urlService = $aURL[$service]['URL'];
         //recuperação do método
-        $this->urlMethod = $aURL[$service]['method'];        
+        $this->urlMethod = $aURL[$service]['method'];
         //montagem do namespace do serviço
         $this->urlOperation = $aURL[$service]['operation'];
         //montagem do namespace do serviço
@@ -500,7 +500,7 @@ class BaseTools
             } else {
                 $path = str_replace('65', '55', $path);
             }
-        } elseif ($tipo == 'cte') {            
+        } elseif ($tipo == 'cte') {
             $path = $this->aConfig['pathXmlUrlFileCTe'];
         } elseif ($tipo == 'mdfe') {
             $path = $this->aConfig['pathXmlUrlFileMDFe'];
@@ -704,7 +704,7 @@ class BaseTools
         if ($alias == 'SVAN' || $alias == 'SVRS') {
             $xpathExpression = "/WS/UF[sigla='$siglaUF']/$sAmbiente";
             $aUrl = $this->zExtractUrl($xmlWS, $aUrl, $xpathExpression);
-        }        
+        }
         return $aUrl;
     }
     
