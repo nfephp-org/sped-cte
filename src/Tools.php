@@ -673,5 +673,5 @@ class Tools extends BaseTools
         $this->soapDebug = $this->oSoap->soapDebug;
         $aRetorno = Response::readReturnSefaz($this->urlOperation, $retorno);
         return (string) $retorno;
-    }            
+    }
 }
