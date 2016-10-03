@@ -45,8 +45,8 @@ class Tools extends BaseTools
      */
     public $erros = array();
     
-    protected $modelo = '65';
-
+    protected $modelo = '57';
+    
     public function printCTe()
     {
     }
@@ -75,7 +75,6 @@ class Tools extends BaseTools
         $indSinc = 0,
         $compactarZip = false
     ) {
-        $this->modelo = '65';
         $sxml = $aXml;
         if (empty($aXml)) {
             $msg = "Pelo menos uma NFe deve ser informada.";
@@ -90,7 +89,7 @@ class Tools extends BaseTools
         }
         $sxml = preg_replace("/<\?xml.*\?>/", "", $sxml);
         $siglaUF = $this->aConfig['siglaUF'];
-
+        
         if ($tpAmb == '') {
             $tpAmb = $this->aConfig['tpAmb'];
         }
@@ -105,12 +104,12 @@ class Tools extends BaseTools
             $siglaUF,
             $tpAmb
         );
-
+        
         if ($this->urlService == '') {
             $msg = "O envio de lote não está disponível na SEFAZ $siglaUF!!!";
             throw new Exception\RuntimeException($msg);
         }
-
+        
         // Montagem dos dados da mensagem SOAP
         $dados = "<cteDadosMsg xmlns=\"$this->urlNamespace\">"
             . "<enviCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
@@ -118,7 +117,7 @@ class Tools extends BaseTools
             . "$sxml"
             . "</enviCTe>"
             . "</cteDadosMsg>";
-
+        
         // Envia dados via SOAP
         $retorno = $this->oSoap->send(
             $this->urlService,
@@ -182,6 +181,7 @@ class Tools extends BaseTools
         //}
         //montagem dos dados da mensagem SOAP
         $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$cons</cteDadosMsg>";
+             
         //envia a solicitação via SOAP
         $retorno = $this->oSoap->send(
             $this->urlService,
@@ -672,5 +672,291 @@ class Tools extends BaseTools
         $this->soapDebug = $this->oSoap->soapDebug;
         $aRetorno = Response::readReturnSefaz($this->urlOperation, $retorno);
         return (string) $retorno;
+    }
+        
+    /**
+     * Maison K. Sakamoto
+     * Sobrecarga de metodos da Classe BaseTools.php,
+     * NOTA: necessario pois por hora não é possível fazer o commit do projeto
+     * diretamente na Classe BaseTools.php
+     * @param string $tipo
+     * @param string $service
+     * @param string $siglaUF
+     * @param string $tpAmb
+     * @return boolean
+     */
+    protected function zLoadServico(
+        $tipo,
+        $service,
+        $siglaUF,
+        $tpAmb
+    ) {
+        if (empty($tipo) || empty($service) || empty($siglaUF)) {
+            $this->urlVersion = '';
+            $this->urlService = '';
+            $this->urlMethod = '';
+            $this->urlOperation = '';
+            $this->urlNamespace = '';
+            $this->urlHeader = '';
+            return false;
+        }
+        
+        $this->urlcUF = $this->getcUF($siglaUF);
+        $pathXmlUrlFile = $this->zGetXmlUrlPath($tipo);
+        
+        if ($this->enableSVCAN) {
+            $aURL = self::zLoadSEFAZ($pathXmlUrlFile, $tpAmb, 'SVCAN');
+        } elseif ($this->enableSVCRS) {
+            $aURL = self::zLoadSEFAZ($pathXmlUrlFile, $tpAmb, 'SVCRS');
+        } else {
+            $aURL = self::zLoadSEFAZ($pathXmlUrlFile, $tpAmb, $siglaUF, $tipo);
+        }
+        
+        //recuperação da versão
+        $this->urlVersion = $aURL[$service]['version'];
+        //recuperação da url do serviço
+        $this->urlService = $aURL[$service]['URL'];
+        //recuperação do método
+        $this->urlMethod = $aURL[$service]['method'];
+        //recuperação do operation
+        $this->urlOperation = $aURL[$service]['operation'];
+        //montagem do namespace do serviço
+        $this->urlNamespace = sprintf("%s/wsdl/%s", $this->urlPortal, $this->urlOperation);
+                
+        //montagem do cabeçalho da comunicação SOAP
+        $this->urlHeader = $this->zMountHeader($tipo, $this->urlNamespace, $this->urlcUF, $this->urlVersion);
+       
+        return true;
+    }
+    
+    /**
+     * Maison K. Sakamoto
+     * Sobrecarga de metodos da Classe BaseTools.php,
+     * NOTA: necessario pois por hora não é possível fazer o commit do projeto
+     * diretamente na Classe BaseTools.php
+     *
+     * @param type $tipo
+     * @return string
+     */
+    protected function zGetXmlUrlPath($tipo)
+    {
+        $path = '';
+        if ($tipo == 'nfe') {
+            $path = $this->aConfig['pathXmlUrlFileNFe'];
+            if ($this->modelo == '65') {
+                $path = str_replace('55', '65', $path);
+            } else {
+                $path = str_replace('65', '55', $path);
+            }
+        } elseif ($tipo == 'cte') {
+            $path = $this->aConfig['pathXmlUrlFileCTe'];
+        } elseif ($tipo == 'mdfe') {
+            $path = $this->aConfig['pathXmlUrlFileMDFe'];
+        } elseif ($tipo == 'cle') {
+            $path = $this->aConfig['pathXmlUrlFileCLe'];
+        }
+        
+        $pathXmlUrlFile = NFEPHP_ROOT
+            . DIRECTORY_SEPARATOR
+            . 'config'
+            . DIRECTORY_SEPARATOR
+            . $path;
+        
+        return $pathXmlUrlFile;
+    }
+    
+    /**
+     * Maison K. Sakamoto
+     * Sobrecarga de metodos da Classe BaseTools.php,
+     * NOTA: necessario pois por hora não é possível fazer o commit do projeto
+     * diretamente na Classe BaseTools.php
+     *
+     * @param type $tipo
+     * @param type $namespace
+     * @param type $cUF
+     * @param type $version
+     * @return string
+     */
+    protected function zMountHeader($tipo, $namespace, $cUF, $version)
+    {
+        $header = '';
+        if ($tipo == 'nfe') {
+            $header = "<nfeCabecMsg "
+                . "xmlns=\"$namespace\">"
+                . "<cUF>$cUF</cUF>"
+                . "<versaoDados>$version</versaoDados>"
+                . "</nfeCabecMsg>";
+        } elseif ($tipo == 'cte') {
+            $header = "<cteCabecMsg "
+                . "xmlns=\"$namespace\">"
+                . "<cUF>$cUF</cUF>"
+                . "<versaoDados>$version</versaoDados>"
+                . "</cteCabecMsg>";
+        } elseif ($tipo == 'mdfe') {
+            $header = "<mdfeCabecMsg "
+                . "xmlns=\"$namespace\">"
+                . "<cUF>$cUF</cUF>"
+                . "<versaoDados>$version</versaoDados>"
+                . "</mdfeCabecMsg>";
+        }
+        return $header;
+    }
+    
+    /**
+     * Maison K. Sakamoto
+     * Sobrecarga de metodos da Classe BaseTools.php,
+     * NOTA: necessario pois por hora não é possível fazer o commit do projeto
+     * diretamente na Classe BaseTools.php
+     *
+     * @param type $pathXmlUrlFile
+     * @param type $tpAmb
+     * @param type $siglaUF
+     * @param type $tipo
+     * @return type
+     * @throws Exception\RuntimeException
+     */
+    protected function zLoadSEFAZ($pathXmlUrlFile = '', $tpAmb = '2', $siglaUF = 'SP', $tipo = 'nfe')
+    {
+        //verifica se o arquivo xml pode ser encontrado no caminho indicado
+        if (! file_exists($pathXmlUrlFile)) {
+            throw new Exception\RuntimeException(
+                "Arquivo $pathXmlUrlFile não encontrado."
+            );
+        }
+        //carrega o xml
+        if (!$xmlWS = simplexml_load_file($pathXmlUrlFile)) {
+            throw new Exception\RuntimeException(
+                "Arquivo $pathXmlUrlFile parece ser invalido ou está corrompido."
+            );
+        }
+        $autorizadores = array();
+        $autorizadores['65'] = array(
+            'AC'=>'SVRS',
+            'AL'=>'SVRS',
+            'AM'=>'AM',
+            'AN'=>'AN',
+            'AP'=>'SVRS',
+            'BA'=>'SVRS',
+            'CE'=>'CE',
+            'DF'=>'SVRS',
+            'ES'=>'SVRS',
+            'GO'=>'SVRS',
+            'MA'=>'SVRS',
+            'MG'=>'MG',
+            'MS'=>'MS',
+            'MT'=>'MT',
+            'PA'=>'SVRS',
+            'PB'=>'SVRS',
+            'PE'=>'PE',
+            'PI'=>'SVRS',
+            'PR'=>'PR',
+            'RJ'=>'SVRS',
+            'RN'=>'SVRS',
+            'RO'=>'SVRS',
+            'RR'=>'SVRS',
+            'RS'=>'RS',
+            'SC'=>'SVRS',
+            'SE'=>'SVRS',
+            'SP'=>'SP',
+            'TO'=>'SVRS',
+            'SVAN'=>'SVAN',
+            'SVRS'=>'SVRS',
+            'SVCAN'=>'SVCAN',
+        );
+        
+        $autorizadores['55'] = array(
+            'AC'=>'SVRS',
+            'AL'=>'SVRS',
+            'AM'=>'AM',
+            'AN'=>'AN',
+            'AP'=>'SVRS',
+            'BA'=>'BA',
+            'CE'=>'CE',
+            'DF'=>'SVRS',
+            'ES'=>'SVRS',
+            'GO'=>'GO',
+            'MA'=>'SVAN',
+            'MG'=>'MG',
+            'MS'=>'MS',
+            'MT'=>'MT',
+            'PA'=>'SVAN',
+            'PB'=>'SVRS',
+            'PE'=>'PE',
+            'PI'=>'SVAN',
+            'PR'=>'PR',
+            'RJ'=>'SVRS',
+            'RN'=>'SVRS',
+            'RO'=>'SVRS',
+            'RR'=>'SVRS',
+            'RS'=>'RS',
+            'SC'=>'SVRS',
+            'SE'=>'SVRS',
+            'SP'=>'SP',
+            'TO'=>'SVRS',
+            'SVAN'=>'SVAN',
+            'SVRS'=>'SVRS',
+            'SVCAN'=>'SVCAN',
+            'SVCRS'=>'SVCRS'
+        );
+        
+        //Estados que utilizam a SVSP - Sefaz Virtual de São Paulo: AP, PE, RR
+        //Estados que utilizam a SVRS - Sefaz Virtual do RS: 
+        //AC, AL, AM, BA, CE, DF, ES, GO, MA, 
+        //PA, PB, PI, RJ, RN, RO, SC, SE, TO
+        //Autorizadores: MT - MS - MG - PR - RS - SP - SVRS - SVSP
+        $autorizadores['57'] = array(
+            'AC'=>'SVRS',
+            'AL'=>'SVRS',
+            'AM'=>'SVRS',
+            'AN'=>'AN',
+            'AP'=>'SVSP',
+            'BA'=>'SVRS',
+            'CE'=>'SVRS',
+            'DF'=>'SVRS',
+            'ES'=>'SVRS',
+            'GO'=>'SVRS',
+            'MA'=>'SVRS',
+            'MG'=>'MG',
+            'MS'=>'MS',
+            'MT'=>'MT',
+            'PA'=>'SVSP',
+            'PB'=>'SVRS',
+            'PE'=>'PE',
+            'PI'=>'SVRS',
+            'PR'=>'PR',
+            'RJ'=>'SVRS',
+            'RN'=>'SVRS',
+            'RO'=>'SVRS',
+            'RR'=>'SVSP',
+            'RS'=>'RS',
+            'SC'=>'SVRS',
+            'SE'=>'SVRS',
+            'SP'=>'SP',
+            'TO'=>'SVRS',
+            'SVAN'=>'SVAN',
+            'SVRS'=>'SVRS',
+            'SVCAN'=>'SVCAN',
+        );
+        //variável de retorno do método
+        $aUrl = array();
+        //testa parametro tpAmb
+        $sAmbiente = 'homologacao';
+        if ($tpAmb == '1') {
+            $sAmbiente = 'producao';
+        }
+        $alias = $autorizadores[$this->modelo][$siglaUF];
+        if ($tipo == 'mdfe') {
+            $alias = 'RS';
+        }
+        //estabelece a expressão xpath de busca
+        $xpathExpression = "/WS/UF[sigla='$alias']/$sAmbiente";
+        $aUrl = $this->zExtractUrl($xmlWS, $aUrl, $xpathExpression);
+        //verifica se existem outros serviços exclusivos para esse estado
+        if ($alias == 'SVAN' || $alias == 'SVRS') {
+            $xpathExpression = "/WS/UF[sigla='$siglaUF']/$sAmbiente";
+            $aUrl = $this->zExtractUrl($xmlWS, $aUrl, $xpathExpression);
+        }
+        
+        return $aUrl;
     }
 }
