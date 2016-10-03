@@ -115,7 +115,7 @@
         <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='2.00'>https://homologacao.nfe.fazenda.sp.gov.br/cteWEB/services/cteRetRecepcao.asmx</CteRetRecepcao>
         <CteCancelamento method='cteCancelamentoCT' operation='CteCancelamento' version='2.00'>https://homologacao.nfe.fazenda.sp.gov.br/cteWEB/services/cteCancelamento.asmx</CteCancelamento>
         <CteInutilizacao method='cteInutilizacaoCT' operation='CteInutilizacao' version='2.00'>https://homologacao.nfe.fazenda.sp.gov.br/cteWEB/services/cteInutilizacao.asmx</CteInutilizacao>
-        <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsultaProtocolo' version='2.00'>https://homologacao.nfe.fazenda.sp.gov.br/cteWEB/services/cteConsulta.asmx</CteConsultaProtocolo>
+        <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsulta' version='2.00'>https://homologacao.nfe.fazenda.sp.gov.br/cteWEB/services/cteConsulta.asmx</CteConsultaProtocolo>
         <CteStatusServico method='cteStatusServicoCT' operation='CteStatusServico' version='2.00'>https://homologacao.nfe.fazenda.sp.gov.br/cteWEB/services/cteStatusServico.asmx</CteStatusServico>
         <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CteRecepcaoEvento' version='2.00'>https://homologacao.nfe.fazenda.sp.gov.br/cteweb/services/cteRecepcaoEvento.asmx</CteRecepcaoEvento>
     </homologacao>
