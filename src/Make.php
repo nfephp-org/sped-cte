@@ -2548,7 +2548,7 @@ class Make extends BaseMake
             case '60':
                 $icms = $this->dom->createElement("ICMS60");
                 $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 60");
-                $this->dom->addChild($icms, 'vBCSTRet', $vBCSTRet, true, "$identificador  Valor da BC do ICMS ST retido");
+                $this->dom->addChild($icms, 'vBCSTRet', $vBCSTRet, true, "$identificador  Valor BC do ICMS ST retido");
                 $this->dom->addChild($icms, 'vICMSSTRet', $vICMSSTRet, true, "$identificador  Valor do ICMS ST retido");
                 $this->dom->addChild($icms, 'pICMSSTRet', $pICMSSTRet, true, "$identificador  Valor do ICMS ST retido");
                 $this->dom->addChild($icms, 'vCred', $vCred, false, "$identificador  Valor do Crédito");
