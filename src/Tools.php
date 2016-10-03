@@ -900,8 +900,8 @@ class Tools extends BaseTools
         );
         
         //Estados que utilizam a SVSP - Sefaz Virtual de São Paulo: AP, PE, RR
-        //Estados que utilizam a SVRS - Sefaz Virtual do RS: 
-        //AC, AL, AM, BA, CE, DF, ES, GO, MA, 
+        //Estados que utilizam a SVRS - Sefaz Virtual do RS:
+        //AC, AL, AM, BA, CE, DF, ES, GO, MA,
         //PA, PB, PI, RJ, RN, RO, SC, SE, TO
         //Autorizadores: MT - MS - MG - PR - RS - SP - SVRS - SVSP
         $autorizadores['57'] = array(
