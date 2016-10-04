@@ -11,9 +11,14 @@ namespace NFePHP\CTe;
  * @license   http://www.gnu.org/licenses/lesser.html LGPL v3
  * @link      http://github.com/nfephp-org/sped-cte for the canonical source repository
  * @author    Roberto L. Machado <linux.rlm at gmail dot com>
-  */
+ *
+ *        CONTRIBUIDORES (em ordem alfabetica):
+ *
+ *          Maison K. Sakamoto <maison.sakamoto at gmail do com>
+ */
 
-use NFePHP\Common\Base\BaseTools;
+//use NFePHP\Common\Base\BaseTools;
+use NFePHP\CTe\BaseTools;
 use NFePHP\Common\LotNumber\LotNumber;
 use NFePHP\Common\Strings\Strings;
 use NFePHP\Common\Files;
@@ -41,8 +46,8 @@ class Tools extends BaseTools
      */
     public $erros = array();
     
-    protected $modelo = '65';
-
+    protected $modelo = '57';
+    
     public function printCTe()
     {
     }
@@ -71,7 +76,6 @@ class Tools extends BaseTools
         $indSinc = 0,
         $compactarZip = false
     ) {
-        $this->modelo = '65';
         $sxml = $aXml;
         if (empty($aXml)) {
             $msg = "Pelo menos uma NFe deve ser informada.";
@@ -86,7 +90,7 @@ class Tools extends BaseTools
         }
         $sxml = preg_replace("/<\?xml.*\?>/", "", $sxml);
         $siglaUF = $this->aConfig['siglaUF'];
-
+        
         if ($tpAmb == '') {
             $tpAmb = $this->aConfig['tpAmb'];
         }
@@ -101,12 +105,12 @@ class Tools extends BaseTools
             $siglaUF,
             $tpAmb
         );
-
+        
         if ($this->urlService == '') {
             $msg = "O envio de lote não está disponível na SEFAZ $siglaUF!!!";
             throw new Exception\RuntimeException($msg);
         }
-
+        
         // Montagem dos dados da mensagem SOAP
         $dados = "<cteDadosMsg xmlns=\"$this->urlNamespace\">"
             . "<enviCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
@@ -114,7 +118,7 @@ class Tools extends BaseTools
             . "$sxml"
             . "</enviCTe>"
             . "</cteDadosMsg>";
-
+        
         // Envia dados via SOAP
         $retorno = $this->oSoap->send(
             $this->urlService,
@@ -178,6 +182,7 @@ class Tools extends BaseTools
         //}
         //montagem dos dados da mensagem SOAP
         $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$cons</cteDadosMsg>";
+             
         //envia a solicitação via SOAP
         $retorno = $this->oSoap->send(
             $this->urlService,
@@ -750,7 +755,7 @@ class Tools extends BaseTools
         $xsdPath = NFEPHP_ROOT.DIRECTORY_SEPARATOR .
             'schemas' .
             DIRECTORY_SEPARATOR .
-            $this->aConfig['schemasCTe'] .
+            $this->aConfig['schemesCTe'] .
             DIRECTORY_SEPARATOR .
             $xsdFile;
         if (! is_file($xsdPath)) {
@@ -762,5 +767,113 @@ class Tools extends BaseTools
             return false;
         }
         return true;
+    }
+    
+    public function sefazInutiliza(
+        $nAno = '',
+        $nSerie = '1',
+        $nIni = '',
+        $nFin = '',
+        $xJust = '',
+        $tpAmb = '2',
+        &$aRetorno = array()
+    ) {
+        // Variavel de retorno do metodo
+        $aRetorno = array (
+            'bStat' => false,
+            'cStat' => '',
+            'xMotivo' => '',
+            'dhRecbto' => '',
+            'nProt' => '');
+        // Valida dos dados de entrada
+        if ($nAno == '' || $nIni == '' || $nFin == '' || $xJust == '') {
+            $this->errStatus = true;
+            $this->errMsg = "Não foi passado algum dos parametos necessários "
+                    . "ANO=$nAno inicio=$nIni fim=$nFin justificativa=$xJust.";
+            return false;
+        }
+        
+        $siglaUF = $this->aConfig['siglaUF'];
+        $cnpj = $this->aConfig['cnpj'];
+        $this->urlOperation = 'CteInutilizacao';
+        
+        $this->zLoadServico('cte', 'CteInutilizacao', $siglaUF, $tpAmb);
+        
+        
+        if ($this->urlService == '') {
+            $msg = "A recepção de eventos não está disponível na SEFAZ $siglaUF!!!";
+            throw new Exception\RuntimeException($msg);
+        }
+        if (strlen($nAno) != 2) {
+            $msg = "Informe o ano com 2 digitos";
+            throw new Exception\InvalidArgumentException($msg);
+        }
+        if (strlen($nSerie) == 0 || strlen($nSerie) > 3) {
+            $msg = "O campo serie está errado: $nSerie. usar 3 digitos";
+            throw new Exception\InvalidArgumentException($msg);
+        }
+        if (strlen($nIni) < 1 || strlen($nIni) > 9) {
+            $msg = "O campo numero inicial está errado: $nIni. Corrija e refaça o processo!!";
+            throw new Exception\InvalidArgumentException($msg);
+        }
+        if (strlen($nFin) < 1 || strlen($nFin) > 9) {
+            $msg = "O campo numero final está errado: $nFin. Corrija e refaça o processo!!";
+            throw new Exception\InvalidArgumentException($msg);
+        }
+        if (strlen($xJust) < 15 || strlen($xJust) > 255) {
+            $msg = "O campo justificativa deve ter no minimo 15 chars e no maximo 255, verifique!";
+            throw new Exception\InvalidArgumentException($msg);
+        }
+        
+        // Identificador da TAG a ser assinada formada com Código da UF +
+        // Ano (2 posições) + CNPJ + modelo + série + nro inicial e nro final
+        // precedida do literal “ID”
+        // 43 posições
+        //     2      4       6       20      22    25       34      43
+        //     2      2       2       14       2     3        9       9
+        $id = 'ID' . $this->urlcUF .  $cnpj . '57' .
+                str_pad($nSerie, 3, '0', STR_PAD_LEFT) .
+                str_pad($nIni, 9, '0', STR_PAD_LEFT) .
+                str_pad($nFin, 9, '0', STR_PAD_LEFT);
+        
+        // Montagem do corpo da mensagem
+        $dXML = '<inutCTe xmlns="' . $this->urlPortal . '" versao="' . $this->urlVersion . '">';
+        $dXML .= '<infInut Id="' . $id . '">';
+        $dXML .= '<tpAmb>' . $tpAmb . '</tpAmb>';
+        $dXML .= '<xServ>INUTILIZAR</xServ>';
+        $dXML .= '<cUF>' . $this->urlcUF . '</cUF>';
+        $dXML .= '<ano>' . $nAno . '</ano>';
+        $dXML .= '<CNPJ>' . $cnpj . '</CNPJ>';
+        $dXML .= '<mod>57</mod>';
+        $dXML .= '<serie>' . $nSerie . '</serie>';
+        $dXML .= '<nCTIni>' . $nIni . '</nCTIni>';
+        $dXML .= '<nCTFin>' . $nFin . '</nCTFin>';
+        $dXML .= '<xJust>' . $xJust . '</xJust>';
+        $dXML .= '</infInut>';
+        $dXML .= '</inutCTe>';
+        
+        // Assina a lsolicitação de inutilização
+        $dXML = $this->oCertificate->signXML($dXML, 'infInut');
+        $dados = '<cteDadosMsg xmlns="' . $this->urlNamespace . '">' . $dXML . '</cteDadosMsg>';
+    
+        // Remove as tags xml que porventura tenham sido inclusas
+        $dados = str_replace('<?xml version="1.0"?>', '', $dados);
+        $dados = str_replace('<?xml version="1.0" encoding="utf-8"?>', '', $dados);
+        $dados = str_replace('<?xml version="1.0" encoding="UTF-8"?>', '', $dados);
+        $dados = str_replace(array("\r","\n","\s"), "", $dados);
+        
+        // Envia a solicitação via SOAP
+        $retorno = $this->oSoap->send(
+            $this->urlService,
+            $this->urlNamespace,
+            $this->urlHeader,
+            $dados,
+            $this->urlMethod
+        );
+        // Verifica o retorno
+        $lastMsg = $this->oSoap->lastMsg;
+        $this->soapDebug = $this->oSoap->soapDebug;
+        $aRetorno = Response::readReturnSefaz($this->urlOperation, $retorno);
+        return (string) $retorno;
     }
 }

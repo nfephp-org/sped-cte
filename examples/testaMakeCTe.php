@@ -1,9 +1,17 @@
 <?php
-
+/**@category  Teste
+ * @package   Spedcteexamples
+ * @copyright 2009-2016 NFePHP
+ * @name      testaMakeCTe.php
+ * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL v.3
+ * @link      http://github.com/nfephp-org/sped-cte for the canonical source repository
+ * @author    Samuel M. Basso <samuelbasso@gmail.com>
+ * Adaptado por Maison K. Sakamoto <maison.sakamoto@gmail.com>
+ **/
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
-include_once '../bootstrap.php';
+require_once '../bootstrap.php';
 
 use NFePHP\CTe\Make;
 use NFePHP\CTe\Tools;
