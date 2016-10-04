@@ -757,7 +757,7 @@ class Tools extends BaseTools
             DIRECTORY_SEPARATOR .
             $this->aConfig['schemesCTe'] .
             DIRECTORY_SEPARATOR .
-            $xsdFile;        
+            $xsdFile;
         if (! is_file($xsdPath)) {
             $this->erros[] = "O arquivo XSD $xsdFile não foi localizado.";
             return false;
