@@ -7,7 +7,7 @@ use NFePHP\CTe\Tools;
 
 $cteTools = new Tools('../config/config.json');
 
-$chave = '43160911004958000177570010000000101000000106';
+$chave = '42161081450900000566570020000000601000000104';
 $tpAmb = '2';
 $filename = "../xml/{$chave}-cte.xml";
 
