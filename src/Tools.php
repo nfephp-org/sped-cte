@@ -553,9 +553,9 @@ class Tools extends BaseTools
         $xsdPath = NFEPHP_ROOT.DIRECTORY_SEPARATOR .
             'schemas' .
             DIRECTORY_SEPARATOR .
-            $this->aConfig['schemasCTe'] .
+            $this->aConfig['schemesCTe'] .
             DIRECTORY_SEPARATOR .
-            $xsdFile;
+            $xsdFile;        
         if (! is_file($xsdPath)) {
             $this->erros[] = "O arquivo XSD $xsdFile não foi localizado.";
             return false;
