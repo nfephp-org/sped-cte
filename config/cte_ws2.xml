@@ -102,7 +102,7 @@
     <producao>
         <CteRecepcao method='CTeRecepcao' operation='CteRecepcao' version='2.00'>https://cte.svrs.rs.gov.br/ws/cterecepcao/CteRecepcao.asmx</CteRecepcao>
         <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='2.00'>https://cte.svrs.rs.gov.br/ws/cteretrecepcao/cteRetRecepcao.asmx</CteRetRecepcao>
-        <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsultaProtocolo' version='2.00'>https://cte.svrs.rs.gov.br/ws/cteconsulta/CteConsulta.asmx</CteConsultaProtocolo>
+        <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsulta' version='2.00'>https://cte.svrs.rs.gov.br/ws/cteconsulta/CteConsulta.asmx</CteConsultaProtocolo>
         <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CteRecepcaoEvento' version='2.00'>https://cte.svrs.rs.gov.br/ws/cterecepcaoevento/cterecepcaoevento.asmx</CteRecepcaoEvento>
         <CteInutilizacao method='CTeInutilizacao' operation='CteInutilizacao' version='2.00'>https://cte.svrs.rs.gov.br/ws/cteinutilizacao/cteinutilizacao.asmx</CteInutilizacao>
         <CteStatusServico method='cteStatusServicoCT' operation='CteStatusServico' version='2.00'>https://cte.svrs.rs.gov.br/ws/ctestatusservico/CteStatusServico.asmx</CteStatusServico>
@@ -124,7 +124,7 @@
         <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='2.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/cteRetRecepcao.asmx</CteRetRecepcao>
         <CteCancelamento method='cteCancelamentoCT' operation='CteCancelamento' version='2.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/cteCancelamento.asmx</CteCancelamento>
         <CteInutilizacao method='cteInutilizacaoCT' operation='CteInutilizacao' version='2.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/cteInutilizacao.asmx</CteInutilizacao>
-        <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsultaProtocolo' version='2.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/cteConsulta.asmx</CteConsultaProtocolo>
+        <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsulta' version='2.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/cteConsulta.asmx</CteConsultaProtocolo>
         <CteStatusServico method='cteStatusServicoCT' operation='CteStatusServico' version='2.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/cteStatusServico.asmx</CteStatusServico>
         <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CteRecepcaoEvento' version='2.00'>https://nfe.fazenda.sp.gov.br/cteweb/services/cteRecepcaoEvento.asmx</CteRecepcaoEvento>
     </producao>
