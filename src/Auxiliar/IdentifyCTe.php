@@ -22,7 +22,7 @@ class IdentifyCTe
         $aList = array(
             'consReciCTe' => 'consReciCTe',
             'consSitCTe' => 'consSitCTe',
-            'consStatServCTe' => 'consStatServCTe',
+            'consStatServCte' => 'consStatServCte',
             'enviCTe' => 'enviCTe',
             'evCancCTe' => 'evCancCTe',
             'evEncCTe' => 'evEncCTe',
@@ -34,11 +34,11 @@ class IdentifyCTe
             'retConsSitCTe' => 'retConsSitCTe',
             'retConsStatServCTe' => 'retConsStatServCTe',
             'retEnviCTe' => 'retEnviCTe',
-            'retEventoCTe' => 'retEventoCTe'
+            'retEventoCTe' => 'retEventoCTe'          
         );
         Identify::setListSchemesId($aList);
-        $schem = Identify::identificacao($xml, $aResp);
-        $dom = $aResp['dom'];
+        $schem = Identify::identificacao($xml, $aResp);        
+        $dom = $aResp['dom'];        
         $node = $dom->getElementsByTagName($aResp['tag'])->item(0);
         if ($schem == 'cte') {
             //se for um nfe então é necessário pegar a versão
