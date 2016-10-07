@@ -36,30 +36,31 @@ class Tools extends BaseTools
     /**
      * urlPortal
      * Instância do WebService
+     *
      * @var string
      */
     protected $urlPortal = 'http://www.portalfiscal.inf.br/cte';
 
     /**
-     * errrors
+     * erros
+     *
      * @var string
      */
     public $erros = array();
     
+    /**
+     * modelo 57 (CTE-e) é um documento fiscal eletrônico,
+     * instituído pelo AJUSTE SINIEF 09/07 (25/10/2007)
+     *
+     * @var modelo
+     */
     protected $modelo = '57';
     
-    public function printCTe()
-    {
-    }
-
-    public function mailCTe()
-    {
-    }
-
     /**
      * assina
-     * @param string $xml
-     * @param boolean $saveFile
+     *
+     * @param  string  $xml
+     * @param  boolean $saveFile
      * @return string
      * @throws Exception\RuntimeException
      */
@@ -68,6 +69,19 @@ class Tools extends BaseTools
         return $this->assinaDoc($xml, 'cte', 'infCte', $saveFile);
     }
 
+    /**
+     * Transmite o xml para a sefaz
+     *
+     * @param type $aXml
+     * @param type $tpAmb
+     * @param type $idLote
+     * @param type $aRetorno
+     * @param int $indSinc
+     * @param type $compactarZip
+     * @return type
+     * @throws Exception\InvalidArgumentException
+     * @throws Exception\RuntimeException
+     */
     public function sefazEnvia(
         $aXml,
         $tpAmb = '2',
@@ -118,7 +132,6 @@ class Tools extends BaseTools
             . "$sxml"
             . "</enviCTe>"
             . "</cteDadosMsg>";
-        
         // Envia dados via SOAP
         $retorno = $this->oSoap->send(
             $this->urlService,
@@ -127,12 +140,6 @@ class Tools extends BaseTools
             $dados,
             $this->urlMethod
         );
-
-//        if ($compactarZip) {
-//            $gzdata = base64_encode(gzencode($cons, 9, FORCE_GZIP));
-//            $body = "<cteDadosMsgZip xmlns=\"$this->urlNamespace\">$gzdata</cteDadosMsgZip>";
-//            $method = $this->urlMethod."Zip";
-//        }
 
         $lastMsg = $this->oSoap->lastMsg;
         $this->soapDebug = $this->oSoap->soapDebug;
@@ -149,6 +156,16 @@ class Tools extends BaseTools
         return (string) $retorno;
     }
 
+    /**
+     * Consulta o recibo na sefaz
+     *
+     * @param type $recibo
+     * @param type $tpAmb
+     * @param type $aRetorno
+     * @return type
+     * @throws Exception\InvalidArgumentException
+     * @throws Exception\RuntimeException
+     */
     public function sefazConsultaRecibo($recibo = '', $tpAmb = '2', &$aRetorno = array())
     {
         if ($recibo == '') {
@@ -175,11 +192,6 @@ class Tools extends BaseTools
             . "<tpAmb>$tpAmb</tpAmb>"
             . "<nRec>$recibo</nRec>"
             . "</consReciCTe>";
-        //validar mensagem com xsd
-        //if (! $this->validarXml($cons)) {
-        //    $msg = 'Falha na validação. '.$this->error;
-        //    throw new Exception\RuntimeException($msg);
-        //}
         //montagem dos dados da mensagem SOAP
         $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$cons</cteDadosMsg>";
              
@@ -206,6 +218,16 @@ class Tools extends BaseTools
         return (string) $retorno;
     }
 
+    /**
+     * consulta a chave de acesso do CT-e
+     *
+     * @param type $chave
+     * @param type $tpAmb
+     * @param type $aRetorno
+     * @return type
+     * @throws Exception\InvalidArgumentException
+     * @throws Exception\RuntimeException
+     */
     public function sefazConsultaChave($chave = '', $tpAmb = '2', &$aRetorno = array())
     {
         $chNFe = preg_replace('/[^0-9]/', '', $chave);
@@ -235,11 +257,6 @@ class Tools extends BaseTools
             . "<xServ>CONSULTAR</xServ>"
             . "<chCTe>$chNFe</chCTe>"
             . "</consSitCTe>";
-        //validar mensagem com xsd
-        //if (! $this->validarXml($cons)) {
-        //    $msg = 'Falha na validação. '.$this->error;
-        //    throw new Exception\RuntimeException($msg);
-        //}
         //montagem dos dados da mensagem SOAP
         $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$cons</cteDadosMsg>";
         //envia a solicitação via SOAP
@@ -262,6 +279,15 @@ class Tools extends BaseTools
         return (string) $retorno;
     }
 
+    /**
+     * consulta disponibilidade do serviço web service da sefaz
+     *
+     * @param type $siglaUF
+     * @param type $tpAmb
+     * @param type $aRetorno
+     * @return type
+     * @throws Exception\RuntimeException
+     */
     public function sefazStatus($siglaUF = '', $tpAmb = '2', &$aRetorno = array())
     {
         if ($tpAmb == '') {
@@ -285,12 +311,6 @@ class Tools extends BaseTools
         $cons = "<consStatServCte xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
             . "<tpAmb>$tpAmb</tpAmb>"
             . "<xServ>STATUS</xServ></consStatServCte>";
-        //valida mensagem com xsd
-        //validar mensagem com xsd
-        //if (! $this->validarXml($cons)) {
-        //    $msg = 'Falha na validação. '.$this->error;
-        //    throw new Exception\RuntimeException($msg);
-        //}
         //montagem dos dados da mensagem SOAP
         $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$cons</cteDadosMsg>";
         //consome o webservice e verifica o retorno do SOAP
@@ -313,7 +333,21 @@ class Tools extends BaseTools
         return (string) $retorno;
     }
 
-    public function sefazInutiliza(
+    /**
+     * Inutiza sequencia de numeracao
+     *
+     * @param type $nAno
+     * @param type $nSerie
+     * @param type $nIni
+     * @param type $nFin
+     * @param type $xJust
+     * @param type $tpAmb
+     * @param type $aRetorno
+     * @return boolean
+     * @throws Exception\RuntimeException
+     * @throws Exception\InvalidArgumentException
+     */
+    public function sefazInutiliza(        
         $nSerie = '1',
         $nIni = '',
         $nFin = '',
@@ -321,21 +355,14 @@ class Tools extends BaseTools
         $tpAmb = '2',
         &$aRetorno = array(),
         $salvarMensagens = true
-    ) {
-        $nSerie = (integer) $nSerie;
-        $nIni = (integer) $nIni;
-        $nFin = (integer) $nFin;
-        $xJust = Strings::cleanString($xJust);
-        $this->zValidParamInut($xJust, $nSerie, $nIni, $nFin);
+    ) {        
         if ($tpAmb == '') {
             $tpAmb = $this->aConfig['tpAmb'];
         }
         // Identificação do serviço
         $servico = 'CteInutilizacao';
         //monta serviço
-        $siglaUF = $this->aConfig['siglaUF'];
-        //carrega serviço
-        $servico = 'CteInutilizacao';
+        $siglaUF = $this->aConfig['siglaUF'];        
         $this->zLoadServico(
             'cte',
             $servico,
@@ -352,8 +379,7 @@ class Tools extends BaseTools
         $sSerie = str_pad($nSerie, 3, '0', STR_PAD_LEFT);
         $sInicio = str_pad($nIni, 9, '0', STR_PAD_LEFT);
         $sFinal = str_pad($nFin, 9, '0', STR_PAD_LEFT);
-        //limpa os caracteres indesejados da justificativa
-        $xJust = Strings::cleanString($xJust);
+        
         // Identificador da TAG a ser assinada formada com Código da UF +
         // precedida do literal “ID”
         // 41 posições
@@ -405,6 +431,17 @@ class Tools extends BaseTools
         return (string) $retorno;
     }
 
+    /**
+     * Cancelamento de numero CT-e
+     *
+     * @param type $chCTe
+     * @param type $tpAmb
+     * @param type $xJust
+     * @param type $nProt
+     * @param type $aRetorno
+     * @return type
+     * @throws Exception\InvalidArgumentException
+     */
     public function sefazCancela($chCTe = '', $tpAmb = '2', $xJust = '', $nProt = '', &$aRetorno = array())
     {
         $chCTe = preg_replace('/[^0-9]/', '', $chCTe);
@@ -440,42 +477,17 @@ class Tools extends BaseTools
         return $retorno;
     }
 
-    public function enviaMail($pathXml = '', $aMails = array(), $templateFile = '', $comPdf = false, $pathPdf = '')
-    {
-        $mail = new Mail($this->aMailConf);
-        // Se não for informado o caminho do PDF, monta um através do XML
-        /*
-        if ($comPdf && $this->modelo == '55' && $pathPdf == '') {
-            $docxml = Files\FilesFolders::readFile($pathXml);
-            $danfe = new Extras\Danfe($docxml, 'P', 'A4', $this->aDocFormat['pathLogoFile'], 'I', '');
-            $id = $danfe->montaDANFE();
-            $pathPdf = $this->aConfig['pathNFeFiles']
-                . DIRECTORY_SEPARATOR
-                . $this->ambiente
-                . DIRECTORY_SEPARATOR
-                . 'pdf'
-                . DIRECTORY_SEPARATOR
-                . $id . '-danfe.pdf';
-            $pdf = $danfe->printDANFE($pathPdf, 'F');
-        }
-         *
-         */
-        if ($mail->envia($pathXml, $aMails, $comPdf, $pathPdf) === false) {
-            throw new Exception\RuntimeException('Email não enviado. '.$mail->error);
-        }
-        return true;
-    }
-
     /**
      * zSefazEvento
-     * @param string $siglaUF
-     * @param string $chCTe
-     * @param string $tpAmb
-     * @param string $tpEvento
-     * @param string $nSeqEvento
-     * @param string $tagAdic
-     * @return string
-     * @throws Exception\RuntimeException
+     *
+     * @param    string $siglaUF
+     * @param    string $chCTe
+     * @param    string $tpAmb
+     * @param    string $tpEvento
+     * @param    string $nSeqEvento
+     * @param    string $tagAdic
+     * @return   string
+     * @throws   Exception\RuntimeException
      * @internal function zLoadServico (Common\Base\BaseTools)
      */
     protected function zSefazEvento(
@@ -506,7 +518,6 @@ class Tools extends BaseTools
         $descEvento = $aRet['desc'];
         $cnpj = $this->aConfig['cnpj'];
         $dhEvento = (string) str_replace(' ', 'T', date('Y-m-d H:i:s'));
-//        $dhEvento = (string) str_replace(' ', 'T', date('Y-m-d H:i:sP'));
         $sSeqEvento = str_pad($nSeqEvento, 2, "0", STR_PAD_LEFT);
         $eventId = "ID".$tpEvento.$chCTe.$sSeqEvento;
         $cOrgao = $this->urlcUF;
@@ -521,7 +532,6 @@ class Tools extends BaseTools
             . "<dhEvento>$dhEvento</dhEvento>"
             . "<tpEvento>$tpEvento</tpEvento>"
             . "<nSeqEvento>$nSeqEvento</nSeqEvento>"
-            //. "<nSeqEvento>$sSeqEvento</nSeqEvento>"
             . "<detEvento versaoEvento=\"$this->urlVersion\">"
             . "$tagAdic"
             . "</detEvento>"
@@ -532,23 +542,11 @@ class Tools extends BaseTools
             . "</eventoCTe>";
 
         $signedMsg = $this->oCertificate->signXML($cons, 'infEvento');
+        //limpa o xml
         $signedMsg = preg_replace("/<\?xml.*\?>/", "", $signedMsg);
-
-        //$signedMsg = Strings::clearXml($signedMsg, true);
-
-//        if (! $this->zValidMessage($signedMsg, 'cte', 'envEvento', $this->urlVersion)) {
-//            $msg = 'Falha na validação. '.$this->error;
-//            throw new Exception\RuntimeException($msg);
-//        }
-
-
-//        $filename = "../cancelamento.xml";
-//        $xml = file_get_contents($filename);
-
-
-        //$body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$xml</cteDadosMsg>";
+        //montagem dos dados da mensagem SOAP
         $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$signedMsg</cteDadosMsg>";
-
+        
         $retorno = $this->oSoap->send(
             $this->urlService,
             $this->urlNamespace,
@@ -634,7 +632,8 @@ class Tools extends BaseTools
 
     /**
      * zTpEv
-     * @param string $tpEvento
+     *
+     * @param  string $tpEvento
      * @return array
      * @throws Exception\RuntimeException
      */
@@ -700,36 +699,12 @@ class Tools extends BaseTools
         return array('alias' => $aliasEvento, 'desc' => $descEvento);
     }
 
-    private function zValidParamInut($xJust, $nSerie, $nIni, $nFin)
-    {
-        $msg = '';
-        $nL = strlen($xJust);
-
-        // Valida dos dados de entrada
-        if ($nIni == '' || $nFin == '' || $xJust == '') {
-            $msg = "Não foi passado algum dos parametos necessários"
-                    . "inicio=$nIni fim=$nFin justificativa=$xJust.";
-        } elseif (strlen($nSerie) == 0 || strlen($nSerie) > 3) {
-            $msg = "O campo serie está errado: $nSerie. Corrija e refaça o processo!!";
-        } elseif (strlen($nIni) < 1 || strlen($nIni) > 9) {
-            $msg = "O campo numero inicial está errado: $nIni. Corrija e refaça o processo!!";
-        } elseif (strlen($nFin) < 1 || strlen($nFin) > 9) {
-            $msg = "O campo numero final está errado: $nFin. Corrija e refaça o processo!!";
-        } elseif ($nL < 15 || $nL > 255) {
-            $msg = "A justificativa tem que ter entre 15 e 255 caracteres, encontrado $nL. "
-                . "Corrija e refaça o processo!!";
-        }
-
-        if ($msg != '') {
-            throw new Exception\InvalidArgumentException($msg);
-        }
-    }
-
     /**
      * validarXml
      * Valida qualquer xml do sistema NFe com seu xsd
      * NOTA: caso não exista um arquivo xsd apropriado retorna false
-     * @param string $xml path ou conteudo do xml
+     *
+     * @param  string $xml path ou conteudo do xml
      * @return boolean
      */
     public function validarXml($xml = '')
@@ -757,6 +732,32 @@ class Tools extends BaseTools
         return true;
     }
     
+    /**
+     * Transmite a correção
+     * conforme o MOC(Manual de Orientações do Contribuinte)
+     * Art. 58-B Fica permitida a utilização de carta de correção,
+     * para regularização de erro ocorrido na emissão de documentos
+     * fiscais relativos à prestação de serviço de transporte, desde que o
+     * erro não esteja relacionado com:
+     * I - as variáveis que determinam o valor do imposto tais como:
+     *  base de cálculo, alíquota, diferença de preço, quantidade, valor da prestação
+     * II - a correção de dados cadastrais que implique mudança do emitente,
+     *  tomador, remetente ou do destinatário;
+     * III - a data de emissão ou de saída.
+     *
+     * @param type $siglaUF
+     * @param type $tpAmb
+     * @param type $cnpj
+     * @param type $chave
+     * @param type $nSeqEvento
+     * @param type $grupoAlterado
+     * @param type $campoAlterado
+     * @param type $valorAlterado
+     * @param type $nroItemAlterado
+     * @param type $aRetorno
+     * @return type
+     * @throws Exception\InvalidArgumentException
+     */
     public function sefazCartaCorrecao(
         $siglaUF = '',
         $tpAmb = '2',
