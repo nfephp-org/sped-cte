@@ -9,8 +9,9 @@ use NFePHP\CTe\Tools;
 $cteTools = new Tools('../config/config.json');
 
 $aResposta = array();
-$recibo = '411000000738509';
-//$recibo = '431000010352151';
+$cteTools->aConfig['siglaUF']='SC';
+$recibo = '423000010444201'; 
+//$recibo = '411000000741429';
 $tpAmb = '2';
 $retorno = $cteTools->sefazConsultaRecibo($recibo, $tpAmb, $aResposta);
 echo '<pre>';
