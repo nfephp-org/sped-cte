@@ -446,7 +446,8 @@ class Response
             $aProt['dhRecbto'] = $infProt->getElementsByTagName('dhRecbto')->item(0)->nodeValue;
             $aProt['nProt'] = isset($infProt->getElementsByTagName('nProt')->item(0)->nodeValue) ?
                 $infProt->getElementsByTagName('nProt')->item(0)->nodeValue : '';
-            $aProt['digVal'] = $infProt->getElementsByTagName('digVal')->item(0)->nodeValue;
+            $aProt['digVal'] = isset($infProt->getElementsByTagName('digVal')->item(0)->nodeValue) ?
+                $infProt->getElementsByTagName('digVal')->item(0)->nodeValue : '';
             $aProt['cStat'] = $infProt->getElementsByTagName('cStat')->item(0)->nodeValue;
             $aProt['xMotivo'] = $infProt->getElementsByTagName('xMotivo')->item(0)->nodeValue;
         }
