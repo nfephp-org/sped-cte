@@ -7,10 +7,10 @@ use NFePHP\CTe\Tools;
 
 $cteTools = new Tools('../config/config.json');
 
-$chave = '42161081450900000566570020000000631000000106';
+$chave = '42161081450900000566570020000000601000000104';
 $tpAmb = '2';
-$filename = "../xml/homologacao/assinadas/{$chave}-cte.xml";
-header('Content-type: text/html; charset=UTF-8');
+$filename = "../xml/{$chave}-cte.xml";
+
 if (! $cteTools->validarXml($filename) || sizeof($cteTools->erros)) {
     echo "<h3>Algum erro ocorreu.... </h3>";
     foreach ($cteTools->erros as $erro) {
