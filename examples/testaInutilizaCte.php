@@ -9,7 +9,6 @@ use NFePHP\CTe\Tools;
 $cteTools = new Tools('../config/config.json');
 
 $aResposta = array();
-$ano = date("y");
 $serie = '2';
 $inicio = '2';
 $fim = '2';
@@ -18,7 +17,7 @@ $xJust = 'teste de Inutilizacao em ambiente de homologacao(teste)'; // MINIMO DE
 
 $cteTools->aConfig['cnpj']='81450900000132'; // CNPJ DA EMPRESA SERA USADO DENTRO DA CLASSE
 $cteTools->aConfig['siglaUF']='PR';
-$retorno = $cteTools->sefazInutiliza($ano, $serie, $inicio, $fim, $xJust, $tpAmb, $aResposta);
+$retorno = $cteTools->sefazInutiliza($serie, $inicio, $fim, $xJust, $tpAmb, $aResposta);
 echo '<pre>';
 echo htmlspecialchars($cteTools->soapDebug);
 //print_r($aResposta);
