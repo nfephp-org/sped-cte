@@ -347,7 +347,7 @@ class Tools extends BaseTools
      * @throws Exception\RuntimeException
      * @throws Exception\InvalidArgumentException
      */
-    public function sefazInutiliza(        
+    public function sefazInutiliza(
         $nSerie = '1',
         $nIni = '',
         $nFin = '',
@@ -355,14 +355,14 @@ class Tools extends BaseTools
         $tpAmb = '2',
         &$aRetorno = array(),
         $salvarMensagens = true
-    ) {        
+    ) {
         if ($tpAmb == '') {
             $tpAmb = $this->aConfig['tpAmb'];
         }
         // Identificação do serviço
         $servico = 'CteInutilizacao';
         //monta serviço
-        $siglaUF = $this->aConfig['siglaUF'];        
+        $siglaUF = $this->aConfig['siglaUF'];
         $this->zLoadServico(
             'cte',
             $servico,
