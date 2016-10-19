@@ -951,6 +951,4 @@ class Tools extends BaseTools
         }
         return (string) $procXML;
     }
-
-
 }

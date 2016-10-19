@@ -2565,30 +2565,31 @@ class Make extends BaseMake
                 $this->dom->addChild($icms, 'vBCSTRet', $vBCSTRet, true, "$identificador  Valor BC do ICMS ST retido");
                 $this->dom->addChild($icms, 'vICMSSTRet', $vICMSSTRet, true, "$identificador  Valor do ICMS ST retido");
                 $this->dom->addChild($icms, 'pICMSSTRet', $pICMSSTRet, true, "$identificador  Valor do ICMS ST retido");
-                if($vCred > 0){
+                if ($vCred > 0) {
                     $this->dom->addChild($icms, 'vCred', $vCred, false, "$identificador  Valor do Crédito");
                 }
                 break;
             case '90':
-                if($outraUF == true){
+                if ($outraUF == true) {
                     $icms = $this->dom->createElement("ICMSOutraUF");
-                    $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 90");
-                    if($pRedBC > 0){
-                        $this->dom->addChild($icms, 'pRedBCOutraUF', $pRedBC, false, "$identificador  Percentual da Redução de BC Outra UF");
+                    $this->dom->addChild($icms, 'CST', $cst, true, "$identificador Tributação do ICMS = 90");
+                    if ($pRedBC > 0) {
+                        $this->dom->addChild($icms, 'pRedBCOutraUF', $pRedBC, false, "$identificador Percentual da 
+                            Redução de BC Outra UF");
                     }
-                    $this->dom->addChild($icms, 'vBCOutraUF', $vBC, true, "$identificador  Valor da BC do ICMS Outra UF");
-                    $this->dom->addChild($icms, 'pICMSOutraUF', $pICMS, true, "$identificador  Alíquota do imposto Outra UF");
+                    $this->dom->addChild($icms, 'vBCOutraUF', $vBC, true, "$identificador  Valor BC do ICMS Outra UF");
+                    $this->dom->addChild($icms, 'pICMSOutraUF', $pICMS, true, "$identificador  Aliq imposto Outra UF");
                     $this->dom->addChild($icms, 'vICMSOutraUF', $vICMS, true, "$identificador  Valor do ICMS Outra UF");
-                }else{
+                } else {
                     $icms = $this->dom->createElement("ICMS90");
                     $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 90");
-                    if($pRedBC > 0) {
-                        $this->dom->addChild($icms, 'pRedBC', $pRedBC, false, "$identificador  Percentual da Redução de BC");
+                    if ($pRedBC > 0) {
+                        $this->dom->addChild($icms, 'pRedBC', $pRedBC, false, "$identificador Percentual Redução BC");
                     }
                     $this->dom->addChild($icms, 'vBC', $vBC, true, "$identificador  Valor da BC do ICMS");
                     $this->dom->addChild($icms, 'pICMS', $pICMS, true, "$identificador  Alíquota do imposto");
                     $this->dom->addChild($icms, 'vICMS', $vICMS, true, "$identificador  Valor do ICMS");
-                    if($vCred > 0) {
+                    if ($vCred > 0) {
                         $this->dom->addChild($icms, 'vCred', $vCred, false, "$identificador  Valor do Crédido");
                     }
                 }
