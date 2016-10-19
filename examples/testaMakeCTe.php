@@ -12,7 +12,7 @@ $cte = new Make();
 $cteTools = new Tools('../config/config.json');
 
 $dhEmi = date("Y-m-d\TH:i:s");
-//$dhEmi = date("d/m/Y");
+$numeroCte = '28';
 
 $chave = $cte->montaChave(
     $cUF = '43',
@@ -21,9 +21,9 @@ $chave = $cte->montaChave(
     $cnpj = $cteTools->aConfig['cnpj'],
     $mod = '57',
     $serie = '1',
-    $numero = '11',
+    $numero = $numeroCte,
     $tpEmis = '1',
-    $cNF = '10');
+    $cNF = $numeroCte);
 
 $resp = $cte->infCteTag(
     $chave,
@@ -33,13 +33,13 @@ $cDV = substr($chave, -1); //Digito Verificador
 
 $resp = $cte->ideTag(
     $cUF = '43',
-    $cCT = '00000010',
+    $cCT = '000000' . $numeroCte,
     $CFOP = '5351',
     $natOp = substr('Prestação de serviço de transporte para execução de serviço da mesma natureza', 0, 60),
     $forPag = '0',
     $mod = '57',
     $serie = '1',
-    $nCT = '11',
+    $nCT = $numeroCte,
     $dhEmi,
     $tpImp = '1',
     $tpEmis = '1',
