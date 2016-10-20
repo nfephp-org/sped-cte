@@ -529,7 +529,9 @@ class Make extends BaseMake
         $this->dom->appChild($this->infCTeNorm, $this->infCarga, 'Falta tag "infCarga"');
         $this->dom->appChild($this->infCarga, $this->infQ, 'Falta tag "infQ"');
         $this->dom->appChild($this->infCTeNorm, $this->infDoc, 'Falta tag "infDoc"');
-        $this->dom->appChild($this->infDoc, $this->infNFe, 'Falta tag "infNFe"');
+        foreach ($this->infNFe as $infNFe) {
+            $this->dom->appChild($this->infDoc, $infNFe, 'Falta tag "infNFe"');
+        }
 
         $this->dom->appChild($this->infCTeNorm, $this->seg, 'Falta tag "seg"');
         $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
@@ -2552,31 +2554,30 @@ class Make extends BaseMake
                 $this->dom->addChild($icms, 'vBCSTRet', $vBCSTRet, true, "$identificador  Valor BC do ICMS ST retido");
                 $this->dom->addChild($icms, 'vICMSSTRet', $vICMSSTRet, true, "$identificador  Valor do ICMS ST retido");
                 $this->dom->addChild($icms, 'pICMSSTRet', $pICMSSTRet, true, "$identificador  Valor do ICMS ST retido");
-                if ($vCred > 0) {
+                if($vCred > 0){
                     $this->dom->addChild($icms, 'vCred', $vCred, false, "$identificador  Valor do Crédito");
                 }
                 break;
             case '90':
-                if ($outraUF == true) {
+                if($outraUF == true){
                     $icms = $this->dom->createElement("ICMSOutraUF");
-                    $this->dom->addChild($icms, 'CST', $cst, true, "$identificador Tributação do ICMS = 90");
-                    if ($pRedBC > 0) {
-                        $this->dom->addChild($icms, 'pRedBCOutraUF', $pRedBC, false, "$identificador Percentual da 
-                            Redução de BC Outra UF");
+                    $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 90");
+                    if($pRedBC > 0){
+                        $this->dom->addChild($icms, 'pRedBCOutraUF', $pRedBC, false, "$identificador  Percentual da Redução de BC Outra UF");
                     }
-                    $this->dom->addChild($icms, 'vBCOutraUF', $vBC, true, "$identificador  Valor BC do ICMS Outra UF");
-                    $this->dom->addChild($icms, 'pICMSOutraUF', $pICMS, true, "$identificador  Aliq imposto Outra UF");
+                    $this->dom->addChild($icms, 'vBCOutraUF', $vBC, true, "$identificador  Valor da BC do ICMS Outra UF");
+                    $this->dom->addChild($icms, 'pICMSOutraUF', $pICMS, true, "$identificador  Alíquota do imposto Outra UF");
                     $this->dom->addChild($icms, 'vICMSOutraUF', $vICMS, true, "$identificador  Valor do ICMS Outra UF");
-                } else {
+                }else{
                     $icms = $this->dom->createElement("ICMS90");
                     $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 90");
-                    if ($pRedBC > 0) {
-                        $this->dom->addChild($icms, 'pRedBC', $pRedBC, false, "$identificador Percentual Redução BC");
+                    if($pRedBC > 0) {
+                        $this->dom->addChild($icms, 'pRedBC', $pRedBC, false, "$identificador  Percentual da Redução de BC");
                     }
                     $this->dom->addChild($icms, 'vBC', $vBC, true, "$identificador  Valor da BC do ICMS");
                     $this->dom->addChild($icms, 'pICMS', $pICMS, true, "$identificador  Alíquota do imposto");
                     $this->dom->addChild($icms, 'vICMS', $vICMS, true, "$identificador  Valor do ICMS");
-                    if ($vCred > 0) {
+                    if($vCred > 0) {
                         $this->dom->addChild($icms, 'vCred', $vCred, false, "$identificador  Valor do Crédido");
                     }
                 }
@@ -2710,12 +2711,22 @@ class Make extends BaseMake
     public function infNFeTag($chave = '', $PIN = '', $dPrev = '')
     {
         $identificador = '#262 <infNFe> - ';
-        $this->infNFe = $this->dom->createElement('infNFe');
-        $this->dom->addChild($this->infNFe, 'chave', $chave, true, $identificador . 'Chave de acesso da NF-e');
-        $this->dom->addChild($this->infNFe, 'PIN', $PIN, false, $identificador . 'PIN SUFRAMA');
-        $this->dom->addChild($this->infNFe, 'dPrev', $dPrev, false, $identificador . 'Data prevista de entrega');
+        $this->infNFe[] = $this->dom->createElement('infNFe');
+        $posicao = (integer) count($this->infNFe) - 1;
+        $this->dom->addChild($this->infNFe[$posicao], 'chave', $chave, true, $identificador . 'Chave de acesso da NF-e');
+        $this->dom->addChild($this->infNFe[$posicao], 'PIN', $PIN, false, $identificador . 'PIN SUFRAMA');
+        $this->dom->addChild($this->infNFe[$posicao], 'dPrev', $dPrev, false, $identificador . 'Data prevista de entrega');
 
-        return $this->infNFe;
+        return $this->infNFe[$posicao];
+
+
+//        $identificador = '#262 <infNFe> - ';
+//        $this->infNFe = $this->dom->createElement('infNFe');
+//        $this->dom->addChild($this->infNFe, 'chave', $chave, true, $identificador . 'Chave de acesso da NF-e');
+//        $this->dom->addChild($this->infNFe, 'PIN', $PIN, false, $identificador . 'PIN SUFRAMA');
+//        $this->dom->addChild($this->infNFe, 'dPrev', $dPrev, false, $identificador . 'Data prevista de entrega');
+//
+//        return $this->infNFe;
     }
 
     public function segTag($respSeg = 4)
