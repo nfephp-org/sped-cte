@@ -2529,8 +2529,7 @@ class Make extends BaseMake
         $vBCSTRet = '',
         $vICMSSTRet = '',
         $pICMSSTRet = '',
-        $vCred = '',
-        $outraUF = false
+        $vCred = ''
     ) {
         $identificador = 'N01 <ICMSxx> - ';
         switch ($cst) {
@@ -2748,8 +2747,6 @@ class Make extends BaseMake
         $identificador = '#360 <seg> - ';
         $this->seg = $this->dom->createElement('seg');
         $this->dom->addChild($this->seg, 'respSeg', $respSeg, true, $identificador . 'Responsável pelo Seguro');
-        $this->dom->addChild($this->seg, 'xSeg', $xSeg, false, $identificador . 'Nome do Responsavel');
-        $this->dom->addChild($this->seg, 'nApol', $nApol, false, $identificador . 'Valor do seguro');
         return $this->seg;
     }
 

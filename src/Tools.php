@@ -183,7 +183,6 @@ class Tools extends BaseTools
         //}
         //montagem dos dados da mensagem SOAP
         $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$cons</cteDadosMsg>";
-             
         //envia a solicitação via SOAP
         $retorno = $this->oSoap->send(
             $this->urlService,
