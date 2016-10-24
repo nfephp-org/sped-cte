@@ -1,6 +1,6 @@
 # SPED-CTE
 
-API para geração e comunicação das CTe com as SEFAZ autorizadoras.
+Framework para geração e comunicação das CTe com as SEFAZ autorizadoras.
 
 *sped-nfse é um framework para geração CTe e eventos na comunicação com as SEFAZ autorizadoras.*
 
