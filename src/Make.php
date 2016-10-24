@@ -540,7 +540,7 @@ class Make extends BaseMake
         $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
 
         $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
-        
+
         $this->dom->appChild($this->imp, $this->vTotTrib, 'Falta tag "vTotTrib"');
         foreach ($this->veic as $veic) {
             $this->dom->appChild($this->rodo, $veic, 'Falta tag "veic"');
@@ -548,7 +548,7 @@ class Make extends BaseMake
         foreach ($this->moto as $moto) {
             $this->dom->appChild($this->rodo, $moto, 'Falta tag "moto"');
         }
-        
+
         $this->dom->appChild($this->CTe, $this->infCte, 'Falta tag "CTe"');
         $this->dom->appChild($this->dom, $this->CTe, 'Falta tag "DOMDocument"');
         $this->xml = $this->dom->saveXML();
@@ -629,7 +629,7 @@ class Make extends BaseMake
         $tpCTe = '',
         $procEmi = '',
         $verProc = '',
-        $indGlobalizado,
+        $indGlobalizado = '',
         $cMunEnv = '',
         $xMunEnv = '',
         $UFEnv = '',
@@ -2676,7 +2676,8 @@ class Make extends BaseMake
         $this->dom->addChild($this->infCarga, 'vCarga', $vCarga, false, $identificador . 'Valor Total da Carga');
         $this->dom->addChild($this->infCarga, 'proPred', $proPred, true, $identificador . 'Produto Predominante');
         $this->dom->addChild($this->infCarga, 'xOutCat', $xOutCat, false, $identificador . 'Outras Caract. da Carga');
-        $this->dom->addChild($this->infCarga, 'vCargaAverb', $vCargaAverb, false, $identificador . 'Valor da Carga para efeito de averbação');
+        $this->dom->addChild($this->infCarga, 'vCargaAverb', $vCargaAverb, false, $identificador . 'Valor da Carga para 
+            efeito de averbação');
 
         return $this->infCarga;
     }
@@ -2738,21 +2739,16 @@ class Make extends BaseMake
         return $this->infModal;
     }
 
-    public function rodoTag($RNTRC = '', $dPrev = '', $lota = '', $CIOT = '')
+    public function rodoTag($RNTRC = '')
     {
         $identificador = '#1 <rodo> - ';
         $this->rodo = $this->dom->createElement('rodo');
         $this->dom->addChild($this->rodo, 'RNTRC', $RNTRC, true, $identificador . 'Registro nacional de transportadores
             rodoviários de carga');
-        $this->dom->addChild($this->rodo, 'dPrev', $dPrev, true, $identificador . 'Data prevista para entrega da carga 
-            no recebedor');
-        $this->dom->addChild($this->rodo, 'lota', $lota, true, $identificador . 'Indicador de lotação');
-        $this->dom->addChild($this->rodo, 'CIOT', $CIOT, false, $identificador . 'Codigo identificador da operacao de '
-            .'transporte');
 
         return $this->rodo;
     }
-    
+
     public function vTotTribTag($vTotTrib = '')
     {
         $identificador = '#250 <imp> - ';
@@ -2763,10 +2759,10 @@ class Make extends BaseMake
             false,
             $identificador . 'Valor de tributos federais, estaduais e municipais'
         );
-        
+
         return $this->vTotTrib;
     }
-    
+
     public function veicTag(
         $RENAVAM = '',
         $placa = '',
@@ -2779,7 +2775,7 @@ class Make extends BaseMake
         $tpCar = '',
         $UF = ''
     ) {
-    
+
         $identificador = '#21 <veic> - ';
         $this->veic[] = $this->dom->createElement('veic');
         $posicao = (integer) count($this->veic) - 1;
@@ -2855,7 +2851,7 @@ class Make extends BaseMake
         );
         return $this->veic[$posicao];
     }
-    
+
     public function motoTag($xNome = '', $CPF = '')
     {
         $identificador = '#21 <veic> - ';

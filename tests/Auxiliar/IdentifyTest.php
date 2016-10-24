@@ -8,7 +8,7 @@ use NFePHP\CTe\Auxiliar\IdentifyCTe;
 
 class IdentifyTest extends PHPUnit_Framework_TestCase
 {
-    public function testeIdentificaCTe()
+    public function testIdentificaCte()
     {
         $aResp = array();
         $filePath = dirname(dirname(__FILE__)) . '/fixtures/xml/0008-cte.xml';

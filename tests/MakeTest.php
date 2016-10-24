@@ -127,9 +127,25 @@ class MakeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('toma3', $toma3Tag->nodeName);
     }
 
+    public function testRemocaoDeElementosDoModalRodoviario()
+    {
+        $RNTRC = '99999999';
+        $rodoTag = $this->cte->rodoTag($RNTRC);
+
+        $this->assertEquals("<rodo><RNTRC>{$RNTRC}</RNTRC></rodo>", $rodoTag->ownerDocument->saveXML($rodoTag));
+    }
+
     protected function setUp()
     {
         parent::setUp();
         $this->cte = new Make();
     }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        unset($this->cte);
+    }
+
+
 }
