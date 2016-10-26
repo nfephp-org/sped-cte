@@ -26,6 +26,8 @@ use NFePHP\Common\Exception;
 use NFePHP\CTe\Auxiliar\Response;
 use NFePHP\CTe\Auxiliar\IdentifyCTe;
 use NFePHP\Common\Dom\ValidXsd;
+use NFePHP\Common\Dom\Dom;
+use NFePHP\Common\DateTime\DateTime;
 
 if (!defined('NFEPHP_ROOT')) {
     define('NFEPHP_ROOT', dirname(dirname(__FILE__)));
@@ -933,7 +935,15 @@ class Tools extends BaseTools
         $procXML = '';
         //carrega a CTe
         $docCTe = new Dom();
-        $docCTe->loadXMLFile($pathCTefile);
+        
+        if (file_exists($pathCTefile)) {
+            //carrega o XML pelo caminho do arquivo informado
+            $docCTe->loadXMLFile($pathCTefile);
+        } else {
+            //carrega o XML pelo conteúdo
+            $docCTe->loadXMLString($pathCTefile);
+        }
+        
         $nodeCTe = $docCTe->getNode('CTe', 0);
         if ($nodeCTe == '') {
             $msg = "O arquivo indicado como CTe não é um xml de CTe!";
@@ -954,7 +964,14 @@ class Tools extends BaseTools
         //carrega o cancelamento
         //pode ser um evento ou resultado de uma consulta com multiplos eventos
         $doccanc = new Dom();
-        $doccanc->loadXMLFile($pathCancfile);
+        
+        if (file_exists($pathCancfile)) {
+            //carrega o XML pelo caminho do arquivo informado
+            $doccanc->loadXMLFile($pathCancfile);
+        } else {
+            //carrega o XML pelo conteúdo
+            $doccanc->loadXMLString($pathCancfile);
+        }
         $retEvento = $doccanc->getElementsByTagName('retEventoCTe')->item(0);
         $eventos = $retEvento->getElementsByTagName('infEvento');
         foreach ($eventos as $evento) {
