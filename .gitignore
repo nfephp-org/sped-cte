@@ -6,6 +6,7 @@ limpaTAB.php
 config.json
 local
 vendor
+xml
 docs
 nbproject
 build
