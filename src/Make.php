@@ -260,6 +260,11 @@ class Make extends BaseMake
      */
     private $ICMSSN = '';
     /**
+     * Observações adicionais da CT-e
+     * @var string
+     */
+    private $xObs = '';
+    /**
      * Grupo de informações do CT-e Normal e Substituto
      * @var \DOMNode
      */
@@ -536,7 +541,6 @@ class Make extends BaseMake
         foreach ($this->infOutros as $infOutros) {
             $this->dom->appChild($this->infDoc, $infOutros, 'Falta tag "infOutros"');
         }
-
 
         $this->dom->appChild($this->infCTeNorm, $this->seg, 'Falta tag "seg"');
         $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
