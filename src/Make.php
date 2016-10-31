@@ -2573,10 +2573,12 @@ class Make extends BaseMake
                     $icms = $this->dom->createElement("ICMSOutraUF");
                     $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 90");
                     if ($pRedBC > 0) {
-                        $this->dom->addChild($icms, 'pRedBCOutraUF', $pRedBC, false, "$identificador Percentual Red BC Outra UF");
+                        $this->dom->addChild($icms, 'pRedBCOutraUF', $pRedBC, false, "$identificador Percentual Red "
+                                . "BC Outra UF");
                     }
                     $this->dom->addChild($icms, 'vBCOutraUF', $vBC, true, "$identificador Valor BC ICMS Outra UF");
-                    $this->dom->addChild($icms, 'pICMSOutraUF', $pICMS, true, "$identificador Alíquota do imposto Outra UF");
+                    $this->dom->addChild($icms, 'pICMSOutraUF', $pICMS, true, "$identificador Alíquota do "
+                            . "imposto Outra UF");
                     $this->dom->addChild($icms, 'vICMSOutraUF', $vICMS, true, "$identificador Valor ICMS Outra UF");
                 } else {
                     $icms = $this->dom->createElement("ICMS90");
@@ -2729,24 +2731,29 @@ class Make extends BaseMake
         $identificador = '#262 <infNFe> - ';
         $this->infNFe[] = $this->dom->createElement('infNFe');
         $posicao = (integer) count($this->infNFe) - 1;
-        $this->dom->addChild($this->infNFe[$posicao], 'chave', $chave, true, $identificador . 'Chave de acesso da NF-e');
+        $this->dom->addChild($this->infNFe[$posicao], 'chave', $chave, true, $identificador . 'Chave acesso da NF-e');
         $this->dom->addChild($this->infNFe[$posicao], 'PIN', $PIN, false, $identificador . 'PIN SUFRAMA');
-        $this->dom->addChild($this->infNFe[$posicao], 'dPrev', $dPrev, false, $identificador . 'Data prevista de entrega');
+        $this->dom->addChild($this->infNFe[$posicao], 'dPrev', $dPrev, false, $identificador . 'Data prevista entrega');
 
         return $this->infNFe[$posicao];
     }
     
     public function infOutrosTag($tpDoc = '', $descOutros = '', $nDoc = '', $dEmi = '', $vDocFisc = '', $dPrev = '')
     {
-        $identificador = '#262 <infOutros> - ';
+        $ident = '#262 <infOutros> - ';
         $this->infOutros[] = $this->dom->createElement('infOutros');
         $posicao = (integer) count($this->infOutros) - 1;
-        $this->dom->addChild($this->infOutros[$posicao], 'tpDoc', $tpDoc, true, $identificador . 'Tipo de documento originário');
-        $this->dom->addChild($this->infOutros[$posicao], 'descOutros', $descOutros, false, $identificador . 'Descrição do documento');
-        $this->dom->addChild($this->infOutros[$posicao], 'nDoc', $nDoc, false, $identificador . 'Número do documento');
-        $this->dom->addChild($this->infOutros[$posicao], 'dEmi', $dEmi, false, $identificador . 'Data de Emissão');
-        $this->dom->addChild($this->infOutros[$posicao], 'vDocFisc', $vDocFisc, false, $identificador . 'Valor do documento');
-        $this->dom->addChild($this->infOutros[$posicao], 'dPrev', $dPrev, false, $identificador . 'Data prevista de entrega');
+        $this->dom->addChild($this->infOutros[$posicao], 'tpDoc', $tpDoc, true, $ident . 'Tipo '
+                . 'de documento originário');
+        $this->dom->addChild($this->infOutros[$posicao], 'descOutros', $descOutros, false, $ident . 'Descrição '
+                . 'do documento');
+        $this->dom->addChild($this->infOutros[$posicao], 'nDoc', $nDoc, false, $ident . 'Número '
+                . 'do documento');
+        $this->dom->addChild($this->infOutros[$posicao], 'dEmi', $dEmi, false, $ident . 'Data de Emissão');
+        $this->dom->addChild($this->infOutros[$posicao], 'vDocFisc', $vDocFisc, false, $ident . 'Valor '
+                . 'do documento');
+        $this->dom->addChild($this->infOutros[$posicao], 'dPrev', $dPrev, false, $ident . 'Data '
+                . 'prevista de entrega');
 
         return $this->infOutros[$posicao];
     }
