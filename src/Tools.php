@@ -566,14 +566,14 @@ class Tools extends BaseTools
         $this->soapDebug = $this->oSoap->soapDebug;
         //salva mensagens
         $filename = "$chCTe-$aliasEvento-envEvento.xml";
-        $this->zGravaFile('cte', $tpAmb, $filename, $lastMsg);        
+        $this->zGravaFile('cte', $tpAmb, $filename, $lastMsg);
         $filename = "$chCTe-$aliasEvento-retEnvEvento.xml";
         $this->zGravaFile('cte', $tpAmb, $filename, $retorno);
         //tratar dados de retorno
         $this->aLastRetEvent = Response::readReturnSefaz($servico, $retorno);
-        if ($this->aLastRetEvent['cStat'] == '134' || 
+        if ($this->aLastRetEvent['cStat'] == '134' ||
                 $this->aLastRetEvent['cStat'] == '135' ||
-                $this->aLastRetEvent['cStat'] == '136'){            
+                $this->aLastRetEvent['cStat'] == '136') {
             $pasta = 'eventos'; //default
             if ($aliasEvento == 'CanCTe') {
                 $pasta = 'canceladas';
@@ -583,7 +583,7 @@ class Tools extends BaseTools
                 $filename = "$chCTe-$aliasEvento-$nSeqEvento-procEvento.xml";
             }
             $retorno = $this->zAddProtMsg('procEventoCTe', 'eventoCTe', $signedMsg, 'retEventoCTe', $retorno);
-            $this->zGravaFile('cte', $tpAmb, $filename, $retorno, $pasta);            
+            $this->zGravaFile('cte', $tpAmb, $filename, $retorno, $pasta);
         }
         return (string) $retorno;
     }
@@ -749,9 +749,9 @@ class Tools extends BaseTools
      * II - a correção de dados cadastrais que implique mudança do emitente,
      *  tomador, remetente ou do destinatário;
      * III - a data de emissão ou de saída.
-     *     
+     *
      * @param type $chCTe
-     * @param type $tpAmb        
+     * @param type $tpAmb
      * @param type $nSeqEvento
      * @param type $grupoAlterado
      * @param type $campoAlterado
@@ -763,7 +763,7 @@ class Tools extends BaseTools
      */
     public function sefazCartaCorrecao(
         $chCTe = '',
-        $tpAmb = '2',        
+        $tpAmb = '2',
         $nSeqEvento = '1',
         $grupoAlterado = '',
         $campoAlterado = '',
