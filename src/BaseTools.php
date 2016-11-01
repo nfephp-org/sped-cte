@@ -19,9 +19,9 @@ namespace NFePHP\CTe;
 use NFePHP\Common\Certificate\Pkcs12;
 use NFePHP\Common\DateTime\DateTime;
 use NFePHP\Common\Dom\Dom;
-use NFePHP\Common\Soap\CurlSoap;
-use NFePHP\Common\Files;
 use NFePHP\Common\Exception;
+use NFePHP\Common\Files;
+use NFePHP\Common\Soap\CurlSoap;
 
 if (!defined('NFEPHP_ROOT')) {
     define('NFEPHP_ROOT', dirname(dirname(dirname(__FILE__))));
@@ -99,7 +99,7 @@ class BaseTools
     protected $oCertificate;
     /**
      * oSoap
-     * @var Object Class
+     * @var CurlSoap
      */
     protected $oSoap;
     /**
@@ -264,6 +264,65 @@ class BaseTools
     }
     
     /**
+     * atualizaCertificado
+     * @param string $certpfx certificado pfx em string ou o path para o certificado
+     * @param string $senha senha para abrir o certificado
+     * @return boolean
+     */
+    public function atualizaCertificado($certpfx = '', $senha = '')
+    {
+        if ($certpfx == '' && $senha != '') {
+            return false;
+        }
+        if (is_file($certpfx)) {
+            $this->oCertificate->loadPfxFile($certpfx, $senha);
+            return true;
+        }
+        $this->oCertificate->loadPfx($certpfx, $senha);
+        $this->zLoadSoapClass();
+        return true;
+    }
+
+    /**
+     * Carrega a classe SOAP e os certificados
+     */
+    protected function zLoadSoapClass()
+    {
+        $this->oSoap = null;
+        $this->oSoap = new CurlSoap(
+            $this->oCertificate->priKeyFile,
+            $this->oCertificate->pubKeyFile,
+            $this->oCertificate->certKeyFile,
+            $this->soapTimeout,
+            $this->sslProtocol
+        );
+    }
+
+    /**
+     * setAmbiente
+     * Seta a varável de ambiente
+     * @param string $tpAmb
+     */
+    protected function setAmbiente($tpAmb = '2')
+    {
+        $this->ambiente = 'homologacao';
+        if ($tpAmb == '1') {
+            $this->ambiente = 'producao';
+        }
+    }
+
+    /**
+     * getSSLProtocol
+     * Retrona o protocolo que está setado
+     * @return string
+     */
+    public function getSSLProtocol()
+    {
+        $aPr = array('default', 'TLSv1', 'SSLv2', 'SSLv3', 'TLSv1.0', 'TLSv1.1', 'TLSv1.2');
+        return $aPr[$this->sslProtocol];
+    }
+
+    /**
      * setSSLProtocol
      * Força o uso de um determinado protocolo de encriptação
      * na comunicação https com a SEFAZ usando cURL
@@ -301,14 +360,12 @@ class BaseTools
     }
     
     /**
-     * getSSLProtocol
-     * Retrona o protocolo que está setado
-     * @return string
+     * getSoapTimeOut
+     * @return integer
      */
-    public function getSSLProtocol()
+    public function getSoapTimeOut()
     {
-        $aPr = array('default','TLSv1','SSLv2','SSLv3','TLSv1.0','TLSv1.1','TLSv1.2');
-        return $aPr[$this->sslProtocol];
+        return $this->soapTimeout;
     }
     
     /**
@@ -321,48 +378,6 @@ class BaseTools
             $this->soapTimeout = $segundos;
             $this->zLoadSoapClass();
         }
-    }
-    
-    /**
-     * getSoapTimeOut
-     * @return integer
-     */
-    public function getSoapTimeOut()
-    {
-        return $this->soapTimeout;
-    }
-    
-    /**
-     * setAmbiente
-     * Seta a varável de ambiente
-     * @param string $tpAmb
-     */
-    protected function setAmbiente($tpAmb = '2')
-    {
-        $this->ambiente = 'homologacao';
-        if ($tpAmb == '1') {
-            $this->ambiente = 'producao';
-        }
-    }
-    
-    /**
-     * atualizaCertificado
-     * @param string $certpfx certificado pfx em string ou o path para o certificado
-     * @param string $senha senha para abrir o certificado
-     * @return boolean
-     */
-    public function atualizaCertificado($certpfx = '', $senha = '')
-    {
-        if ($certpfx == '' && $senha != '') {
-            return false;
-        }
-        if (is_file($certpfx)) {
-            $this->oCertificate->loadPfxFile($certpfx, $senha);
-            return true;
-        }
-        $this->oCertificate->loadPfx($certpfx, $senha);
-        $this->zLoadSoapClass();
-        return true;
     }
     
     /**
@@ -406,6 +421,44 @@ class BaseTools
         }
         return $sxml;
     }
+
+    /**
+     * zGravaFile
+     * Grava os dados no diretorio das NFe
+     * @param string $tpAmb ambiente
+     * @param string $filename nome do arquivo
+     * @param string $data dados a serem salvos
+     * @param string $subFolder
+     * @param string $anomes
+     * @throws Exception\RuntimeException
+     */
+    protected function zGravaFile(
+        $tipo = '',
+        $tpAmb = '2',
+        $filename = '',
+        $data = '',
+        $subFolder = 'temporarias',
+        $anomes = ''
+    )
+    {
+        if ($anomes == '') {
+            $anomes = date('Ym');
+        }
+        $path = '';
+        if ($tipo == 'nfe') {
+            $path = $this->aConfig['pathNFeFiles'];
+        } elseif ($tipo == 'cte') {
+            $path = $this->aConfig['pathCTeFiles'];
+        } elseif ($tipo == 'mdfe') {
+            $path = $this->aConfig['pathMDFeFiles'];
+        }
+        $pathTemp = Files\FilesFolders::getFilePath($tpAmb, $path, $subFolder)
+            . DIRECTORY_SEPARATOR . $anomes;
+        if (!Files\FilesFolders::saveFile($pathTemp, $filename, $data)) {
+            $msg = 'Falha na gravação no diretório. ' . $pathTemp;
+            throw new Exception\RuntimeException($msg);
+        }
+    }
     
     /**
      * setVerAplic
@@ -414,21 +467,6 @@ class BaseTools
     public function setVerAplic($versao = '')
     {
         $this->verAplic = $versao;
-    }
-
-    /**
-     * Carrega a classe SOAP e os certificados
-     */
-    protected function zLoadSoapClass()
-    {
-        $this->oSoap = null;
-        $this->oSoap = new CurlSoap(
-            $this->oCertificate->priKeyFile,
-            $this->oCertificate->pubKeyFile,
-            $this->oCertificate->certKeyFile,
-            $this->soapTimeout,
-            $this->sslProtocol
-        );
     }
     
     /**
@@ -459,7 +497,7 @@ class BaseTools
         }
         $this->urlcUF = $this->getcUF($siglaUF);
         $pathXmlUrlFile = $this->zGetXmlUrlPath($tipo);
-        
+
         if ($this->enableSVCAN) {
             $aURL = self::zLoadSEFAZ($pathXmlUrlFile, $tpAmb, 'SVCAN');
         } elseif ($this->enableSVCRS) {
@@ -477,13 +515,23 @@ class BaseTools
         $this->urlOperation = $aURL[$service]['operation'];
         //montagem do namespace do serviço
         $this->urlNamespace = sprintf("%s/wsdl/%s", $this->urlPortal, $this->urlOperation);
-        
+
         //montagem do cabeçalho da comunicação SOAP
         $this->urlHeader = $this->zMountHeader($tipo, $this->urlNamespace, $this->urlcUF, $this->urlVersion);
-       
+
         return true;
     }
     
+    /**
+     * getcUF
+     * @param string $siglaUF
+     * @return string numero cUF
+     */
+    public function getcUF($siglaUF = '')
+    {
+        return $this->cUFlist[$siglaUF];
+    }
+
     /**
      * zGetXmlUrlPath
      * @param string $tipo
@@ -506,47 +554,14 @@ class BaseTools
         } elseif ($tipo == 'cle') {
             $path = $this->aConfig['pathXmlUrlFileCLe'];
         }
-        
+
         $pathXmlUrlFile = NFEPHP_ROOT
             . DIRECTORY_SEPARATOR
             . 'config'
             . DIRECTORY_SEPARATOR
             . $path;
-        
+
         return $pathXmlUrlFile;
-    }
-    
-    /**
-     * zMountHeader
-     * @param string $tipo
-     * @param string $namespace
-     * @param string $cUF
-     * @param string $version
-     * @return string
-     */
-    private function zMountHeader($tipo, $namespace, $cUF, $version)
-    {
-        $header = '';
-        if ($tipo == 'nfe') {
-            $header = "<nfeCabecMsg "
-                . "xmlns=\"$namespace\">"
-                . "<cUF>$cUF</cUF>"
-                . "<versaoDados>$version</versaoDados>"
-                . "</nfeCabecMsg>";
-        } elseif ($tipo == 'cte') {
-            $header = "<cteCabecMsg "
-                . "xmlns=\"$namespace\">"
-                . "<cUF>$cUF</cUF>"
-                . "<versaoDados>$version</versaoDados>"
-                . "</cteCabecMsg>";
-        } elseif ($tipo == 'mdfe') {
-            $header = "<mdfeCabecMsg "
-                . "xmlns=\"$namespace\">"
-                . "<cUF>$cUF</cUF>"
-                . "<versaoDados>$version</versaoDados>"
-                . "</mdfeCabecMsg>";
-        }
-        return $header;
     }
     
     /**
@@ -611,7 +626,7 @@ class BaseTools
             'SVRS'=>'SVRS',
             'SVCAN'=>'SVCAN',
         );
-        
+
         $autorizadores['55'] = array(
             'AC'=>'SVRS',
             'AL'=>'SVRS',
@@ -646,7 +661,7 @@ class BaseTools
             'SVCAN'=>'SVCAN',
             'SVCRS'=>'SVCRS'
         );
-        
+
         //Estados que utilizam a SVSP - Sefaz Virtual de São Paulo: AP, PE, RR
         //Estados que utilizam a SVRS - Sefaz Virtual do RS:
         //AC, AL, AM, BA, CE, DF, ES, GO, MA,
@@ -731,52 +746,38 @@ class BaseTools
         }
         return $aUrl;
     }
-    
-    /**
-     * zGravaFile
-     * Grava os dados no diretorio das NFe
-     * @param string $tpAmb ambiente
-     * @param string $filename nome do arquivo
-     * @param string $data dados a serem salvos
-     * @param string $subFolder
-     * @param string $anomes
-     * @throws Exception\RuntimeException
-     */
-    protected function zGravaFile(
-        $tipo = '',
-        $tpAmb = '2',
-        $filename = '',
-        $data = '',
-        $subFolder = 'temporarias',
-        $anomes = ''
-    ) {
-        if ($anomes == '') {
-            $anomes = date('Ym');
-        }
-        $path = '';
-        if ($tipo == 'nfe') {
-            $path = $this->aConfig['pathNFeFiles'];
-        } elseif ($tipo == 'cte') {
-            $path = $this->aConfig['pathCTeFiles'];
-        } elseif ($tipo == 'mdfe') {
-            $path = $this->aConfig['pathMDFeFiles'];
-        }
-        $pathTemp = Files\FilesFolders::getFilePath($tpAmb, $path, $subFolder)
-            . DIRECTORY_SEPARATOR.$anomes;
-        if (! Files\FilesFolders::saveFile($pathTemp, $filename, $data)) {
-            $msg = 'Falha na gravação no diretório. '.$pathTemp;
-            throw new Exception\RuntimeException($msg);
-        }
-    }
 
     /**
-     * getcUF
-     * @param string $siglaUF
-     * @return string numero cUF
+     * zMountHeader
+     * @param string $tipo
+     * @param string $namespace
+     * @param string $cUF
+     * @param string $version
+     * @return string
      */
-    public function getcUF($siglaUF = '')
+    private function zMountHeader($tipo, $namespace, $cUF, $version)
     {
-        return $this->cUFlist[$siglaUF];
+        $header = '';
+        if ($tipo == 'nfe') {
+            $header = "<nfeCabecMsg "
+                . "xmlns=\"$namespace\">"
+                . "<cUF>$cUF</cUF>"
+                . "<versaoDados>$version</versaoDados>"
+                . "</nfeCabecMsg>";
+        } elseif ($tipo == 'cte') {
+            $header = "<cteCabecMsg "
+                . "xmlns=\"$namespace\">"
+                . "<cUF>$cUF</cUF>"
+                . "<versaoDados>$version</versaoDados>"
+                . "</cteCabecMsg>";
+        } elseif ($tipo == 'mdfe') {
+            $header = "<mdfeCabecMsg "
+                . "xmlns=\"$namespace\">"
+                . "<cUF>$cUF</cUF>"
+                . "<versaoDados>$version</versaoDados>"
+                . "</mdfeCabecMsg>";
+        }
+        return $header;
     }
     
     /**
