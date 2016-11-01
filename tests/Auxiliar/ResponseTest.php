@@ -10,7 +10,7 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 {
     public $mdfe;
     
-    public function testeInstanciar()
+    public function testInstanciar()
     {
         $this->mdfe = new Response();
     }

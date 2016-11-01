@@ -2,7 +2,7 @@
 <!-- 
     Alterado os endereços MS produção conforme nota da SEFAZ MS 26 DE FEVEREIRO DE 2016 - 14:23 ACASARIN@FAZENDA.MS
 -->
-<WS xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
+<WS>
 <UF>
     <sigla>MG</sigla>
     <homologacao>
@@ -160,7 +160,9 @@
     <producao>
         <CteRecepcao method='CTeRecepcao' operation='CteRecepcao' version='2.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/cteRecepcao.asmx</CteRecepcao>
         <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='2.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/CteRetRecepcao.asmx</CteRetRecepcao>
-        <CteCancelamento method='CTeCancelamento' operation='CteCancelamento' version='2.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/CteCancelamento.asmx</CteCancelamento>        
+        <CteCancelamento method='CTeCancelamento' operation='CteCancelamento' version='2.00'>
+            https://nfe.fazenda.sp.gov.br/cteWEB/services/CteCancelamento.asmx
+        </CteCancelamento>
         <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsultaProtocolo' version='2.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/CteConsulta.asmx</CteConsultaProtocolo>
         <CteStatusServico method='cteStatusServicoCT' operation='CteStatusServico' version='2.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/CteStatusServico.asmx</CteStatusServico>
     </producao>
