@@ -42,6 +42,13 @@ class Tools extends BaseTools
      * @var string
      */
     protected $urlPortal = 'http://www.portalfiscal.inf.br/cte';
+    
+    /**
+     * aLastRetEvent
+     *
+     * @var array
+     */
+    private $aLastRetEvent = array();
 
     /**
      * @var string
