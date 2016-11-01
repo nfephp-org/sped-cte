@@ -23,7 +23,6 @@ use NFePHP\Common\LotNumber\LotNumber;
 use NFePHP\Common\Strings\Strings;
 use NFePHP\Common\Files;
 use NFePHP\Common\Exception;
-use NFePHP\Common\Dom\Dom;
 use NFePHP\CTe\Auxiliar\Response;
 use NFePHP\CTe\Auxiliar\IdentifyCTe;
 use NFePHP\Common\Dom\ValidXsd;
@@ -42,13 +41,6 @@ class Tools extends BaseTools
      */
     protected $urlPortal = 'http://www.portalfiscal.inf.br/cte';
 
-    /**
-     * aLastRetEvent
-     *
-     * @var array
-     */
-    private $aLastRetEvent = array();
-   
     /**
      * erros
      *
@@ -551,7 +543,7 @@ class Tools extends BaseTools
 
         $signedMsg = $this->oCertificate->signXML($cons, 'infEvento');
         //limpa o xml
-        $signedMsg = Strings::clearXml($signedMsg, true);
+        $signedMsg = preg_replace("/<\?xml.*\?>/", "", $signedMsg);
         //montagem dos dados da mensagem SOAP
         $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$signedMsg</cteDadosMsg>";
         
@@ -571,19 +563,22 @@ class Tools extends BaseTools
         $this->zGravaFile('cte', $tpAmb, $filename, $retorno);
         //tratar dados de retorno
         $this->aLastRetEvent = Response::readReturnSefaz($servico, $retorno);
-        if ($this->aLastRetEvent['cStat'] == '134' ||
-                $this->aLastRetEvent['cStat'] == '135' ||
-                $this->aLastRetEvent['cStat'] == '136') {
-            $pasta = 'eventos'; //default
-            if ($aliasEvento == 'CanCTe') {
-                $pasta = 'canceladas';
-                $filename = "$chCTe-$aliasEvento-procEvento.xml";
-            } elseif ($aliasEvento == 'CCe') {
-                $pasta = 'cartacorrecao';
-                $filename = "$chCTe-$aliasEvento-$nSeqEvento-procEvento.xml";
+        if ($this->aLastRetEvent['cStat'] == '128') {
+            if ($this->aLastRetEvent['evento'][0]['cStat'] == '135' ||
+                $this->aLastRetEvent['evento'][0]['cStat'] == '136' ||
+                $this->aLastRetEvent['evento'][0]['cStat'] == '155'
+            ) {
+                $pasta = 'eventos'; //default
+                if ($aliasEvento == 'CanCTe') {
+                    $pasta = 'canceladas';
+                    $filename = "$chCTe-$aliasEvento-procEvento.xml";
+                } elseif ($aliasEvento == 'CCe') {
+                    $pasta = 'cartacorrecao';
+                    $filename = "$chCTe-$aliasEvento-$nSeqEvento-procEvento.xml";
+                }
+                $retorno = $this->zAddProtMsg('procEventoCTe', 'evento', $signedMsg, 'retEvento', $retorno);
+                $this->zGravaFile('cte', $tpAmb, $filename, $retorno, $pasta);
             }
-            $retorno = $this->zAddProtMsg('procEventoCTe', 'eventoCTe', $signedMsg, 'retEventoCTe', $retorno);
-            $this->zGravaFile('cte', $tpAmb, $filename, $retorno, $pasta);
         }
         return (string) $retorno;
     }
@@ -750,8 +745,10 @@ class Tools extends BaseTools
      *  tomador, remetente ou do destinatário;
      * III - a data de emissão ou de saída.
      *
-     * @param type $chCTe
+     * @param type $siglaUF
      * @param type $tpAmb
+     * @param type $cnpj
+     * @param type $chave
      * @param type $nSeqEvento
      * @param type $grupoAlterado
      * @param type $campoAlterado
@@ -762,8 +759,10 @@ class Tools extends BaseTools
      * @throws Exception\InvalidArgumentException
      */
     public function sefazCartaCorrecao(
-        $chCTe = '',
+        $siglaUF = '',
         $tpAmb = '2',
+        $cnpj = '',
+        $chave = '',
         $nSeqEvento = '1',
         $grupoAlterado = '',
         $campoAlterado = '',
@@ -771,21 +770,19 @@ class Tools extends BaseTools
         $nroItemAlterado = '01',
         &$aRetorno = array()
     ) {
-        $chCTe = preg_replace('/[^0-9]/', '', $chCTe);
+        $chCTe = preg_replace('/[^0-9]/', '', $chave);
         
         //validação dos dados de entrada
         if (strlen($chCTe) != 44) {
             $msg = "Uma chave de CTe válida não foi passada como parâmetro $chCTe.";
             throw new Exception\InvalidArgumentException($msg);
         }
-        if ($chCTe == '' || $grupoAlterado == '' || $campoAlterado == '' || $valorAlterado == '') {
+        if ($siglaUF == '' || $cnpj == '' || $chave == '' ||
+            $grupoAlterado == '' || $campoAlterado == '' || $valorAlterado == ''
+        ) {
             $msg = "Preencha os campos obrigatórios!";
             throw new Exception\InvalidArgumentException($msg);
         }
-        if ($tpAmb == '') {
-            $tpAmb = $this->aConfig['tpAmb'];
-        }
-        $siglaUF = $this->zGetSigla(substr($chCTe, 0, 2));
         
         //estabelece o codigo do tipo de evento CARTA DE CORRECAO
         $tpEvento = '110110';
