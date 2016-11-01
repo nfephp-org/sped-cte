@@ -22,6 +22,12 @@ $aResposta = array();
 // utilizar 90 para identificar SUFRAMA
 $siglaUF = $cteTools->aConfig['siglaUF'];
 
+// Identificação do Ambiente: 1 – Produção 2 – Homologação
+$tpAmb = '2';
+
+// Informar o CNPJ do autor do Evento
+$cnpj = $cteTools->aConfig['cnpj'];
+
 // Chave de Acesso do CT-e vinculado ao Evento
 $chave = '41160981450900000132570020000000601000000106';
 
@@ -50,8 +56,10 @@ $nroItemAlterado='01';
 
 // Transmite o arquivo
 $cteTools->sefazCartaCorrecao(
+    $siglaUF,
+    $tpAmb,
+    $cnpj,
     $chave,
-    $tpAmb,        
     $nSeqEvento,
     $grupoAlterado,
     $campoAlterado,
