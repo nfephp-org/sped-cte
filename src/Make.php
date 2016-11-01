@@ -82,7 +82,7 @@ class Make extends BaseMake
      * Indicador do "papel" do tomador do serviço no CT-e
      * @var \DOMNode
      */
-    private $toma03 = '';
+    private $toma3 = '';
     /**
      * Indicador do "papel" do tomador do serviço no CT-e
      * @var \DOMNode
@@ -260,10 +260,10 @@ class Make extends BaseMake
      */
     private $ICMSSN = '';
     /**
-     * Valor de tributos federais, estaduais e municipais
-     * @var \DOMNode
+     * Observações adicionais da CT-e
+     * @var string
      */
-    private $vTotTrib = '';
+    private $xObs = '';
     /**
      * Grupo de informações do CT-e Normal e Substituto
      * @var \DOMNode
@@ -284,7 +284,7 @@ class Make extends BaseMake
      * e Serviço vinculado a multimodal.
      * @var \DOMNode
      */
-    private $infDoc = '';
+    private $infDoc = array();
     /**
      * Informações das NF
      * @var array
@@ -466,8 +466,8 @@ class Make extends BaseMake
             return false;
         }
         $this->zCTeTag();
-        if ($this->toma03 != '') {
-            $this->dom->appChild($this->ide, $this->toma03, 'Falta tag "ide"');
+        if ($this->toma3 != '') {
+            $this->dom->appChild($this->ide, $this->toma3, 'Falta tag "ide"');
         } else {
             $this->dom->appChild($this->toma4, $this->enderToma, 'Falta tag "toma4"');
             $this->dom->appChild($this->ide, $this->toma4, 'Falta tag "ide"');
@@ -534,21 +534,19 @@ class Make extends BaseMake
         $this->dom->appChild($this->infCTeNorm, $this->infCarga, 'Falta tag "infCarga"');
         $this->dom->appChild($this->infCarga, $this->infQ, 'Falta tag "infQ"');
         $this->dom->appChild($this->infCTeNorm, $this->infDoc, 'Falta tag "infDoc"');
-        $this->dom->appChild($this->infDoc, $this->infNFe, 'Falta tag "infNFe"');
+
+        foreach ($this->infNFe as $infNFe) {
+            $this->dom->appChild($this->infDoc, $infNFe, 'Falta tag "infNFe"');
+        }
+        foreach ($this->infOutros as $infOutros) {
+            $this->dom->appChild($this->infDoc, $infOutros, 'Falta tag "infOutros"');
+        }
 
         $this->dom->appChild($this->infCTeNorm, $this->seg, 'Falta tag "seg"');
         $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
 
         $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
-        
-        $this->dom->appChild($this->imp, $this->vTotTrib, 'Falta tag "vTotTrib"');
-        foreach ($this->veic as $veic) {
-            $this->dom->appChild($this->rodo, $veic, 'Falta tag "veic"');
-        }
-        foreach ($this->moto as $moto) {
-            $this->dom->appChild($this->rodo, $moto, 'Falta tag "moto"');
-        }
-        
+
         $this->dom->appChild($this->CTe, $this->infCte, 'Falta tag "CTe"');
         $this->dom->appChild($this->dom, $this->CTe, 'Falta tag "DOMDocument"');
         $this->xml = $this->dom->saveXML();
@@ -618,7 +616,6 @@ class Make extends BaseMake
         $cCT = '',
         $CFOP = '',
         $natOp = '',
-        $forPag = '',
         $mod = '',
         $serie = '',
         $nCT = '',
@@ -630,7 +627,7 @@ class Make extends BaseMake
         $tpCTe = '',
         $procEmi = '',
         $verProc = '',
-        $refCTE = '',
+        $indGlobalizado = '',
         $cMunEnv = '',
         $xMunEnv = '',
         $UFEnv = '',
@@ -644,6 +641,7 @@ class Make extends BaseMake
         $UFFim = '',
         $retira = '',
         $xDetRetira = '',
+        $indIEToma = '',
         $dhCont = '',
         $xJust = ''
     ) {
@@ -677,13 +675,6 @@ class Make extends BaseMake
             $natOp,
             true,
             $identificador . 'Natureza da Operação'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'forPag',
-            $forPag,
-            true,
-            $identificador . 'Forma de pagamento do serviço'
         );
         $this->dom->addChild(
             $this->ide,
@@ -765,10 +756,10 @@ class Make extends BaseMake
         );
         $this->dom->addChild(
             $this->ide,
-            'refCTE',
-            $refCTE,
+            'indGlobalizado',
+            $indGlobalizado,
             false,
-            $identificador . 'Chave de acesso do CT-e referenciado'
+            $identificador . 'Indicador de CT-e Globalizado'
         );
         $this->dom->addChild(
             $this->ide,
@@ -864,6 +855,13 @@ class Make extends BaseMake
         );
         $this->dom->addChild(
             $this->ide,
+            'indIEToma',
+            $indIEToma,
+            true,
+            $identificador . 'Indicador do papel do tomador na prestação do serviço'
+        );
+        $this->dom->addChild(
+            $this->ide,
             'dhCont',
             $dhCont,
             false,
@@ -881,29 +879,29 @@ class Make extends BaseMake
     }
 
     /**
-     * Gera as tags para o elemento: toma03 (Indicador do "papel" do tomador do serviço no CT-e)
+     * Gera as tags para o elemento: toma3 (Indicador do "papel" do tomador do serviço no CT-e)
      * e adiciona ao grupo ide
      * #35
      * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "toma03" do
+     * Os parâmetros para esta função são todos os elementos da tag "toma3" do
      * tipo elemento (Ele = E|CE|A) e nível 3
      *
      * @param string $toma Tomador do Serviço
      *
      * @return \DOMElement
      */
-    public function toma03Tag($toma = '')
+    public function toma3Tag($toma = '')
     {
-        $identificador = '#35 <toma03> - ';
-        $this->toma03 = $this->dom->createElement('toma03');
+        $identificador = '#35 <toma3> - ';
+        $this->toma3 = $this->dom->createElement('toma3');
         $this->dom->addChild(
-            $this->toma03,
+            $this->toma3,
             'toma',
             $toma,
             true,
             $identificador . 'Tomador do Serviço'
         );
-        return $this->toma03;
+        return $this->toma3;
     }
 
     /**
@@ -1537,7 +1535,7 @@ class Make extends BaseMake
      *
      * @return \DOMElement
      */
-    public function emitTag($CNPJ = '', $IE = '', $xNome = '', $xFant = '')
+    public function emitTag($CNPJ = '', $IE = '', $IEST = '', $xNome = '', $xFant = '')
     {
         $identificador = '#97 <emit> - ';
         $this->emit = $this->dom->createElement('emit');
@@ -1557,6 +1555,13 @@ class Make extends BaseMake
         );
         $this->dom->addChild(
             $this->emit,
+            'IEST',
+            $IEST,
+            false,
+            $identificador . 'Inscrição Estadual do Substituto Tributário'
+        );
+        $this->dom->addChild(
+            $this->emit,
             'xNome',
             $xNome,
             true,
@@ -1566,7 +1571,7 @@ class Make extends BaseMake
             $this->emit,
             'xFant',
             $xFant,
-            true,
+            false,
             $identificador . 'Nome fantasia'
         );
         return $this->emit;
@@ -2527,7 +2532,9 @@ class Make extends BaseMake
         $vBCSTRet = '',
         $vICMSSTRet = '',
         $pICMSSTRet = '',
-        $vCred = ''
+        $vCred = '',
+        $vTotTrib = '',
+        $outraUF = false
     ) {
         $identificador = 'N01 <ICMSxx> - ';
         switch ($cst) {
@@ -2564,16 +2571,35 @@ class Make extends BaseMake
                 $this->dom->addChild($icms, 'vBCSTRet', $vBCSTRet, true, "$identificador  Valor BC do ICMS ST retido");
                 $this->dom->addChild($icms, 'vICMSSTRet', $vICMSSTRet, true, "$identificador  Valor do ICMS ST retido");
                 $this->dom->addChild($icms, 'pICMSSTRet', $pICMSSTRet, true, "$identificador  Valor do ICMS ST retido");
-                $this->dom->addChild($icms, 'vCred', $vCred, false, "$identificador  Valor do Crédito");
+                if ($vCred > 0) {
+                    $this->dom->addChild($icms, 'vCred', $vCred, false, "$identificador  Valor do Crédito");
+                }
                 break;
             case '90':
-                $icms = $this->dom->createElement("ICMS90");
-                $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 90");
-                $this->dom->addChild($icms, 'pRedBC', $pRedBC, false, "$identificador  Percentual da Redução de BC");
-                $this->dom->addChild($icms, 'vBC', $vBC, true, "$identificador  Valor da BC do ICMS");
-                $this->dom->addChild($icms, 'pICMS', $pICMS, true, "$identificador  Alíquota do imposto");
-                $this->dom->addChild($icms, 'vICMS', $vICMS, true, "$identificador  Valor do ICMS");
-                $this->dom->addChild($icms, 'vCred', $vCred, false, "$identificador  Valor do Crédido");
+                if ($outraUF == true) {
+                    $icms = $this->dom->createElement("ICMSOutraUF");
+                    $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 90");
+                    if ($pRedBC > 0) {
+                        $this->dom->addChild($icms, 'pRedBCOutraUF', $pRedBC, false, "$identificador Percentual Red "
+                                . "BC Outra UF");
+                    }
+                    $this->dom->addChild($icms, 'vBCOutraUF', $vBC, true, "$identificador Valor BC ICMS Outra UF");
+                    $this->dom->addChild($icms, 'pICMSOutraUF', $pICMS, true, "$identificador Alíquota do "
+                            . "imposto Outra UF");
+                    $this->dom->addChild($icms, 'vICMSOutraUF', $vICMS, true, "$identificador Valor ICMS Outra UF");
+                } else {
+                    $icms = $this->dom->createElement("ICMS90");
+                    $this->dom->addChild($icms, 'CST', $cst, true, "$identificador Tributação do ICMS = 90");
+                    if ($pRedBC > 0) {
+                        $this->dom->addChild($icms, 'pRedBC', $pRedBC, false, "$identificador Percentual Redução BC");
+                    }
+                    $this->dom->addChild($icms, 'vBC', $vBC, true, "$identificador  Valor da BC do ICMS");
+                    $this->dom->addChild($icms, 'pICMS', $pICMS, true, "$identificador  Alíquota do imposto");
+                    $this->dom->addChild($icms, 'vICMS', $vICMS, true, "$identificador  Valor do ICMS");
+                    if ($vCred > 0) {
+                        $this->dom->addChild($icms, 'vCred', $vCred, false, "$identificador  Valor do Crédido");
+                    }
+                }
                 break;
             case 'SN':
                 $icms = $this->dom->createElement("ICMSSN");
@@ -2590,6 +2616,12 @@ class Make extends BaseMake
         if (isset($icms)) {
             $tagIcms->appendChild($icms);
         }
+
+        if ($vTotTrib > 0) {
+            $this->dom->addChild($this->imp, 'vTotTrib', $vTotTrib, false, "$identificador Valor Total dos Tributos");
+        }
+
+
         return $tagIcms;
     }
 
@@ -2609,7 +2641,7 @@ class Make extends BaseMake
     {
         $identificador = '#65 <pass> - ';
         $this->comp[] = $this->dom->createElement('Comp');
-        $posicao = (integer) count($this->comp) - 1;
+        $posicao = (integer) count($this->obsCont) - 1;
         $this->dom->addChild(
             $this->comp[$posicao],
             'xNome',
@@ -2662,13 +2694,15 @@ class Make extends BaseMake
         return $this->infCTeNorm;
     }
 
-    public function infCargaTag($vCarga = '', $proPred = '', $xOutCat = '')
+    public function infCargaTag($vCarga = '', $proPred = '', $xOutCat = '', $vCargaAverb = '')
     {
         $identificador = '#253 <infCarga> - ';
         $this->infCarga = $this->dom->createElement('infCarga');
         $this->dom->addChild($this->infCarga, 'vCarga', $vCarga, false, $identificador . 'Valor Total da Carga');
         $this->dom->addChild($this->infCarga, 'proPred', $proPred, true, $identificador . 'Produto Predominante');
         $this->dom->addChild($this->infCarga, 'xOutCat', $xOutCat, false, $identificador . 'Outras Caract. da Carga');
+        $this->dom->addChild($this->infCarga, 'vCargaAverb', $vCargaAverb, false, $identificador . 'Valor da Carga para 
+            efeito de averbação');
 
         return $this->infCarga;
     }
@@ -2704,21 +2738,40 @@ class Make extends BaseMake
     public function infNFeTag($chave = '', $PIN = '', $dPrev = '')
     {
         $identificador = '#262 <infNFe> - ';
-        $this->infNFe = $this->dom->createElement('infNFe');
-        $this->dom->addChild($this->infNFe, 'chave', $chave, true, $identificador . 'Chave de acesso da NF-e');
-        $this->dom->addChild($this->infNFe, 'PIN', $PIN, false, $identificador . 'PIN SUFRAMA');
-        $this->dom->addChild($this->infNFe, 'dPrev', $dPrev, false, $identificador . 'Data prevista de entrega');
+        $this->infNFe[] = $this->dom->createElement('infNFe');
+        $posicao = (integer) count($this->infNFe) - 1;
+        $this->dom->addChild($this->infNFe[$posicao], 'chave', $chave, true, $identificador . 'Chave acesso da NF-e');
+        $this->dom->addChild($this->infNFe[$posicao], 'PIN', $PIN, false, $identificador . 'PIN SUFRAMA');
+        $this->dom->addChild($this->infNFe[$posicao], 'dPrev', $dPrev, false, $identificador . 'Data prevista entrega');
 
-        return $this->infNFe;
+        return $this->infNFe[$posicao];
+    }
+    
+    public function infOutrosTag($tpDoc = '', $descOutros = '', $nDoc = '', $dEmi = '', $vDocFisc = '', $dPrev = '')
+    {
+        $ident = '#262 <infOutros> - ';
+        $this->infOutros[] = $this->dom->createElement('infOutros');
+        $posicao = (integer) count($this->infOutros) - 1;
+        $this->dom->addChild($this->infOutros[$posicao], 'tpDoc', $tpDoc, true, $ident . 'Tipo '
+                . 'de documento originário');
+        $this->dom->addChild($this->infOutros[$posicao], 'descOutros', $descOutros, false, $ident . 'Descrição '
+                . 'do documento');
+        $this->dom->addChild($this->infOutros[$posicao], 'nDoc', $nDoc, false, $ident . 'Número '
+                . 'do documento');
+        $this->dom->addChild($this->infOutros[$posicao], 'dEmi', $dEmi, false, $ident . 'Data de Emissão');
+        $this->dom->addChild($this->infOutros[$posicao], 'vDocFisc', $vDocFisc, false, $ident . 'Valor '
+                . 'do documento');
+        $this->dom->addChild($this->infOutros[$posicao], 'dPrev', $dPrev, false, $ident . 'Data '
+                . 'prevista de entrega');
+
+        return $this->infOutros[$posicao];
     }
 
-    public function segTag($respSeg = 4, $xSeg = '', $nApol = '')
+    public function segTag($respSeg = 4)
     {
         $identificador = '#360 <seg> - ';
         $this->seg = $this->dom->createElement('seg');
         $this->dom->addChild($this->seg, 'respSeg', $respSeg, true, $identificador . 'Responsável pelo Seguro');
-        $this->dom->addChild($this->seg, 'xSeg', $xSeg, false, $identificador . 'Nome do Responsavel');
-        $this->dom->addChild($this->seg, 'nApol', $nApol, false, $identificador . 'Valor do seguro');
         return $this->seg;
     }
 
@@ -2730,143 +2783,13 @@ class Make extends BaseMake
         return $this->infModal;
     }
 
-    public function rodoTag($RNTRC = '', $dPrev = '', $lota = '', $CIOT = '')
+    public function rodoTag($RNTRC = '')
     {
         $identificador = '#1 <rodo> - ';
         $this->rodo = $this->dom->createElement('rodo');
         $this->dom->addChild($this->rodo, 'RNTRC', $RNTRC, true, $identificador . 'Registro nacional de transportadores
             rodoviários de carga');
-        $this->dom->addChild($this->rodo, 'dPrev', $dPrev, true, $identificador . 'Data prevista para entrega da carga 
-            no recebedor');
-        $this->dom->addChild($this->rodo, 'lota', $lota, true, $identificador . 'Indicador de lotação');
-        $this->dom->addChild($this->rodo, 'CIOT', $CIOT, false, $identificador . 'Codigo identificador da operacao de '
-            .'transporte');
 
         return $this->rodo;
-    }
-    
-    public function vTotTribTag($vTotTrib = '')
-    {
-        $identificador = '#250 <imp> - ';
-        $this->dom->addChild(
-            $this->imp,
-            'vTotTrib',
-            $vTotTrib,
-            false,
-            $identificador . 'Valor de tributos federais, estaduais e municipais'
-        );
-        
-        return $this->vTotTrib;
-    }
-    
-    public function veicTag(
-        $RENAVAM = '',
-        $placa = '',
-        $tara = '',
-        $capKG = '',
-        $capM3 = '',
-        $tpProp = '',
-        $tpVeic = '',
-        $tpRod = '',
-        $tpCar = '',
-        $UF = ''
-    ) {
-    
-        $identificador = '#21 <veic> - ';
-        $this->veic[] = $this->dom->createElement('veic');
-        $posicao = (integer) count($this->veic) - 1;
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'RENAVAM',
-            $RENAVAM,
-            false,
-            $identificador . 'RENAVAM do veículo'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'placa',
-            $placa,
-            false,
-            $identificador . 'Placa do veículo'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'tara',
-            $tara,
-            false,
-            $identificador . 'Tara em KG'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'capKG',
-            $capKG,
-            false,
-            $identificador . 'Capacidade em KG'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'capM3',
-            $capM3,
-            false,
-            $identificador . 'Capacidade em M3'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'tpProp',
-            $tpProp,
-            false,
-            $identificador . 'Tipo de Propriedade de veículo'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'tpVeic',
-            $tpVeic,
-            false,
-            $identificador . 'Tipo do veículo'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'tpRod',
-            $tpRod,
-            false,
-            $identificador . 'Tipo do Rodado'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'tpCar',
-            $tpCar,
-            false,
-            $identificador . 'Tipo de Carroceria'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'UF',
-            $UF,
-            false,
-            $identificador . 'UF em que veículo está licenciado'
-        );
-        return $this->veic[$posicao];
-    }
-    
-    public function motoTag($xNome = '', $CPF = '')
-    {
-        $identificador = '#21 <veic> - ';
-        $this->moto[] = $this->dom->createElement('moto');
-        $posicao = (integer) count($this->moto) - 1;
-        $this->dom->addChild(
-            $this->moto[$posicao],
-            'xNome',
-            $xNome,
-            false,
-            $identificador . 'Nome do motorista'
-        );
-        $this->dom->addChild(
-            $this->moto[$posicao],
-            'CPF',
-            $CPF,
-            false,
-            $identificador . 'CPF do motorista'
-        );
-        return $this->moto[$posicao];
     }
 }

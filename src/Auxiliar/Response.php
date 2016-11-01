@@ -13,7 +13,7 @@ namespace NFePHP\CTe\Auxiliar;
  * @link      http://github.com/nfephp-org/nfephp for the canonical source repository
  */
 
-use \DOMDocument;
+use DOMDocument;
 
 class Response
 {
@@ -62,77 +62,6 @@ class Response
         return array();
     }
 
-    /**
-     * zReadConsultaCadastro2
-     *
-     * @param  DOMDocument $dom
-     * @return array
-     */
-    protected static function zReadConsultaCadastro2($dom)
-    {
-        $aResposta = array(
-            'bStat' => false,
-            'version' => '',
-            'cStat' => '',
-            'verAplic' => '',
-            'xMotivo' => '',
-            'UF' => '',
-            'IE' => '',
-            'CNPJ' => '',
-            'CPF' => '',
-            'dhCons' => '',
-            'cUF' => '',
-            'aCad' => array()
-        );
-        $tag = $dom->getElementsByTagName('retConsCad')->item(0);
-        if (! isset($tag)) {
-            return $aResposta;
-        }
-        $infCons = $tag->getElementsByTagName('infCons')->item(0);
-        $aResposta = array(
-            'bStat' => true,
-            'version' => $tag->getAttribute('versao'),
-            'cStat' => $infCons->getElementsByTagName('cStat')->item(0)->nodeValue,
-            'verAplic' => $infCons->getElementsByTagName('verAplic')->item(0)->nodeValue,
-            'xMotivo' => $infCons->getElementsByTagName('xMotivo')->item(0)->nodeValue,
-            'UF' => $infCons->getElementsByTagName('UF')->item(0)->nodeValue,
-            'IE' => $infCons->getElementsByTagName('IE')->item(0)->nodeValue,
-            'CNPJ' => $infCons->getElementsByTagName('CNPJ')->item(0)->nodeValue,
-            'CPF' => $infCons->getElementsByTagName('CPF')->item(0)->nodeValue,
-            'dhCons' => $infCons->getElementsByTagName('dhCons')->item(0)->nodeValue,
-            'cUF' => $infCons->getElementsByTagName('cUF')->item(0)->nodeValue,
-            'aCad' => array()
-        );
-        $infCad = $tag->getElementsByTagName('infCad');
-        if (isset($infCad)) {
-            foreach ($infCad as $cad) {
-                $ender = $cad->getElementsByTagName('ender')->item(0);
-                $aCad[] = array(
-                    'IE' => $cad->getElementsByTagName('IE')->item(0)->nodeValue,
-                    'CNPJ' => $cad->getElementsByTagName('CNPJ')->item(0)->nodeValue,
-                    'UF' => $cad->getElementsByTagName('UF')->item(0)->nodeValue,
-                    'cSit' => $cad->getElementsByTagName('cSit')->item(0)->nodeValue,
-                    'indCredNFe' => $cad->getElementsByTagName('indCredNFe')->item(0)->nodeValue,
-                    'indCredCTe' => $cad->getElementsByTagName('indCredCTe')->item(0)->nodeValue,
-                    'xNome' => $cad->getElementsByTagName('xNome')->item(0)->nodeValue,
-                    'xRegApur' => $cad->getElementsByTagName('xRegApur')->item(0)->nodeValue,
-                    'CNAE' => $cad->getElementsByTagName('CNAE')->item(0)->nodeValue,
-                    'dIniAtiv' => $cad->getElementsByTagName('dIniAtiv')->item(0)->nodeValue,
-                    'dUltSit' => $cad->getElementsByTagName('dUltSit')->item(0)->nodeValue,
-                    'xLgr' => $ender->getElementsByTagName('xLgr')->item(0)->nodeValue,
-                    'nro' => $ender->getElementsByTagName('nro')->item(0)->nodeValue,
-                    'xCpl' => $ender->getElementsByTagName('xCpl')->item(0)->nodeValue,
-                    'xBairro' => $ender->getElementsByTagName('xBairro')->item(0)->nodeValue,
-                    'cMun' => $ender->getElementsByTagName('cMun')->item(0)->nodeValue,
-                    'xMun' => $ender->getElementsByTagName('xMun')->item(0)->nodeValue,
-                    'CEP' => $ender->getElementsByTagName('CEP')->item(0)->nodeValue
-                );
-            }
-            $aResposta['aCad'] = $aCad;
-        }
-        return $aResposta;
-    }
-    
     /**
      * zReadRecepcaoLote
      *
@@ -214,10 +143,35 @@ class Response
             'cStat' => $tag->getElementsByTagName('cStat')->item(0)->nodeValue,
             'xMotivo' => $tag->getElementsByTagName('xMotivo')->item(0)->nodeValue,
             'nRec' => $tag->getElementsByTagName('nRec')->item(0)->nodeValue,
-            'cUF' => $tag->getElementsByTagName('tpAmb')->item(0)->nodeValue,
+            'cUF' => $tag->getElementsByTagName('cUF')->item(0)->nodeValue,
             'aProt' => self::zGetProt($tag)
         );
         return $aResposta;
+    }
+
+    /**
+     * zGetProt
+     *
+     * @param  DOMDocument $tag
+     * @return type
+     */
+    private static function zGetProt($tag)
+    {
+        $aProt = array();
+        $infProt = $tag->getElementsByTagName('infProt')->item(0);
+        if (isset($infProt)) {
+            $aProt['tpAmb'] = $infProt->getElementsByTagName('tpAmb')->item(0)->nodeValue;
+            $aProt['verAplic'] = $infProt->getElementsByTagName('verAplic')->item(0)->nodeValue;
+            $aProt['chCTe'] = $infProt->getElementsByTagName('chCTe')->item(0)->nodeValue;
+            $aProt['dhRecbto'] = $infProt->getElementsByTagName('dhRecbto')->item(0)->nodeValue;
+            $aProt['nProt'] = isset($infProt->getElementsByTagName('nProt')->item(0)->nodeValue) ?
+                $infProt->getElementsByTagName('nProt')->item(0)->nodeValue : '';
+            $aProt['digVal'] = isset($infProt->getElementsByTagName('digVal')->item(0)->nodeValue) ?
+                $infProt->getElementsByTagName('digVal')->item(0)->nodeValue : '';
+            $aProt['cStat'] = $infProt->getElementsByTagName('cStat')->item(0)->nodeValue;
+            $aProt['xMotivo'] = $infProt->getElementsByTagName('xMotivo')->item(0)->nodeValue;
+        }
+        return $aProt;
     }
 
     /**
@@ -250,12 +204,82 @@ class Response
             'verAplic' => $tag->getElementsByTagName('verAplic')->item(0)->nodeValue,
             'cStat' => $tag->getElementsByTagName('cStat')->item(0)->nodeValue,
             'xMotivo' => $tag->getElementsByTagName('xMotivo')->item(0)->nodeValue,
-            'cUF' => $tag->getElementsByTagName('tpAmb')->item(0)->nodeValue,
+            'cUF' => $tag->getElementsByTagName('cUF')->item(0)->nodeValue,
             'aProt' => self::zGetProt($tag)
         );
         return $aResposta;
     }
 
+    /**
+     * zReadConsultaCadastro2
+     *
+     * @param  DOMDocument $dom
+     * @return array
+     */
+    protected static function zReadConsultaCadastro2($dom)
+    {
+        $aResposta = array(
+            'bStat' => false,
+            'version' => '',
+            'cStat' => '',
+            'verAplic' => '',
+            'xMotivo' => '',
+            'UF' => '',
+            'IE' => '',
+            'CNPJ' => '',
+            'CPF' => '',
+            'dhCons' => '',
+            'cUF' => '',
+            'aCad' => array()
+        );
+        $tag = $dom->getElementsByTagName('retConsCad')->item(0);
+        if (!isset($tag)) {
+            return $aResposta;
+        }
+        $infCons = $tag->getElementsByTagName('infCons')->item(0);
+        $aResposta = array(
+            'bStat' => true,
+            'version' => $tag->getAttribute('versao'),
+            'cStat' => $infCons->getElementsByTagName('cStat')->item(0)->nodeValue,
+            'verAplic' => $infCons->getElementsByTagName('verAplic')->item(0)->nodeValue,
+            'xMotivo' => $infCons->getElementsByTagName('xMotivo')->item(0)->nodeValue,
+            'UF' => $infCons->getElementsByTagName('UF')->item(0)->nodeValue,
+            'IE' => $infCons->getElementsByTagName('IE')->item(0)->nodeValue,
+            'CNPJ' => $infCons->getElementsByTagName('CNPJ')->item(0)->nodeValue,
+            'CPF' => $infCons->getElementsByTagName('CPF')->item(0)->nodeValue,
+            'dhCons' => $infCons->getElementsByTagName('dhCons')->item(0)->nodeValue,
+            'cUF' => $infCons->getElementsByTagName('cUF')->item(0)->nodeValue,
+            'aCad' => array()
+        );
+        $infCad = $tag->getElementsByTagName('infCad');
+        if (isset($infCad)) {
+            foreach ($infCad as $cad) {
+                $ender = $cad->getElementsByTagName('ender')->item(0);
+                $aCad[] = array(
+                    'IE' => $cad->getElementsByTagName('IE')->item(0)->nodeValue,
+                    'CNPJ' => $cad->getElementsByTagName('CNPJ')->item(0)->nodeValue,
+                    'UF' => $cad->getElementsByTagName('UF')->item(0)->nodeValue,
+                    'cSit' => $cad->getElementsByTagName('cSit')->item(0)->nodeValue,
+                    'indCredNFe' => $cad->getElementsByTagName('indCredNFe')->item(0)->nodeValue,
+                    'indCredCTe' => $cad->getElementsByTagName('indCredCTe')->item(0)->nodeValue,
+                    'xNome' => $cad->getElementsByTagName('xNome')->item(0)->nodeValue,
+                    'xRegApur' => $cad->getElementsByTagName('xRegApur')->item(0)->nodeValue,
+                    'CNAE' => $cad->getElementsByTagName('CNAE')->item(0)->nodeValue,
+                    'dIniAtiv' => $cad->getElementsByTagName('dIniAtiv')->item(0)->nodeValue,
+                    'dUltSit' => $cad->getElementsByTagName('dUltSit')->item(0)->nodeValue,
+                    'xLgr' => $ender->getElementsByTagName('xLgr')->item(0)->nodeValue,
+                    'nro' => $ender->getElementsByTagName('nro')->item(0)->nodeValue,
+                    'xCpl' => $ender->getElementsByTagName('xCpl')->item(0)->nodeValue,
+                    'xBairro' => $ender->getElementsByTagName('xBairro')->item(0)->nodeValue,
+                    'cMun' => $ender->getElementsByTagName('cMun')->item(0)->nodeValue,
+                    'xMun' => $ender->getElementsByTagName('xMun')->item(0)->nodeValue,
+                    'CEP' => $ender->getElementsByTagName('CEP')->item(0)->nodeValue
+                );
+            }
+            $aResposta['aCad'] = $aCad;
+        }
+        return $aResposta;
+    }
 
     /**
      * zReadConsultaCT
@@ -304,6 +328,52 @@ class Response
         return $aResposta;
     }
     
+    /**
+     * zGetEvent
+     *
+     * @param  DOMDocument $tag
+     * @return array
+     */
+    private static function zGetEvent($tag)
+    {
+        $aEvent = array();
+        $infEvento = $tag->getElementsByTagName('infEvento')->item(0);
+        if (isset($infEvento)) {
+            $aEvent = array(
+                'chCTe' => $infEvento->getElementsByTagName('chCTe')->item(0)->nodeValue,
+                'tpEvento' => $infEvento->getElementsByTagName('tpEvento')->item(0)->nodeValue,
+                'xEvento' => $infEvento->getElementsByTagName('xEvento')->item(0)->nodeValue,
+                'nSeqEvento' => $infEvento->getElementsByTagName('nSeqEvento')->item(0)->nodeValue,
+                'dhRegEvento' => $infEvento->getElementsByTagName('dhRegEvento')->item(0)->nodeValue,
+                'nProt' => $infEvento->getElementsByTagName('nProt')->item(0)->nodeValue
+            );
+        }
+        return $aEvent;
+    }
+
+    /**
+     * zGetCanc
+     *
+     * @param  DOMDocument $tag
+     * @return type
+     */
+    private static function zGetCanc($tag)
+    {
+        $aCanc = array();
+        $infCanc = $tag->getElementsByTagName('infCanc');
+        if (!empty($infCanc)) {
+            $aProt['tpAmb'] = $infCanc->getElementsByTagName('tpAmb')->item(0)->nodeValue;
+            $aProt['verAplic'] = $infCanc->getElementsByTagName('verAplic')->item(0)->nodeValue;
+            $aProt['cStat'] = $infCanc->getElementsByTagName('cStat')->item(0)->nodeValue;
+            $aProt['xMotivo'] = $infCanc->getElementsByTagName('xMotivo')->item(0)->nodeValue;
+            $aProt['cUF'] = $infCanc->getElementsByTagName('cUF')->item(0)->nodeValue;
+            $aProt['chCTe'] = $infCanc->getElementsByTagName('chCTe')->item(0)->nodeValue;
+            $aProt['dhRecbto'] = $infCanc->getElementsByTagName('dhRecbto')->item(0)->nodeValue;
+            $aProt['nProt'] = $infCanc->getElementsByTagName('nProt')->item(0)->nodeValue;
+        }
+        return $aCanc;
+    }
+
     /**
      * zReadInutilizacao
      *
@@ -399,7 +469,7 @@ class Response
         );
         return $aResposta;
     }
-    
+
     /**
      * zReadRecepcaoEvento
      *
@@ -437,76 +507,5 @@ class Response
           //  'evento' => self::zGetEvent($tag)
         );
         return $aResposta;
-    }
-    
-    /**
-     * zGetProt
-     *
-     * @param  DOMDocument $tag
-     * @return type
-     */
-    private static function zGetProt($tag)
-    {
-        $aProt = array();
-        $infProt = $tag->getElementsByTagName('infProt')->item(0);
-        if (isset($infProt)) {
-            $aProt['tpAmb'] = $infProt->getElementsByTagName('tpAmb')->item(0)->nodeValue;
-            $aProt['verAplic'] = $infProt->getElementsByTagName('verAplic')->item(0)->nodeValue;
-            $aProt['chCTe'] = $infProt->getElementsByTagName('chCTe')->item(0)->nodeValue;
-            $aProt['dhRecbto'] = $infProt->getElementsByTagName('dhRecbto')->item(0)->nodeValue;
-            $aProt['nProt'] = isset($infProt->getElementsByTagName('nProt')->item(0)->nodeValue) ?
-                $infProt->getElementsByTagName('nProt')->item(0)->nodeValue : '';
-            $aProt['digVal'] = isset($infProt->getElementsByTagName('digVal')->item(0)->nodeValue) ?
-                $infProt->getElementsByTagName('digVal')->item(0)->nodeValue : '';
-            $aProt['cStat'] = $infProt->getElementsByTagName('cStat')->item(0)->nodeValue;
-            $aProt['xMotivo'] = $infProt->getElementsByTagName('xMotivo')->item(0)->nodeValue;
-        }
-        return $aProt;
-    }
-    
-    /**
-     * zGetEvent
-     *
-     * @param  DOMDocument $tag
-     * @return array
-     */
-    private static function zGetEvent($tag)
-    {
-        $aEvent = array();
-        $infEvento = $tag->getElementsByTagName('infEvento')->item(0);
-        if (isset($infEvento)) {
-            $aEvent = array(
-                'chCTe' => $infEvento->getElementsByTagName('chCTe')->item(0)->nodeValue,
-                'tpEvento' => $infEvento->getElementsByTagName('tpEvento')->item(0)->nodeValue,
-                'xEvento' => $infEvento->getElementsByTagName('xEvento')->item(0)->nodeValue,
-                'nSeqEvento' => $infEvento->getElementsByTagName('nSeqEvento')->item(0)->nodeValue,
-                'dhRegEvento' => $infEvento->getElementsByTagName('dhRegEvento')->item(0)->nodeValue,
-                'nProt' => $infEvento->getElementsByTagName('nProt')->item(0)->nodeValue
-            );
-        }
-        return $aEvent;
-    }
-
-    /**
-     * zGetCanc
-     *
-     * @param  DOMDocument $tag
-     * @return type
-     */
-    private static function zGetCanc($tag)
-    {
-        $aCanc = array();
-        $infCanc = $tag->getElementsByTagName('infCanc');
-        if (! empty($infCanc)) {
-            $aProt['tpAmb'] = $infCanc->getElementsByTagName('tpAmb')->item(0)->nodeValue;
-            $aProt['verAplic'] = $infCanc->getElementsByTagName('verAplic')->item(0)->nodeValue;
-            $aProt['cStat'] = $infCanc->getElementsByTagName('cStat')->item(0)->nodeValue;
-            $aProt['xMotivo'] = $infCanc->getElementsByTagName('xMotivo')->item(0)->nodeValue;
-            $aProt['cUF'] = $infCanc->getElementsByTagName('cUF')->item(0)->nodeValue;
-            $aProt['chCTe'] = $infCanc->getElementsByTagName('chCTe')->item(0)->nodeValue;
-            $aProt['dhRecbto'] = $infCanc->getElementsByTagName('dhRecbto')->item(0)->nodeValue;
-            $aProt['nProt'] = $infCanc->getElementsByTagName('nProt')->item(0)->nodeValue;
-        }
-        return $aCanc;
     }
 }

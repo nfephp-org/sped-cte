@@ -9,13 +9,13 @@ use NFePHP\CTe\Tools;
 class ToolsTest extends PHPUnit_Framework_TestCase
 {
     public $cte;
-    
-//    /**
-//     * @expectedException NFePHP\Common\Exception\InvalidArgumentException
-//     */
-    public function testeInstanciar()
+
+    /**
+     * @expectedException NFePHP\Common\Exception\InvalidArgumentException
+     */
+    public function testDeveLancarInvalidargumentexceptionAoInstanciarComParametroVazio()
     {
-//        $configJson = dirname(dirname(__FILE__)) . '/fixtures/config/fakeconfig.json';
-//        $this->cte = new Tools($configJson);
+        $configJson = '';
+        $this->cte = new Tools($configJson);
     }
 }
