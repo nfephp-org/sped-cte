@@ -26,6 +26,8 @@ use NFePHP\Common\Exception;
 use NFePHP\CTe\Auxiliar\Response;
 use NFePHP\CTe\Auxiliar\IdentifyCTe;
 use NFePHP\Common\Dom\ValidXsd;
+use NFePHP\Common\Dom\Dom;
+use NFePHP\Common\DateTime\DateTime;
 
 if (!defined('NFEPHP_ROOT')) {
     define('NFEPHP_ROOT', dirname(dirname(__FILE__)));
@@ -616,52 +618,6 @@ class Tools extends BaseTools
         return (string) $retorno;
     }
 
-    /**
-     * zAddProtMsg
-     *
-     * @param  string $tagproc
-     * @param  string $tagmsg
-     * @param  string $xmlmsg
-     * @param  string $tagretorno
-     * @param  string $xmlretorno
-     * @return string
-     */
-    protected function zAddProtMsg($tagproc, $tagmsg, $xmlmsg, $tagretorno, $xmlretorno)
-    {
-        $doc = new Dom();
-        $doc->loadXMLString($xmlmsg);
-        $nodedoc = $doc->getNode($tagmsg, 0);
-        $procver = $nodedoc->getAttribute("versao");
-        $procns = $nodedoc->getAttribute("xmlns");
-
-        $doc1 = new Dom();
-        $doc1->loadXMLString($xmlretorno);
-        $nodedoc1 = $doc1->getNode($tagretorno, 0);
-
-        $proc = new \DOMDocument('1.0', 'utf-8');
-        $proc->formatOutput = false;
-        $proc->preserveWhiteSpace = false;
-        //cria a tag nfeProc
-        $procNode = $proc->createElement($tagproc);
-        $proc->appendChild($procNode);
-        //estabele o atributo de versão
-        $procNodeAtt1 = $procNode->appendChild($proc->createAttribute('versao'));
-        $procNodeAtt1->appendChild($proc->createTextNode($procver));
-        //estabelece o atributo xmlns
-        $procNodeAtt2 = $procNode->appendChild($proc->createAttribute('xmlns'));
-        $procNodeAtt2->appendChild($proc->createTextNode($procns));
-        //inclui a tag inutNFe
-        $node = $proc->importNode($nodedoc, true);
-        $procNode->appendChild($node);
-        //inclui a tag retInutNFe
-        $node = $proc->importNode($nodedoc1, true);
-        $procNode->appendChild($node);
-        //salva o xml como string em uma variável
-        $procXML = $proc->saveXML();
-        //remove as informações indesejadas
-        $procXML = Strings::clearProt($procXML);
-        return $procXML;
-    }
 
     /**
      * zTpEv
@@ -979,7 +935,15 @@ class Tools extends BaseTools
         $procXML = '';
         //carrega a CTe
         $docCTe = new Dom();
-        $docCTe->loadXMLFile($pathCTefile);
+        
+        if (file_exists($pathCTefile)) {
+            //carrega o XML pelo caminho do arquivo informado
+            $docCTe->loadXMLFile($pathCTefile);
+        } else {
+            //carrega o XML pelo conteúdo
+            $docCTe->loadXMLString($pathCTefile);
+        }
+        
         $nodeCTe = $docCTe->getNode('CTe', 0);
         if ($nodeCTe == '') {
             $msg = "O arquivo indicado como CTe não é um xml de CTe!";
@@ -1000,7 +964,14 @@ class Tools extends BaseTools
         //carrega o cancelamento
         //pode ser um evento ou resultado de uma consulta com multiplos eventos
         $doccanc = new Dom();
-        $doccanc->loadXMLFile($pathCancfile);
+        
+        if (file_exists($pathCancfile)) {
+            //carrega o XML pelo caminho do arquivo informado
+            $doccanc->loadXMLFile($pathCancfile);
+        } else {
+            //carrega o XML pelo conteúdo
+            $doccanc->loadXMLString($pathCancfile);
+        }
         $retEvento = $doccanc->getElementsByTagName('retEventoCTe')->item(0);
         $eventos = $retEvento->getElementsByTagName('infEvento');
         foreach ($eventos as $evento) {
