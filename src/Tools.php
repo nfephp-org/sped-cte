@@ -782,10 +782,7 @@ class Tools extends BaseTools
      * @param type $chCTe
      * @param type $tpAmb
      * @param type $nSeqEvento
-     * @param type $grupoAlterado
-     * @param type $campoAlterado
-     * @param type $valorAlterado
-     * @param type $nroItemAlterado
+     * @param type $infCorrecao
      * @param type $aRetorno
      * @return type
      * @throws Exception\InvalidArgumentException
@@ -794,20 +791,17 @@ class Tools extends BaseTools
         $chCTe = '',
         $tpAmb = '2',
         $nSeqEvento = '1',
-        $grupoAlterado = '',
-        $campoAlterado = '',
-        $valorAlterado = '',
-        $nroItemAlterado = '01',
+        $infCorrecao = array(),
         &$aRetorno = array()
     ) {
         $chCTe = preg_replace('/[^0-9]/', '', $chCTe);
-        
+
         //validação dos dados de entrada
         if (strlen($chCTe) != 44) {
             $msg = "Uma chave de CTe válida não foi passada como parâmetro $chCTe.";
             throw new Exception\InvalidArgumentException($msg);
         }
-        if ($chCTe == '' || $grupoAlterado == '' || $campoAlterado == '' || $valorAlterado == '') {
+        if ($chCTe == '' || empty(array_filter($infCorrecao))) {
             $msg = "Preencha os campos obrigatórios!";
             throw new Exception\InvalidArgumentException($msg);
         }
@@ -815,21 +809,27 @@ class Tools extends BaseTools
             $tpAmb = $this->aConfig['tpAmb'];
         }
         $siglaUF = $this->zGetSigla(substr($chCTe, 0, 2));
-        
+
         //estabelece o codigo do tipo de evento CARTA DE CORRECAO
         $tpEvento = '110110';
         $descEvento = 'Carta de Correcao';
-        
+
+        //Grupo de Informações de Correção
+        $correcoes = '';
+        foreach ($infCorrecao as $info) {
+            $correcoes .=
+                "<infCorrecao>"
+                    ."<grupoAlterado>".$info['grupoAlterado']."</grupoAlterado>"
+                    ."<campoAlterado>".$info['campoAlterado']."</campoAlterado>"
+                    ."<valorAlterado>".$info['valorAlterado']."</valorAlterado>"
+                    ."<nroItemAlterado>".$info['nroItemAlterado']."</nroItemAlterado>"
+                ."</infCorrecao>";
+        }
         //monta mensagem
         $tagAdic =
             "<evCCeCTe>"
                 . "<descEvento>$descEvento</descEvento>"
-                . "<infCorrecao>"
-                    . "<grupoAlterado>$grupoAlterado</grupoAlterado>"
-                    . "<campoAlterado>$campoAlterado</campoAlterado>"
-                    . "<valorAlterado>$valorAlterado</valorAlterado>"
-                    . "<nroItemAlterado>$nroItemAlterado</nroItemAlterado>"
-                . "</infCorrecao>"
+                .$correcoes
                 . "<xCondUso>"
                     . "A Carta de Correcao e disciplinada pelo Art. 58-B do "
                     . "CONVENIO/SINIEF 06/89: Fica permitida a utilizacao de carta de "
