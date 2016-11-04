@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Arquivo de teste para transmissão de Carta de Correção
  * @copyright  Copyright (c) 2008-2015
@@ -30,33 +31,23 @@ $chave = '41160981450900000132570020000000601000000106';
 // nos casos em que possa existir mais de um evento
 // o autor do evento deve numerar de forma sequencial.
 $nSeqEvento = '1';
-       
-// Indicar o grupo de informações que pertence
-// o campoAlterado. Ex: ide
-$grupoAlterado = 'ide';
 
-// Nome do campo modificado do CT-e Original.
-// Ex: natOp
-$campoAlterado = 'natOp';
-
-// Valor correspondente à alteração.
-$valorAlterado = 'teste de carta de correcao';
-
-// Preencher com o indice do item alterado caso a alteração ocorra em uma lista.
-// Por exemplo: Se corrigir uma das NF-e do remetente, 
-// esta tag deverá indicar a posição da NF-e alterada na lista.
-// OBS: O indice inicia sempre em 01
-$nroItemAlterado='01';
+//As informações da correção devem ser em array
+//O registro de uma nova Carta de Correção substitui a Carta de Correção anterior, assim a nova
+//Carta de Correção deve conter todas as correções a serem consideradas.
+$infCorrecao[] = array(
+    "grupoAlterado" => 'ide', // Indicar o grupo de informações que pertence
+    "campoAlterado" => 'natOp', // Nome do campo modificado do CT-e Original.
+    "valorAlterado" => 'teste de carta de correcao', // Valor correspondente à alteração.
+    "nroItemAlterado" => '1'// Preencher com o indice do item alterado caso a alteração ocorra em uma lista.
+);
 
 // Transmite o arquivo
 $cteTools->sefazCartaCorrecao(
     $chave,
-    $tpAmb,        
+    $tpAmb,
     $nSeqEvento,
-    $grupoAlterado,
-    $campoAlterado,
-    $valorAlterado,
-    $nroItemAlterado,
+    $infCorrecao,
     $aResposta
 );
 
