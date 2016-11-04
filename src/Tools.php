@@ -782,7 +782,7 @@ class Tools extends BaseTools
      * @param type $chCTe
      * @param type $tpAmb
      * @param type $nSeqEvento
-     * @param type $infCorrecao array(array(grupoAlterado => grupo, campoAlterado => campo, valorAlterado=>valor, nroItemAlterado=>nro))
+     * @param type $infCorrecao
      * @param type $aRetorno
      * @return type
      * @throws Exception\InvalidArgumentException
