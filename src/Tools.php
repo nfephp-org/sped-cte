@@ -2,6 +2,16 @@
 
 namespace NFePHP\CTe;
 
+use NFePHP\Common\Base\BaseTools;
+use NFePHP\Common\DateTime\DateTime;
+use NFePHP\Common\Dom\Dom;
+use NFePHP\Common\Dom\ValidXsd;
+use NFePHP\Common\Exception;
+use NFePHP\Common\LotNumber\LotNumber;
+use NFePHP\Common\Strings\Strings;
+use NFePHP\CTe\Auxiliar\IdentifyCTe;
+use NFePHP\CTe\Auxiliar\Response;
+
 /**
  * Classe principal para a comunicação com a SEFAZ
  *
@@ -17,22 +27,6 @@ namespace NFePHP\CTe;
  *          Maison K. Sakamoto <maison.sakamoto at gmail do com>
  *          Samuel M Basso <samuelbasso at gmail do com>
  */
-
-use NFePHP\Common\Base\BaseTools;
-use NFePHP\Common\LotNumber\LotNumber;
-use NFePHP\Common\Strings\Strings;
-use NFePHP\Common\Files;
-use NFePHP\Common\Exception;
-use NFePHP\CTe\Auxiliar\Response;
-use NFePHP\CTe\Auxiliar\IdentifyCTe;
-use NFePHP\Common\Dom\ValidXsd;
-use NFePHP\Common\Dom\Dom;
-use NFePHP\Common\DateTime\DateTime;
-
-if (!defined('NFEPHP_ROOT')) {
-    define('NFEPHP_ROOT', dirname(dirname(__FILE__)));
-}
-
 class Tools extends BaseTools
 {
     /**
@@ -61,6 +55,17 @@ class Tools extends BaseTools
      * @var modelo
      */
     protected $modelo = '57';
+
+    /**
+     * @var string
+     */
+    private $rootDir;
+
+    public function __construct($configJson = '')
+    {
+        parent::__construct($configJson);
+        $this->rootDir = dirname(__DIR__);
+    }
 
     /**
      * assina
@@ -750,7 +755,7 @@ class Tools extends BaseTools
             return false;
         }
         $xsdFile = $aResp['Id'].'_v'.$aResp['versao'].'.xsd';
-        $xsdPath = NFEPHP_ROOT.DIRECTORY_SEPARATOR .
+        $xsdPath = $this->rootDir.DIRECTORY_SEPARATOR .
             'schemas' .
             DIRECTORY_SEPARATOR .
             $this->aConfig['schemasCTe'] .
