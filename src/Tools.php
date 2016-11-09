@@ -746,7 +746,8 @@ class Tools extends BaseTools
         $aResp = array();
         $schem = IdentifyCTe::identificar($xml, $aResp);
         if ($schem == '') {
-            return true;
+            $this->erros[] = "Não foi possível identificar o documento";
+            return false;
         }
         $xsdFile = $aResp['Id'].'_v'.$aResp['versao'].'.xsd';
         $xsdPath = NFEPHP_ROOT.DIRECTORY_SEPARATOR .
