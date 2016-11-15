@@ -82,7 +82,7 @@ class Make extends BaseMake
      * Indicador do "papel" do tomador do serviço no CT-e
      * @var \DOMNode
      */
-    private $toma3 = '';
+    private $toma03 = '';
     /**
      * Indicador do "papel" do tomador do serviço no CT-e
      * @var \DOMNode
@@ -466,8 +466,8 @@ class Make extends BaseMake
             return false;
         }
         $this->zCTeTag();
-        if ($this->toma3 != '') {
-            $this->dom->appChild($this->ide, $this->toma3, 'Falta tag "ide"');
+        if ($this->toma03 != '') {
+            $this->dom->appChild($this->ide, $this->toma03, 'Falta tag "ide"');
         } else {
             $this->dom->appChild($this->toma4, $this->enderToma, 'Falta tag "toma4"');
             $this->dom->appChild($this->ide, $this->toma4, 'Falta tag "ide"');
@@ -616,6 +616,7 @@ class Make extends BaseMake
         $cCT = '',
         $CFOP = '',
         $natOp = '',
+        $forPag = '',
         $mod = '',
         $serie = '',
         $nCT = '',
@@ -627,7 +628,7 @@ class Make extends BaseMake
         $tpCTe = '',
         $procEmi = '',
         $verProc = '',
-        $indGlobalizado = '',
+        $refCTE = '',
         $cMunEnv = '',
         $xMunEnv = '',
         $UFEnv = '',
@@ -641,7 +642,6 @@ class Make extends BaseMake
         $UFFim = '',
         $retira = '',
         $xDetRetira = '',
-        $indIEToma = '',
         $dhCont = '',
         $xJust = ''
     ) {
@@ -675,6 +675,13 @@ class Make extends BaseMake
             $natOp,
             true,
             $identificador . 'Natureza da Operação'
+        );
+        $this->dom->addChild(
+            $this->ide,
+            'forPag',
+            $forPag,
+            true,
+            $identificador . 'Forma de pagamento do serviço'
         );
         $this->dom->addChild(
             $this->ide,
@@ -756,10 +763,10 @@ class Make extends BaseMake
         );
         $this->dom->addChild(
             $this->ide,
-            'indGlobalizado',
-            $indGlobalizado,
+            'refCTE',
+            $refCTE,
             false,
-            $identificador . 'Indicador de CT-e Globalizado'
+            $identificador . 'Chave de acesso do CT-e referenciado'
         );
         $this->dom->addChild(
             $this->ide,
@@ -855,13 +862,6 @@ class Make extends BaseMake
         );
         $this->dom->addChild(
             $this->ide,
-            'indIEToma',
-            $indIEToma,
-            true,
-            $identificador . 'Indicador do papel do tomador na prestação do serviço'
-        );
-        $this->dom->addChild(
-            $this->ide,
             'dhCont',
             $dhCont,
             false,
@@ -879,29 +879,29 @@ class Make extends BaseMake
     }
 
     /**
-     * Gera as tags para o elemento: toma3 (Indicador do "papel" do tomador do serviço no CT-e)
+     * Gera as tags para o elemento: toma03 (Indicador do "papel" do tomador do serviço no CT-e)
      * e adiciona ao grupo ide
      * #35
      * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "toma3" do
+     * Os parâmetros para esta função são todos os elementos da tag "toma03" do
      * tipo elemento (Ele = E|CE|A) e nível 3
      *
      * @param string $toma Tomador do Serviço
      *
      * @return \DOMElement
      */
-    public function toma3Tag($toma = '')
+    public function toma03Tag($toma = '')
     {
-        $identificador = '#35 <toma3> - ';
-        $this->toma3 = $this->dom->createElement('toma3');
+        $identificador = '#35 <toma03> - ';
+        $this->toma03 = $this->dom->createElement('toma03');
         $this->dom->addChild(
-            $this->toma3,
+            $this->toma03,
             'toma',
             $toma,
             true,
             $identificador . 'Tomador do Serviço'
         );
-        return $this->toma3;
+        return $this->toma03;
     }
 
     /**
@@ -1535,7 +1535,7 @@ class Make extends BaseMake
      *
      * @return \DOMElement
      */
-    public function emitTag($CNPJ = '', $IE = '', $IEST = '', $xNome = '', $xFant = '')
+    public function emitTag($CNPJ = '', $IE = '', $xNome = '', $xFant = '')
     {
         $identificador = '#97 <emit> - ';
         $this->emit = $this->dom->createElement('emit');
@@ -1555,13 +1555,6 @@ class Make extends BaseMake
         );
         $this->dom->addChild(
             $this->emit,
-            'IEST',
-            $IEST,
-            false,
-            $identificador . 'Inscrição Estadual do Substituto Tributário'
-        );
-        $this->dom->addChild(
-            $this->emit,
             'xNome',
             $xNome,
             true,
@@ -1571,7 +1564,7 @@ class Make extends BaseMake
             $this->emit,
             'xFant',
             $xFant,
-            false,
+            true,
             $identificador . 'Nome fantasia'
         );
         return $this->emit;
@@ -2694,15 +2687,13 @@ class Make extends BaseMake
         return $this->infCTeNorm;
     }
 
-    public function infCargaTag($vCarga = '', $proPred = '', $xOutCat = '', $vCargaAverb = '')
+    public function infCargaTag($vCarga = '', $proPred = '', $xOutCat = '')
     {
         $identificador = '#253 <infCarga> - ';
         $this->infCarga = $this->dom->createElement('infCarga');
         $this->dom->addChild($this->infCarga, 'vCarga', $vCarga, false, $identificador . 'Valor Total da Carga');
         $this->dom->addChild($this->infCarga, 'proPred', $proPred, true, $identificador . 'Produto Predominante');
         $this->dom->addChild($this->infCarga, 'xOutCat', $xOutCat, false, $identificador . 'Outras Caract. da Carga');
-        $this->dom->addChild($this->infCarga, 'vCargaAverb', $vCargaAverb, false, $identificador . 'Valor da Carga para 
-            efeito de averbação');
 
         return $this->infCarga;
     }
@@ -2783,12 +2774,17 @@ class Make extends BaseMake
         return $this->infModal;
     }
 
-    public function rodoTag($RNTRC = '')
+    public function rodoTag($RNTRC = '', $dPrev = '', $lota = '', $CIOT = '')
     {
         $identificador = '#1 <rodo> - ';
         $this->rodo = $this->dom->createElement('rodo');
         $this->dom->addChild($this->rodo, 'RNTRC', $RNTRC, true, $identificador . 'Registro nacional de transportadores
             rodoviários de carga');
+        $this->dom->addChild($this->rodo, 'dPrev', $dPrev, true, $identificador . 'Data prevista para entrega da carga 
+            no recebedor');
+        $this->dom->addChild($this->rodo, 'lota', $lota, true, $identificador . 'Indicador de lotação');
+        $this->dom->addChild($this->rodo, 'CIOT', $CIOT, false, $identificador . 'Codigo identificador da operacao de '
+            .'transporte');
 
         return $this->rodo;
     }
