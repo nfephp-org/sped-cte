@@ -1,6 +1,8 @@
 # SPED-CTE
 
-API para geração e comunicação das CTe com as SEFAZ autorizadoras.
+[![Chat][ico-gitter]][link-gitter]
+
+Framework para geração e comunicação das CTe com as SEFAZ autorizadoras.
 
 *sped-cte é um framework para geração CTe e eventos na comunicação com as SEFAZ autorizadoras.*
 
@@ -14,7 +16,7 @@ API para geração e comunicação das CTe com as SEFAZ autorizadoras.
 [![Issues][ico-issues]][link-issues]
 [![Forks][ico-forks]][link-forks]
 [![Stars][ico-stars]][link-stars]
-[![Chat][ico-gitter]][link-gitter]
+
 
 Este pacote visa fornecer os meios para gerar, assinar e anviar os dados relativos ao projeto Sped CTe.
 
@@ -35,6 +37,7 @@ $ composer test
 ```
 
 ## Contributing
+**ATENÇÂO: A versão atual corresponde a vesão 2.00 do layout da SEFAZ, tanto na branch "master" como na branch "develop". As contribuições para a proxima versão do layout da SEFAZ 3.0 devem ser feitas exclusivamente na branch v3.0.**
 
 Para contribuir por favor observe o [CONTRIBUTING](CONTRIBUTING.md) e o  [Código de Conduta](CONDUCT.md) parea detalhes.
 
@@ -44,8 +47,13 @@ Caso você encontre algum problema relativo a segurança, por favor envie um ema
 
 ## Credits
 
-- Desenvolvimento Inicial - Roberto L. Machado <linux_rlm@gmail.com>
-- Demais colaboradores serão indicados oportunamente.
+- Roberto L. Machado (Owner)
+- Samuel Basso (Mantenedor)
+- Gleidson Brito (Colaborador)
+- Giovani Paseto (Colaborador)
+- Mailson Kendi Sakamoto (Colaborador)
+- Everton Xavier (Colaborador)
+
 
 ## License
 
