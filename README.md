@@ -52,6 +52,7 @@ Caso você encontre algum problema relativo a segurança, por favor envie um ema
 - Gleidson Brito (Colaborador)
 - Giovani Paseto (Colaborador)
 - Mailson Kendi Sakamoto (Colaborador)
+- Everton Xavier (Colaborador)
 
 
 ## License
