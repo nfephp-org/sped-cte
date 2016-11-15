@@ -47,11 +47,12 @@ Caso você encontre algum problema relativo a segurança, por favor envie um ema
 
 ## Credits
 
->Roberto L. Machado (Owner)
->Samuel Basso (Mantenedor)
->Gleidson Brito (Colaborador)
->Giovani Paseto (Colaborador)
->Mailson Kendi Sakamoto (Colaborador)
+- Roberto L. Machado (Owner)
+- Samuel Basso (Mantenedor)
+- Gleidson Brito (Colaborador)
+- Giovani Paseto (Colaborador)
+- Mailson Kendi Sakamoto (Colaborador)
+
 
 ## License
 
