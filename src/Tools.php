@@ -2,7 +2,8 @@
 
 namespace NFePHP\CTe;
 
-use NFePHP\Common\Base\BaseTools;
+//use NFePHP\Common\Base\BaseTools;
+use NFePHP\CTe\BaseTools;
 use NFePHP\Common\DateTime\DateTime;
 use NFePHP\Common\Dom\Dom;
 use NFePHP\Common\Dom\ValidXsd;
