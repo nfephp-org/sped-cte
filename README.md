@@ -51,7 +51,7 @@ Caso você encontre algum problema relativo a segurança, por favor envie um ema
 - Samuel Basso (Mantenedor)
 - Gleidson Brito (Colaborador)
 - Giovani Paseto (Colaborador)
-- Mailson Kendi Sakamoto (Colaborador)
+- Maison Kendi Sakamoto (Colaborador)
 - Everton Xavier (Colaborador)
 
 

@@ -7,6 +7,8 @@
  * @link      http://github.com/nfephp-org/sped-cte for the canonical source repository
  * @author    Samuel M. Basso <samuelbasso@gmail.com>
  * Adaptado por Maison K. Sakamoto <maison.sakamoto@gmail.com>
+ * 
+ * Teste para a versão 2.0 do CT-e
  **/
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
@@ -22,6 +24,8 @@ $cteTools = new Tools('../config/config.json');
 $dhEmi = date("Y-m-d\TH:i:s");
 //$dhEmi = date("d/m/Y");
 
+$numeroCTE = '71';
+
 $chave = $cte->montaChave(
     $cUF = '41',                // Codigo da UF da tabela do IBGE: 41-PR
     $ano = date('y', strtotime($dhEmi)),
@@ -29,7 +33,7 @@ $chave = $cte->montaChave(
     $cnpj = $cteTools->aConfig['cnpj'],
     $mod = '57',                // Modelo do documento fiscal: 57 para identificação do CT-e
     $serie = '2',               // Serie do CTe
-    $numero = '58',             // Numero do CTe
+    $numero = $numeroCTE,             // Numero do CTe
     $tpEmis = '1',              // Forma de emissao do CTe: 1-Normal; 4-EPEC pela SVC; 5-Contingência
     $cCT = '10'
 );               // Codigo numerico que compoe a chave de acesso (Codigo aleatorio do emitente, para evitar acessos indevidos ao documento)
@@ -46,7 +50,7 @@ $resp = $cte->ideTag(
     $forPag = '1',              // 0-Pago; 1-A pagar; 2-Outros
     $mod = '57',                // Modelo do documento fiscal: 57 para identificação do CT-e
     $serie = '2',               // Serie do CTe
-    $nCT = '58',                // Numero do CTe
+    $nCT = $numeroCTE,                // Numero do CTe
     $dhEmi,                     // Data e hora de emissão do CT-e: Formato AAAA-MM-DDTHH:MM:DD
     $tpImp = '1',               // Formato de impressao do DACTE: 1-Retrato; 2-Paisagem.
     $tpEmis = '1',              // Forma de emissao do CTe: 1-Normal; 4-EPEC pela SVC; 5-Contingência
@@ -78,11 +82,9 @@ $resp = $cte->ideTag(
     $xJust = ''                 // Justificativa da entrada em contingência
 );
 
-$resp = $cte->toma3Tag(
+$resp = $cte->toma03Tag(
     $toma = '3'                 // Indica o "papel" do tomador: 0-Remetente; 1-Expedidor; 2-Recebedor; 3-Destinatário
 );
-
-
 
 $resp = $cte->toma4Tag(
     $toma = '4',                        // 4-Outros, informar os dados cadastrais do tomador quando ele for outros
@@ -191,12 +193,11 @@ $resp = $cte->icmsTag(
     $vICMS = 400.12,    // Valor do ICMS
     $vBCSTRet = '',     // Valor da BC do ICMS ST retido
     $vICMSSTRet = '',   // Valor do ICMS ST retido
-    $pICMSSTRet = ''      // Alíquota do ICMS
+    $pICMSSTRet = '',   // Alíquota do ICMS
+    $vCred = '',        // Valor do Crédito Outorgado/Presumido
+    $vTotTrib = 754.38, // Valor de tributos federais, estaduais e municipais
+    $outraUF = false    // ICMS devido à UF de origem da prestação, quando diferente da UF do emitente
 );
-
-/*$rep = $cte->vTotTribTag(
-        $vTotTrib=754.38 // Valor de tributos federais, estaduais e municipais
-);*/
 
 $resp = $cte->infCTeNormTag();              // Grupo de informações do CT-e Normal e Substituto
 
