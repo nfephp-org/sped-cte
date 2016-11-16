@@ -728,7 +728,7 @@ class Tools extends BaseTools
         return true;
     }
 
-    /**
+     /**
      * Transmite a correção
      * conforme o MOC(Manual de Orientações do Contribuinte)
      * Art. 58-B Fica permitida a utilização de carta de correção,
@@ -760,55 +760,56 @@ class Tools extends BaseTools
         $cnpj = '',
         $chave = '',
         $nSeqEvento = '1',
-        $grupoAlterado = '',
-        $campoAlterado = '',
-        $valorAlterado = '',
-        $nroItemAlterado = '01',
+        $arrayObj,
         &$aRetorno = array()
     ) {
         $chCTe = preg_replace('/[^0-9]/', '', $chave);
-
+        
         //validação dos dados de entrada
         if (strlen($chCTe) != 44) {
             $msg = "Uma chave de CTe válida não foi passada como parâmetro $chCTe.";
             throw new Exception\InvalidArgumentException($msg);
         }
-        if ($siglaUF == '' || $cnpj == '' || $chave == '' ||
-            $grupoAlterado == '' || $campoAlterado == '' || $valorAlterado == ''
-        ) {
+        if ($siglaUF == '' || $cnpj == '' || $chave == '') {
             $msg = "Preencha os campos obrigatórios!";
             throw new Exception\InvalidArgumentException($msg);
+        }
+        $infoCorrecao = "";
+        for ($index = 0; $index < count($arrayObj); $index++) {
+            $obj = (object) $arrayObj[$index];
+            $infoCorrecao   = $infoCorrecao."<infCorrecao>"
+                            . "<grupoAlterado>{$obj->grupo}</grupoAlterado>"
+                            . "<campoAlterado>{$obj->campo}</campoAlterado>"
+                            . "<valorAlterado>{$obj->valor}</valorAlterado>"
+                            . "<nroItemAlterado>{$obj->item}</nroItemAlterado>"
+                            . "</infCorrecao>";
         }
 
         //estabelece o codigo do tipo de evento CARTA DE CORRECAO
         $tpEvento = '110110';
         $descEvento = 'Carta de Correcao';
-
+        
         //monta mensagem
         $tagAdic =
             "<evCCeCTe>"
-            . "<descEvento>$descEvento</descEvento>"
-            . "<infCorrecao>"
-            . "<grupoAlterado>$grupoAlterado</grupoAlterado>"
-            . "<campoAlterado>$campoAlterado</campoAlterado>"
-            . "<valorAlterado>$valorAlterado</valorAlterado>"
-            . "<nroItemAlterado>$nroItemAlterado</nroItemAlterado>"
-            . "</infCorrecao>"
-            . "<xCondUso>"
-            . "A Carta de Correcao e disciplinada pelo Art. 58-B do "
-            . "CONVENIO/SINIEF 06/89: Fica permitida a utilizacao de carta de "
-            . "correcao, para regularizacao de erro ocorrido na emissao de "
-            . "documentos fiscais relativos a prestacao de servico de transporte, "
-            . "desde que o erro nao esteja relacionado com: I - as variaveis que "
-            . "determinam o valor do imposto tais como: base de calculo, "
-            . "aliquota, diferenca de preco, quantidade, valor da prestacao;II - "
-            . "a correcao de dados cadastrais que implique mudanca do emitente, "
-            . "tomador, remetente ou do destinatario;III - a data de emissao ou "
-            . "de saida."
-            . "</xCondUso>"
+                . "<descEvento>$descEvento</descEvento>"
+                . $infoCorrecao
+                . "<xCondUso>"
+                    . "A Carta de Correcao e disciplinada pelo Art. 58-B do "
+                    . "CONVENIO/SINIEF 06/89: Fica permitida a utilizacao de carta de "
+                    . "correcao, para regularizacao de erro ocorrido na emissao de "
+                    . "documentos fiscais relativos a prestacao de servico de transporte, "
+                    . "desde que o erro nao esteja relacionado com: I - as variaveis que "
+                    . "determinam o valor do imposto tais como: base de calculo, "
+                    . "aliquota, diferenca de preco, quantidade, valor da prestacao;II - "
+                    . "a correcao de dados cadastrais que implique mudanca do emitente, "
+                    . "tomador, remetente ou do destinatario;III - a data de emissao ou "
+                    . "de saida."
+                . "</xCondUso>"
             ."</evCCeCTe>";
-        $retorno = $this->zSefazEvento($siglaUF, $chCTe, $tpAmb, $tpEvento, $nSeqEvento, $tagAdic);
-        $aRetorno = $this->aLastRetEvent;
+        $retorno = $this->zSefazEvento($siglaUF, $chCTe, $tpAmb, $tpEvento, $nSeqEvento, $tagAdic,$cnpj); // xml recebido da SEFAZ
+        $aRetorno[] = $this->aLastRetEvent;
+        $aRetorno[] = $this->oSoap->lastMsg;                                    // xml transmitido(enviou) para a SEFAZ
         return $retorno;
     }
 
