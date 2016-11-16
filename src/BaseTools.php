@@ -24,7 +24,8 @@ use NFePHP\Common\Files;
 use NFePHP\Common\Exception;
 
 if (!defined('NFEPHP_ROOT')) {
-    define('NFEPHP_ROOT', dirname(dirname(dirname(__FILE__))));
+    //define('NFEPHP_ROOT', dirname(dirname(dirname(__FILE__))));
+    define('NFEPHP_ROOT', dirname(dirname(__FILE__)));
 }
 
 class BaseTools
