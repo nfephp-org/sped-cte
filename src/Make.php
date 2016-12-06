@@ -324,7 +324,7 @@ class Make extends BaseMake
      * Documentos de Transporte Anterior
      * @var \DOMNode
      */
-    private $docAnt = '';
+    private $docAnt = array();
     /**
      * Emissor do documento anterior
      * @var array
@@ -544,6 +544,19 @@ class Make extends BaseMake
             }
             foreach ($this->infOutros as $infOutros) {
                 $this->dom->appChild($this->infDoc, $infOutros, 'Falta tag "infOutros"');
+            }
+
+            if ($this->idDocAntEle != []) { //Caso tenha CT-es Anteriores viculados
+                $this->dom->appChild($this->infCTeNorm, $this->docAnt, 'Falta tag "docAnt"');
+
+                foreach ($this->emiDocAnt as $emiDocAnt) {
+                    $this->dom->appChild($this->docAnt, $emiDocAnt, 'Falta tag "emiDocAnt"');
+                    $this->dom->appChild($emiDocAnt, $this->idDocAnt, 'Falta tag "idDocAnt"');
+
+                    foreach ($this->idDocAntEle as $idDocAntEle) {
+                        $this->dom->appChild($this->idDocAnt, $idDocAntEle, 'Falta tag "emiDocAnt"');
+                    }
+                }
             }
 
             $this->dom->appChild($this->infCTeNorm, $this->seg, 'Falta tag "seg"');
@@ -2755,6 +2768,18 @@ class Make extends BaseMake
         return $this->infDoc;
     }
 
+    public function docAntTag()
+    {
+        $this->docAnt = $this->dom->createElement('docAnt');
+        return $this->docAnt;
+    }
+
+    public function idDocAntTag()
+    {
+        $this->idDocAnt = $this->dom->createElement('idDocAnt');
+        return $this->idDocAnt;
+    }
+
     /**
      * Gera as tags para o elemento: "infNF" (Informações das NF)
      * #262
@@ -2844,6 +2869,54 @@ class Make extends BaseMake
 
         return $this->infOutros[$posicao];
     }
+
+    /**
+     * Gera as tags para o elemento: "emiDocAnt" (Informações dos CT-es Anteriores)
+     * #345
+     * Nível: 3
+     * @param type $CNPJ
+     * @param type $CPF
+     * @param type $IE
+     * @param type $UF
+     * @param type $xNome
+     * @return type
+     */
+    public function emiDocAntTag($CNPJ = '', $CPF = '', $IE = '', $UF = '', $xNome = '')
+    {
+        $identificador = '#345 <emiDocAnt> - ';
+        $this->emiDocAnt[] = $this->dom->createElement('emiDocAnt');
+        $posicao = (integer) count($this->emiDocAnt) - 1;
+        if ($CNPJ != '') {
+            $this->dom->addChild($this->emiDocAnt[$posicao], 'CNPJ', $CNPJ, true, $identificador . 'Número do CNPJ');
+        } else {
+            $this->dom->addChild($this->emiDocAnt[$posicao], 'CPF', $CPF, true, $identificador . 'Número do CPF');
+        }
+        $this->dom->addChild($this->emiDocAnt[$posicao], 'IE', $IE, true, $identificador . 'Inscrição Estadual');
+        $this->dom->addChild($this->emiDocAnt[$posicao], 'UF', $UF, true, $identificador . 'Sigla da UF');
+        $this->dom->addChild($this->emiDocAnt[$posicao], 'xNome', $xNome, true, $identificador . 'Razão Social ou '
+            .' Nome do Expedidor');
+
+        return $this->emiDocAnt[$posicao];
+    }
+
+    /**
+     * Gera as tags para o elemento: "idDocAntEle" (Informações dos CT-es Anteriores)
+     * #358
+     * Nível: 4
+     * @param type $chave
+     * @return type
+     */
+    public function idDocAntEleTag($chave = '')
+    {
+        $identificador = '#358 <idDocAntEle> - ';
+        $this->idDocAntEle[] = $this->dom->createElement('idDocAntEle');
+        $posicao = (integer) count($this->idDocAntEle) - 1;
+        $this->dom->addChild($this->idDocAntEle[$posicao], 'chave', $chave, true, $identificador . 'Chave de '
+            .'Acesso do CT-e');
+
+        return $this->idDocAntEle[$posicao];
+    }
+    
     /**
      * Gera as tags para o elemento: "seg" (Informações de Seguro da Carga)
      * #360

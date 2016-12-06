@@ -26,6 +26,9 @@ $dhEmi = date("Y-m-d\TH:i:s");
 
 $numeroCTE = '71';
 
+
+
+
 $chave = $cte->montaChave(
     $cUF = '41',                // Codigo da UF da tabela do IBGE: 41-PR
     $ano = date('y', strtotime($dhEmi)),
