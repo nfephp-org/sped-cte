@@ -600,38 +600,38 @@ class Make extends BaseMake
      * #4
      * Nível: 1
      * Os parâmetros para esta função são todos os elementos da tag "ide" do tipo elemento (Ele = E|CE|A) e nível 2
-     * @param string $cUF
-     * @param string $cCT
-     * @param string $CFOP
-     * @param string $natOp
-     * @param string $forPag
-     * @param string $mod
-     * @param string $serie
-     * @param string $nCT
-     * @param string $dhEmi
-     * @param string $tpImp
-     * @param string $tpEmis
-     * @param string $cDV
-     * @param string $tpAmb
-     * @param string $tpCTe
-     * @param string $procEmi
-     * @param string $verProc
-     * @param string $refCTE
-     * @param string $cMunEnv
-     * @param string $xMunEnv
-     * @param string $UFEnv
-     * @param string $modal
-     * @param string $tpServ
-     * @param string $cMunIni
-     * @param string $xMunIni
-     * @param string $UFIni
-     * @param string $cMunFim
-     * @param string $xMunFim
-     * @param string $UFFim
-     * @param string $retira
-     * @param string $xDetRetira
-     * @param string $dhCont
-     * @param string $xJust
+     * @param string $cUF Código da UF do emitente do CT-e
+     * @param string $cCT Código numérico que compõe a Chave de Acesso
+     * @param string $CFOP Código Fiscal de Operações e Prestações
+     * @param string $natOp Natureza da Operação
+     * @param string $forPag Forma de pagamento do serviço
+     * @param string $mod Modelo do documento fiscal
+     * @param string $serie Série do CT-e
+     * @param string $nCT Número do CT-e
+     * @param string $dhEmi Data e hora de emissão do CT-e
+     * @param string $tpImp Formato de impressão do DACTE
+     * @param string $tpEmis Forma de emissão do CT-e
+     * @param string $cDV Digito Verificador da chave de acesso do CT-e
+     * @param string $tpAmb Tipo do Ambiente
+     * @param string $tpCTe Tipo do CT-e
+     * @param string $procEmi Identificador do processo de emissão do CT-e
+     * @param string $verProc Versão do processo de emissão
+     * @param string $refCTE Chave de acesso do CT-e referenciado
+     * @param string $cMunEnv Código do Município de envio do CT-e (de onde o documento foi transmitido)
+     * @param string $xMunEnv Nome do Município de envio do CT-e (de onde o documento foi transmitido)
+     * @param string $UFEnv Sigla da UF de envio do CT-e (de onde o documento foi transmitido)
+     * @param string $modal Modal
+     * @param string $tpServ Tipo do Serviço
+     * @param string $cMunIni Código do Município de início da prestação
+     * @param string $xMunIni Nome do Município do início da prestação
+     * @param string $UFIni UF do início da prestação
+     * @param string $cMunFim Código do Município de término da prestação
+     * @param string $xMunFim Nome do Município do término da prestação
+     * @param string $UFFim UF do término da prestação
+     * @param string $retira Indicador se o Recebedor retira no Aeroporto, Filial, Porto ou Estação de Destino?
+     * @param string $xDetRetira Detalhes do retira
+     * @param string $dhCont Data e Hora da entrada em contingência
+     * @param string $xJust Justificativa da entrada em contingência
      * @return DOMElement|\DOMNode
      */
     public function ideTag(
@@ -1503,8 +1503,8 @@ class Make extends BaseMake
      * Nível: 2
      * Os parâmetros para esta função são todos os elementos da tag "ObsFisco" do tipo
      * elemento (Ele = E|CE|A) e nível 3
-     * @param string $xCampo
-     * @param string $xTexto
+     * @param string $xCampo Identificação do campo
+     * @param string $xTexto Conteúdo do campo
      * @return bool
      */
     public function obsFiscoTag($xCampo = '', $xTexto = '')
@@ -1530,17 +1530,16 @@ class Make extends BaseMake
         );
         return false;
     }
-
     /**
      * Gera as tags para o elemento: "emit" (Identificação do Emitente do CT-e)
      * #97
      * Nível: 1
      * Os parâmetros para esta função são todos os elementos da tag "emit" do
      * tipo elemento (Ele = E|CE|A) e nível 2
-     * @param string $CNPJ
-     * @param string $IE
-     * @param string $xNome
-     * @param string $xFant
+     * @param string $CNPJ CNPJ do emitente
+     * @param string $IE Inscrição Estadual do Emitente
+     * @param string $xNome Razão social ou Nome do emitente
+     * @param string $xFant Nome fantasia
      * @return DOMElement|\DOMNode
      */
     public function emitTag($CNPJ = '', $IE = '', $xNome = '', $xFant = '')
