@@ -714,7 +714,7 @@ class Tools extends BaseTools
         $xsdPath = $this->rootDir.DIRECTORY_SEPARATOR .
             'schemas' .
             DIRECTORY_SEPARATOR .
-            $this->aConfig['schemesCTe'] .
+            $this->aConfig['schemasCTe'] .
             DIRECTORY_SEPARATOR .
             $xsdFile;
         if (! is_file($xsdPath)) {
