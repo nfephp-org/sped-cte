@@ -714,7 +714,7 @@ class Tools extends BaseTools
         $xsdPath = $this->rootDir.DIRECTORY_SEPARATOR .
             'schemas' .
             DIRECTORY_SEPARATOR .
-            $this->aConfig['schemasCTe'] .
+            $this->aConfig['schemesCTe'] .
             DIRECTORY_SEPARATOR .
             $xsdFile;
         if (! is_file($xsdPath)) {
@@ -727,8 +727,7 @@ class Tools extends BaseTools
         }
         return true;
     }
-
-     /**
+    /**
      * Transmite a correção
      * conforme o MOC(Manual de Orientações do Contribuinte)
      * Art. 58-B Fica permitida a utilização de carta de correção,
@@ -740,14 +739,12 @@ class Tools extends BaseTools
      * II - a correção de dados cadastrais que implique mudança do emitente,
      *  tomador, remetente ou do destinatário;
      * III - a data de emissão ou de saída.
-     *
-     * @param type $chCTe
-     * @param type $tpAmb
-     * @param type $nSeqEvento
-     * @param type $infCorrecao
-     * @param type $aRetorno
-     * @return type
-     * @throws Exception\InvalidArgumentException
+     * @param string $chCTe
+     * @param string $tpAmb
+     * @param string $nSeqEvento
+     * @param array $infCorrecao
+     * @param array $aRetorno
+     * @return string
      */
     public function sefazCartaCorrecao(
         $chCTe = '',
