@@ -2,6 +2,17 @@
 
 namespace NFePHP\CTe;
 
+//use NFePHP\Common\Base\BaseTools;
+use NFePHP\CTe\BaseTools;
+use NFePHP\Common\DateTime\DateTime;
+use NFePHP\Common\Dom\Dom;
+use NFePHP\Common\Dom\ValidXsd;
+use NFePHP\Common\Exception;
+use NFePHP\Common\LotNumber\LotNumber;
+use NFePHP\Common\Strings\Strings;
+use NFePHP\CTe\Auxiliar\IdentifyCTe;
+use NFePHP\CTe\Auxiliar\Response;
+
 /**
  * Classe principal para a comunicação com a SEFAZ
  *
@@ -17,22 +28,6 @@ namespace NFePHP\CTe;
  *          Maison K. Sakamoto <maison.sakamoto at gmail do com>
  *          Samuel M Basso <samuelbasso at gmail do com>
  */
-
-use NFePHP\Common\Base\BaseTools;
-use NFePHP\Common\LotNumber\LotNumber;
-use NFePHP\Common\Strings\Strings;
-use NFePHP\Common\Files;
-use NFePHP\Common\Exception;
-use NFePHP\CTe\Auxiliar\Response;
-use NFePHP\CTe\Auxiliar\IdentifyCTe;
-use NFePHP\Common\Dom\ValidXsd;
-use NFePHP\Common\Dom\Dom;
-use NFePHP\Common\DateTime\DateTime;
-
-if (!defined('NFEPHP_ROOT')) {
-    define('NFEPHP_ROOT', dirname(dirname(__FILE__)));
-}
-
 class Tools extends BaseTools
 {
     /**
@@ -57,6 +52,17 @@ class Tools extends BaseTools
      * @var modelo
      */
     protected $modelo = '57';
+
+    /**
+     * @var string
+     */
+    private $rootDir;
+
+    public function __construct($configJson = '')
+    {
+        parent::__construct($configJson);
+        $this->rootDir = dirname(__DIR__);
+    }
 
     /**
      * assina
@@ -701,10 +707,11 @@ class Tools extends BaseTools
         $aResp = array();
         $schem = IdentifyCTe::identificar($xml, $aResp);
         if ($schem == '') {
-            return true;
+            $this->erros[] = "Não foi possível identificar o documento";
+            return false;
         }
         $xsdFile = $aResp['Id'].'_v'.$aResp['versao'].'.xsd';
-        $xsdPath = NFEPHP_ROOT.DIRECTORY_SEPARATOR .
+        $xsdPath = $this->rootDir.DIRECTORY_SEPARATOR .
             'schemas' .
             DIRECTORY_SEPARATOR .
             $this->aConfig['schemasCTe'] .
@@ -720,7 +727,6 @@ class Tools extends BaseTools
         }
         return true;
     }
-
     /**
      * Transmite a correção
      * conforme o MOC(Manual de Orientações do Contribuinte)
@@ -733,72 +739,65 @@ class Tools extends BaseTools
      * II - a correção de dados cadastrais que implique mudança do emitente,
      *  tomador, remetente ou do destinatário;
      * III - a data de emissão ou de saída.
-     *
-     * @param type $siglaUF
-     * @param type $tpAmb
-     * @param type $cnpj
-     * @param type $chave
-     * @param type $nSeqEvento
-     * @param type $grupoAlterado
-     * @param type $campoAlterado
-     * @param type $valorAlterado
-     * @param type $nroItemAlterado
-     * @param type $aRetorno
-     * @return type
-     * @throws Exception\InvalidArgumentException
+     * @param string $chCTe
+     * @param string $tpAmb
+     * @param string $nSeqEvento
+     * @param array $infCorrecao
+     * @param array $aRetorno
+     * @return string
      */
     public function sefazCartaCorrecao(
-        $siglaUF = '',
+        $chCTe = '',
         $tpAmb = '2',
-        $cnpj = '',
-        $chave = '',
         $nSeqEvento = '1',
-        $grupoAlterado = '',
-        $campoAlterado = '',
-        $valorAlterado = '',
-        $nroItemAlterado = '01',
+        $infCorrecao = array(),
         &$aRetorno = array()
     ) {
-        $chCTe = preg_replace('/[^0-9]/', '', $chave);
-
+        $chCTe = preg_replace('/[^0-9]/', '', $chCTe);
         //validação dos dados de entrada
         if (strlen($chCTe) != 44) {
             $msg = "Uma chave de CTe válida não foi passada como parâmetro $chCTe.";
             throw new Exception\InvalidArgumentException($msg);
         }
-        if ($siglaUF == '' || $cnpj == '' || $chave == '' ||
-            $grupoAlterado == '' || $campoAlterado == '' || $valorAlterado == ''
-        ) {
+        if ($chCTe == '' || empty(array_filter($infCorrecao))) {
             $msg = "Preencha os campos obrigatórios!";
             throw new Exception\InvalidArgumentException($msg);
         }
-
+        if ($tpAmb == '') {
+            $tpAmb = $this->aConfig['tpAmb'];
+        }
+        $siglaUF = $this->zGetSigla(substr($chCTe, 0, 2));
         //estabelece o codigo do tipo de evento CARTA DE CORRECAO
         $tpEvento = '110110';
         $descEvento = 'Carta de Correcao';
-
+        //Grupo de Informações de Correção
+        $correcoes = '';
+        foreach ($infCorrecao as $info) {
+            $correcoes .=
+                "<infCorrecao>"
+                    ."<grupoAlterado>".$info['grupoAlterado']."</grupoAlterado>"
+                    ."<campoAlterado>".$info['campoAlterado']."</campoAlterado>"
+                    ."<valorAlterado>".$info['valorAlterado']."</valorAlterado>"
+                    ."<nroItemAlterado>".$info['nroItemAlterado']."</nroItemAlterado>"
+                ."</infCorrecao>";
+        }
         //monta mensagem
         $tagAdic =
             "<evCCeCTe>"
-            . "<descEvento>$descEvento</descEvento>"
-            . "<infCorrecao>"
-            . "<grupoAlterado>$grupoAlterado</grupoAlterado>"
-            . "<campoAlterado>$campoAlterado</campoAlterado>"
-            . "<valorAlterado>$valorAlterado</valorAlterado>"
-            . "<nroItemAlterado>$nroItemAlterado</nroItemAlterado>"
-            . "</infCorrecao>"
-            . "<xCondUso>"
-            . "A Carta de Correcao e disciplinada pelo Art. 58-B do "
-            . "CONVENIO/SINIEF 06/89: Fica permitida a utilizacao de carta de "
-            . "correcao, para regularizacao de erro ocorrido na emissao de "
-            . "documentos fiscais relativos a prestacao de servico de transporte, "
-            . "desde que o erro nao esteja relacionado com: I - as variaveis que "
-            . "determinam o valor do imposto tais como: base de calculo, "
-            . "aliquota, diferenca de preco, quantidade, valor da prestacao;II - "
-            . "a correcao de dados cadastrais que implique mudanca do emitente, "
-            . "tomador, remetente ou do destinatario;III - a data de emissao ou "
-            . "de saida."
-            . "</xCondUso>"
+                . "<descEvento>$descEvento</descEvento>"
+                .$correcoes
+                . "<xCondUso>"
+                    . "A Carta de Correcao e disciplinada pelo Art. 58-B do "
+                    . "CONVENIO/SINIEF 06/89: Fica permitida a utilizacao de carta de "
+                    . "correcao, para regularizacao de erro ocorrido na emissao de "
+                    . "documentos fiscais relativos a prestacao de servico de transporte, "
+                    . "desde que o erro nao esteja relacionado com: I - as variaveis que "
+                    . "determinam o valor do imposto tais como: base de calculo, "
+                    . "aliquota, diferenca de preco, quantidade, valor da prestacao;II - "
+                    . "a correcao de dados cadastrais que implique mudanca do emitente, "
+                    . "tomador, remetente ou do destinatario;III - a data de emissao ou "
+                    . "de saida."
+                . "</xCondUso>"
             ."</evCCeCTe>";
         $retorno = $this->zSefazEvento($siglaUF, $chCTe, $tpAmb, $tpEvento, $nSeqEvento, $tagAdic);
         $aRetorno = $this->aLastRetEvent;
