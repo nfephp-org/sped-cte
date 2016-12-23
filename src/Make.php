@@ -3082,7 +3082,7 @@ class Make extends BaseMake
         $identificador = '#21 <veic> - ';
         $this->veic[] = $this->dom->createElement('veic');
         $posicao = (integer)count($this->veic) - 1;
-        if($cInt != ''){
+        if ($cInt != '') {
             $this->dom->addChild(
                 $this->veic[$posicao],
                 'cInt',
