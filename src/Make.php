@@ -3033,6 +3033,7 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "veic" (Dados dos Veículos)
      * #21
      * Nível: 1
+     * @param string $cInt
      * @param string $RENAVAM
      * @param string $placa
      * @param string $tara
@@ -3053,6 +3054,7 @@ class Make extends BaseMake
      * @return mixed
      */
     public function veicTag(
+        $cInt = '',
         $RENAVAM = '',
         $placa = '',
         $tara = '',
@@ -3080,6 +3082,15 @@ class Make extends BaseMake
         $identificador = '#21 <veic> - ';
         $this->veic[] = $this->dom->createElement('veic');
         $posicao = (integer)count($this->veic) - 1;
+        if($cInt != ''){
+            $this->dom->addChild(
+                $this->veic[$posicao],
+                'cInt',
+                $cInt,
+                false,
+                $identificador . 'Código interno do veículo'
+            );
+        }
         $this->dom->addChild(
             $this->veic[$posicao],
             'RENAVAM',
