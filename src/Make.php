@@ -1001,15 +1001,13 @@ class Make extends BaseMake
                 $identificador . 'Número do CPF'
             );
         }
-        if ($IE !== '') {
-            $this->dom->addChild(
-                $this->toma4,
-                'IE',
-                $IE,
-                false,
-                $identificador . 'Inscrição Estadual'
-            );
-        }
+        $this->dom->addChild(
+            $this->toma4,
+            'IE',
+            $IE,
+            false,
+            $identificador . 'Inscrição Estadual'
+        );
         $this->dom->addChild(
             $this->toma4,
             'xNome',
@@ -1571,15 +1569,13 @@ class Make extends BaseMake
             true,
             $identificador . 'CNPJ do emitente'
         );
-        if ($IE !== '') {
-            $this->dom->addChild(
-                $this->emit,
-                'IE',
-                $IE,
-                true,
-                $identificador . 'Inscrição Estadual do Emitente'
-            );
-        }
+        $this->dom->addChild(
+            $this->emit,
+            'IE',
+            $IE,
+            true,
+            $identificador . 'Inscrição Estadual do Emitente'
+        );
         $this->dom->addChild(
             $this->emit,
             'xNome',
@@ -1749,15 +1745,13 @@ class Make extends BaseMake
                 $identificador . 'CPF do remente'
             );
         }
-        if ($IE !== '') {
-            $this->dom->addChild(
-                $this->rem,
-                'IE',
-                $IE,
-                true,
-                $identificador . 'Inscrição Estadual do remente'
-            );
-        }
+        $this->dom->addChild(
+            $this->rem,
+            'IE',
+            $IE,
+            true,
+            $identificador . 'Inscrição Estadual do remente'
+        );
         $this->dom->addChild(
             $this->rem,
             'xNome',
@@ -1950,15 +1944,13 @@ class Make extends BaseMake
                 $identificador . 'Número do CPF'
             );
         }
-        if ($IE !== '') {
-            $this->dom->addChild(
-                $this->exped,
-                'IE',
-                $IE,
-                true,
-                $identificador . 'Inscrição Estadual'
-            );
-        }
+        $this->dom->addChild(
+            $this->exped,
+            'IE',
+            $IE,
+            true,
+            $identificador . 'Inscrição Estadual'
+        );
         $this->dom->addChild(
             $this->exped,
             'xNome',
@@ -2144,15 +2136,13 @@ class Make extends BaseMake
                 $identificador . 'Número do CPF'
             );
         }
-        if ($IE !== '') {
-            $this->dom->addChild(
-                $this->receb,
-                'IE',
-                $IE,
-                true,
-                $identificador . 'Inscrição Estadual'
-            );
-        }
+        $this->dom->addChild(
+            $this->receb,
+            'IE',
+            $IE,
+            true,
+            $identificador . 'Inscrição Estadual'
+        );
         $this->dom->addChild(
             $this->receb,
             'xNome',
@@ -2339,15 +2329,13 @@ class Make extends BaseMake
                 $identificador . 'Número do CPF'
             );
         }
-        if ($IE !== '') {
-            $this->dom->addChild(
-                $this->dest,
-                'IE',
-                $IE,
-                true,
-                $identificador . 'Inscrição Estadual'
-            );
-        }
+        $this->dom->addChild(
+            $this->dest,
+            'IE',
+            $IE,
+            true,
+            $identificador . 'Inscrição Estadual'
+        );
         $this->dom->addChild(
             $this->dest,
             'xNome',
@@ -3195,15 +3183,13 @@ class Make extends BaseMake
                 true,
                 $identificador . 'Nome do proprietario'
             );
-            if ($IE !== '') {
-                $this->dom->addChild(
-                    $this->prop[$p],
-                    'IE',
-                    $IE,
-                    true,
-                    $identificador . 'IE do proprietario'
-                );
-            }
+            $this->dom->addChild(
+                $this->prop[$p],
+                'IE',
+                $IE,
+                true,
+                $identificador . 'IE do proprietario'
+            );
             $this->dom->addChild(
                 $this->prop[$p],
                 'UF',
