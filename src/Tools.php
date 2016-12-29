@@ -59,7 +59,11 @@ class Tools extends BaseTools
     /**
      * @var string
      */
-    private $rootDir;
+    protected $rootDir;
+
+    public static $PL_CTE_200 = 'PL_CTe_200';
+
+    public static $PL_CTE_300 = 'PL_CTe_300';
 
     public function __construct($configJson = '')
     {
@@ -1061,5 +1065,23 @@ class Tools extends BaseTools
             }
         }
         return (string) $procXML;
+    }
+
+    public static function validarXmlCte($xml, $schema)
+    {
+        $aResp = array();
+        $schem = IdentifyCTe::identificar($xml, $aResp);
+        if ($schem == '') {
+            return ["Não foi possível identificar o documento"];
+        }
+        $xsdFile = "{$aResp['Id']}_v{$aResp['versao']}.xsd";
+        $xsdPath = implode(DIRECTORY_SEPARATOR, [dirname(__DIR__), 'schemas', $schema, $xsdFile]);
+        if (!is_file($xsdPath)) {
+            return ["O arquivo XSD {$xsdFile} não foi localizado."];
+        }
+        if (!ValidXsd::validar($aResp['xml'], $xsdPath)) {
+            return ValidXsd::$errors;
+        }
+        return [];
     }
 }
