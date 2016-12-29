@@ -1080,7 +1080,7 @@ class Tools extends BaseTools
             return ["O arquivo XSD {$xsdFile} não foi localizado."];
         }
         if (!ValidXsd::validar($aResp['xml'], $xsdPath)) {
-            return [ValidXsd::$errors];
+            return ValidXsd::$errors;
         }
         return [];
     }
