@@ -367,7 +367,7 @@ class Tools extends BaseTools
         $nFin = (integer) $nFin;
         $xJust = Strings::cleanString($xJust);
         //Função comentada por não estar implementada.
-        //$this->zValidParamInut($xJust, $nSerie, $nIni, $nFin);
+//        $this->zValidParamInut($xJust, $nSerie, $nIni, $nFin);
         if ($tpAmb == '') {
             $tpAmb = $this->aConfig['tpAmb'];
         }
@@ -436,13 +436,13 @@ class Tools extends BaseTools
         //tratar dados de retorno
         $aRetorno = Response::readReturnSefaz($servico, $retorno);
         //Comentado por não ter implementada a função de zAddProtMsg
-        //if ($aRetorno['cStat'] == '102') {
-            //$retorno = $this->zAddProtMsg('ProcInutCTe', 'inutCTe', $signedMsg, 'retInutCTe', $retorno);
+//        if ($aRetorno['cStat'] == '102') {
+//            $retorno = $this->zAddProtMsg('ProcInutCTe', 'inutCTe', $signedMsg, 'retInutCTe', $retorno);
             if ($salvarMensagens) {
                 $filename = "$sAno-$this->modelo-$sSerie-".$sInicio."_".$sFinal."-procInutCTe.xml";
                 $this->zGravaFile('cte', $tpAmb, $filename, $retorno, 'inutilizadas');
             }
-        //}
+//        }
         return (string) $retorno;
     }
 
