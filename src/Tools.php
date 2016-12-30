@@ -438,10 +438,10 @@ class Tools extends BaseTools
         //Comentado por não ter implementada a função de zAddProtMsg
 //        if ($aRetorno['cStat'] == '102') {
 //            $retorno = $this->zAddProtMsg('ProcInutCTe', 'inutCTe', $signedMsg, 'retInutCTe', $retorno);
-            if ($salvarMensagens) {
-                $filename = "$sAno-$this->modelo-$sSerie-".$sInicio."_".$sFinal."-procInutCTe.xml";
-                $this->zGravaFile('cte', $tpAmb, $filename, $retorno, 'inutilizadas');
-            }
+        if ($salvarMensagens) {
+            $filename = "$sAno-$this->modelo-$sSerie-".$sInicio."_".$sFinal."-procInutCTe.xml";
+            $this->zGravaFile('cte', $tpAmb, $filename, $retorno, 'inutilizadas');
+        }
 //        }
         return (string) $retorno;
     }
