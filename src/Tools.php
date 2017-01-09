@@ -563,7 +563,7 @@ class Tools extends BaseTools
         $aliasEvento = $aRet['alias'];
         $descEvento = $aRet['desc'];
         $cnpj = $this->aConfig['cnpj'];
-        $dhEvento = (string) str_replace(' ', 'T', date('Y-m-d H:i:s'));
+        $dhEvento = DateTime::convertTimestampToSefazTime(time());
         $sSeqEvento = str_pad($nSeqEvento, 2, "0", STR_PAD_LEFT);
         $eventId = "ID".$tpEvento.$chCTe.$sSeqEvento;
         $cOrgao = $this->urlcUF;
