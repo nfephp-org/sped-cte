@@ -822,37 +822,8 @@ class Tools extends BaseTools
 
         //estabelece o codigo do tipo de evento CARTA DE CORRECAO
         $tpEvento = '110110';
-        $descEvento = 'Carta de Correcao';
-
-        //Grupo de Informações de Correção
-        $correcoes = '';
-        foreach ($infCorrecao as $info) {
-            $correcoes .=
-                "<infCorrecao>"
-                    ."<grupoAlterado>".$info['grupoAlterado']."</grupoAlterado>"
-                    ."<campoAlterado>".$info['campoAlterado']."</campoAlterado>"
-                    ."<valorAlterado>".$info['valorAlterado']."</valorAlterado>"
-                    ."<nroItemAlterado>".$info['nroItemAlterado']."</nroItemAlterado>"
-                ."</infCorrecao>";
-        }
         //monta mensagem
-        $tagAdic =
-            "<evCCeCTe>"
-                . "<descEvento>$descEvento</descEvento>"
-                .$correcoes
-                . "<xCondUso>"
-                    . "A Carta de Correcao e disciplinada pelo Art. 58-B do "
-                    . "CONVENIO/SINIEF 06/89: Fica permitida a utilizacao de carta de "
-                    . "correcao, para regularizacao de erro ocorrido na emissao de "
-                    . "documentos fiscais relativos a prestacao de servico de transporte, "
-                    . "desde que o erro nao esteja relacionado com: I - as variaveis que "
-                    . "determinam o valor do imposto tais como: base de calculo, "
-                    . "aliquota, diferenca de preco, quantidade, valor da prestacao;II - "
-                    . "a correcao de dados cadastrais que implique mudanca do emitente, "
-                    . "tomador, remetente ou do destinatario;III - a data de emissao ou "
-                    . "de saida."
-                . "</xCondUso>"
-            ."</evCCeCTe>";
+        $tagAdic = Tools::serializarMensagemDoEventoCartaDeCorrecao($infCorrecao);
         $retorno = $this->zSefazEvento($siglaUF, $chCTe, $tpAmb, $tpEvento, $nSeqEvento, $tagAdic);
         $aRetorno = $this->aLastRetEvent;
         return $retorno;
@@ -1094,30 +1065,29 @@ class Tools extends BaseTools
             if (key_exists('nroItemAlterado', $info)) {
                 $nroItemAlteradoOptionalElement = "<nroItemAlterado>{$info['nroItemAlterado']}</nroItemAlterado>";
             }
-            $correcoes .= "<infCorrecao>
-                <grupoAlterado>{$info['grupoAlterado']}</grupoAlterado>
-                <campoAlterado>{$info['campoAlterado']}</campoAlterado>
-                <valorAlterado>{$info['valorAlterado']}</valorAlterado>
-                {$nroItemAlteradoOptionalElement}
-            </infCorrecao>";
+            $correcoes .= "<infCorrecao>" .
+                "<grupoAlterado>{$info['grupoAlterado']}</grupoAlterado>" .
+                "<campoAlterado>{$info['campoAlterado']}</campoAlterado>" .
+                "<valorAlterado>{$info['valorAlterado']}</valorAlterado>" .
+                "{$nroItemAlteradoOptionalElement}" .
+                "</infCorrecao>";
         }
         //monta mensagem
-        return "<evCCeCTe>
-            <descEvento>Carta de Correcao</descEvento>
-            $correcoes
-            <xCondUso>
-            A Carta de Correcao e disciplinada pelo Art. 58-B do 
-            CONVENIO/SINIEF 06/89: Fica permitida a utilizacao de carta de 
-            correcao, para regularizacao de erro ocorrido na emissao de 
-            documentos fiscais relativos a prestacao de servico de transporte, 
-            desde que o erro nao esteja relacionado com: I - as variaveis que 
-            determinam o valor do imposto tais como: base de calculo, 
-            aliquota, diferenca de preco, quantidade, valor da prestacao;II - 
-            a correcao de dados cadastrais que implique mudanca do emitente, 
-            tomador, remetente ou do destinatario;III - a data de emissao ou 
-            de saida.
-            </xCondUso>
-        </evCCeCTe>";
+        return "<evCCeCTe>" .
+            "<descEvento>Carta de Correcao</descEvento>" .
+            "{$correcoes}" .
+            "<xCondUso>" .
+            "A Carta de Correcao e disciplinada pelo Art. 58-B do " .
+            "CONVENIO/SINIEF 06/89: Fica permitida a utilizacao de carta de " .
+            "correcao, para regularizacao de erro ocorrido na emissao de " .
+            "documentos fiscais relativos a prestacao de servico de transporte, " .
+            "desde que o erro nao esteja relacionado com: I - as variaveis que " .
+            "determinam o valor do imposto tais como: base de calculo, " .
+            "aliquota, diferenca de preco, quantidade, valor da prestacao;II - " .
+            "a correcao de dados cadastrais que implique mudanca do emitente, " .
+            "tomador, remetente ou do destinatario;III - a data de emissao ou " .
+            "de saida." .
+            "</xCondUso>" .
+        "</evCCeCTe>";
     }
-
 }
