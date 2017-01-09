@@ -343,14 +343,13 @@ class Tools extends BaseTools
     /**
      * Inutiza sequencia de numeracao
      *
-     * @param type $nAno
-     * @param type $nSerie
-     * @param type $nIni
-     * @param type $nFin
-     * @param type $xJust
-     * @param type $tpAmb
-     * @param type $aRetorno
-     * @return boolean
+     * @param int $nSerie
+     * @param int $nIni
+     * @param int $nFin
+     * @param string $xJust
+     * @param int $tpAmb
+     * @param array $aRetorno
+     * @return string
      * @throws Exception\RuntimeException
      * @throws Exception\InvalidArgumentException
      */
@@ -367,7 +366,8 @@ class Tools extends BaseTools
         $nIni = (integer) $nIni;
         $nFin = (integer) $nFin;
         $xJust = Strings::cleanString($xJust);
-        $this->zValidParamInut($xJust, $nSerie, $nIni, $nFin);
+        //Função comentada por não estar implementada.
+//        $this->zValidParamInut($xJust, $nSerie, $nIni, $nFin);
         if ($tpAmb == '') {
             $tpAmb = $this->aConfig['tpAmb'];
         }
@@ -376,7 +376,6 @@ class Tools extends BaseTools
         //monta serviço
         $siglaUF = $this->aConfig['siglaUF'];
         //carrega serviço
-        $servico = 'CteInutilizacao';
         $this->zLoadServico(
             'cte',
             $servico,
@@ -436,13 +435,14 @@ class Tools extends BaseTools
         }
         //tratar dados de retorno
         $aRetorno = Response::readReturnSefaz($servico, $retorno);
-        if ($aRetorno['cStat'] == '102') {
-            $retorno = $this->zAddProtMsg('ProcInutCTe', 'inutCTe', $signedMsg, 'retInutCTe', $retorno);
-            if ($salvarMensagens) {
-                $filename = "$sAno-$this->modelo-$sSerie-".$sInicio."_".$sFinal."-procInutCTe.xml";
-                $this->zGravaFile('cte', $tpAmb, $filename, $retorno, 'inutilizadas');
-            }
+        //Comentado por não ter implementada a função de zAddProtMsg
+//        if ($aRetorno['cStat'] == '102') {
+//            $retorno = $this->zAddProtMsg('ProcInutCTe', 'inutCTe', $signedMsg, 'retInutCTe', $retorno);
+        if ($salvarMensagens) {
+            $filename = "$sAno-$this->modelo-$sSerie-".$sInicio."_".$sFinal."-procInutCTe.xml";
+            $this->zGravaFile('cte', $tpAmb, $filename, $retorno, 'inutilizadas');
         }
+//        }
         return (string) $retorno;
     }
 
