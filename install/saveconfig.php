@@ -38,11 +38,11 @@ $pathCertsFiles = filter_input(INPUT_GET, 'pathCertsFiles', FILTER_SANITIZE_STRI
 
 $siteUrl = filter_input(INPUT_GET, 'siteUrl', FILTER_SANITIZE_URL);
 
-$schemesNFe = filter_input(INPUT_GET, 'schemesNFe', FILTER_SANITIZE_STRING);
-$schemesCTe = filter_input(INPUT_GET, 'schemesCTe', FILTER_SANITIZE_STRING);
-$schemesMDFe = filter_input(INPUT_GET, 'schemesMDFe', FILTER_SANITIZE_STRING);
-$schemesCLe = filter_input(INPUT_GET, 'schemesCLe', FILTER_SANITIZE_STRING);
-$schemesNFSe = filter_input(INPUT_GET, 'schemesNFSe', FILTER_SANITIZE_STRING);
+$schemasNFe = filter_input(INPUT_GET, 'schemasNFe', FILTER_SANITIZE_STRING);
+$schemasCTe = filter_input(INPUT_GET, 'schemasCTe', FILTER_SANITIZE_STRING);
+$schemasMDFe = filter_input(INPUT_GET, 'schemasMDFe', FILTER_SANITIZE_STRING);
+$schemasCLe = filter_input(INPUT_GET, 'schemasCLe', FILTER_SANITIZE_STRING);
+$schemasNFSe = filter_input(INPUT_GET, 'schemasNFSe', FILTER_SANITIZE_STRING);
 
 $razaosocial = filter_input(INPUT_GET, 'razaosocial', FILTER_SANITIZE_SPECIAL_CHARS);
 $nomefantasia = filter_input(INPUT_GET, 'nomefantasia', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -153,11 +153,11 @@ $aConfig = array(
     'pathNFSeFiles'=> $pathNFSeFiles,
     'pathCertsFiles' => $pathCertsFiles,
     'siteUrl' => $siteUrl,
-    'schemesNFe' => $schemesNFe,
-    'schemesCTe' => $schemesCTe,
-    'schemesMDFe' => $schemesMDFe,
-    'schemesCLe' => $schemesCLe,
-    'schemesNFSe' => $schemesNFSe,
+    'schemasNFe' => $schemasNFe,
+    'schemasCTe' => $schemasCTe,
+    'schemasMDFe' => $schemasMDFe,
+    'schemasCLe' => $schemasCLe,
+    'schemasNFSe' => $schemasNFSe,
     'razaosocial' => $razaosocial,
     'nomefantasia' => $nomefantasia,
     'siglaUF'=> $siglaUF,

@@ -1,6 +1,8 @@
 # SPED-CTE
 
-API para geração e comunicação das CTe com as SEFAZ autorizadoras.
+[![Chat][ico-gitter]][link-gitter]
+
+Framework para geração e comunicação das CTe com as SEFAZ autorizadoras.
 
 *sped-cte é um framework para geração CTe e eventos na comunicação com as SEFAZ autorizadoras.*
 
@@ -14,15 +16,19 @@ API para geração e comunicação das CTe com as SEFAZ autorizadoras.
 [![Issues][ico-issues]][link-issues]
 [![Forks][ico-forks]][link-forks]
 [![Stars][ico-stars]][link-stars]
-[![Chat][ico-gitter]][link-gitter]
 
-Este pacote visa fornecer os meios para gerar, assinar e anviar os dados relativos ao projeto Sped CTe.
+
+## Objetivo
+
+Este pacote visa fornecer os meios para gerar, assinar e enviar os dados relativos ao projeto Sped CTe.
 
 Este pacote faz parte da API NFePHP e atende aos parâmetros das PSR2 e PSR4, bem como é desenvolvida para de adequar as versões ATIVAS do PHP e aos layouts da CTe em vigor.
 
 ## Install
 
-composer nfephp-org/sped-cte
+Pelo terminal vá até a raiz de seu projeto e lá execute :
+
+composer require nfephp-org/sped-cte
 
 ## Change log
 
@@ -35,8 +41,37 @@ $ composer test
 ```
 
 ## Contributing
+**ATENÇÂO: A versão atual corresponde a vesão 2.00 do layout da SEFAZ, tanto na branch "master" como na branch "develop". As contribuições para a proxima versão do layout da SEFAZ 3.0 devem ser feitas exclusivamente na branch v3.0.**
 
 Para contribuir por favor observe o [CONTRIBUTING](CONTRIBUTING.md) e o  [Código de Conduta](CONDUCT.md) parea detalhes.
+
+## Versionamento
+
+Para fins de transparência e discernimento sobre nosso ciclo de lançamento, e procurando manter compatibilidade com versões anteriores, o número de versão da NFePHP 
+será mantida, tanto quanto possível, respeitando o padrão abaixo.
+
+As liberações serão numeradas com o seguinte formato:
+
+`<major>.<minor>.<patch>`
+
+E serão construídas com as seguintes orientações:
+
+* Quebra de compatibilidade com versões anteriores, avança o `<major>`.
+* Adição de novas funcionalidades sem quebrar compatibilidade com versões anteriores, avança o `<minor>`.
+* Correção de bugs e outras alterações, avança `<patch>`.
+
+Para mais informações, por favor visite <http://semver.org/>.
+
+## Desenvolvimento
+
+Para todo o desenvolvimento, correções de bugs, inclusões e testes deverá ser usada branch `develop`. 
+Na branch `master`estarão os códigos considerados como estáveis.
+Novas branches poderão surgir em função das necessidades que se apresentarem, seja para manter versionamentos anteriores seja para estabelecer correções de bugs. Mas apenas essas duas branches estabelecidas é que serão permanentente mantidas. 
+
+## Pull Request
+
+Para que seu Pull Request seja aceito ele deve estar seguindo os padrões descritos neste documento <http://www.walkeralencar.com/PHPCodeStandards.pdf>
+
 
 ## Security
 
@@ -44,8 +79,12 @@ Caso você encontre algum problema relativo a segurança, por favor envie um ema
 
 ## Credits
 
-- Desenvolvimento Inicial - Roberto L. Machado <linux_rlm@gmail.com>
-- Demais colaboradores serão indicados oportunamente.
+- Roberto L. Machado (Owner)
+- Samuel Basso (Mantenedor)
+- Gleidson Brito (Colaborador)
+- Giovani Paseto (Colaborador)
+- Maison Kendi Sakamoto (Colaborador)
+- Everton Xavier (Colaborador)
 
 ## License
 

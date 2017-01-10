@@ -2,7 +2,8 @@
 
 namespace NFePHP\CTe;
 
-use NFePHP\Common\Base\BaseTools;
+//use NFePHP\Common\Base\BaseTools;
+use NFePHP\CTe\BaseTools;
 use NFePHP\Common\DateTime\DateTime;
 use NFePHP\Common\Dom\Dom;
 use NFePHP\Common\Dom\ValidXsd;
@@ -36,15 +37,10 @@ class Tools extends BaseTools
      * @var string
      */
     protected $urlPortal = 'http://www.portalfiscal.inf.br/cte';
-    
-    /**
-     * aLastRetEvent
-     *
-     * @var array
-     */
-    private $aLastRetEvent = array();
 
     /**
+     * erros
+     *
      * @var string
      */
     public $erros = array();
@@ -52,6 +48,7 @@ class Tools extends BaseTools
     /**
      * modelo 57 (CTE-e) é um documento fiscal eletrônico,
      * instituído pelo AJUSTE SINIEF 09/07 (25/10/2007)
+     *
      * @var modelo
      */
     protected $modelo = '57';
@@ -73,6 +70,7 @@ class Tools extends BaseTools
 
     /**
      * assina
+     *
      * @param  string  $xml
      * @param  boolean $saveFile
      * @return string
@@ -85,13 +83,14 @@ class Tools extends BaseTools
 
     /**
      * Transmite o xml para a sefaz
-     * @param string|array $aXml
-     * @param string $tpAmb
-     * @param string $idLote
-     * @param array $aRetorno
+     *
+     * @param type $aXml
+     * @param type $tpAmb
+     * @param type $idLote
+     * @param type $aRetorno
      * @param int $indSinc
-     * @param boolean $compactarZip
-     * @return string
+     * @param type $compactarZip
+     * @return type
      * @throws Exception\InvalidArgumentException
      * @throws Exception\RuntimeException
      */
@@ -348,14 +347,13 @@ class Tools extends BaseTools
     /**
      * Inutiza sequencia de numeracao
      *
-     * @param type $nAno
-     * @param type $nSerie
-     * @param type $nIni
-     * @param type $nFin
-     * @param type $xJust
-     * @param type $tpAmb
-     * @param type $aRetorno
-     * @return boolean
+     * @param int $nSerie
+     * @param int $nIni
+     * @param int $nFin
+     * @param string $xJust
+     * @param int $tpAmb
+     * @param array $aRetorno
+     * @return string
      * @throws Exception\RuntimeException
      * @throws Exception\InvalidArgumentException
      */
@@ -372,7 +370,8 @@ class Tools extends BaseTools
         $nIni = (integer) $nIni;
         $nFin = (integer) $nFin;
         $xJust = Strings::cleanString($xJust);
-        $this->zValidParamInut($xJust, $nSerie, $nIni, $nFin);
+        //Função comentada por não estar implementada.
+//        $this->zValidParamInut($xJust, $nSerie, $nIni, $nFin);
         if ($tpAmb == '') {
             $tpAmb = $this->aConfig['tpAmb'];
         }
@@ -381,7 +380,6 @@ class Tools extends BaseTools
         //monta serviço
         $siglaUF = $this->aConfig['siglaUF'];
         //carrega serviço
-        $servico = 'CteInutilizacao';
         $this->zLoadServico(
             'cte',
             $servico,
@@ -441,13 +439,14 @@ class Tools extends BaseTools
         }
         //tratar dados de retorno
         $aRetorno = Response::readReturnSefaz($servico, $retorno);
-        if ($aRetorno['cStat'] == '102') {
-            $retorno = $this->zAddProtMsg('ProcInutCTe', 'inutCTe', $signedMsg, 'retInutCTe', $retorno);
-            if ($salvarMensagens) {
-                $filename = "$sAno-$this->modelo-$sSerie-".$sInicio."_".$sFinal."-procInutCTe.xml";
-                $this->zGravaFile('cte', $tpAmb, $filename, $retorno, 'inutilizadas');
-            }
+        //Comentado por não ter implementada a função de zAddProtMsg
+//        if ($aRetorno['cStat'] == '102') {
+//            $retorno = $this->zAddProtMsg('ProcInutCTe', 'inutCTe', $signedMsg, 'retInutCTe', $retorno);
+        if ($salvarMensagens) {
+            $filename = "$sAno-$this->modelo-$sSerie-".$sInicio."_".$sFinal."-procInutCTe.xml";
+            $this->zGravaFile('cte', $tpAmb, $filename, $retorno, 'inutilizadas');
         }
+//        }
         return (string) $retorno;
     }
 
@@ -589,10 +588,10 @@ class Tools extends BaseTools
 
         $signedMsg = $this->oCertificate->signXML($cons, 'infEvento');
         //limpa o xml
-        $signedMsg = Strings::clearXml($signedMsg, true);
+        $signedMsg = preg_replace("/<\?xml.*\?>/", "", $signedMsg);
         //montagem dos dados da mensagem SOAP
         $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$signedMsg</cteDadosMsg>";
-        
+
         $retorno = $this->oSoap->send(
             $this->urlService,
             $this->urlNamespace,
@@ -609,69 +608,26 @@ class Tools extends BaseTools
         $this->zGravaFile('cte', $tpAmb, $filename, $retorno);
         //tratar dados de retorno
         $this->aLastRetEvent = Response::readReturnSefaz($servico, $retorno);
-        if ($this->aLastRetEvent['cStat'] == '134' ||
-                $this->aLastRetEvent['cStat'] == '135' ||
-                $this->aLastRetEvent['cStat'] == '136') {
-            $pasta = 'eventos'; //default
-            if ($aliasEvento == 'CancCTe') {
-                $pasta = 'canceladas';
-                $filename = "$chCTe-$aliasEvento-procEvento.xml";
-            } elseif ($aliasEvento == 'CCe') {
-                $pasta = 'cartacorrecao';
-                $filename = "$chCTe-$aliasEvento-$nSeqEvento-procEvento.xml";
+        if ($this->aLastRetEvent['cStat'] == '128') {
+            if ($this->aLastRetEvent['evento'][0]['cStat'] == '135' ||
+                $this->aLastRetEvent['evento'][0]['cStat'] == '136' ||
+                $this->aLastRetEvent['evento'][0]['cStat'] == '155'
+            ) {
+                $pasta = 'eventos'; //default
+                if ($aliasEvento == 'CanCTe') {
+                    $pasta = 'canceladas';
+                    $filename = "$chCTe-$aliasEvento-procEvento.xml";
+                } elseif ($aliasEvento == 'CCe') {
+                    $pasta = 'cartacorrecao';
+                    $filename = "$chCTe-$aliasEvento-$nSeqEvento-procEvento.xml";
+                }
+                $retorno = $this->zAddProtMsg('procEventoCTe', 'evento', $signedMsg, 'retEvento', $retorno);
+                $this->zGravaFile('cte', $tpAmb, $filename, $retorno, $pasta);
             }
-            $retorno = $this->zAddProtMsg('procEventoCTe', 'eventoCTe', $signedMsg, 'retEventoCTe', $retorno);
-            $this->zGravaFile('cte', $tpAmb, $filename, $retorno, $pasta);
         }
         return (string) $retorno;
     }
-    
-    /**
-     * zAddProtMsg
-     *
-     * @param  string $tagproc
-     * @param  string $tagmsg
-     * @param  string $xmlmsg
-     * @param  string $tagretorno
-     * @param  string $xmlretorno
-     * @return string
-     */
-    protected function zAddProtMsg($tagproc, $tagmsg, $xmlmsg, $tagretorno, $xmlretorno)
-    {
-        $doc = new Dom();
-        $doc->loadXMLString($xmlmsg);
-        $nodedoc = $doc->getNode($tagmsg, 0);
-        $procver = $nodedoc->getAttribute("versao");
-        $procns = $nodedoc->getAttribute("xmlns");
 
-        $doc1 = new Dom();
-        $doc1->loadXMLString($xmlretorno);
-        $nodedoc1 = $doc1->getNode($tagretorno, 0);
-
-        $proc = new \DOMDocument('1.0', 'utf-8');
-        $proc->formatOutput = false;
-        $proc->preserveWhiteSpace = false;
-        //cria a tag nfeProc
-        $procNode = $proc->createElement($tagproc);
-        $proc->appendChild($procNode);
-        //estabele o atributo de versão
-        $procNodeAtt1 = $procNode->appendChild($proc->createAttribute('versao'));
-        $procNodeAtt1->appendChild($proc->createTextNode($procver));
-        //estabelece o atributo xmlns
-        $procNodeAtt2 = $procNode->appendChild($proc->createAttribute('xmlns'));
-        $procNodeAtt2->appendChild($proc->createTextNode($procns));
-        //inclui a tag inutNFe
-        $node = $proc->importNode($nodedoc, true);
-        $procNode->appendChild($node);
-        //inclui a tag retInutNFe
-        $node = $proc->importNode($nodedoc1, true);
-        $procNode->appendChild($node);
-        //salva o xml como string em uma variável
-        $procXML = $proc->saveXML();
-        //remove as informações indesejadas
-        $procXML = Strings::clearProt($procXML);
-        return $procXML;
-    }
 
     /**
      * zTpEv
@@ -775,7 +731,6 @@ class Tools extends BaseTools
         }
         return true;
     }
-
     /**
      * Transmite a correção
      * conforme o MOC(Manual de Orientações do Contribuinte)
@@ -788,14 +743,12 @@ class Tools extends BaseTools
      * II - a correção de dados cadastrais que implique mudança do emitente,
      *  tomador, remetente ou do destinatário;
      * III - a data de emissão ou de saída.
-     *
-     * @param type $chCTe
-     * @param type $tpAmb
-     * @param type $nSeqEvento
-     * @param type $infCorrecao
-     * @param type $aRetorno
-     * @return type
-     * @throws Exception\InvalidArgumentException
+     * @param string $chCTe
+     * @param string $tpAmb
+     * @param string $nSeqEvento
+     * @param array $infCorrecao
+     * @param array $aRetorno
+     * @return string
      */
     public function sefazCartaCorrecao(
         $chCTe = '',
@@ -805,7 +758,6 @@ class Tools extends BaseTools
         &$aRetorno = array()
     ) {
         $chCTe = preg_replace('/[^0-9]/', '', $chCTe);
-
         //validação dos dados de entrada
         if (strlen($chCTe) != 44) {
             $msg = "Uma chave de CTe válida não foi passada como parâmetro $chCTe.";
@@ -819,9 +771,20 @@ class Tools extends BaseTools
             $tpAmb = $this->aConfig['tpAmb'];
         }
         $siglaUF = $this->zGetSigla(substr($chCTe, 0, 2));
-
         //estabelece o codigo do tipo de evento CARTA DE CORRECAO
         $tpEvento = '110110';
+        $descEvento = 'Carta de Correcao';
+        //Grupo de Informações de Correção
+        $correcoes = '';
+        foreach ($infCorrecao as $info) {
+            $correcoes .=
+                "<infCorrecao>"
+                    ."<grupoAlterado>".$info['grupoAlterado']."</grupoAlterado>"
+                    ."<campoAlterado>".$info['campoAlterado']."</campoAlterado>"
+                    ."<valorAlterado>".$info['valorAlterado']."</valorAlterado>"
+                    ."<nroItemAlterado>".$info['nroItemAlterado']."</nroItemAlterado>"
+                ."</infCorrecao>";
+        }
         //monta mensagem
         $tagAdic = Tools::serializarMensagemDoEventoCartaDeCorrecao($infCorrecao);
         $retorno = $this->zSefazEvento($siglaUF, $chCTe, $tpAmb, $tpEvento, $nSeqEvento, $tagAdic);
