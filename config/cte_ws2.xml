@@ -142,7 +142,7 @@
     <producao>
         <CteRecepcao method='CTeRecepcao' operation='CteRecepcao' version='2.00'>https://cte.svrs.rs.gov.br/ws/cterecepcao/CteRecepcao.asmx</CteRecepcao>
         <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='2.00'>https://cte.svrs.rs.gov.br/ws/cteretrecepcao/cteRetRecepcao.asmx</CteRetRecepcao>
-        <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsultaProtocolo' version='2.00'>https://cte.svrs.rs.gov.br/ws/cteconsulta/CteConsulta.asmx</CteConsultaProtocolo>
+        <CteConsultaProtocolo method='CteConsulta' operation='CteConsulta' version='2.00'>https://cte.svrs.rs.gov.br/ws/cteconsulta/CteConsulta.asmx</CteConsultaProtocolo>
         <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CteRecepcaoEvento' version='2.00'>https://cte.svrs.rs.gov.br/ws/cterecepcaoevento/cterecepcaoevento.asmx</CteRecepcaoEvento>
         <CteInutilizacao method='CTeInutilizacao' operation='CteInutilizacao' version='2.00'>https://cte.svrs.rs.gov.br/ws/cteinutilizacao/cteinutilizacao.asmx</CteInutilizacao>
         <CteStatusServico method='cteStatusServicoCT' operation='CteStatusServico' version='2.00'>https://cte.svrs.rs.gov.br/ws/ctestatusservico/CteStatusServico.asmx</CteStatusServico>
