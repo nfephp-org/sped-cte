@@ -60,11 +60,11 @@ $pathCLeFiles = '';
 $pathNFSeFiles = '';
 $pathCertsFiles = PATH_NFEPHP . DIRECTORY_SEPARATOR . 'certs' . DIRECTORY_SEPARATOR;
 $siteUrl = str_replace('index.php', '', 'http://'.$_SERVER["SERVER_NAME"].$_SERVER["SCRIPT_NAME"]);
-$schemesNFe = 'PL_008i2';
-$schemesCTe = 'PL_CTe_200';
-$schemesMDFe = 'PL_MDFe_100';
-$schemesCLe = '';
-$schemesNFSe = '';
+$schemasNFe = 'PL_008i2';
+$schemasCTe = 'PL_CTe_200';
+$schemasMDFe = 'PL_MDFe_100';
+$schemasCLe = '';
+$schemasNFSe = '';
 
 $razaosocial = '';
 $nomefantasia = '';
@@ -136,11 +136,11 @@ if (is_file($pathConfig)) {
     $pathNFSeFiles = isset($installConfig->pathNFSeFiles) ? $installConfig->pathNFSeFiles : '';
     $pathCertsFiles = isset($installConfig->pathCertsFiles) ? $installConfig->pathCertsFiles : '';
     $siteUrl = isset($installConfig->siteUrl) ? $installConfig->siteUrl : $siteUrl;
-    $schemesNFe = isset($installConfig->schemesNFe) ? $installConfig->schemesNFe : '';
-    $schemesCTe = isset($installConfig->schemesCTe) ? $installConfig->schemesCTe : '';
-    $schemesMDFe = isset($installConfig->schemesMDFe) ? $installConfig->schemesMDFe : '';
-    $schemesCLe = isset($installConfig->schemesCLe) ? $installConfig->schemesCLe : '';
-    $schemesNFSe = isset($installConfig->schemesNFSe) ? $installConfig->schemesNFSe : '';
+    $schemasNFe = isset($installConfig->schemasNFe) ? $installConfig->schemasNFe : '';
+    $schemasCTe = isset($installConfig->schemasCTe) ? $installConfig->schemasCTe : '';
+    $schemasMDFe = isset($installConfig->schemasMDFe) ? $installConfig->schemasMDFe : '';
+    $schemasCLe = isset($installConfig->schemasCLe) ? $installConfig->schemasCLe : '';
+    $schemasNFSe = isset($installConfig->schemasNFSe) ? $installConfig->schemasNFSe : '';
     $razaosocial = isset($installConfig->razaosocial) ? $installConfig->razaosocial : '';
     $nomefantasia = isset($installConfig->nomefantasia) ? $installConfig->nomefantasia : '';
     $siglaUF = isset($installConfig->siglaUF) ? $installConfig->siglaUF : 'SP';
@@ -575,15 +575,15 @@ function changeAlerts(key, flag, msg) {
     <h2 align="right">Schemas</h2>
     <div id="esquerda">
     <span title="Indique o path completo para o arquivo de schemas para NFe. ">Schemas NFe</span><br>
-    <input type="text" id="schemesNFe" name="schemesNFe" placeholder="pasta dos arquivos xsd"  value="<?php echo $schemesNFe;?>" /><br>
+    <input type="text" id="schemasNFe" name="schemasNFe" placeholder="pasta dos arquivos xsd"  value="<?php echo $schemasNFe;?>" /><br>
     <span title="Indique o path completo para o arquivo de schemas para CTe. ">Schemas CTe</span><br>
-    <input type="text" id="schemesCTe" name="schemesCTe" placeholder="pasta dos arquivos xsd"  value="<?php echo $schemesCTe;?>" /><br>
+    <input type="text" id="schemasCTe" name="schemasCTe" placeholder="pasta dos arquivos xsd"  value="<?php echo $schemasCTe;?>" /><br>
     <span title="Indique o path completo para o arquivo de schemas para MDFe. ">Schemas MDFe</span><br>
-    <input type="text" id="schemesMDFe" name="schemesMDFe" placeholder="pasta dos arquivos xsd"  value="<?php echo $schemesMDFe;?>" /><br>
+    <input type="text" id="schemasMDFe" name="schemasMDFe" placeholder="pasta dos arquivos xsd"  value="<?php echo $schemasMDFe;?>" /><br>
     <span title="Indique o path completo para o arquivo de schemas para CLe. ">Schemas CLe</span><br>
-    <input type="text" id="schemesCLe" name="schemesCLe" placeholder="pasta dos arquivos xsd"  value="<?php echo $schemesCLe;?>" /><br>
+    <input type="text" id="schemasCLe" name="schemasCLe" placeholder="pasta dos arquivos xsd"  value="<?php echo $schemasCLe;?>" /><br>
     <span title="Indique o path completo para os arquivos de schemas para NFSe. ">Schemas NFSe</span><br>
-    <input type="text" id="schemesNFSe" name="schemesNFSe" placeholder="pasta dos arquivos xsd"  value="<?php echo $schemesNFSe;?>" /><br>
+    <input type="text" id="schemasNFSe" name="schemasNFSe" placeholder="pasta dos arquivos xsd"  value="<?php echo $schemasNFSe;?>" /><br>
     </div>
     <div id="direita">
         <h3>Os esquemas são arquivos xml (terminação xsd) que contêm as regras de formatação para cada campo de um determinado xml.</h3>
