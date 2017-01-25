@@ -146,6 +146,4 @@ class MakeTest extends PHPUnit_Framework_TestCase
         parent::tearDown();
         unset($this->cte);
     }
-
-
 }
