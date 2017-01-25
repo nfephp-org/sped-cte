@@ -532,6 +532,9 @@ class Make extends BaseMake
         if ($this->infCteComp != '') { // Caso seja um CTe tipo complemento de valores
             $this->dom->appChild($this->infCte, $this->infCteComp, 'Falta tag "infCteComp"');
         }
+        if ($this->infCteAnu != '') { // Caso seja um CTe tipo anulação
+            $this->dom->appChild($this->infCte, $this->infCteAnu, 'Falta tag "infCteAnu"');
+        }
         if ($this->infCTeNorm != '') { // Caso seja um CTe tipo normal
             $this->dom->appChild($this->infCte, $this->infCTeNorm, 'Falta tag "infCTeNorm"');
             $this->dom->appChild($this->infCTeNorm, $this->infCarga, 'Falta tag "infCarga"');
@@ -3259,5 +3262,34 @@ class Make extends BaseMake
             $identificador . ' Chave do CT-e complementado'
         );
         return $this->infCteComp;
+    }
+
+    /**
+     * Gera as tags para o elemento: "infCteAnu" (Detalhamento do CT-e de Anulação)
+     * #411
+     * Nível: 1
+     * @param string $chave
+     * @param string $data
+     * @return DOMElement|\DOMNode
+     */
+    public function infCteAnuTag($chave = '', $data = '')
+    {
+        $identificador = '#411 <infCteAnu> - ';
+        $this->infCteAnu = $this->dom->createElement('infCteAnu');
+        $this->dom->addChild(
+            $this->infCteAnu,
+            'chCte',
+            $chave,
+            true,
+            $identificador . ' Chave do CT-e anulado'
+        );
+        $this->dom->addChild(
+            $this->infCteAnu,
+            'dEmi',
+            $data,
+            true,
+            $identificador . ' Data de Emissão do CT-e anulado'
+        );
+        return $this->infCteAnu;
     }
 }
