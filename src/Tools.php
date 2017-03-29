@@ -365,9 +365,8 @@ class Tools extends BaseTools
         $nSerie = (integer) $nSerie;
         $nIni = (integer) $nIni;
         $nFin = (integer) $nFin;
-        $xJust = Strings::cleanString($xJust);
-        //Função comentada por não estar implementada.
-//        $this->zValidParamInut($xJust, $nSerie, $nIni, $nFin);
+        $xJust = Strings::cleanString($xJust);        
+        $this->zValidParamInut($xJust, $nSerie, $nIni, $nFin);
         if ($tpAmb == '') {
             $tpAmb = $this->aConfig['tpAmb'];
         }
@@ -444,6 +443,35 @@ class Tools extends BaseTools
         }
 //        }
         return (string) $retorno;
+    }
+    
+    /**
+     * zValidParamInut
+     *
+     * @param  string $xJust
+     * @param  int    $nSerie
+     * @param  int    $nIni
+     * @param  int    $nFin
+     * @throws Exception\InvalidArgumentException
+     */
+    private function zValidParamInut($xJust, $nSerie, $nIni, $nFin)
+    {
+        $msg = '';
+        //valida dos dados de entrada
+        if (strlen($xJust) < 15 || strlen($xJust) > 255) {
+            $msg = "A justificativa deve ter entre 15 e 255 digitos!!";
+        } elseif ($nSerie < 0 || $nSerie > 999) {
+            $msg = "O campo serie está errado: $nSerie!!";
+        } elseif ($nIni < 1 || $nIni > 1000000000) {
+            $msg = "O campo numero inicial está errado: $nIni!!";
+        } elseif ($nFin < 1 || $nFin > 1000000000) {
+            $msg = "O campo numero final está errado: $nFin!!";
+        } elseif ($this->enableSVCRS || $this->enableSVCAN) {
+            $msg = "A inutilização não pode ser feita em contingência!!";
+        }
+        if ($msg != '') {
+            throw new Exception\InvalidArgumentException($msg);
+        }
     }
 
     /**
