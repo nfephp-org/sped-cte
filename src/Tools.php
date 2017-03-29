@@ -434,18 +434,62 @@ class Tools extends BaseTools
             $this->zGravaFile('cte', $tpAmb, $filename, $retorno);
         }
         //tratar dados de retorno
-        $aRetorno = Response::readReturnSefaz($servico, $retorno);
-        //Comentado por não ter implementada a função de zAddProtMsg
-//        if ($aRetorno['cStat'] == '102') {
-//            $retorno = $this->zAddProtMsg('ProcInutCTe', 'inutCTe', $signedMsg, 'retInutCTe', $retorno);
-        if ($salvarMensagens) {
-            $filename = "$sAno-$this->modelo-$sSerie-".$sInicio."_".$sFinal."-procInutCTe.xml";
-            $this->zGravaFile('cte', $tpAmb, $filename, $retorno, 'inutilizadas');
+        $aRetorno = Response::readReturnSefaz($servico, $retorno);        
+        if ($aRetorno['cStat'] == '102') {
+            $retorno = $this->zAddProtMsg('ProcInutCTe', 'inutCTe', $signedMsg, 'retInutCTe', $retorno);
+            if ($salvarMensagens) {
+                $filename = "$sAno-$this->modelo-$sSerie-".$sInicio."_".$sFinal."-procInutCTe.xml";
+                $this->zGravaFile('cte', $tpAmb, $filename, $retorno, 'inutilizadas');
+            }
         }
-//        }
         return (string) $retorno;
     }
-
+    
+    /**
+     * zAddProtMsg
+     *
+     * @param  string $tagproc
+     * @param  string $tagmsg
+     * @param  string $xmlmsg
+     * @param  string $tagretorno
+     * @param  string $xmlretorno
+     * @return string
+     */
+    protected function zAddProtMsg($tagproc, $tagmsg, $xmlmsg, $tagretorno, $xmlretorno)
+    {
+        $doc = new Dom();
+        $doc->loadXMLString($xmlmsg);
+        $nodedoc = $doc->getNode($tagmsg, 0);
+        $procver = $nodedoc->getAttribute("versao");
+        $procns = $nodedoc->getAttribute("xmlns");
+        $doc1 = new Dom();
+        $doc1->loadXMLString($xmlretorno);
+        $nodedoc1 = $doc1->getNode($tagretorno, 0);
+        $proc = new \DOMDocument('1.0', 'utf-8');
+        $proc->formatOutput = false;
+        $proc->preserveWhiteSpace = false;
+        //cria a tag nfeProc
+        $procNode = $proc->createElement($tagproc);
+        $proc->appendChild($procNode);
+        //estabele o atributo de versão
+        $procNodeAtt1 = $procNode->appendChild($proc->createAttribute('versao'));
+        $procNodeAtt1->appendChild($proc->createTextNode($procver));
+        //estabelece o atributo xmlns
+        $procNodeAtt2 = $procNode->appendChild($proc->createAttribute('xmlns'));
+        $procNodeAtt2->appendChild($proc->createTextNode($procns));
+        //inclui a tag inutNFe
+        $node = $proc->importNode($nodedoc, true);
+        $procNode->appendChild($node);
+        //inclui a tag retInutNFe
+        $node = $proc->importNode($nodedoc1, true);
+        $procNode->appendChild($node);
+        //salva o xml como string em uma variável
+        $procXML = $proc->saveXML();
+        //remove as informações indesejadas
+        $procXML = Strings::clearProt($procXML);
+        return $procXML;
+    }
+    
     /**
      * Cancelamento de numero CT-e
      *
