@@ -365,7 +365,7 @@ class Tools extends BaseTools
         $nSerie = (integer) $nSerie;
         $nIni = (integer) $nIni;
         $nFin = (integer) $nFin;
-        $xJust = Strings::cleanString($xJust);        
+        $xJust = Strings::cleanString($xJust);
         $this->zValidParamInut($xJust, $nSerie, $nIni, $nFin);
         if ($tpAmb == '') {
             $tpAmb = $this->aConfig['tpAmb'];
