@@ -1,4 +1,5 @@
 <?php
+
 namespace NFePHP\CTe;
 
 /**
@@ -6,14 +7,14 @@ namespace NFePHP\CTe;
  * @category  Library
  * @package   nfephp-org/sped-cte
  * @copyright 2009-2016 NFePHP
- * @name      Make .php
+ * @name      Make.php
  * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL v.3
  * @link      http://github.com/nfephp-org/sped-cte for the canonical source repository
  * @author    Roberto L. Machado <linux.rlm at gmail dot com>
  */
 
+use DOMElement;
 use NFePHP\Common\Base\BaseMake;
-use \DOMElement;
 
 class Make extends BaseMake
 {
@@ -81,7 +82,7 @@ class Make extends BaseMake
      * Indicador do "papel" do tomador do serviço no CT-e
      * @var \DOMNode
      */
-    private $toma03 = '';
+    private $toma3 = '';
     /**
      * Indicador do "papel" do tomador do serviço no CT-e
      * @var \DOMNode
@@ -465,8 +466,8 @@ class Make extends BaseMake
             return false;
         }
         $this->zCTeTag();
-        if ($this->toma03 != '') {
-            $this->dom->appChild($this->ide, $this->toma03, 'Falta tag "ide"');
+        if ($this->toma3 != '') {
+            $this->dom->appChild($this->ide, $this->toma3, 'Falta tag "ide"');
         } else {
             $this->dom->appChild($this->toma4, $this->enderToma, 'Falta tag "toma4"');
             $this->dom->appChild($this->ide, $this->toma4, 'Falta tag "ide"');
@@ -590,9 +591,11 @@ class Make extends BaseMake
      * Gera o grupo básico: Informações do CT-e
      * #1
      * Nível: 0
-     * @param string $chave
-     * @param string $versao
-     * @return DOMElement|\DOMNode
+     *
+     * @param string $chave  Chave do CTe
+     * @param string $versao Versão do CTe
+     *
+     * @return \DOMElement
      */
     public function infCteTag($chave = '', $versao = '')
     {
@@ -611,7 +614,6 @@ class Make extends BaseMake
      * @param string $cCT Código numérico que compõe a Chave de Acesso
      * @param string $CFOP Código Fiscal de Operações e Prestações
      * @param string $natOp Natureza da Operação
-     * @param string $forPag Forma de pagamento do serviço
      * @param string $mod Modelo do documento fiscal
      * @param string $serie Série do CT-e
      * @param string $nCT Número do CT-e
@@ -646,7 +648,6 @@ class Make extends BaseMake
         $cCT = '',
         $CFOP = '',
         $natOp = '',
-        $forPag = '',
         $mod = '',
         $serie = '',
         $nCT = '',
@@ -658,7 +659,7 @@ class Make extends BaseMake
         $tpCTe = '',
         $procEmi = '',
         $verProc = '',
-        $refCTE = '',
+        $indGlobalizado = '',
         $cMunEnv = '',
         $xMunEnv = '',
         $UFEnv = '',
@@ -672,6 +673,7 @@ class Make extends BaseMake
         $UFFim = '',
         $retira = '',
         $xDetRetira = '',
+        $indIEToma = '',
         $dhCont = '',
         $xJust = ''
     ) {
@@ -705,13 +707,6 @@ class Make extends BaseMake
             $natOp,
             true,
             $identificador . 'Natureza da Operação'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'forPag',
-            $forPag,
-            true,
-            $identificador . 'Forma de pagamento do serviço'
         );
         $this->dom->addChild(
             $this->ide,
@@ -793,10 +788,10 @@ class Make extends BaseMake
         );
         $this->dom->addChild(
             $this->ide,
-            'refCTE',
-            $refCTE,
+            'indGlobalizado',
+            $indGlobalizado,
             false,
-            $identificador . 'Chave de acesso do CT-e referenciado'
+            $identificador . 'Indicador de CT-e Globalizado'
         );
         $this->dom->addChild(
             $this->ide,
@@ -892,6 +887,13 @@ class Make extends BaseMake
         );
         $this->dom->addChild(
             $this->ide,
+            'indIEToma',
+            $indIEToma,
+            true,
+            $identificador . 'Indicador do papel do tomador na prestação do serviço'
+        );
+        $this->dom->addChild(
+            $this->ide,
             'dhCont',
             $dhCont,
             false,
@@ -909,29 +911,29 @@ class Make extends BaseMake
     }
 
     /**
-     * Gera as tags para o elemento: toma03 (Indicador do "papel" do tomador do serviço no CT-e)
+     * Gera as tags para o elemento: toma3 (Indicador do "papel" do tomador do serviço no CT-e)
      * e adiciona ao grupo ide
      * #35
      * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "toma03" do
+     * Os parâmetros para esta função são todos os elementos da tag "toma3" do
      * tipo elemento (Ele = E|CE|A) e nível 3
      *
      * @param string $toma Tomador do Serviço
      *
      * @return \DOMElement
      */
-    public function toma03Tag($toma = '')
+    public function toma3Tag($toma = '')
     {
-        $identificador = '#35 <toma03> - ';
-        $this->toma03 = $this->dom->createElement('toma03');
+        $identificador = '#35 <toma3> - ';
+        $this->toma3 = $this->dom->createElement('toma3');
         $this->dom->addChild(
-            $this->toma03,
+            $this->toma3,
             'toma',
             $toma,
             true,
             $identificador . 'Tomador do Serviço'
         );
-        return $this->toma03;
+        return $this->toma3;
     }
 
     /**
@@ -942,13 +944,13 @@ class Make extends BaseMake
      * Os parâmetros para esta função são todos os elementos da tag "toma4" do
      * tipo elemento (Ele = E|CE|A) e nível 3
      *
-     * @param string $toma Tomador do Serviço
-     * @param string $CNPJ Número do CNPJ
-     * @param string $CPF Número do CPF
-     * @param string $IE Inscrição Estadual
+     * @param string $toma  Tomador do Serviço
+     * @param string $CNPJ  Número do CNPJ
+     * @param string $CPF   Número do CPF
+     * @param string $IE    Inscrição Estadual
      * @param string $xNome Razão Social ou Nome
      * @param string $xFant Nome Fantasia
-     * @param string $fone Telefone
+     * @param string $fone  Telefone
      * @param string $email Endereço de email
      *
      * @return \DOMElement
@@ -1049,16 +1051,16 @@ class Make extends BaseMake
      * Os parâmetros para esta função são todos os elementos da tag "enderToma"
      * do tipo elemento (Ele = E|CE|A) e nível 4
      *
-     * @param string $xLgr Logradouro
-     * @param string $nro Número
-     * @param string $xCpl Complemento
+     * @param string $xLgr    Logradouro
+     * @param string $nro     Número
+     * @param string $xCpl    Complemento
      * @param string $xBairro Bairro
-     * @param string $cMun Código do município (utilizar a tabela do IBGE)
-     * @param string $xMun Nome do município
-     * @param string $CEP CEP
-     * @param string $UF Sigla da UF
-     * @param string $cPais Código do país
-     * @param string $xPais Nome do país
+     * @param string $cMun    Código do município (utilizar a tabela do IBGE)
+     * @param string $xMun    Nome do município
+     * @param string $CEP     CEP
+     * @param string $UF      Sigla da UF
+     * @param string $cPais   Código do país
+     * @param string $xPais   Nome do país
      *
      * @return \DOMElement
      */
@@ -1156,12 +1158,12 @@ class Make extends BaseMake
      * Os parâmetros para esta função são todos os elementos da tag "compl" do
      * tipo elemento (Ele = E|CE|A) e nível 2
      *
-     * @param string $xCaracAd Característica adicional do transporte
+     * @param string $xCaracAd  Característica adicional do transporte
      * @param string $xCaracSer Característica adicional do serviço
-     * @param string $xEmi Funcionário emissor do CTe
-     * @param string $origCalc Município de origem para efeito de cálculo do frete
-     * @param string $destCalc Município de destino para efeito de cálculo do frete
-     * @param string $xObs Observações Gerais
+     * @param string $xEmi      Funcionário emissor do CTe
+     * @param string $origCalc  Município de origem para efeito de cálculo do frete
+     * @param string $destCalc  Município de destino para efeito de cálculo do frete
+     * @param string $xObs      Observações Gerais
      *
      * @return \DOMElement
      */
@@ -1270,7 +1272,7 @@ class Make extends BaseMake
     {
         $identificador = '#65 <pass> - ';
         $this->pass[] = $this->dom->createElement('pass');
-        $posicao = (integer)count($this->pass) - 1;
+        $posicao = (integer) count($this->pass) - 1;
         $this->dom->addChild(
             $this->pass[$posicao],
             'xPass',
@@ -1347,8 +1349,8 @@ class Make extends BaseMake
      * elemento (Ele = E|CE|A) e nível 4
      *
      * @param string $tpPer Tipo de data/período programado para entrega
-     * @param string $dIni Data inicial
-     * @param string $dFim Data final
+     * @param string $dIni  Data inicial
+     * @param string $dFim  Data final
      *
      * @return \DOMElement
      */
@@ -1446,8 +1448,8 @@ class Make extends BaseMake
      * tipo elemento (Ele = E|CE|A) e nível 4
      *
      * @param string $tpHor Tipo de hora
-     * @param string $hIni Hora inicial
-     * @param string $hFim Hora final
+     * @param string $hIni  Hora inicial
+     * @param string $hFim  Hora final
      *
      * @return \DOMElement
      */
@@ -1494,7 +1496,7 @@ class Make extends BaseMake
     public function obsContTag($xCampo = '', $xTexto = '')
     {
         $identificador = '#91 <ObsCont> - ';
-        $posicao = (integer)count($this->obsCont) - 1;
+        $posicao = (integer) count($this->obsCont) - 1;
         if (count($this->obsCont) <= 10) {
             $this->obsCont[] = $this->dom->createElement('ObsCont');
             $this->obsCont[$posicao]->setAttribute('xCampo', $xCampo);
@@ -1508,9 +1510,9 @@ class Make extends BaseMake
             return true;
         }
         $this->erros[] = array(
-            'tag' => (string)'<ObsCont>',
-            'desc' => (string)'Campo de uso livre do contribuinte',
-            'erro' => (string)'Tag deve aparecer de 0 a 10 vezes'
+            'tag' => (string) '<ObsCont>',
+            'desc' => (string) 'Campo de uso livre do contribuinte',
+            'erro' => (string) 'Tag deve aparecer de 0 a 10 vezes'
         );
         return false;
     }
@@ -1521,14 +1523,16 @@ class Make extends BaseMake
      * Nível: 2
      * Os parâmetros para esta função são todos os elementos da tag "ObsFisco" do tipo
      * elemento (Ele = E|CE|A) e nível 3
+     *
      * @param string $xCampo Identificação do campo
      * @param string $xTexto Conteúdo do campo
-     * @return bool
+     *
+     * @return boolean
      */
     public function obsFiscoTag($xCampo = '', $xTexto = '')
     {
         $identificador = '#94 <ObsFisco> - ';
-        $posicao = (integer)count($this->obsFisco) - 1;
+        $posicao = (integer) count($this->obsFisco) - 1;
         if (count($this->obsFisco) <= 10) {
             $this->obsFisco[] = $this->dom->createElement('obsFisco');
             $this->obsFisco[$posicao]->setAttribute('xCampo', $xCampo);
@@ -1542,9 +1546,9 @@ class Make extends BaseMake
             return true;
         }
         $this->erros[] = array(
-            'tag' => (string)'<ObsFisco>',
-            'desc' => (string)'Campo de uso livre do contribuinte',
-            'erro' => (string)'Tag deve aparecer de 0 a 10 vezes'
+            'tag' => (string) '<ObsFisco>',
+            'desc' => (string) 'Campo de uso livre do contribuinte',
+            'erro' => (string) 'Tag deve aparecer de 0 a 10 vezes'
         );
         return false;
     }
@@ -1555,13 +1559,15 @@ class Make extends BaseMake
      * Nível: 1
      * Os parâmetros para esta função são todos os elementos da tag "emit" do
      * tipo elemento (Ele = E|CE|A) e nível 2
-     * @param string $CNPJ CNPJ do emitente
-     * @param string $IE Inscrição Estadual do Emitente
+     *
+     * @param string $CNPJ  CNPJ do emitente
+     * @param string $IE    Inscrição Estadual do Emitente
      * @param string $xNome Razão social ou Nome do emitente
      * @param string $xFant Nome fantasia
-     * @return DOMElement|\DOMNode
+     *
+     * @return \DOMElement
      */
-    public function emitTag($CNPJ = '', $IE = '', $xNome = '', $xFant = '')
+    public function emitTag($CNPJ = '', $IE = '', $IEST = '', $xNome = '', $xFant = '')
     {
         $identificador = '#97 <emit> - ';
         $this->emit = $this->dom->createElement('emit');
@@ -1581,6 +1587,13 @@ class Make extends BaseMake
         );
         $this->dom->addChild(
             $this->emit,
+            'IEST',
+            $IEST,
+            false,
+            $identificador . 'Inscrição Estadual do Substituto Tributário'
+        );
+        $this->dom->addChild(
+            $this->emit,
             'xNome',
             $xNome,
             true,
@@ -1590,7 +1603,7 @@ class Make extends BaseMake
             $this->emit,
             'xFant',
             $xFant,
-            true,
+            false,
             $identificador . 'Nome fantasia'
         );
         return $this->emit;
@@ -1603,15 +1616,15 @@ class Make extends BaseMake
      * Os parâmetros para esta função são todos os elementos da tag "enderEmit" do
      * tipo elemento (Ele = E|CE|A) e nível 3
      *
-     * @param string $xLgr Logradouro
-     * @param string $nro Número
-     * @param string $xCpl Complemento
+     * @param string $xLgr    Logradouro
+     * @param string $nro     Número
+     * @param string $xCpl    Complemento
      * @param string $xBairro Bairro
-     * @param string $cMun Código do município (utilizar a tabela do IBGE)
-     * @param string $xMun Nome do município
-     * @param string $CEP CEP
-     * @param string $UF Sigla da UF
-     * @param string $fone Telefone
+     * @param string $cMun    Código do município (utilizar a tabela do IBGE)
+     * @param string $xMun    Nome do município
+     * @param string $CEP     CEP
+     * @param string $UF      Sigla da UF
+     * @param string $fone    Telefone
      *
      * @return \DOMElement
      */
@@ -1702,12 +1715,12 @@ class Make extends BaseMake
      * Os parâmetros para esta função são todos os elementos da tag "rem" do
      * tipo elemento (Ele = E|CE|A) e nível 2
      *
-     * @param string $CNPJ Número do CNPJ
-     * @param string $CPF Número do CPF
-     * @param string $IE Inscrição Estadual
+     * @param string $CNPJ  Número do CNPJ
+     * @param string $CPF   Número do CPF
+     * @param string $IE    Inscrição Estadual
      * @param string $xNome Razão social ou nome do remetente
      * @param string $xFant Nome fantasia
-     * @param string $fone Telefone
+     * @param string $fone  Telefone
      * @param string $email Endereço de email
      *
      * @return \DOMElement
@@ -1793,16 +1806,16 @@ class Make extends BaseMake
      * Os parâmetros para esta função são todos os elementos da tag "enderReme" do
      * tipo elemento (Ele = E|CE|A) e nível 3
      *
-     * @param string $xLgr Logradouro
-     * @param string $nro Número
-     * @param string $xCpl Complemento
+     * @param string $xLgr    Logradouro
+     * @param string $nro     Número
+     * @param string $xCpl    Complemento
      * @param string $xBairro Bairro
-     * @param string $cMun Código do município (utilizar a tabela do IBGE)
-     * @param string $xMun Nome do município
-     * @param string $CEP CEP
-     * @param string $UF Sigla da UF
-     * @param string $cPais Código do país
-     * @param string $xPais Nome do país
+     * @param string $cMun    Código do município (utilizar a tabela do IBGE)
+     * @param string $xMun    Nome do município
+     * @param string $CEP     CEP
+     * @param string $UF      Sigla da UF
+     * @param string $cPais   Código do país
+     * @param string $xPais   Nome do país
      *
      * @return \DOMElement
      */
@@ -1890,6 +1903,7 @@ class Make extends BaseMake
             false,
             $identificador . 'Nome do país'
         );
+
         $node = $this->rem->getElementsByTagName("email")->item(0);
         $this->rem->insertBefore($this->enderReme, $node);
         return $this->enderReme;
@@ -2483,6 +2497,9 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "vPrest" (Valores da Prestação de Serviço)
      * #208
      * Nível: 1
+     * Os parâmetros para esta função são todos os elementos da tag "vPrest" do
+     * tipo elemento (Ele = E|CE|A) e nível 2
+     *
      * @param string $vTPrest Valor Total da Prestação do Serviço
      * @param string $vRec Valor a Receber
      *
@@ -2627,7 +2644,9 @@ class Make extends BaseMake
      * Gera as tags para o elemento: "Comp" (Componentes do Valor da Prestação)
      * #211
      * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "Comp"
+     * Os parâmetros para esta função são todos os elementos da tag "Comp" do
+     * tipo elemento (Ele = E|CE|A) e nível 3
+     *
      * @param string $xNome Nome do componente
      * @param string $vComp Valor do componente
      *
@@ -2695,19 +2714,23 @@ class Make extends BaseMake
      * #253
      * Nível: 2
      * Os parâmetros para esta função são todos os elementos da tag "infCarga"
-     * @param string vCarga Valor total da carga
-     * @param string proPred Produto predominante
-     * @param string xOutCat Outras características da carga
+     * @param string $vCarga Valor total da carga
+     * @param string $proPred Produto predominante
+     * @param string $xOutCat Outras características da carga
+     * @param string $vCargaAverb
      *
      * @return \DOMElement
      */
-    public function infCargaTag($vCarga = '', $proPred = '', $xOutCat = '')
+    public function infCargaTag($vCarga = '', $proPred = '', $xOutCat = '', $vCargaAverb = '')
     {
         $identificador = '#253 <infCarga> - ';
         $this->infCarga = $this->dom->createElement('infCarga');
         $this->dom->addChild($this->infCarga, 'vCarga', $vCarga, false, $identificador . 'Valor Total da Carga');
         $this->dom->addChild($this->infCarga, 'proPred', $proPred, true, $identificador . 'Produto Predominante');
         $this->dom->addChild($this->infCarga, 'xOutCat', $xOutCat, false, $identificador . 'Outras Caract. da Carga');
+        $this->dom->addChild($this->infCarga, 'vCargaAverb', $vCargaAverb, false, $identificador . 'Valor da Carga para 
+            efeito de averbação');
+
         return $this->infCarga;
     }
 
@@ -3000,22 +3023,15 @@ class Make extends BaseMake
      * #1
      * Nível: 0
      * @param string $RNTRC
-     * @param string $dPrev
-     * @param string $lota
-     * @param string $CIOT
      * @return DOMElement|\DOMNode
      */
-    public function rodoTag($RNTRC = '', $dPrev = '', $lota = '', $CIOT = '')
+    public function rodoTag($RNTRC = '')
     {
         $identificador = '#1 <rodo> - ';
         $this->rodo = $this->dom->createElement('rodo');
-        $this->dom->addChild($this->rodo, 'RNTRC', $RNTRC, true, $identificador . 'Registro nacional de 
-        transportadoresrodoviários de carga');
-        $this->dom->addChild($this->rodo, 'dPrev', $dPrev, true, $identificador . 'Data prevista para entrega da carga 
-            no recebedor');
-        $this->dom->addChild($this->rodo, 'lota', $lota, true, $identificador . 'Indicador de lotação');
-        $this->dom->addChild($this->rodo, 'CIOT', $CIOT, false, $identificador . 'Codigo identificador da operacao de '
-            . 'transporte');
+        $this->dom->addChild($this->rodo, 'RNTRC', $RNTRC, true, $identificador . 'Registro nacional de transportadores
+            rodoviários de carga');
+
         return $this->rodo;
     }
 
