@@ -1591,7 +1591,7 @@ class Make extends BaseMake
             $this->emit,
             'xFant',
             $xFant,
-            true,
+            false,
             $identificador . 'Nome fantasia'
         );
         return $this->emit;
