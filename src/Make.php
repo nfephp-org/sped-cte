@@ -2998,19 +2998,19 @@ class Make extends BaseMake
       * @param string $nApol    
       * @return mixed
       */
-     public function segTag($respSeg = 4, $xSeg = '', $nApol = '')
-     {
-         $identificador = '#360 <seg> - ';
-         $this->seg[] = $this->dom->createElement('seg');
-         $posicao = (integer)count($this->seg) - 1;
+    public function segTag($respSeg = 4, $xSeg = '', $nApol = '')
+    {
+        $identificador = '#360 <seg> - ';
+        $this->seg[] = $this->dom->createElement('seg');
+        $posicao = (integer)count($this->seg) - 1;
 
-         $this->dom->addChild($this->seg[$posicao], 'respSeg', $respSeg, true, $identificador . 'Responsável 
-         pelo Seguro');
-         $this->dom->addChild($this->seg[$posicao], 'xSeg', $xSeg, false, $identificador . 'Nome da 
-         Seguradora');
-         $this->dom->addChild($this->seg[$posicao], 'nApol', $nApol, false, $identificador . 'Número da Apólice');         
-         return $this->seg[$posicao];
-     }
+        $this->dom->addChild($this->seg[$posicao], 'respSeg', $respSeg, true, $identificador . 'Responsável
+        pelo Seguro');
+        $this->dom->addChild($this->seg[$posicao], 'xSeg', $xSeg, false, $identificador . 'Nome da
+        Seguradora');
+        $this->dom->addChild($this->seg[$posicao], 'nApol', $nApol, false, $identificador . 'Número da Apólice');
+        return $this->seg[$posicao];
+    }
     
     /**
      * Gera as tags para o elemento: "infModal" (Informações do modal)
