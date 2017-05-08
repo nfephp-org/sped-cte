@@ -2995,7 +2995,7 @@ class Make extends BaseMake
       * Nível: 2
       * @param int $respSeg
       * @param string $xSeg
-      * @param string $nApol    
+      * @param string $nApol
       * @return mixed
       */
     public function segTag($respSeg = 4, $xSeg = '', $nApol = '')
