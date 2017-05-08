@@ -346,11 +346,6 @@ class Make extends BaseMake
      */
     private $idDocAntEle = array();
     /**
-     * Informações de Seguro da Carga
-     * @var array
-     */
-    private $seg = array();
-    /**
      * Informações do modal
      * @var \DOMNode
      */
@@ -434,11 +429,6 @@ class Make extends BaseMake
      * @var array
      */
     private $valePed = array();
-    /**
-     * Dados dos Veículos
-     * @var array
-     */
-    private $veic = array();
     /**
      * Proprietários do Veículo. Só preenchido quando o veículo não pertencer à empresa emitente do CT-e
      * @var array
@@ -563,15 +553,8 @@ class Make extends BaseMake
                 }
             }
 
-            foreach ($this->seg as $seg) {
-                $this->dom->appChild($this->infCTeNorm, $seg, 'Falta tag "seg"');
-            }
-
             $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
             $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
-        }
-        foreach ($this->veic as $veic) {
-            $this->dom->appChild($this->rodo, $veic, 'Falta tag "veic"');
         }
 
         $this->dom->appChild($this->CTe, $this->infCte, 'Falta tag "CTe"');
@@ -3006,30 +2989,6 @@ class Make extends BaseMake
         return $this->idDocAntEle[$posicao];
     }
 
-
-    /**
-     * Gera as tags para o elemento: "seg" (Informações de Seguro da Carga)
-     * #360
-     * Nível: 2
-     * @param int $respSeg
-     * @param string $xSeg
-     * @param string $nApol
-     * @return mixed
-     */
-    public function segTag($respSeg = 4, $xSeg = '', $nApol = '')
-    {
-        $identificador = '#360 <seg> - ';
-        $this->seg[] = $this->dom->createElement('seg');
-        $posicao = (integer)count($this->seg) - 1;
-
-        $this->dom->addChild($this->seg[$posicao], 'respSeg', $respSeg, true, $identificador . 'Responsável 
-            pelo Seguro');
-        $this->dom->addChild($this->seg[$posicao], 'xSeg', $xSeg, false, $identificador . 'Nome da 
-            Seguradora');
-        $this->dom->addChild($this->seg[$posicao], 'nApol', $nApol, false, $identificador . 'Número da Apólice');
-        return $this->seg[$posicao];
-    }
-
     /**
      * Gera as tags para o elemento: "infModal" (Informações do modal)
      * #366
@@ -3061,199 +3020,6 @@ class Make extends BaseMake
             rodoviários de carga');
 
         return $this->rodo;
-    }
-
-    /**
-     * Leiaute - Rodoviário
-     * Gera as tags para o elemento: "veic" (Dados dos Veículos)
-     * #21
-     * Nível: 1
-     * @param string $cInt
-     * @param string $RENAVAM
-     * @param string $placa
-     * @param string $tara
-     * @param string $capKG
-     * @param string $capM3
-     * @param string $tpProp
-     * @param string $tpVeic
-     * @param string $tpRod
-     * @param string $tpCar
-     * @param string $UF
-     * @param string $CPF
-     * @param string $CNPJ
-     * @param string $RNTRC
-     * @param string $xNome
-     * @param string $IE
-     * @param string $propUF
-     * @param string $tpPropProp
-     * @return mixed
-     */
-    public function veicTag(
-        $cInt = '',
-        $RENAVAM = '',
-        $placa = '',
-        $tara = '',
-        $capKG = '',
-        $capM3 = '',
-        $tpProp = '',
-        $tpVeic = '',
-        $tpRod = '',
-        $tpCar = '',
-        $UF = '',
-        $CPF = '',
-        // Informar os zeros não significativos.
-        $CNPJ = '',
-        // Informar os zeros não significativos.
-        $RNTRC = '',
-        // Registro obrigatório do proprietário
-        $xNome = '',
-        // Nome do proprietário
-        $IE = '',
-        // Inscrição estadual caso seja Pessoa Jurídica
-        $propUF = '',
-        // Sigla da UF,
-        $tpPropProp = ''
-    ) {
-        $identificador = '#21 <veic> - ';
-        $this->veic[] = $this->dom->createElement('veic');
-        $posicao = (integer)count($this->veic) - 1;
-        if ($cInt != '') {
-            $this->dom->addChild(
-                $this->veic[$posicao],
-                'cInt',
-                $cInt,
-                false,
-                $identificador . 'Código interno do veículo'
-            );
-        }
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'RENAVAM',
-            $RENAVAM,
-            false,
-            $identificador . 'RENAVAM do veículo'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'placa',
-            $placa,
-            false,
-            $identificador . 'Placa do veículo'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'tara',
-            $tara,
-            false,
-            $identificador . 'Tara em KG'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'capKG',
-            $capKG,
-            false,
-            $identificador . 'Capacidade em KG'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'capM3',
-            $capM3,
-            false,
-            $identificador . 'Capacidade em M3'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'tpProp',
-            $tpProp,
-            false,
-            $identificador . 'Tipo de Propriedade de veículo'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'tpVeic',
-            $tpVeic,
-            false,
-            $identificador . 'Tipo do veículo'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'tpRod',
-            $tpRod,
-            false,
-            $identificador . 'Tipo do Rodado'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'tpCar',
-            $tpCar,
-            false,
-            $identificador . 'Tipo de Carroceria'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'UF',
-            $UF,
-            false,
-            $identificador . 'UF em que veículo está licenciado'
-        );
-        if ($tpProp == 'T') { // CASO FOR VEICULO DE TERCEIRO
-            $this->prop[] = $this->dom->createElement('prop');
-            $p = (integer)count($this->prop) - 1;
-            if ($CNPJ != '') {
-                $this->dom->addChild(
-                    $this->prop[$p],
-                    'CNPJ',
-                    $CNPJ,
-                    true,
-                    $identificador . 'CNPJ do proprietario'
-                );
-            } elseif ($CPF != '') {
-                $this->dom->addChild(
-                    $this->prop[$p],
-                    'CPF',
-                    $CPF,
-                    true,
-                    $identificador . 'CPF do proprietario'
-                );
-            }
-            $this->dom->addChild(
-                $this->prop[$p],
-                'RNTRC',
-                $RNTRC,
-                true,
-                $identificador . 'RNTRC do proprietario'
-            );
-            $this->dom->addChild(
-                $this->prop[$p],
-                'xNome',
-                $xNome,
-                true,
-                $identificador . 'Nome do proprietario'
-            );
-            $this->dom->addChild(
-                $this->prop[$p],
-                'IE',
-                $IE,
-                true,
-                $identificador . 'IE do proprietario'
-            );
-            $this->dom->addChild(
-                $this->prop[$p],
-                'UF',
-                $propUF,
-                true,
-                $identificador . 'UF do proprietario'
-            );
-            $this->dom->addChild(
-                $this->prop[$p],
-                'tpProp',
-                $tpPropProp,
-                true,
-                $identificador . 'Tipo Proprietário'
-            );
-            $this->dom->appChild($this->veic[$posicao], $this->prop[$p], 'Falta tag "prop"');
-        }
-        return $this->veic[$posicao];
     }
 
     /**
