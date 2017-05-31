@@ -810,10 +810,10 @@ class Tools extends BaseTools
     
     public function addProtocolo($xml = '', $xmlProt = '', $saveFile = false)
     {
-         //carrega a CTe
-         $docCte= new Dom();
-         $docCte->loadXMLString($xml);
-         $nodecte = $docCte->getNode('CTe', 0);
+        //carrega a CTe
+        $docCte= new Dom();
+        $docCte->loadXMLString($xml);
+        $nodecte = $docCte->getNode('CTe', 0);
         if ($nodecte == '') {
             $msg = "O arquivo indicado como CTe não é um xml de CTe!";
             throw new Exception\RuntimeException($msg);
@@ -823,15 +823,15 @@ class Tools extends BaseTools
             throw new Exception\RuntimeException($msg);
         }
          //carrega o protocolo
-         $docprot = new Dom();
-         $docprot->loadXMLString($xmlProt);
-         $nodeprots = $docprot->getElementsByTagName('protCTe');
+        $docprot = new Dom();
+        $docprot->loadXMLString($xmlProt);
+        $nodeprots = $docprot->getElementsByTagName('protCTe');
         if ($nodeprots->length == 0) {
             $msg = "O arquivo indicado não contem um protocolo de autorização!";
             throw new Exception\RuntimeException($msg);
         }
          //carrega dados da CTe
-         $tpAmb = $docCte->getNodeValue('tpAmb');
+        $tpAmb = $docCte->getNodeValue('tpAmb');
         $anomes = date(
             'Ym',
             DateTime::convertSefazTimeToTimestamp($docCte->getNodeValue('dhEmi'))
@@ -840,8 +840,8 @@ class Tools extends BaseTools
 //        $versao = $infCTe->getAttribute("versao");
 //        $chaveId = $infCTe->getAttribute("Id");
 //        $chaveCTe = preg_replace('/[^0-9]/', '', $chaveId);
-         $digValueCTe = $docCte->getNodeValue('DigestValue');
-         //carrega os dados do protocolo
+        $digValueCTe = $docCte->getNodeValue('DigestValue');
+        //carrega os dados do protocolo
         for ($i = 0; $i < $nodeprots->length; $i++) {
              $nodeprot = $nodeprots->item($i);
              $protver = $nodeprot->getAttribute("versao");
@@ -877,20 +877,20 @@ class Tools extends BaseTools
         $cteProcAtt2->appendChild($procCte->createTextNode($this->urlPortal));
          //inclui a tag CTe
         $node = $procCte->importNode($nodecte, true);
-         $cteProc->appendChild($node);
+        $cteProc->appendChild($node);
          //cria tag protCTe
         $protCTe = $procCte->createElement('protCTe');
-         $cteProc->appendChild($protCTe);
+        $cteProc->appendChild($protCTe);
          //estabele o atributo de versão
         $protCTeAtt1 = $protCTe->appendChild($procCte->createAttribute('versao'));
         $protCTeAtt1->appendChild($procCte->createTextNode($protver));
          //cria tag infProt
         $nodep = $procCte->importNode($infProt, true);
-         $protCTe->appendChild($nodep);
+        $protCTe->appendChild($nodep);
          //salva o xml como string em uma variável
         $procXML = $procCte->saveXML();
          //remove as informações indesejadas
-         $procXML = Strings::clearProt($procXML);
+        $procXML = Strings::clearProt($procXML);
         if ($saveFile) {
 //            $filename = "{$chaveCTe}-protCTe.xml";
             $filename = "{$chaveProt}-protCTe.xml";
@@ -903,7 +903,7 @@ class Tools extends BaseTools
                 $anomes
             );
         }
-         return $procXML;
+        return $procXML;
     }
      
 
