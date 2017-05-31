@@ -2,2992 +2,1055 @@
 
 namespace NFePHP\CTe;
 
+use NFePHP\Common\DateTime\DateTime;
+use NFePHP\Common\Dom\Dom;
+use NFePHP\Common\Dom\ValidXsd;
+use NFePHP\Common\Exception;
+use NFePHP\Common\LotNumber\LotNumber;
+use NFePHP\Common\Strings\Strings;
+use NFePHP\CTe\Auxiliar\IdentifyCTe;
+use NFePHP\CTe\Auxiliar\Response;
+use NFePHP\CTe\BaseTools;
+
 /**
+ * Classe principal para a comunicação com a SEFAZ
  *
  * @category  Library
  * @package   nfephp-org/sped-cte
  * @copyright 2009-2016 NFePHP
- * @name      Make.php
- * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL v.3
+ * @license   http://www.gnu.org/licenses/lesser.html LGPL v3
  * @link      http://github.com/nfephp-org/sped-cte for the canonical source repository
  * @author    Roberto L. Machado <linux.rlm at gmail dot com>
+ *
+ *        CONTRIBUIDORES (em ordem alfabetica):
+ *
+ *          Maison K. Sakamoto <maison.sakamoto at gmail do com>
+ *          Samuel M Basso <samuelbasso at gmail do com>
  */
-
-use NFePHP\Common\Base\BaseMake;
-use \DOMElement;
-
-class Make extends BaseMake
+class Tools extends BaseTools
 {
     /**
-     * versao
-     * numero da versão do xml da CTe
-     * @var string
-     */
-    public $versao = '3.00';
-    /**
-     * mod
-     * modelo da CTe 57
-     * @var integer
-     */
-    public $mod = 57;
-    /**
-     * chave da MDFe
-     * @var string
-     */
-    public $chCTe = '';
-    /**
-     * xml
-     * String com o xml do documento fiscal montado
-     * @var string
-     */
-    public $xml = '';
-    /**
-     * dom
-     * Variável onde será montado o xml do documento fiscal
-     * @var \NFePHP\Common\Dom\Dom
-     */
-    public $dom;
-    /**
-     * tpAmb
-     * tipo de ambiente
-     * @var string
-     */
-    public $tpAmb = '2';
-    /**
-     * Modal do Cte
-     * @var integer
-     */
-    private $modal = 0;
-    /**
-     * Tag CTe
-     * @var \DOMNode
-     */
-    private $CTe = '';
-    /**
-     * Informações do CT-e
-     * @var \DOMNode
-     */
-    private $infCte = '';
-    /**
-     * Identificação do CT-e
-     * @var \DOMNode
-     */
-    private $ide = '';
-    /**
-     * Tipo do Serviço
-     * @var integer
-     */
-    private $tpServ = 0;
-    /**
-     * Indicador do "papel" do tomador do serviço no CT-e
-     * @var \DOMNode
-     */
-    private $toma03 = '';
-    /**
-     * Indicador do "papel" do tomador do serviço no CT-e
-     * @var \DOMNode
-     */
-    private $toma4 = '';
-    /**
-     * Dados do endereço
-     * @var \DOMNode
-     */
-    private $enderToma = '';
-    /**
-     * Dados complementares do CT-e para fins operacionais ou comerciais
-     * @var \DOMNode
-     */
-    private $compl = '';
-    /**
-     * Previsão do fluxo da carga
-     * @var \DOMNode
-     */
-    private $fluxo = '';
-    /**
-     * Passagem
-     * @var array
-     */
-    private $pass = array();
-    /**
-     * Informações ref. a previsão de entrega
-     * @var \DOMNode
-     */
-    private $entrega = '';
-    /**
-     * Entrega sem data definida
-     * @var \DOMNode
-     */
-    private $semData = '';
-    /**
-     * Entrega com data definida
-     * @var \DOMNode
-     */
-    private $comData = '';
-    /**
-     * Entrega no período definido
-     * @var \DOMNode
-     */
-    private $noPeriodo = '';
-    /**
-     * Entrega sem hora definida
-     * @var \DOMNode
-     */
-    private $semHora = '';
-    /**
-     * Entrega com hora definida
-     * @var \DOMNode
-     */
-    private $comHora = '';
-    /**
-     * Entrega no intervalo de horário definido
-     * @var \DOMNode
-     */
-    private $noInter = '';
-    /**
-     * Campo de uso livre do contribuinte
-     * @var array
-     */
-    private $obsCont = array();
-    /**
-     * Campo de uso livre do contribuinte
-     * @var array
-     */
-    private $obsFisco = array();
-    /**
-     * Identificação do Emitente do CT-e
-     * @var \DOMNode
-     */
-    private $emit = '';
-    /**
-     * Endereço do emitente
-     * @var \DOMNode
-     */
-    private $enderEmit = '';
-    /**
-     * Informações do Remetente das mercadorias transportadas pelo CT-e
-     * @var \DOMNode
-     */
-    private $rem = '';
-    /**
-     * Dados do endereço
-     * @var \DOMNode
-     */
-    private $enderReme = '';
-    /**
-     * Informações do Expedidor da Carga
-     * @var \DOMNode
-     */
-    private $exped = '';
-    /**
-     * Dados do endereço
-     * @var \DOMNode
-     */
-    private $enderExped = '';
-    /**
-     * Informações do Recebedor da Carga
-     * @var \DOMNode
-     */
-    private $receb = '';
-    /**
-     * Dados do endereço
-     * @var \DOMNode
-     */
-    private $enderReceb = '';
-    /**
-     * Informações do Destinatário do CT-e
-     * @var \DOMNode
-     */
-    private $dest = '';
-    /**
-     * Dados do endereço
-     * @var \DOMNode
-     */
-    private $enderDest = '';
-    /**
-     * Valores da Prestação de Serviço
-     * @var \DOMNode
-     */
-    private $vPrest = '';
-    /**
-     * Componentes do Valor da Prestação
-     * @var array
-     */
-    private $comp = array();
-    /**
-     * Informações relativas aos Impostos
-     * @var \DOMNode
-     */
-    private $imp = '';
-    /**
-     * Informações relativas ao ICMS
-     * @var \DOMNode
-     */
-    private $ICMS = '';
-    /**
-     * Prestação sujeito à tributação normal do ICMS
-     * @var \DOMNode
-     */
-    private $ICMS00 = '';
-    /**
-     * Prestação sujeito à tributação com redução de BC do ICMS
-     * @var \DOMNode
-     */
-    private $ICMS20 = '';
-    /**
-     * ICMS Isento, não Tributado ou diferido
-     * @var \DOMNode
-     */
-    private $ICMS45 = '';
-    /**
-     * Tributação pelo ICMS60 - ICMS cobrado por substituição tributária.
-     * Responsabilidade do recolhimento do ICMS atribuído ao tomador ou 3º por ST
-     * @var \DOMNode
-     */
-    private $ICMS60 = '';
-    /**
-     * ICMS Outros
-     * @var \DOMNode
-     */
-    private $ICMS90 = '';
-    /**
-     * ICMS devido à UF de origem da prestação, quando diferente da UF do emitente
-     * @var \DOMNode
-     */
-    private $ICMSOutraUF = '';
-    /**
-     * Simples Nacional
-     * @var \DOMNode
-     */
-    private $ICMSSN = '';
-    /**
-     * Valor de tributos federais, estaduais e municipais
-     * @var \DOMNode
-     */
-    private $vTotTrib = '';
-    /**
-     * Grupo de informações do CT-e Normal e Substituto
-     * @var \DOMNode
-     */
-    private $infCTeNorm = '';
-    /**
-     * Informações da Carga do CT-e
-     * @var \DOMNode
-     */
-    private $infCarga = '';
-    /**
-     * Informações de quantidades da Carga do CT-e
-     * @var \DOMNode
-     */
-    private $infQ = array();
-    /**
-     * Informações dos documentos transportados pelo CT-e Opcional para Redespacho Intermediario
-     * e Serviço vinculado a multimodal.
-     * @var \DOMNode
-     */
-    private $infDoc = '';
-    /**
-     * Informações das NF
-     * @var array
-     */
-    private $infNF = array();
-    /**
-     * Informações das NF-e
-     * @var array
-     */
-    private $infNFe = array();
-    /**
-     * Informações dos demais documentos
-     * @var array
-     */
-    private $infOutros = array();
-    /**
-     * Informações das Unidades de Transporte (Carreta/Reboque/Vagão)
-     * @var array
-     */
-    private $infUnidTransp = array();
-    /**
-     * Lacres das Unidades de Transporte
-     * @var array
-     */
-    private $lacUnidTransp = array();
-    /**
-     * Informações das Unidades de Carga (Containeres/ULD/Outros)
-     * @var array
-     */
-    private $infUnidCarga = array();
-    /**
-     * Lacres das Unidades de Carga
-     * @var array
-     */
-    private $lacUnidCarga = array();
-    /**
-     * Documentos de Transporte Anterior
-     * @var \DOMNode
-     */
-    private $docAnt = '';
-    /**
-     * Emissor do documento anterior
-     * @var array
-     */
-    private $emiDocAnt = array();
-    /**
-     * Informações de identificação dos documentos de Transporte Anterior
-     * @var array
-     */
-    private $idDocAnt = array();
-    /**
-     * Documentos de transporte anterior em papel
-     * @var array
-     */
-    private $idDocAntPap = array();
-    /**
-     * Documentos de transporte anterior eletrônicos
-     * @var array
-     */
-    private $idDocAntEle = array();
-    /**
-     * Informações de Seguro da Carga
-     * @var array
-     */
-    private $seg = array();
-    /**
-     * Informações do modal
-     * @var \DOMNode
-     */
-    private $infModal = '';
-    /**
-     * Preenchido quando for transporte de produtos classificados pela ONU como perigosos.
-     * @var array
-     */
-    private $peri = array();
-    /**
-     * informações dos veículos transportados
-     * @var array
-     */
-    private $veicNovos = array();
-    /**
-     * Dados da cobrança do CT-e
-     * @var \DOMNode
-     */
-    private $cobr = '';
-    /**
-     * Dados da fatura
-     * @var \DOMNode
-     */
-    private $fat = '';
-    /**
-     * Dados das duplicatas
-     * @var array
-     */
-    private $dup = array();
-    /**
-     * Informações do CT-e de substituição
-     * @var \DOMNode
-     */
-    private $infCteSub = '';
-    /**
-     * Tomador é contribuinte do ICMS
-     * @var \DOMNode
-     */
-    private $tomaICMS = '';
-    /**
-     * Tomador não é contribuinte do ICMS
-     * @var \DOMNode
-     */
-    private $tomaNaoICMS = '';
-    /**
-     * Informação da NF ou CT emitido pelo Tomador
-     * @var \DOMNode
-     */
-    private $refNF = '';
-    /**
-     * Informação do CTe emitido pelo Tomador
-     * @var \DOMNode
-     */
-    private $refCte = '';
-    /**
-     * Informação da NF ou CT emitido pelo Tomador
-     * @var \DOMNode
-     */
-    private $infCteComp = '';
-    /**
-     * Detalhamento do CT-e do tipo Anulação
-     * @var \DOMNode
-     */
-    private $infCteAnu = '';
-    /**
-     * Informações do modal Rodoviário
-     * @var \DOMNode
-     */
-    private $rodo = '';
-    /**
-     * Ordens de Coleta associados
-     * @var array
-     */
-    private $occ = array();
-    /**
-     * @var \DOMNode
-     */
-    private $emiOcc = array();
-    /**
-     * Informações de Vale Pedágio
-     * @var array
-     */
-    private $valePed = array();
-    /**
-     * Dados dos Veículos
-     * @var array
-     */
-    private $veic = array();
-    /**
-     * Proprietários do Veículo. Só preenchido quando o veículo não pertencer à empresa emitente do CT-e
-     * @var array
-     */
-    private $prop = array();
-    /**
-     * Dados dos Veículos
-     * @var array
-     */
-    private $lacRodo = array();
-    /**
-     * Informações do(s) Motorista(s)
-     * @var array
-     */
-    private $moto = array();
-    /**
-     * Autorizados para download do XML do DF-e
-     * @var \DOMNode
-     */
-    private $tagAutXML = '';
-    /**
-     * Monta o arquivo XML usando as tag's já preenchidas
+     * urlPortal
+     * Instância do WebService
      *
-     * @return bool
+     * @var string
      */
-    public function montaCTe()
+    protected $urlPortal = 'http://www.portalfiscal.inf.br/cte';
+
+    /**
+     * aLastRetEvent
+     *
+     * @var array
+     */
+    private $aLastRetEvent = array();
+
+    /**
+     * @var string
+     */
+    public $erros = array();
+    
+    /**
+     * modelo 57 (CTE-e) é um documento fiscal eletrônico,
+     * instituído pelo AJUSTE SINIEF 09/07 (25/10/2007)
+     * @var modelo
+     */
+    protected $modelo = '57';
+    
+    /**
+     * @var string
+     */
+    protected $rootDir;
+
+    public static $PL_CTE_200 = 'PL_CTe_200';
+
+    public static $PL_CTE_300 = 'PL_CTe_300';
+
+    public function __construct($configJson = '')
     {
-        if (count($this->erros) > 0) {
+        parent::__construct($configJson);
+        $this->rootDir = dirname(__DIR__);
+    }
+
+    /**
+     * assina
+     *
+     * @param  string  $xml
+     * @param  boolean $saveFile
+     * @return string
+     * @throws Exception\RuntimeException
+     */
+    public function assina($xml = '', $saveFile = false)
+    {
+        return $this->assinaDoc($xml, 'cte', 'infCte', $saveFile);
+    }
+
+    /**
+     * Transmite o xml para a sefaz
+     * @param string|array $aXml
+     * @param string $tpAmb
+     * @param string $idLote
+     * @param array $aRetorno
+     * @param int $indSinc
+     * @param boolean $compactarZip
+     * @return string
+     * @throws Exception\InvalidArgumentException
+     * @throws Exception\RuntimeException
+     */
+    public function sefazEnvia(
+        $aXml,
+        $tpAmb = '2',
+        $idLote = '',
+        &$aRetorno = array(),
+        $indSinc = 0,
+        $compactarZip = false
+    ) {
+        $sxml = $aXml;
+        if (empty($aXml)) {
+            $msg = "Pelo menos uma CTe deve ser informada.";
+            throw new Exception\InvalidArgumentException($msg);
+        }
+        if (is_array($aXml)) {
+            if (count($aXml) > 1) {
+                //multiplas cte, não pode ser sincrono
+                $indSinc = 0;
+            }
+            $sxml = implode("", $sxml);
+        }
+        $sxml = preg_replace("/<\?xml.*\?>/", "", $sxml);
+        $siglaUF = $this->aConfig['siglaUF'];
+        
+        if ($tpAmb == '') {
+            $tpAmb = $this->aConfig['tpAmb'];
+        }
+        if ($idLote == '') {
+            $idLote = LotNumber::geraNumLote(15);
+        }
+        //carrega serviço
+        $servico = 'CteRecepcao';
+        $this->zLoadServico(
+            'cte',
+            $servico,
+            $siglaUF,
+            $tpAmb
+        );
+        
+        if ($this->urlService == '') {
+            $msg = "O envio de lote não está disponível na SEFAZ $siglaUF!!!";
+            throw new Exception\RuntimeException($msg);
+        }
+        
+        // Montagem dos dados da mensagem SOAP
+        $dados = "<cteDadosMsg xmlns=\"$this->urlNamespace\">"
+            . "<enviCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
+            . "<idLote>$idLote</idLote>"
+            . "$sxml"
+            . "</enviCTe>"
+            . "</cteDadosMsg>";
+        // Envia dados via SOAP
+        $retorno = $this->oSoap->send(
+            $this->urlService,
+            $this->urlNamespace,
+            $this->urlHeader,
+            $dados,
+            $this->urlMethod
+        );
+
+        $lastMsg = $this->oSoap->lastMsg;
+        $this->soapDebug = $this->oSoap->soapDebug;
+        //salva mensagens
+        $filename = "$idLote-enviCTe.xml";
+        $this->zGravaFile('cte', $tpAmb, $filename, $lastMsg);
+        $filename = "$idLote-retEnviCTe.xml";
+        $this->zGravaFile('cte', $tpAmb, $filename, $retorno);
+        //tratar dados de retorno
+
+        $aRetorno = Response::readReturnSefaz($servico, $retorno);
+        //caso o envio seja recebido com sucesso mover a CTe da pasta
+        //das assinadas para a pasta das enviadas
+        return (string) $retorno;
+    }
+
+    /**
+     * Consulta o recibo na sefaz
+     *
+     * @param type $recibo
+     * @param type $tpAmb
+     * @param type $aRetorno
+     * @return type
+     * @throws Exception\InvalidArgumentException
+     * @throws Exception\RuntimeException
+     */
+    public function sefazConsultaRecibo($recibo = '', $tpAmb = '2', &$aRetorno = array())
+    {
+        if ($recibo == '') {
+            $msg = "Deve ser informado um recibo.";
+            throw new Exception\InvalidArgumentException($msg);
+        }
+        if ($tpAmb == '') {
+            $tpAmb = $this->aConfig['tpAmb'];
+        }
+        $siglaUF = $this->aConfig['siglaUF'];
+        //carrega serviço
+        $servico = 'CteRetRecepcao';
+        $this->zLoadServico(
+            'cte',
+            $servico,
+            $siglaUF,
+            $tpAmb
+        );
+        if ($this->urlService == '') {
+            $msg = "A consulta de CTe não está disponível na SEFAZ $siglaUF!!!";
+            throw new Exception\RuntimeException($msg);
+        }
+        $cons = "<consReciCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
+            . "<tpAmb>$tpAmb</tpAmb>"
+            . "<nRec>$recibo</nRec>"
+            . "</consReciCTe>";
+        //montagem dos dados da mensagem SOAP
+        $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$cons</cteDadosMsg>";
+        //envia a solicitação via SOAP
+        $retorno = $this->oSoap->send(
+            $this->urlService,
+            $this->urlNamespace,
+            $this->urlHeader,
+            $body,
+            $this->urlMethod
+        );
+        $lastMsg = $this->oSoap->lastMsg;
+        $this->soapDebug = $this->oSoap->soapDebug;
+        //salva mensagens
+        $filename = "$recibo-consReciCTe.xml";
+        $this->zGravaFile('cte', $tpAmb, $filename, $lastMsg);
+        $filename = "$recibo-retConsReciCTe.xml";
+        $this->zGravaFile('cte', $tpAmb, $filename, $retorno);
+        //tratar dados de retorno
+        $aRetorno = Response::readReturnSefaz($servico, $retorno);
+        //podem ser retornados nenhum, um ou vários protocolos
+        //caso existam protocolos protocolar as CTe e movelas-las para a
+        //pasta enviadas/aprovadas/anomes
+        return (string) $retorno;
+    }
+
+    /**
+     * consulta a chave de acesso do CT-e
+     *
+     * @param type $chave
+     * @param type $tpAmb
+     * @param type $aRetorno
+     * @return type
+     * @throws Exception\InvalidArgumentException
+     * @throws Exception\RuntimeException
+     */
+    public function sefazConsultaChave($chave = '', $tpAmb = '2', &$aRetorno = array())
+    {
+        $chCTe = preg_replace('/[^0-9]/', '', $chave);
+        if (strlen($chCTe) != 44) {
+            $msg = "Uma chave de 44 dígitos da CTe deve ser passada.";
+            throw new Exception\InvalidArgumentException($msg);
+        }
+        if ($tpAmb == '') {
+            $tpAmb = $this->aConfig['tpAmb'];
+        }
+        $cUF = substr($chCTe, 0, 2);
+        $siglaUF = $this->zGetSigla($cUF);
+        //carrega serviço
+        $servico = 'CteConsultaProtocolo';
+        $this->zLoadServico(
+            'cte',
+            $servico,
+            $siglaUF,
+            $tpAmb
+        );
+        if ($this->urlService == '') {
+            $msg = "A consulta de CTe não está disponível na SEFAZ $siglaUF!!!";
+            throw new Exception\RuntimeException($msg);
+        }
+        $cons = "<consSitCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
+            . "<tpAmb>$tpAmb</tpAmb>"
+            . "<xServ>CONSULTAR</xServ>"
+            . "<chCTe>$chCTe</chCTe>"
+            . "</consSitCTe>";
+        //montagem dos dados da mensagem SOAP
+        $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$cons</cteDadosMsg>";
+        //envia a solicitação via SOAP
+        $retorno = $this->oSoap->send(
+            $this->urlService,
+            $this->urlNamespace,
+            $this->urlHeader,
+            $body,
+            $this->urlMethod
+        );
+        $lastMsg = $this->oSoap->lastMsg;
+        $this->soapDebug = $this->oSoap->soapDebug;
+        //salva mensagens
+        $filename = "$chCTe-consSitCTe.xml";
+        $this->zGravaFile('cte', $tpAmb, $filename, $lastMsg);
+        $filename = "$chCTe-retConsSitCTe.xml";
+        $this->zGravaFile('cte', $tpAmb, $filename, $retorno);
+        //tratar dados de retorno
+        $aRetorno = Response::readReturnSefaz($servico, $retorno);
+        return (string) $retorno;
+    }
+
+    /**
+     * consulta disponibilidade do serviço web service da sefaz
+     *
+     * @param type $siglaUF
+     * @param type $tpAmb
+     * @param type $aRetorno
+     * @return type
+     * @throws Exception\RuntimeException
+     */
+    public function sefazStatus($siglaUF = '', $tpAmb = '2', &$aRetorno = array())
+    {
+        if ($tpAmb == '') {
+            $tpAmb = $this->aConfig['tpAmb'];
+        }
+        if ($siglaUF == '') {
+            $siglaUF = $this->aConfig['siglaUF'];
+        }
+        //carrega serviço
+        $servico = 'CteStatusServico';
+        $this->zLoadServico(
+            'cte',
+            $servico,
+            $siglaUF,
+            $tpAmb
+        );
+        if ($this->urlService == '') {
+            $msg = "O status não está disponível na SEFAZ $siglaUF!!!";
+            throw new Exception\RuntimeException($msg);
+        }
+        $cons = "<consStatServCte xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
+            . "<tpAmb>$tpAmb</tpAmb>"
+            . "<xServ>STATUS</xServ></consStatServCte>";
+        //montagem dos dados da mensagem SOAP
+        $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$cons</cteDadosMsg>";
+        //consome o webservice e verifica o retorno do SOAP
+        $retorno = $this->oSoap->send(
+            $this->urlService,
+            $this->urlNamespace,
+            $this->urlHeader,
+            $body,
+            $this->urlMethod
+        );
+        $lastMsg = $this->oSoap->lastMsg;
+        $this->soapDebug = $this->oSoap->soapDebug;
+        $datahora = date('Ymd_His');
+        $filename = $siglaUF."_"."$datahora-consStatServCte.xml";
+        $this->zGravaFile('cte', $tpAmb, $filename, $lastMsg);
+        $filename = $siglaUF."_"."$datahora-retConsStatServCte.xml";
+        $this->zGravaFile('cte', $tpAmb, $filename, $retorno);
+        //tratar dados de retorno
+        $aRetorno = Response::readReturnSefaz($servico, $retorno);
+        return (string) $retorno;
+    }
+
+    /**
+     * Inutiza sequencia de numeracao
+     *
+     * @param type $nAno
+     * @param type $nSerie
+     * @param type $nIni
+     * @param type $nFin
+     * @param type $xJust
+     * @param type $tpAmb
+     * @param type $aRetorno
+     * @return boolean
+     * @throws Exception\RuntimeException
+     * @throws Exception\InvalidArgumentException
+     */
+    public function sefazInutiliza(
+        $nSerie = '1',
+        $nIni = '',
+        $nFin = '',
+        $xJust = '',
+        $tpAmb = '2',
+        &$aRetorno = array(),
+        $salvarMensagens = true
+    ) {
+        if ($tpAmb == '') {
+            $tpAmb = $this->aConfig['tpAmb'];
+        }
+        // Identificação do serviço
+        $servico = 'CteInutilizacao';
+        //monta serviço
+        $siglaUF = $this->aConfig['siglaUF'];
+        //carrega serviço
+        $this->zLoadServico(
+            'cte',
+            $servico,
+            $siglaUF,
+            $tpAmb
+        );
+        if ($this->urlService == '') {
+            $msg = "A inutilização não está disponível na SEFAZ $siglaUF!!!";
+            throw new Exception\RuntimeException($msg);
+        }
+        //montagem dos dados da mensagem SOAP
+        $cnpj = $this->aConfig['cnpj'];
+        $sAno = (string) date('y');
+        $sSerie = str_pad($nSerie, 3, '0', STR_PAD_LEFT);
+        $sInicio = str_pad($nIni, 9, '0', STR_PAD_LEFT);
+        $sFinal = str_pad($nFin, 9, '0', STR_PAD_LEFT);
+        //limpa os caracteres indesejados da justificativa
+        $xJust = Strings::cleanString($xJust);
+        // Identificador da TAG a ser assinada formada com Código da UF +
+        // precedida do literal “ID”
+        // 41 posições
+        $id = 'ID'.$this->urlcUF.$cnpj.'57'.$sSerie.$sInicio.$sFinal;
+        // Montagem do corpo da mensagem
+        $dXML = "<inutCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
+            ."<infInut Id=\"$id\">"
+            ."<tpAmb>$tpAmb</tpAmb>"
+            ."<xServ>INUTILIZAR</xServ>"
+            ."<cUF>$this->urlcUF</cUF>"
+            ."<ano>$sAno</ano>"
+            ."<CNPJ>$cnpj</CNPJ>"
+            ."<mod>57</mod>"
+            ."<serie>$nSerie</serie>"
+            ."<nCTIni>$nIni</nCTIni>"
+            ."<nCTFin>$nFin</nCTFin>"
+            ."<xJust>$xJust</xJust>"
+            ."</infInut></inutCTe>";
+        //assina a solicitação de inutilização
+        $signedMsg = $this->oCertificate->signXML($dXML, 'infInut');
+        $signedMsg = Strings::clearXml($signedMsg, true);
+        $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$signedMsg</cteDadosMsg>";
+        //envia a solicitação via SOAP
+        $retorno = $this->oSoap->send(
+            $this->urlService,
+            $this->urlNamespace,
+            $this->urlHeader,
+            $body,
+            $this->urlMethod
+        );
+        $lastMsg = $this->oSoap->lastMsg;
+        $this->soapDebug = $this->oSoap->soapDebug;
+        //salva mensagens
+        if ($salvarMensagens) {
+            $filename = "$sAno-$this->modelo-$sSerie-".$sInicio."_".$sFinal."-inutCTe.xml";
+            $this->zGravaFile('cte', $tpAmb, $filename, $lastMsg);
+            $filename = "$sAno-$this->modelo-$sSerie-".$sInicio."_".$sFinal."-retInutCTe.xml";
+            $this->zGravaFile('cte', $tpAmb, $filename, $retorno);
+        }
+        //tratar dados de retorno
+        $aRetorno = Response::readReturnSefaz($servico, $retorno);
+        //Comentado por não ter implementada a função de zAddProtMsg
+//        if ($aRetorno['cStat'] == '102') {
+//            $retorno = $this->zAddProtMsg('ProcInutCTe', 'inutCTe', $signedMsg, 'retInutCTe', $retorno);
+        if ($salvarMensagens) {
+            $filename = "$sAno-$this->modelo-$sSerie-".$sInicio."_".$sFinal."-procInutCTe.xml";
+            $this->zGravaFile('cte', $tpAmb, $filename, $retorno, 'inutilizadas');
+        }
+//        }
+        return (string) $retorno;
+    }
+
+    /**
+     * Cancelamento de numero CT-e
+     *
+     * @param type $chCTe
+     * @param type $tpAmb
+     * @param type $xJust
+     * @param type $nProt
+     * @param type $aRetorno
+     * @return type
+     * @throws Exception\InvalidArgumentException
+     */
+    public function sefazCancela($chCTe = '', $tpAmb = '2', $xJust = '', $nProt = '', &$aRetorno = array(), $cnpj = '')
+    {
+        $chCTe = preg_replace('/[^0-9]/', '', $chCTe);
+        $nProt = preg_replace('/[^0-9]/', '', $nProt);
+        $xJust = Strings::cleanString($xJust);
+        //validação dos dados de entrada
+        if (strlen($chCTe) != 44) {
+            $msg = "Uma chave de CTe válida não foi passada como parâmetro $chCTe.";
+            throw new Exception\InvalidArgumentException($msg);
+        }
+        if ($nProt == '') {
+            $msg = "Não foi passado o numero do protocolo!!";
+            throw new Exception\InvalidArgumentException($msg);
+        }
+        if (strlen($xJust) < 15 || strlen($xJust) > 255) {
+            $msg = "A justificativa deve ter pelo menos 15 digitos e no máximo 255!!";
+            throw new Exception\InvalidArgumentException($msg);
+        }
+        $siglaUF = $this->zGetSigla(substr($chCTe, 0, 2));
+
+        //estabelece o codigo do tipo de evento CANCELAMENTO
+        $tpEvento = '110111';
+        $descEvento = 'Cancelamento';
+        $nSeqEvento = 1;
+        //monta mensagem
+        $tagAdic = "<evCancCTe>"
+            . "<descEvento>$descEvento</descEvento>"
+            . "<nProt>$nProt</nProt>"
+            . "<xJust>$xJust</xJust>"
+            . "</evCancCTe>";
+        $retorno = $this->zSefazEvento($siglaUF, $chCTe, $tpAmb, $tpEvento, $nSeqEvento, $tagAdic, $cnpj);
+        $aRetorno = $this->aLastRetEvent;
+        return $retorno;
+    }
+
+    /**
+     * zSefazEvento
+     *
+     * @param    string $siglaUF
+     * @param    string $chCTe
+     * @param    string $tpAmb
+     * @param    string $tpEvento
+     * @param    string $nSeqEvento
+     * @param    string $tagAdic
+     * @return   string
+     * @throws   Exception\RuntimeException
+     * @internal function zLoadServico (Common\Base\BaseTools)
+     */
+    protected function zSefazEvento(
+        $siglaUF = '',
+        $chCTe = '',
+        $tpAmb = '2',
+        $tpEvento = '',
+        $nSeqEvento = '1',
+        $tagAdic = ''
+    ) {
+        if ($tpAmb == '') {
+            $tpAmb = $this->aConfig['tpAmb'];
+        }
+        //carrega serviço
+        $servico = 'CteRecepcaoEvento';
+        $this->zLoadServico(
+            'cte',
+            $servico,
+            $siglaUF,
+            $tpAmb
+        );
+        if ($this->urlService == '') {
+            $msg = "A recepção de eventos não está disponível na SEFAZ $siglaUF!!!";
+            throw new Exception\RuntimeException($msg);
+        }
+        $aRet = $this->zTpEv($tpEvento);
+        $aliasEvento = $aRet['alias'];
+        //$descEvento = $aRet['desc'];
+        $cnpj = $this->aConfig['cnpj'];
+        $dhEvento = DateTime::convertTimestampToSefazTime(time());
+        $sSeqEvento = str_pad($nSeqEvento, 2, "0", STR_PAD_LEFT);
+        $eventId = "ID".$tpEvento.$chCTe.$sSeqEvento;
+        $cOrgao = $this->urlcUF;
+        if ($siglaUF == 'AN') {
+            $cOrgao = '91';
+        }
+        $mensagem = "<infEvento Id=\"$eventId\">"
+            . "<cOrgao>$cOrgao</cOrgao>"
+            . "<tpAmb>$tpAmb</tpAmb>"
+            . "<CNPJ>$cnpj</CNPJ>"
+            . "<chCTe>$chCTe</chCTe>"
+            . "<dhEvento>$dhEvento</dhEvento>"
+            . "<tpEvento>$tpEvento</tpEvento>"
+            . "<nSeqEvento>$nSeqEvento</nSeqEvento>"
+            . "<detEvento versaoEvento=\"$this->urlVersion\">"
+            . "$tagAdic"
+            . "</detEvento>"
+            . "</infEvento>";
+
+        $cons = "<eventoCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
+            . "$mensagem"
+            . "</eventoCTe>";
+
+        $signedMsg = $this->oCertificate->signXML($cons, 'infEvento');
+        //limpa o xml
+        $signedMsg = Strings::clearXml($signedMsg, true);
+        //montagem dos dados da mensagem SOAP
+        $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$signedMsg</cteDadosMsg>";
+        
+        $retorno = $this->oSoap->send(
+            $this->urlService,
+            $this->urlNamespace,
+            $this->urlHeader,
+            $body,
+            $this->urlMethod
+        );
+        $lastMsg = $this->oSoap->lastMsg;
+        $this->soapDebug = $this->oSoap->soapDebug;
+        //salva mensagens
+        $filename = "$chCTe-$aliasEvento-envEvento.xml";
+        $this->zGravaFile('cte', $tpAmb, $filename, $lastMsg);
+        $filename = "$chCTe-$aliasEvento-retEnvEvento.xml";
+        $this->zGravaFile('cte', $tpAmb, $filename, $retorno);
+        //tratar dados de retorno
+        $this->aLastRetEvent = Response::readReturnSefaz($servico, $retorno);
+        if ($this->aLastRetEvent['cStat'] == '134' ||
+                $this->aLastRetEvent['cStat'] == '135' ||
+                $this->aLastRetEvent['cStat'] == '136') {
+                $pasta = 'eventos'; //default
+            if ($aliasEvento == 'CancCTe') {
+                    $pasta = 'canceladas';
+                    $filename = "$chCTe-$aliasEvento-procEvento.xml";
+            } elseif ($aliasEvento == 'CCe') {
+                $pasta = 'cartacorrecao';
+                $filename = "$chCTe-$aliasEvento-$nSeqEvento-procEvento.xml";
+            }
+            $retorno = $this->zAddProtMsg('procEventoCTe', 'eventoCTe', $signedMsg, 'retEventoCTe', $retorno);
+                $this->zGravaFile('cte', $tpAmb, $filename, $retorno, $pasta);
+        }
+        return (string) $retorno;
+    }
+
+    /**
+     * zAddProtMsg
+     *
+     * @param  string $tagproc
+     * @param  string $tagmsg
+     * @param  string $xmlmsg
+     * @param  string $tagretorno
+     * @param  string $xmlretorno
+     * @return string
+     */
+    protected function zAddProtMsg($tagproc, $tagmsg, $xmlmsg, $tagretorno, $xmlretorno)
+    {
+        $doc = new Dom();
+        $doc->loadXMLString($xmlmsg);
+        $nodedoc = $doc->getNode($tagmsg, 0);
+        $procver = $nodedoc->getAttribute("versao");
+        $procns = $nodedoc->getAttribute("xmlns");
+
+        $doc1 = new Dom();
+        $doc1->loadXMLString($xmlretorno);
+        $nodedoc1 = $doc1->getNode($tagretorno, 0);
+
+        $proc = new \DOMDocument('1.0', 'utf-8');
+        $proc->formatOutput = false;
+        $proc->preserveWhiteSpace = false;
+        //cria a tag nfeProc
+        $procNode = $proc->createElement($tagproc);
+        $proc->appendChild($procNode);
+        //estabele o atributo de versão
+        $procNodeAtt1 = $procNode->appendChild($proc->createAttribute('versao'));
+        $procNodeAtt1->appendChild($proc->createTextNode($procver));
+        //estabelece o atributo xmlns
+        $procNodeAtt2 = $procNode->appendChild($proc->createAttribute('xmlns'));
+        $procNodeAtt2->appendChild($proc->createTextNode($procns));
+        //inclui a tag inutNFe
+        $node = $proc->importNode($nodedoc, true);
+        $procNode->appendChild($node);
+        //inclui a tag retInutNFe
+        $node = $proc->importNode($nodedoc1, true);
+        $procNode->appendChild($node);
+        //salva o xml como string em uma variável
+        $procXML = $proc->saveXML();
+        //remove as informações indesejadas
+        $procXML = Strings::clearProt($procXML);
+        return $procXML;
+    }
+
+    /**
+     * zTpEv
+     *
+     * @param  string $tpEvento
+     * @return array
+     * @throws Exception\RuntimeException
+     */
+    private function zTpEv($tpEvento = '')
+    {
+        //montagem dos dados da mensagem SOAP
+        switch ($tpEvento) {
+            case '110110':
+                //CCe
+                $aliasEvento = 'CCe';
+                $descEvento = 'Carta de Correcao';
+                break;
+            case '110111':
+                //cancelamento
+                $aliasEvento = 'CancCTe';
+                $descEvento = 'Cancelamento';
+                break;
+            case '110140':
+                //EPEC
+                //emissão em contingência EPEC
+                $aliasEvento = 'EPEC';
+                $descEvento = 'EPEC';
+                break;
+            case '111500':
+            case '111501':
+                //EPP
+                //Pedido de prorrogação
+                $aliasEvento = 'EPP';
+                $descEvento = 'Pedido de Prorrogacao';
+                break;
+            case '111502':
+            case '111503':
+                //ECPP
+                //Cancelamento do Pedido de prorrogação
+                $aliasEvento = 'ECPP';
+                $descEvento = 'Cancelamento de Pedido de Prorrogacao';
+                break;
+            case '210200':
+                //Confirmacao da Operacao
+                $aliasEvento = 'EvConfirma';
+                $descEvento = 'Confirmacao da Operacao';
+                break;
+            case '210210':
+                //Ciencia da Operacao
+                $aliasEvento = 'EvCiencia';
+                $descEvento = 'Ciencia da Operacao';
+                break;
+            case '210220':
+                //Desconhecimento da Operacao
+                $aliasEvento = 'EvDesconh';
+                $descEvento = 'Desconhecimento da Operacao';
+                break;
+            case '210240':
+                //Operacao não Realizada
+                $aliasEvento = 'EvNaoRealizada';
+                $descEvento = 'Operacao nao Realizada';
+                break;
+            default:
+                $msg = "O código do tipo de evento informado não corresponde a "
+                    . "nenhum evento estabelecido.";
+                throw new Exception\RuntimeException($msg);
+        }
+        return array('alias' => $aliasEvento, 'desc' => $descEvento);
+    }
+
+    /**
+     * validarXml
+     * Valida qualquer xml do sistema CTe com seu xsd
+     * NOTA: caso não exista um arquivo xsd apropriado retorna false
+     *
+     * @param  string $xml path ou conteudo do xml
+     * @return boolean
+     */
+    public function validarXml($xml = '')
+    {
+        $aResp = array();
+        $schem = IdentifyCTe::identificar($xml, $aResp);
+        if ($schem == '') {
+            $this->erros[] = "Não foi possível identificar o documento";
             return false;
         }
-        $this->zCTeTag();
-        if ($this->toma03 != '') {
-            $this->dom->appChild($this->ide, $this->toma03, 'Falta tag "ide"');
-        } else {
-            $this->dom->appChild($this->toma4, $this->enderToma, 'Falta tag "toma4"');
-            $this->dom->appChild($this->ide, $this->toma4, 'Falta tag "ide"');
+        $xsdFile = $aResp['Id'].'_v'.$aResp['versao'].'.xsd';
+        $xsdPath = $this->rootDir.DIRECTORY_SEPARATOR .
+            'schemas' .
+            DIRECTORY_SEPARATOR .
+            $this->aConfig['schemasCTe'] .
+            DIRECTORY_SEPARATOR .
+            $xsdFile;
+        if (! is_file($xsdPath)) {
+            $this->erros[] = "O arquivo XSD $xsdFile não foi localizado.";
+            return false;
         }
-        $this->dom->appChild($this->infCte, $this->ide, 'Falta tag "infCte"');
-        if ($this->compl != '') {
-            if ($this->fluxo != '') {
-                foreach ($this->pass as $pass) {
-                    $this->dom->appChild($this->fluxo, $pass, 'Falta tag "fluxo"');
-                }
-                $this->dom->appChild($this->compl, $this->fluxo, 'Falta tag "infCte"');
-            }
-            if ($this->semData != '') {
-                $this->zEntregaTag();
-                $this->dom->appChild($this->entrega, $this->semData, 'Falta tag "Entrega"');
-            } elseif ($this->comData != '') {
-                $this->zEntregaTag();
-                $this->dom->appChild($this->entrega, $this->comData, 'Falta tag "Entrega"');
-            } elseif ($this->noPeriodo != '') {
-                $this->zEntregaTag();
-                $this->dom->appChild($this->entrega, $this->noPeriodo, 'Falta tag "Entrega"');
-            } elseif ($this->semHora != '') {
-                $this->zEntregaTag();
-                $this->dom->appChild($this->entrega, $this->semHora, 'Falta tag "Entrega"');
-            } elseif ($this->comHora != '') {
-                $this->zEntregaTag();
-                $this->dom->appChild($this->entrega, $this->comHora, 'Falta tag "Entrega"');
-            } elseif ($this->noInter != '') {
-                $this->zEntregaTag();
-                $this->dom->appChild($this->entrega, $this->noInter, 'Falta tag "Entrega"');
-            }
-            foreach ($this->obsCont as $obsCont) {
-                $this->dom->appChild($this->compl, $obsCont, 'Falta tag "compl"');
-            }
-            foreach ($this->obsFisco as $obsFisco) {
-                $this->dom->appChild($this->compl, $obsFisco, 'Falta tag "compl"');
-            }
-            $this->dom->appChild($this->infCte, $this->compl, 'Falta tag "infCte"');
+        if (! ValidXsd::validar($aResp['xml'], $xsdPath)) {
+            $this->erros[] = ValidXsd::$errors;
+            return false;
         }
-        $this->dom->appChild($this->emit, $this->enderEmit, 'Falta tag "emit"');
-        $this->dom->appChild($this->infCte, $this->emit, 'Falta tag "infCte"');
-        if ($this->rem != '') {
-            $this->dom->appChild($this->infCte, $this->rem, 'Falta tag "infCte"');
-        }
-        if ($this->exped != '') {
-            $this->dom->appChild($this->infCte, $this->exped, 'Falta tag "infCte"');
-        }
-        if ($this->receb != '') {
-            $this->dom->appChild($this->infCte, $this->receb, 'Falta tag "infCte"');
-        }
-        if ($this->dest != '') {
-            $this->dom->appChild($this->infCte, $this->dest, 'Falta tag "infCte"');
-        }
-        foreach ($this->comp as $comp) {
-            $this->dom->appChild($this->vPrest, $comp, 'Falta tag "vPrest"');
-        }
-        $this->dom->appChild($this->infCte, $this->vPrest, 'Falta tag "infCte"');
-        $this->dom->appChild($this->infCte, $this->imp, 'Falta tag "imp"');
-        
-        if ($this->infCteComp != '') {
-            $this->dom->appChild($this->infCte, $this->infCteComp, 'Falta tag "infCteComp"');
-        }
-        if ($this->infCTeNorm != '') {
-            $this->dom->appChild($this->infCte, $this->infCTeNorm, 'Falta tag "infCTeNorm"');
-            $this->dom->appChild($this->infCTeNorm, $this->infCarga, 'Falta tag "infCarga"');
-            $this->dom->appChild($this->infCarga, $this->infQ, 'Falta tag "infQ"');
-            $this->dom->appChild($this->infCTeNorm, $this->infDoc, 'Falta tag "infDoc"');
-            foreach ($this->infNFe as $infNFe) {
-                $this->dom->appChild($this->infDoc, $infNFe, 'Falta tag "infNFe"');
-            }
-            $this->dom->appChild($this->infCTeNorm, $this->seg, 'Falta tag "seg"');
-            $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
-            $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
-        }
-        $this->dom->appChild($this->imp, $this->vTotTrib, 'Falta tag "vTotTrib"');
-        
-        $this->dom->appChild($this->infCte, $this->tagAutXML, 'Falta tag "autXML"');
-        $this->dom->appChild($this->CTe, $this->infCte, 'Falta tag "CTe"');
-        $this->dom->appChild($this->dom, $this->CTe, 'Falta tag "DOMDocument"');
-        $this->xml = $this->dom->saveXML();
         return true;
     }
-
-    /**
-     * Gera o grupo básico: Informações do CT-e
-     * #1
-     * Nível: 0
-     *
-     * @param string $chave  Chave do CTe
-     * @param string $versao Versão do CTe
-     *
-     * @return \DOMElement
-     */
-    public function infCteTag($chave = '', $versao = '')
-    {
-        $this->infCte = $this->dom->createElement('infCte');
-        $this->infCte->setAttribute('Id', 'CTe' . $chave);
-        $this->infCte->setAttribute('versao', $versao);
-        return $this->infCte;
-    }
-
-    /**
-     * Gera as tags para o elemento: Identificação do CT-e
-     * #4
-     * Nível: 1
-     * Os parâmetros para esta função são todos os elementos da tag "ide" do tipo elemento (Ele = E|CE|A) e nível 2
-     *
-     * @param string $cUF        Código da UF do emitente do CT-e
-     * @param string $cCT        Código numérico que compõe a Chave de Acesso
-     * @param string $CFOP       Código Fiscal de Operações e Prestações
-     * @param string $natOp      Natureza da Operação
-     * @param string $mod        Modelo do documento fiscal
-     * @param string $serie      Série do CT-e
-     * @param string $nCT        Número do CT-e
-     * @param string $dhEmi      Data e hora de emissão do CT-e
-     * @param string $tpImp      Formato de impressão do DACTE
-     * @param string $tpEmis     Forma de emissão do CT-e
-     * @param string $cDV        Digito Verificador da chave de acesso do CT-e
-     * @param string $tpAmb      Tipo do Ambiente
-     * @param string $tpCTe      Tipo do CT-e
-     * @param string $procEmi    Identificador do processo de emissão do CT-e
-     * @param string $verProc    Versão do processo de emissão
-     * @param string $refCTE     Chave de acesso do CT-e referenciado
-     * @param string $cMunEnv    Código do Município de envio do CT-e (de onde o documento foi transmitido)
-     * @param string $xMunEnv    Nome do Município de envio do CT-e (de onde o documento foi transmitido)
-     * @param string $UFEnv      Sigla da UF de envio do CT-e (de onde o documento foi transmitido)
-     * @param string $modal      Modal
-     * @param string $tpServ     Tipo do Serviço
-     * @param string $cMunIni    Código do Município de início da prestação
-     * @param string $xMunIni    Nome do Município do início da prestação
-     * @param string $UFIni      UF do início da prestação
-     * @param string $cMunFim    Código do Município de término da prestação
-     * @param string $xMunFim    Nome do Município do término da prestação
-     * @param string $UFFim      UF do término da prestação
-     * @param string $retira     Indicador se o Recebedor retira no Aeroporto, Filial, Porto ou Estação de Destino?
-     * @param string $xDetRetira Detalhes do retira
-     * @param string $dhCont     Data e Hora da entrada em contingência
-     * @param string $xJust      Justificativa da entrada em contingência
-     *
-     * @return \DOMElement
-     */
-    public function ideTag(
-        $cUF = '',
-        $cCT = '',
-        $CFOP = '',
-        $natOp = '',
-        $mod = '',
-        $serie = '',
-        $nCT = '',
-        $dhEmi = '',
-        $tpImp = '',
-        $tpEmis = '',
-        $cDV = '',
-        $tpAmb = '',
-        $tpCTe = '',
-        $procEmi = '',
-        $verProc = '',
-        $indGlobalizado = '',
-        $cMunEnv = '',
-        $xMunEnv = '',
-        $UFEnv = '',
-        $modal = '',
-        $tpServ = '',
-        $cMunIni = '',
-        $xMunIni = '',
-        $UFIni = '',
-        $cMunFim = '',
-        $xMunFim = '',
-        $UFFim = '',
-        $retira = '',
-        $xDetRetira = '',
-        $dhCont = '',
-        $xJust = '',
-        $indIEToma = ''
-    ) {
-        $this->tpAmb = $tpAmb;
-        $identificador = '#4 <ide> - ';
-        $this->ide = $this->dom->createElement('ide');
-        $this->dom->addChild(
-            $this->ide,
-            'cUF',
-            $cUF,
-            true,
-            $identificador . 'Código da UF do emitente do CT-e'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'cCT',
-            $cCT,
-            true,
-            $identificador . 'Código numérico que compõe a Chave de Acesso'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'CFOP',
-            $CFOP,
-            true,
-            $identificador . 'Código Fiscal de Operações e Prestações'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'natOp',
-            $natOp,
-            true,
-            $identificador . 'Natureza da Operação'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'mod',
-            $mod,
-            true,
-            $identificador . 'Modelo do documento fiscal'
-        );
-        $this->mod = $mod;
-        $this->dom->addChild(
-            $this->ide,
-            'serie',
-            $serie,
-            true,
-            $identificador . 'Série do CT-e'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'nCT',
-            $nCT,
-            true,
-            $identificador . 'Número do CT-e'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'dhEmi',
-            $dhEmi,
-            true,
-            $identificador . 'Data e hora de emissão do CT-e'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'tpImp',
-            $tpImp,
-            true,
-            $identificador . 'Formato de impressão do DACTE'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'tpEmis',
-            $tpEmis,
-            true,
-            $identificador . 'Forma de emissão do CT-e'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'cDV',
-            $cDV,
-            true,
-            $identificador . 'Digito Verificador da chave de acesso do CT-e'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'tpAmb',
-            $tpAmb,
-            true,
-            $identificador . 'Tipo do Ambiente'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'tpCTe',
-            $tpCTe,
-            true,
-            $identificador . 'Tipo do CT-e'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'procEmi',
-            $procEmi,
-            true,
-            $identificador . 'Identificador do processo de emissão do CT-e'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'verProc',
-            $verProc,
-            true,
-            $identificador . 'Versão do processo de emissão'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'indGlobalizado',
-            $indGlobalizado,
-            false,
-            $identificador . 'Indicador de CT-e Globalizado'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'cMunEnv',
-            $cMunEnv,
-            true,
-            $identificador . 'Código do Município de envio do CT-e (de onde o documento foi transmitido)'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'xMunEnv',
-            $xMunEnv,
-            true,
-            $identificador . 'Nome do Município de envio do CT-e (de onde o documento foi transmitido)'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'UFEnv',
-            $UFEnv,
-            true,
-            $identificador . 'Sigla da UF de envio do CT-e (de onde o documento foi transmitido)'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'modal',
-            $modal,
-            true,
-            $identificador . 'Modal'
-        );
-        $this->modal = $modal;
-        $this->dom->addChild(
-            $this->ide,
-            'tpServ',
-            $tpServ,
-            true,
-            $identificador . 'Tipo do Serviço'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'cMunIni',
-            $cMunIni,
-            true,
-            $identificador . 'Nome do Município do início da prestação'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'xMunIni',
-            $xMunIni,
-            true,
-            $identificador . 'Nome do Município do início da prestação'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'UFIni',
-            $UFIni,
-            true,
-            $identificador . 'UF do início da prestação'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'cMunFim',
-            $cMunFim,
-            true,
-            $identificador . 'Código do Município de término da prestação'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'xMunFim',
-            $xMunFim,
-            true,
-            $identificador . 'Nome do Município do término da prestação'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'UFFim',
-            $UFFim,
-            true,
-            $identificador . 'UF do término da prestação'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'retira',
-            $retira,
-            true,
-            $identificador . 'Indicador se o Recebedor retira no Aeroporto, Filial, Porto ou Estação de Destino'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'xDetRetira',
-            $xDetRetira,
-            false,
-            $identificador . 'Detalhes do retira'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'dhCont',
-            $dhCont,
-            false,
-            $identificador . 'Data e Hora da entrada em contingência'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'xJust',
-            $xJust,
-            false,
-            $identificador . 'Justificativa da entrada em contingência'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'indIEToma',
-            $indIEToma,
-            false,
-            $identificador . 'Indicador do papel do tomador na prestação do serviço'
-        );
-        $this->tpServ = $tpServ;
-        return $this->ide;
-    }
-
-    /**
-     * Gera as tags para o elemento: toma03 (Indicador do "papel" do tomador do serviço no CT-e)
-     * e adiciona ao grupo ide
-     * #35
-     * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "toma03" do
-     * tipo elemento (Ele = E|CE|A) e nível 3
-     *
-     * @param string $toma Tomador do Serviço
-     *
-     * @return \DOMElement
-     */
-    public function toma03Tag($toma = '')
-    {
-        $identificador = '#35 <toma3> - ';
-        $this->toma03 = $this->dom->createElement('toma3');
-        $this->dom->addChild(
-            $this->toma03,
-            'toma',
-            $toma,
-            true,
-            $identificador . 'Tomador do Serviço'
-        );
-        return $this->toma03;
-    }
-
-    /**
-     * Gera as tags para o elemento: toma4 (Indicador do "papel" do tomador
-     * do serviço no CT-e) e adiciona ao grupo ide
-     * #37
-     * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "toma4" do
-     * tipo elemento (Ele = E|CE|A) e nível 3
-     *
-     * @param string $toma  Tomador do Serviço
-     * @param string $CNPJ  Número do CNPJ
-     * @param string $CPF   Número do CPF
-     * @param string $IE    Inscrição Estadual
-     * @param string $xNome Razão Social ou Nome
-     * @param string $xFant Nome Fantasia
-     * @param string $fone  Telefone
-     * @param string $email Endereço de email
-     *
-     * @return \DOMElement
-     */
-    public function toma4Tag(
-        $toma = '',
-        $CNPJ = '',
-        $CPF = '',
-        $IE = '',
-        $xNome = '',
-        $xFant = '',
-        $fone = '',
-        $email = ''
-    ) {
-        $identificador = '#37 <toma4> - ';
-        $this->toma4 = $this->dom->createElement('toma4');
-        $this->dom->addChild(
-            $this->toma4,
-            'toma',
-            $toma,
-            true,
-            $identificador . 'Tomador do Serviço'
-        );
-        if ($CNPJ != '') {
-            $this->dom->addChild(
-                $this->toma4,
-                'CNPJ',
-                $CNPJ,
-                true,
-                $identificador . 'Número do CNPJ'
-            );
-        } elseif ($CPF != '') {
-            $this->dom->addChild(
-                $this->toma4,
-                'CPF',
-                $CPF,
-                true,
-                $identificador . 'Número do CPF'
-            );
-        } else {
-            $this->dom->addChild(
-                $this->toma4,
-                'CNPJ',
-                $CNPJ,
-                true,
-                $identificador . 'Número do CNPJ'
-            );
-            $this->dom->addChild(
-                $this->toma4,
-                'CPF',
-                $CPF,
-                true,
-                $identificador . 'Número do CPF'
-            );
-        }
-        $this->dom->addChild(
-            $this->toma4,
-            'IE',
-            $IE,
-            false,
-            $identificador . 'Inscrição Estadual'
-        );
-        $this->dom->addChild(
-            $this->toma4,
-            'xNome',
-            $xNome,
-            true,
-            $identificador . 'Razão Social ou Nome'
-        );
-        $this->dom->addChild(
-            $this->toma4,
-            'xFant',
-            $xFant,
-            false,
-            $identificador . 'Nome Fantasia'
-        );
-        $this->dom->addChild(
-            $this->toma4,
-            'fone',
-            $fone,
-            false,
-            $identificador . 'Telefone'
-        );
-        $this->dom->addChild(
-            $this->toma4,
-            'email',
-            $email,
-            false,
-            $identificador . 'Endereço de email'
-        );
-        return $this->toma4;
-    }
-
-    /**
-     * Gera as tags para o elemento: "enderToma" (Dados do endereço) e adiciona ao grupo "toma4"
-     * #45
-     * Nível: 3
-     * Os parâmetros para esta função são todos os elementos da tag "enderToma"
-     * do tipo elemento (Ele = E|CE|A) e nível 4
-     *
-     * @param string $xLgr    Logradouro
-     * @param string $nro     Número
-     * @param string $xCpl    Complemento
-     * @param string $xBairro Bairro
-     * @param string $cMun    Código do município (utilizar a tabela do IBGE)
-     * @param string $xMun    Nome do município
-     * @param string $CEP     CEP
-     * @param string $UF      Sigla da UF
-     * @param string $cPais   Código do país
-     * @param string $xPais   Nome do país
-     *
-     * @return \DOMElement
-     */
-    public function enderTomaTag(
-        $xLgr = '',
-        $nro = '',
-        $xCpl = '',
-        $xBairro = '',
-        $cMun = '',
-        $xMun = '',
-        $CEP = '',
-        $UF = '',
-        $cPais = '',
-        $xPais = ''
-    ) {
-        $identificador = '#45 <enderToma> - ';
-        $this->enderToma = $this->dom->createElement('enderToma');
-        $this->dom->addChild(
-            $this->enderToma,
-            'xLgr',
-            $xLgr,
-            true,
-            $identificador . 'Logradouro'
-        );
-        $this->dom->addChild(
-            $this->enderToma,
-            'nro',
-            $nro,
-            true,
-            $identificador . 'Número'
-        );
-        $this->dom->addChild(
-            $this->enderToma,
-            'xCpl',
-            $xCpl,
-            false,
-            $identificador . 'Complemento'
-        );
-        $this->dom->addChild(
-            $this->enderToma,
-            'xBairro',
-            $xBairro,
-            true,
-            $identificador . 'Bairro'
-        );
-        $this->dom->addChild(
-            $this->enderToma,
-            'cMun',
-            $cMun,
-            true,
-            $identificador . 'Código do município (utilizar a tabela do IBGE)'
-        );
-        $this->dom->addChild(
-            $this->enderToma,
-            'xMun',
-            $xMun,
-            true,
-            $identificador . 'Nome do município'
-        );
-        $this->dom->addChild(
-            $this->enderToma,
-            'CEP',
-            $CEP,
-            false,
-            $identificador . 'CEP'
-        );
-        $this->dom->addChild(
-            $this->enderToma,
-            'UF',
-            $UF,
-            true,
-            $identificador . 'Sigla da UF'
-        );
-        $this->dom->addChild(
-            $this->enderToma,
-            'cPais',
-            $cPais,
-            false,
-            $identificador . 'Código do país'
-        );
-        $this->dom->addChild(
-            $this->enderToma,
-            'xPais',
-            $xPais,
-            false,
-            $identificador . 'Nome do país'
-        );
-        return $this->enderToma;
-    }
-
-    /**
-     * Gera as tags para o elemento: "compl" (Dados complementares do CT-e para fins operacionais ou comerciais)
-     * #59
-     * Nível: 1
-     * Os parâmetros para esta função são todos os elementos da tag "compl" do
-     * tipo elemento (Ele = E|CE|A) e nível 2
-     *
-     * @param string $xCaracAd  Característica adicional do transporte
-     * @param string $xCaracSer Característica adicional do serviço
-     * @param string $xEmi      Funcionário emissor do CTe
-     * @param string $origCalc  Município de origem para efeito de cálculo do frete
-     * @param string $destCalc  Município de destino para efeito de cálculo do frete
-     * @param string $xObs      Observações Gerais
-     *
-     * @return \DOMElement
-     */
-    public function complTag($xCaracAd = '', $xCaracSer = '', $xEmi = '', $origCalc = '', $destCalc = '', $xObs = '')
-    {
-        $identificador = '#59 <compl> - ';
-        $this->compl = $this->dom->createElement('compl');
-        $this->dom->addChild(
-            $this->compl,
-            'xCaracAd',
-            $xCaracAd,
-            false,
-            $identificador . 'Característica adicional do transporte'
-        );
-        $this->dom->addChild(
-            $this->compl,
-            'xCaracSer',
-            $xCaracSer,
-            false,
-            $identificador . 'Característica adicional do serviço'
-        );
-        $this->dom->addChild(
-            $this->compl,
-            'xEmi',
-            $xEmi,
-            false,
-            $identificador . 'Funcionário emissor do CTe'
-        );
-        $this->dom->addChild(
-            $this->compl,
-            'origCalc',
-            $origCalc,
-            false,
-            $identificador . 'Município de origem para efeito de cálculo do frete'
-        );
-        $this->dom->addChild(
-            $this->compl,
-            'destCalc',
-            $destCalc,
-            false,
-            $identificador . 'Município de destino para efeito de cálculo do frete'
-        );
-        $this->dom->addChild(
-            $this->compl,
-            'xObs',
-            $xObs,
-            false,
-            $identificador . 'Observações Gerais'
-        );
-        return $this->compl;
-    }
-    
-    public function autXML($cnpj = '')
-    {
-        $identificador = '#396 <autXML> - ';
-        $this->tagAutXML = $this->dom->createElement('autXML');
-        $this->dom->addChild(
-            $this->tagAutXML,
-            'CNPJ',
-            $cnpj,
-            false,
-            $identificador . 'Autorizados para download do XML do DF-e'
-        );
-        return $this->tagAutXML;
-    }
     
     /**
-     * Gera as tags para o elemento: "fluxo" (Previsão do fluxo da carga)
-     * #63
-     * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "fluxo" do
-     * tipo elemento (Ele = E|CE|A) e nível 3
+     * Transmite a correção
+     * conforme o MOC(Manual de Orientações do Contribuinte)
+     * Art. 58-B Fica permitida a utilização de carta de correção,
+     * para regularização de erro ocorrido na emissão de documentos
+     * fiscais relativos à prestação de serviço de transporte, desde que o
+     * erro não esteja relacionado com:
+     * I - as variáveis que determinam o valor do imposto tais como:
+     *  base de cálculo, alíquota, diferença de preço, quantidade, valor da prestação
+     * II - a correção de dados cadastrais que implique mudança do emitente,
+     *  tomador, remetente ou do destinatário;
+     * III - a data de emissão ou de saída.
      *
-     * @param string $xOrig Sigla ou código interno da Filial/Porto/Estação/ Aeroporto de Origem
-     * @param string $xDest Sigla ou código interno da Filial/Porto/Estação/Aeroporto de Destino
-     * @param string $xRota Código da Rota de Entrega
-     *
-     * @return \DOMElement
+     * @param string $chCTe
+     * @param string $tpAmb
+     * @param string $nSeqEvento
+     * @param array $infCorrecao
+     * @param array $aRetorno
+     * @return string
+     * @throws Exception\InvalidArgumentException
      */
-    public function fluxoTag($xOrig = '', $xDest = '', $xRota = '')
-    {
-        $identificador = '#63 <fluxo> - ';
-        $this->fluxo = $this->dom->createElement('fluxo');
-        $this->dom->addChild(
-            $this->fluxo,
-            'xOrig',
-            $xOrig,
-            false,
-            $identificador . 'Sigla ou código interno da Filial/Porto/Estação/ Aeroporto de Origem'
-        );
-        $this->dom->addChild(
-            $this->fluxo,
-            'xDest',
-            $xDest,
-            false,
-            $identificador . 'Sigla ou código interno da Filial/Porto/Estação/Aeroporto de Destino'
-        );
-        $this->dom->addChild(
-            $this->fluxo,
-            'xRota',
-            $xRota,
-            false,
-            $identificador . 'Código da Rota de Entrega'
-        );
-        return $this->fluxo;
-    }
-
-    /**
-     * Gera as tags para o elemento: "pass"
-     * #65
-     * Nível: 3
-     * Os parâmetros para esta função são todos os elementos da tag "pass" do
-     * tipo elemento (Ele = E|CE|A) e nível 4
-     *
-     * @param string $xPass Sigla ou código interno da Filial/Porto/Estação/Aeroporto de Passagem
-     *
-     * @return \DOMElement
-     */
-    public function passTag($xPass = '')
-    {
-        $identificador = '#65 <pass> - ';
-        $this->pass[] = $this->dom->createElement('pass');
-        $posicao = (integer) count($this->pass) - 1;
-        $this->dom->addChild(
-            $this->pass[$posicao],
-            'xPass',
-            $xPass,
-            false,
-            $identificador . 'Sigla ou código interno da Filial/Porto/Estação/Aeroporto de Passagem'
-        );
-        return $this->pass[$posicao];
-    }
-
-    /**
-     * Gera as tags para o elemento: "semData" (Entrega sem data definida)
-     * #70
-     * Nível: 3
-     * Os parâmetros para esta função são todos os elementos da tag "semData" do
-     * tipo elemento (Ele = E|CE|A) e nível 4
-     *
-     * @param string $tpPer Tipo de data/período programado para entrega
-     *
-     * @return \DOMElement
-     */
-    public function semDataTag($tpPer = '')
-    {
-        $identificador = '#70 <semData> - ';
-        $this->semData = $this->dom->createElement('semData');
-        $this->dom->addChild(
-            $this->semData,
-            'tpPer',
-            $tpPer,
-            true,
-            $identificador . 'Tipo de data/período programado para entrega'
-        );
-        return $this->semData;
-    }
-
-    /**
-     * Gera as tags para o elemento: "comData" (Entrega com data definida)
-     * #72
-     * Nível: 3
-     * Os parâmetros para esta função são todos os elementos da tag "comData" do
-     * tipo elemento (Ele = E|CE|A) e nível 4
-     *
-     * @param string $tpPer Tipo de data/período programado para entrega
-     * @param string $dProg Data programada
-     *
-     * @return \DOMElement
-     */
-    public function comDataTag($tpPer = '', $dProg = '')
-    {
-        $identificador = '#72 <comData> - ';
-        $this->comData = $this->dom->createElement('comData');
-        $this->dom->addChild(
-            $this->comData,
-            'tpPer',
-            $tpPer,
-            true,
-            $identificador . 'Tipo de data/período programado para entrega'
-        );
-        $this->dom->addChild(
-            $this->comData,
-            'dProg',
-            $dProg,
-            true,
-            $identificador . 'Data programada'
-        );
-        return $this->comData;
-    }
-
-    /**
-     * Gera as tags para o elemento: "noPeriodo" (Entrega no período definido)
-     * #75
-     * Nível: 3
-     * Os parâmetros para esta função são todos os elementos da tag "noPeriodo" do tipo
-     * elemento (Ele = E|CE|A) e nível 4
-     *
-     * @param string $tpPer Tipo de data/período programado para entrega
-     * @param string $dIni  Data inicial
-     * @param string $dFim  Data final
-     *
-     * @return \DOMElement
-     */
-    public function noPeriodoTag($tpPer = '', $dIni = '', $dFim = '')
-    {
-        $identificador = '#75 <noPeriodo> - ';
-        $this->noPeriodo = $this->dom->createElement('noPeriodo');
-        $this->dom->addChild(
-            $this->noPeriodo,
-            'tpPer',
-            $tpPer,
-            true,
-            $identificador . 'Tipo de data/período programado para entrega'
-        );
-        $this->dom->addChild(
-            $this->noPeriodo,
-            'dIni',
-            $dIni,
-            true,
-            $identificador . 'Data inicial'
-        );
-        $this->dom->addChild(
-            $this->noPeriodo,
-            'dFim',
-            $dFim,
-            true,
-            $identificador . 'Data final'
-        );
-        return $this->noPeriodo;
-    }
-
-    /**
-     * Gera as tags para o elemento: "semHora" (Entrega sem hora definida)
-     * #79
-     * Nível: 3
-     * Os parâmetros para esta função são todos os elementos da tag "semHora" do
-     * tipo elemento (Ele = E|CE|A) e nível 4
-     *
-     * @param string $tpHor Tipo de hora
-     *
-     * @return \DOMElement
-     */
-    public function semHoraTag($tpHor = '')
-    {
-        $identificador = '#79 <semHora> - ';
-        $this->semHora = $this->dom->createElement('semHora');
-        $this->dom->addChild(
-            $this->semHora,
-            'tpHor',
-            $tpHor,
-            true,
-            $identificador . 'Tipo de hora'
-        );
-        return $this->semHora;
-    }
-
-    /**
-     * Gera as tags para o elemento: "comHora" (Entrega sem hora definida)
-     * # = 81
-     * Nível = 3
-     * Os parâmetros para esta função são todos os elementos da tag "comHora" do
-     * tipo elemento (Ele = E|CE|A) e nível 4
-     *
-     * @param string $tpHor Tipo de hora
-     * @param string $hProg Hora programada
-     *
-     * @return \DOMElement
-     */
-    public function comHoraTag($tpHor = '', $hProg = '')
-    {
-        $identificador = '#81 <comHora> - ';
-        $this->comHora = $this->dom->createElement('comHora');
-        $this->dom->addChild(
-            $this->comHora,
-            'tpHor',
-            $tpHor,
-            true,
-            $identificador . 'Tipo de hora'
-        );
-        $this->dom->addChild(
-            $this->comHora,
-            'hProg',
-            $hProg,
-            true,
-            $identificador . 'Hora programada'
-        );
-        return $this->comHora;
-    }
-
-    /**
-     * Gera as tags para o elemento: "noInter" (Entrega no intervalo de horário definido)
-     * #84
-     * Nível: 3
-     * Os parâmetros para esta função são todos os elementos da tag "noInter" do
-     * tipo elemento (Ele = E|CE|A) e nível 4
-     *
-     * @param string $tpHor Tipo de hora
-     * @param string $hIni  Hora inicial
-     * @param string $hFim  Hora final
-     *
-     * @return \DOMElement
-     */
-    public function noInterTag($tpHor = '', $hIni = '', $hFim = '')
-    {
-        $identificador = '#84 <noInter> - ';
-        $this->noInter = $this->dom->createElement('noInter');
-        $this->dom->addChild(
-            $this->noInter,
-            'tpHor',
-            $tpHor,
-            true,
-            $identificador . 'Tipo de hora'
-        );
-        $this->dom->addChild(
-            $this->noInter,
-            'hIni',
-            $hIni,
-            true,
-            $identificador . 'Hora inicial'
-        );
-        $this->dom->addChild(
-            $this->noInter,
-            'hFim',
-            $hFim,
-            true,
-            $identificador . 'Hora final'
-        );
-        return $this->noInter;
-    }
-
-    /**
-     * Gera as tags para o elemento: "ObsCont" (Campo de uso livre do contribuinte)
-     * #91
-     * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "ObsCont" do
-     * tipo elemento (Ele = E|CE|A) e nível 3
-     *
-     * @param string $xCampo Identificação do campo
-     * @param string $xTexto Conteúdo do campo
-     *
-     * @return boolean
-     */
-    public function obsContTag($xCampo = '', $xTexto = '')
-    {
-        $identificador = '#91 <ObsCont> - ';
-        $posicao = (integer) count($this->obsCont) - 1;
-        if (count($this->obsCont) <= 10) {
-            $this->obsCont[] = $this->dom->createElement('ObsCont');
-            $this->obsCont[$posicao]->setAttribute('xCampo', $xCampo);
-            $this->dom->addChild(
-                $this->obsCont[$posicao],
-                'xTexto',
-                $xTexto,
-                true,
-                $identificador . 'Conteúdo do campo'
-            );
-            return true;
-        }
-        $this->erros[] = array(
-            'tag' => (string) '<ObsCont>',
-            'desc' => (string) 'Campo de uso livre do contribuinte',
-            'erro' => (string) 'Tag deve aparecer de 0 a 10 vezes'
-        );
-        return false;
-    }
-
-    /**
-     * Gera as tags para o elemento: "ObsFisco" (Campo de uso livre do contribuinte)
-     * #94
-     * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "ObsFisco" do tipo
-     * elemento (Ele = E|CE|A) e nível 3
-     *
-     * @param string $xCampo Identificação do campo
-     * @param string $xTexto Conteúdo do campo
-     *
-     * @return boolean
-     */
-    public function obsFiscoTag($xCampo = '', $xTexto = '')
-    {
-        $identificador = '#94 <ObsFisco> - ';
-        $posicao = (integer) count($this->obsFisco) - 1;
-        if (count($this->obsFisco) <= 10) {
-            $this->obsFisco[] = $this->dom->createElement('obsFisco');
-            $this->obsFisco[$posicao]->setAttribute('xCampo', $xCampo);
-            $this->dom->addChild(
-                $this->obsFisco[$posicao],
-                'xTexto',
-                $xTexto,
-                true,
-                $identificador . 'Conteúdo do campo'
-            );
-            return true;
-        }
-        $this->erros[] = array(
-            'tag' => (string) '<ObsFisco>',
-            'desc' => (string) 'Campo de uso livre do contribuinte',
-            'erro' => (string) 'Tag deve aparecer de 0 a 10 vezes'
-        );
-        return false;
-    }
-
-    /**
-     * Gera as tags para o elemento: "emit" (Identificação do Emitente do CT-e)
-     * #97
-     * Nível: 1
-     * Os parâmetros para esta função são todos os elementos da tag "emit" do
-     * tipo elemento (Ele = E|CE|A) e nível 2
-     *
-     * @param string $CNPJ  CNPJ do emitente
-     * @param string $IE    Inscrição Estadual do Emitente
-     * @param string $xNome Razão social ou Nome do emitente
-     * @param string $xFant Nome fantasia
-     *
-     * @return \DOMElement
-     */
-    public function emitTag($CNPJ = '', $IE = '', $xNome = '', $xFant = '')
-    {
-        $identificador = '#97 <emit> - ';
-        $this->emit = $this->dom->createElement('emit');
-        $this->dom->addChild(
-            $this->emit,
-            'CNPJ',
-            $CNPJ,
-            true,
-            $identificador . 'CNPJ do emitente'
-        );
-        if ($IE !== '') {
-            $this->dom->addChild(
-                $this->emit,
-                'IE',
-                $IE,
-                true,
-                $identificador . 'Inscrição Estadual do Emitente'
-            );
-        }
-        $this->dom->addChild(
-            $this->emit,
-            'xNome',
-            $xNome,
-            true,
-            $identificador . 'Razão social ou Nome do emitente'
-        );
-        $this->dom->addChild(
-            $this->emit,
-            'xFant',
-            $xFant,
-            true,
-            $identificador . 'Nome fantasia'
-        );
-        return $this->emit;
-    }
-
-    /**
-     * Gera as tags para o elemento: "enderEmit" (Endereço do emitente)
-     * #102
-     * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "enderEmit" do
-     * tipo elemento (Ele = E|CE|A) e nível 3
-     *
-     * @param string $xLgr    Logradouro
-     * @param string $nro     Número
-     * @param string $xCpl    Complemento
-     * @param string $xBairro Bairro
-     * @param string $cMun    Código do município (utilizar a tabela do IBGE)
-     * @param string $xMun    Nome do município
-     * @param string $CEP     CEP
-     * @param string $UF      Sigla da UF
-     * @param string $fone    Telefone
-     *
-     * @return \DOMElement
-     */
-    public function enderEmitTag(
-        $xLgr = '',
-        $nro = '',
-        $xCpl = '',
-        $xBairro = '',
-        $cMun = '',
-        $xMun = '',
-        $CEP = '',
-        $UF = '',
-        $fone = ''
+    public function sefazCartaCorrecao(
+        $chCTe = '',
+        $tpAmb = '2',
+        $nSeqEvento = '1',
+        $infCorrecao = array(),
+        &$aRetorno = array()
     ) {
-        $identificador = '#102 <enderEmit> - ';
-        $this->enderEmit = $this->dom->createElement('enderEmit');
-        $this->dom->addChild(
-            $this->enderEmit,
-            'xLgr',
-            $xLgr,
-            true,
-            $identificador . 'Logradouro'
-        );
-        $this->dom->addChild(
-            $this->enderEmit,
-            'nro',
-            $nro,
-            true,
-            $identificador . 'Número'
-        );
-        $this->dom->addChild(
-            $this->enderEmit,
-            'xCpl',
-            $xCpl,
-            false,
-            $identificador . 'Complemento'
-        );
-        $this->dom->addChild(
-            $this->enderEmit,
-            'xBairro',
-            $xBairro,
-            true,
-            $identificador . 'Bairro'
-        );
-        $this->dom->addChild(
-            $this->enderEmit,
-            'cMun',
-            $cMun,
-            true,
-            $identificador . 'Código do município'
-        );
-        $this->dom->addChild(
-            $this->enderEmit,
-            'xMun',
-            $xMun,
-            true,
-            $identificador . 'Nome do município'
-        );
-        $this->dom->addChild(
-            $this->enderEmit,
-            'CEP',
-            $CEP,
-            false,
-            $identificador . 'CEP'
-        );
-        $this->dom->addChild(
-            $this->enderEmit,
-            'UF',
-            $UF,
-            true,
-            $identificador . 'Sigla da UF'
-        );
-        $this->dom->addChild(
-            $this->enderEmit,
-            'fone',
-            $fone,
-            false,
-            $identificador . 'Telefone'
-        );
-        return $this->enderEmit;
-    }
-
-    /**
-     * Gera as tags para o elemento: "rem" (Informações do Remetente das mercadorias
-     * transportadas pelo CT-e)
-     * #112
-     * Nível = 1
-     * Os parâmetros para esta função são todos os elementos da tag "rem" do
-     * tipo elemento (Ele = E|CE|A) e nível 2
-     *
-     * @param string $CNPJ  Número do CNPJ
-     * @param string $CPF   Número do CPF
-     * @param string $IE    Inscrição Estadual
-     * @param string $xNome Razão social ou nome do remetente
-     * @param string $xFant Nome fantasia
-     * @param string $fone  Telefone
-     * @param string $email Endereço de email
-     *
-     * @return \DOMElement
-     */
-    public function remTag($CNPJ = '', $CPF = '', $IE = '', $xNome = '', $xFant = '', $fone = '', $email = '')
-    {
-        $identificador = '#97 <rem> - ';
-        $this->rem = $this->dom->createElement('rem');
-        if ($CNPJ != '') {
-            $this->dom->addChild(
-                $this->rem,
-                'CNPJ',
-                $CNPJ,
-                true,
-                $identificador . 'CNPJ do Remente'
-            );
-        } elseif ($CPF != '') {
-            $this->dom->addChild(
-                $this->rem,
-                'CPF',
-                $CPF,
-                true,
-                $identificador . 'CPF do Remente'
-            );
-        } else {
-            $this->dom->addChild(
-                $this->rem,
-                'CNPJ',
-                $CNPJ,
-                true,
-                $identificador . 'CNPJ do Remente'
-            );
-            $this->dom->addChild(
-                $this->rem,
-                'CPF',
-                $CPF,
-                true,
-                $identificador . 'CPF do remente'
-            );
-        }
-        $this->dom->addChild(
-            $this->rem,
-            'IE',
-            $IE,
-            false,
-            $identificador . 'Inscrição Estadual do remente'
-        );
-        $this->dom->addChild(
-            $this->rem,
-            'xNome',
-            $xNome,
-            true,
-            $identificador . 'Razão social ou Nome do remente'
-        );
-        $this->dom->addChild(
-            $this->rem,
-            'xFant',
-            $xFant,
-            false,
-            $identificador . 'Nome fantasia'
-        );
-        $this->dom->addChild(
-            $this->rem,
-            'fone',
-            $fone,
-            false,
-            $identificador . 'Telefone'
-        );
-        $this->dom->addChild(
-            $this->rem,
-            'email',
-            $email,
-            false,
-            $identificador . 'Endereço de email'
-        );
-        return $this->rem;
-    }
-
-    /**
-     * Gera as tags para o elemento: "enderReme" (Dados do endereço)
-     * #119
-     * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "enderReme" do
-     * tipo elemento (Ele = E|CE|A) e nível 3
-     *
-     * @param string $xLgr    Logradouro
-     * @param string $nro     Número
-     * @param string $xCpl    Complemento
-     * @param string $xBairro Bairro
-     * @param string $cMun    Código do município (utilizar a tabela do IBGE)
-     * @param string $xMun    Nome do município
-     * @param string $CEP     CEP
-     * @param string $UF      Sigla da UF
-     * @param string $cPais   Código do país
-     * @param string $xPais   Nome do país
-     *
-     * @return \DOMElement
-     */
-    public function enderRemeTag(
-        $xLgr = '',
-        $nro = '',
-        $xCpl = '',
-        $xBairro = '',
-        $cMun = '',
-        $xMun = '',
-        $CEP = '',
-        $UF = '',
-        $cPais = '',
-        $xPais = ''
-    ) {
-        $identificador = '#119 <enderReme> - ';
-        $this->enderReme = $this->dom->createElement('enderReme');
-        $this->dom->addChild(
-            $this->enderReme,
-            'xLgr',
-            $xLgr,
-            true,
-            $identificador . 'Logradouro'
-        );
-        $this->dom->addChild(
-            $this->enderReme,
-            'nro',
-            $nro,
-            true,
-            $identificador . 'Número'
-        );
-        $this->dom->addChild(
-            $this->enderReme,
-            'xCpl',
-            $xCpl,
-            false,
-            $identificador . 'Complemento'
-        );
-        $this->dom->addChild(
-            $this->enderReme,
-            'xBairro',
-            $xBairro,
-            true,
-            $identificador . 'Bairro'
-        );
-        $this->dom->addChild(
-            $this->enderReme,
-            'cMun',
-            $cMun,
-            true,
-            $identificador . 'Código do município (utilizar a tabela do IBGE)'
-        );
-        $this->dom->addChild(
-            $this->enderReme,
-            'xMun',
-            $xMun,
-            true,
-            $identificador . 'Nome do município'
-        );
-        $this->dom->addChild(
-            $this->enderReme,
-            'CEP',
-            $CEP,
-            false,
-            $identificador . 'CEP'
-        );
-        $this->dom->addChild(
-            $this->enderReme,
-            'UF',
-            $UF,
-            true,
-            $identificador . 'Sigla da UF'
-        );
-        $this->dom->addChild(
-            $this->enderReme,
-            'cPais',
-            $cPais,
-            false,
-            $identificador . 'Código do país'
-        );
-        $this->dom->addChild(
-            $this->enderReme,
-            'xPais',
-            $xPais,
-            false,
-            $identificador . 'Nome do país'
-        );
-
-        $node = $this->rem->getElementsByTagName("email")->item(0);
-        $this->rem->insertBefore($this->enderReme, $node);
-        return $this->enderReme;
-    }
-
-    /**
-     * Gera as tags para o elemento: "exped" (Informações do Expedidor da Carga)
-     * #142
-     * Nível: 1
-     * Os parâmetros para esta função são todos os elementos da tag "exped" do
-     * tipo elemento (Ele = E|CE|A) e nível 2
-     *
-     * @param string $CNPJ  Número do CNPJ
-     * @param string $CPF   Número do CPF
-     * @param string $IE    Inscrição Estadual
-     * @param string $xNome Razão Social ou Nome
-     * @param string $fone  Telefone
-     * @param string $email Endereço de email
-     *
-     * @return \DOMElement
-     */
-    public function expedTag($CNPJ = '', $CPF = '', $IE = '', $xNome = '', $fone = '', $email = '')
-    {
-        $identificador = '#142 <exped> - ';
-        $this->exped = $this->dom->createElement('exped');
-        if ($CNPJ != '') {
-            $this->dom->addChild(
-                $this->exped,
-                'CNPJ',
-                $CNPJ,
-                true,
-                $identificador . 'Número do CNPJ'
-            );
-        } elseif ($CPF != '') {
-            $this->dom->addChild(
-                $this->exped,
-                'CPF',
-                $CPF,
-                true,
-                $identificador . 'Número do CPF'
-            );
-        } else {
-            $this->dom->addChild(
-                $this->exped,
-                'CNPJ',
-                $CNPJ,
-                true,
-                $identificador . 'Número do CNPJ'
-            );
-            $this->dom->addChild(
-                $this->exped,
-                'CPF',
-                $CPF,
-                true,
-                $identificador . 'Número do CPF'
-            );
-        }
-        if ($IE !== '') {
-            $this->dom->addChild(
-                $this->exped,
-                'IE',
-                $IE,
-                true,
-                $identificador . 'Inscrição Estadual'
-            );
-        }
-        $this->dom->addChild(
-            $this->exped,
-            'xNome',
-            $xNome,
-            true,
-            $identificador . 'Razão social ou Nome'
-        );
-        $this->dom->addChild(
-            $this->exped,
-            'fone',
-            $fone,
-            false,
-            $identificador . 'Telefone'
-        );
-        $this->dom->addChild(
-            $this->exped,
-            'email',
-            $email,
-            false,
-            $identificador . 'Endereço de email'
-        );
-        return $this->exped;
-    }
-
-    /**
-     * Gera as tags para o elemento: "enderExped" (Dados do endereço)
-     * #148
-     * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "enderExped" do
-     * tipo elemento (Ele = E|CE|A) e nível 3
-     *
-     * @param string $xLgr    Logradouro
-     * @param string $nro     Número
-     * @param string $xCpl    Complemento
-     * @param string $xBairro Bairro
-     * @param string $cMun    Código do município (utilizar a tabela do IBGE)
-     * @param string $xMun    Nome do município
-     * @param string $CEP     CEP
-     * @param string $UF      Sigla da UF
-     * @param string $cPais   Código do país
-     * @param string $xPais   Nome do país
-     *
-     * @return \DOMElement
-     */
-    public function enderExpedTag(
-        $xLgr = '',
-        $nro = '',
-        $xCpl = '',
-        $xBairro = '',
-        $cMun = '',
-        $xMun = '',
-        $CEP = '',
-        $UF = '',
-        $cPais = '',
-        $xPais = ''
-    ) {
-        $identificador = '#148 <enderExped> - ';
-        $this->enderExped = $this->dom->createElement('enderExped');
-        $this->dom->addChild(
-            $this->enderExped,
-            'xLgr',
-            $xLgr,
-            true,
-            $identificador . 'Logradouro'
-        );
-        $this->dom->addChild(
-            $this->enderExped,
-            'nro',
-            $nro,
-            true,
-            $identificador . 'Número'
-        );
-        $this->dom->addChild(
-            $this->enderExped,
-            'xCpl',
-            $xCpl,
-            false,
-            $identificador . 'Complemento'
-        );
-        $this->dom->addChild(
-            $this->enderExped,
-            'xBairro',
-            $xBairro,
-            true,
-            $identificador . 'Bairro'
-        );
-        $this->dom->addChild(
-            $this->enderExped,
-            'cMun',
-            $cMun,
-            true,
-            $identificador . 'Código do município (utilizar a tabela do IBGE)'
-        );
-        $this->dom->addChild(
-            $this->enderExped,
-            'xMun',
-            $xMun,
-            true,
-            $identificador . 'Nome do município'
-        );
-        $this->dom->addChild(
-            $this->enderExped,
-            'CEP',
-            $CEP,
-            false,
-            $identificador . 'CEP'
-        );
-        $this->dom->addChild(
-            $this->enderExped,
-            'UF',
-            $UF,
-            true,
-            $identificador . 'Sigla da UF'
-        );
-        $this->dom->addChild(
-            $this->enderExped,
-            'cPais',
-            $cPais,
-            false,
-            $identificador . 'Código do país'
-        );
-        $this->dom->addChild(
-            $this->enderExped,
-            'xPais',
-            $xPais,
-            false,
-            $identificador . 'Nome do país'
-        );
-        $node = $this->exped->getElementsByTagName("email")->item(0);
-        $this->exped->insertBefore($this->enderExped, $node);
-        return $this->enderExped;
-    }
-
-    /**
-     * Gera as tags para o elemento: "receb" (Informações do Recebedor da Carga)
-     * #160
-     * Nível: 1
-     * Os parâmetros para esta função são todos os elementos da tag "receb" do
-     * tipo elemento (Ele = E|CE|A) e nível 2
-     *
-     * @param string $CNPJ  Número do CNPJ
-     * @param string $CPF   Número do CPF
-     * @param string $IE    Inscrição Estadual
-     * @param string $xNome Razão Social ou Nome
-     * @param string $fone  Telefone
-     * @param string $email Endereço de email
-     *
-     * @return \DOMElement
-     */
-    public function recebTag($CNPJ = '', $CPF = '', $IE = '', $xNome = '', $fone = '', $email = '')
-    {
-        $identificador = '#160 <receb> - ';
-        $this->receb = $this->dom->createElement('receb');
-        if ($CNPJ != '') {
-            $this->dom->addChild(
-                $this->receb,
-                'CNPJ',
-                $CNPJ,
-                true,
-                $identificador . 'Número do CNPJ'
-            );
-        } elseif ($CPF != '') {
-            $this->dom->addChild(
-                $this->receb,
-                'CPF',
-                $CPF,
-                true,
-                $identificador . 'Número do CPF'
-            );
-        } else {
-            $this->dom->addChild(
-                $this->receb,
-                'CNPJ',
-                $CNPJ,
-                true,
-                $identificador . 'Número do CNPJ'
-            );
-            $this->dom->addChild(
-                $this->receb,
-                'CPF',
-                $CPF,
-                true,
-                $identificador . 'Número do CPF'
-            );
-        }
-        if ($IE !== '') {
-            $this->dom->addChild(
-                $this->receb,
-                'IE',
-                $IE,
-                true,
-                $identificador . 'Inscrição Estadual'
-            );
-        }
-        $this->dom->addChild(
-            $this->receb,
-            'xNome',
-            $xNome,
-            true,
-            $identificador . 'Razão social ou Nome'
-        );
-        $this->dom->addChild(
-            $this->receb,
-            'fone',
-            $fone,
-            false,
-            $identificador . 'Telefone'
-        );
-        $this->dom->addChild(
-            $this->receb,
-            'email',
-            $email,
-            false,
-            $identificador . 'Endereço de email'
-        );
-        return $this->receb;
-    }
-
-    /**
-     * Gera as tags para o elemento: "enderReceb" (Informações do Recebedor da Carga)
-     * #166
-     * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "enderReceb" do
-     * tipo elemento (Ele = E|CE|A) e nível 3
-     *
-     * @param string $xLgr    Logradouro
-     * @param string $nro     Número
-     * @param string $xCpl    Complemento
-     * @param string $xBairro Bairro
-     * @param string $cMun    Código do município (utilizar a tabela do IBGE)
-     * @param string $xMun    Nome do município
-     * @param string $CEP     CEP
-     * @param string $UF      Sigla da UF
-     * @param string $cPais   Código do país
-     * @param string $xPais   Nome do país
-     *
-     * @return \DOMElement
-     */
-    public function enderRecebTag(
-        $xLgr = '',
-        $nro = '',
-        $xCpl = '',
-        $xBairro = '',
-        $cMun = '',
-        $xMun = '',
-        $CEP = '',
-        $UF = '',
-        $cPais = '',
-        $xPais = ''
-    ) {
-        $identificador = '#160 <enderReceb> - ';
-        $this->enderReceb = $this->dom->createElement('enderReceb');
-        $this->dom->addChild(
-            $this->enderReceb,
-            'xLgr',
-            $xLgr,
-            true,
-            $identificador . 'Logradouro'
-        );
-        $this->dom->addChild(
-            $this->enderReceb,
-            'nro',
-            $nro,
-            true,
-            $identificador . 'Número'
-        );
-        $this->dom->addChild(
-            $this->enderReceb,
-            'xCpl',
-            $xCpl,
-            false,
-            $identificador . 'Complemento'
-        );
-        $this->dom->addChild(
-            $this->enderReceb,
-            'xBairro',
-            $xBairro,
-            true,
-            $identificador . 'Bairro'
-        );
-        $this->dom->addChild(
-            $this->enderReceb,
-            'cMun',
-            $cMun,
-            true,
-            $identificador . 'Código do município (utilizar a tabela do IBGE)'
-        );
-        $this->dom->addChild(
-            $this->enderReceb,
-            'xMun',
-            $xMun,
-            true,
-            $identificador . 'Nome do município'
-        );
-        $this->dom->addChild(
-            $this->enderReceb,
-            'CEP',
-            $CEP,
-            false,
-            $identificador . 'CEP'
-        );
-        $this->dom->addChild(
-            $this->enderReceb,
-            'UF',
-            $UF,
-            true,
-            $identificador . 'Sigla da UF'
-        );
-        $this->dom->addChild(
-            $this->enderReceb,
-            'cPais',
-            $cPais,
-            false,
-            $identificador . 'Código do país'
-        );
-        $this->dom->addChild(
-            $this->enderReceb,
-            'xPais',
-            $xPais,
-            false,
-            $identificador . 'Nome do país'
-        );
-        $node = $this->receb->getElementsByTagName("email")->item(0);
-        $this->receb->insertBefore($this->enderReceb, $node);
-        return $this->enderReceb;
-    }
-
-    /**
-     * Gera as tags para o elemento: "dest" (Informações do Destinatário do CT-e)
-     * #178
-     * Nível: 1
-     * Os parâmetros para esta função são todos os elementos da tag "dest" do
-     * tipo elemento (Ele = E|CE|A) e nível 2
-     *
-     * @param string $CNPJ  Número do CNPJ
-     * @param string $CPF   Número do CPF
-     * @param string $IE    Inscrição Estadual
-     * @param string $xNome Razão Social ou Nome
-     * @param string $fone  Telefone
-     * @param string $ISUF  Inscrição na SUFRAMA
-     * @param string $email Endereço de email
-     *
-     * @return \DOMElement
-     */
-    public function destTag($CNPJ = '', $CPF = '', $IE = '', $xNome = '', $fone = '', $ISUF = '', $email = '')
-    {
-        $identificador = '#178 <dest> - ';
-        $this->dest = $this->dom->createElement('dest');
-        if ($CNPJ != '') {
-            $this->dom->addChild(
-                $this->dest,
-                'CNPJ',
-                $CNPJ,
-                true,
-                $identificador . 'Número do CNPJ'
-            );
-        } elseif ($CPF != '') {
-            $this->dom->addChild(
-                $this->dest,
-                'CPF',
-                $CPF,
-                true,
-                $identificador . 'Número do CPF'
-            );
-        } else {
-            $this->dom->addChild(
-                $this->dest,
-                'CNPJ',
-                $CNPJ,
-                true,
-                $identificador . 'Número do CNPJ'
-            );
-            $this->dom->addChild(
-                $this->dest,
-                'CPF',
-                $CPF,
-                true,
-                $identificador . 'Número do CPF'
-            );
-        }
-        $this->dom->addChild(
-            $this->dest,
-            'IE',
-            $IE,
-            false,
-            $identificador . 'Inscrição Estadual'
-        );
-        $this->dom->addChild(
-            $this->dest,
-            'xNome',
-            $xNome,
-            true,
-            $identificador . 'Razão social ou Nome'
-        );
-        $this->dom->addChild(
-            $this->dest,
-            'fone',
-            $fone,
-            false,
-            $identificador . 'Telefone'
-        );
-        $this->dom->addChild(
-            $this->dest,
-            'ISUF',
-            $ISUF,
-            false,
-            $identificador . 'Inscrição na SUFRAMA'
-        );
-        $this->dom->addChild(
-            $this->dest,
-            'email',
-            $email,
-            false,
-            $identificador . 'Endereço de email'
-        );
-        return $this->dest;
-    }
-
-    /**
-     * Gera as tags para o elemento: "enderDest" (Informações do Recebedor da Carga)
-     * # = 185
-     * Nível = 2
-     * Os parâmetros para esta função são todos os elementos da tag "enderDest" do
-     * tipo elemento (Ele = E|CE|A) e nível 3
-     *
-     * @param string $xLgr    Logradouro
-     * @param string $nro     Número
-     * @param string $xCpl    Complemento
-     * @param string $xBairro Bairro
-     * @param string $cMun    Código do município (utilizar a tabela do IBGE)
-     * @param string $xMun    Nome do município
-     * @param string $CEP     CEP
-     * @param string $UF      Sigla da UF
-     * @param string $cPais   Código do país
-     * @param string $xPais   Nome do país
-     *
-     * @return \DOMElement
-     */
-    public function enderDestTag(
-        $xLgr = '',
-        $nro = '',
-        $xCpl = '',
-        $xBairro = '',
-        $cMun = '',
-        $xMun = '',
-        $CEP = '',
-        $UF = '',
-        $cPais = '',
-        $xPais = ''
-    ) {
-        $identificador = '#185 <enderDest> - ';
-        $this->enderDest = $this->dom->createElement('enderDest');
-        $this->dom->addChild(
-            $this->enderDest,
-            'xLgr',
-            $xLgr,
-            true,
-            $identificador . 'Logradouro'
-        );
-        $this->dom->addChild(
-            $this->enderDest,
-            'nro',
-            $nro,
-            true,
-            $identificador . 'Número'
-        );
-        $this->dom->addChild(
-            $this->enderDest,
-            'xCpl',
-            $xCpl,
-            false,
-            $identificador . 'Complemento'
-        );
-        $this->dom->addChild(
-            $this->enderDest,
-            'xBairro',
-            $xBairro,
-            true,
-            $identificador . 'Bairro'
-        );
-        $this->dom->addChild(
-            $this->enderDest,
-            'cMun',
-            $cMun,
-            true,
-            $identificador . 'Código do município (utilizar a tabela do IBGE)'
-        );
-        $this->dom->addChild(
-            $this->enderDest,
-            'xMun',
-            $xMun,
-            true,
-            $identificador . 'Nome do município'
-        );
-        $this->dom->addChild(
-            $this->enderDest,
-            'CEP',
-            $CEP,
-            false,
-            $identificador . 'CEP'
-        );
-        $this->dom->addChild(
-            $this->enderDest,
-            'UF',
-            $UF,
-            true,
-            $identificador . 'Sigla da UF'
-        );
-        $this->dom->addChild(
-            $this->enderDest,
-            'cPais',
-            $cPais,
-            false,
-            $identificador . 'Código do país'
-        );
-        $this->dom->addChild(
-            $this->enderDest,
-            'xPais',
-            $xPais,
-            false,
-            $identificador . 'Nome do país'
-        );
-        $node = $this->dest->getElementsByTagName("email")->item(0);
-        $this->dest->insertBefore($this->enderDest, $node);
-        return $this->enderDest;
-    }
-
-    /**
-     * Gera as tags para o elemento: "vPrest" (Local de Entrega constante na Nota Fiscal)
-     * #208
-     * Nível: 1
-     * Os parâmetros para esta função são todos os elementos da tag "vPrest" do
-     * tipo elemento (Ele = E|CE|A) e nível 2
-     *
-     * @param string $vTPrest Valor Total da Prestação do Serviço
-     * @param string $vRec    Valor a Receber
-     *
-     * @return \DOMElement
-     */
-    public function vPrestTag($vTPrest = '', $vRec = '')
-    {
-        $identificador = '#208 <vPrest> - ';
-        $this->vPrest = $this->dom->createElement('vPrest');
-        $this->dom->addChild(
-            $this->vPrest,
-            'vTPrest',
-            $vTPrest,
-            true,
-            $identificador . 'Valor Total da Prestação do Serviço'
-        );
-        $this->dom->addChild(
-            $this->vPrest,
-            'vRec',
-            $vRec,
-            true,
-            $identificador . 'Valor a Receber'
-        );
-        return $this->vPrest;
-    }
-
-
-    /**
-     * tagICMS
-     * Informações do ICMS da Operação própria e ST N01 pai M01
-     * tag NFe/infNFe/det[]/imposto/ICMS
-     * @param string $nItem
-     * @param string $orig
-     * @param string $CST
-     * @param string $modBC
-     * @param string $vBC
-     * @param string $pICMS
-     * @param string $vICMS
-     * @param string $vICMSDeson
-     * @param string $motDesICMS
-     * @param string $modBCST
-     * @param string $pMVAST
-     * @param string $pRedBCST
-     * @param string $vBCST
-     * @param string $pICMSST
-     * @param string $vICMSST
-     * @param string $pDif
-     * @param string $vICMSDif
-     * @param string $vICMSOp
-     * @param string $vBCSTRet
-     * @param string $vICMSSTRet
-     * @return DOMElement
-     */
-    public function icmsTag(
-        $cst = '',
-        $pRedBC = '',
-        $vBC = '',
-        $pICMS = '',
-        $vICMS = '',
-        $vBCSTRet = '',
-        $vICMSSTRet = '',
-        $pICMSSTRet = '',
-        $vCred = ''
-    ) {
-        $identificador = 'N01 <ICMSxx> - ';
-        switch ($cst) {
-            case '00':
-                $icms = $this->dom->createElement("ICMS00");
-                $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 00");
-                $this->dom->addChild($icms, 'vBC', $vBC, true, "$identificador  Valor da BC do ICMS");
-                $this->dom->addChild($icms, 'pICMS', $pICMS, true, "$identificador  Alíquota do imposto");
-                $this->dom->addChild($icms, 'vICMS', $vICMS, true, "$identificador  Valor do ICMS");
-                break;
-            case '20':
-                $icms = $this->dom->createElement("ICMS20");
-                $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 20");
-                $this->dom->addChild($icms, 'pRedBC', $pRedBC, true, "$identificador  Percentual da Redução de BC");
-                $this->dom->addChild($icms, 'vBC', $vBC, true, "$identificador  Valor da BC do ICMS");
-                $this->dom->addChild($icms, 'pICMS', $pICMS, true, "$identificador  Alíquota do imposto");
-                $this->dom->addChild($icms, 'vICMS', $vICMS, true, "$identificador  Valor do ICMS");
-                break;
-            case '40':
-                $icms = $this->dom->createElement("ICMS45");
-                $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 40");
-                break;
-            case '41':
-                $icms = $this->dom->createElement("ICMS45");
-                $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 41");
-                break;
-            case '51':
-                $icms = $this->dom->createElement("ICMS45");
-                $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 51");
-                break;
-            case '60':
-                $icms = $this->dom->createElement("ICMS60");
-                $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 60");
-                $this->dom->addChild($icms, 'vBCSTRet', $vBCSTRet, true, "$identificador  Valor BC do ICMS ST retido");
-                $this->dom->addChild($icms, 'vICMSSTRet', $vICMSSTRet, true, "$identificador  Valor do ICMS ST retido");
-                $this->dom->addChild($icms, 'pICMSSTRet', $pICMSSTRet, true, "$identificador  Valor do ICMS ST retido");
-                $this->dom->addChild($icms, 'vCred', $vCred, false, "$identificador  Valor do Crédito");
-                break;
-            case '90':
-                $icms = $this->dom->createElement("ICMS90");
-                $this->dom->addChild($icms, 'CST', $cst, true, "$identificador  Tributação do ICMS = 90");
-                $this->dom->addChild($icms, 'pRedBC', $pRedBC, false, "$identificador  Percentual da Redução de BC");
-                $this->dom->addChild($icms, 'vBC', $vBC, true, "$identificador  Valor da BC do ICMS");
-                $this->dom->addChild($icms, 'pICMS', $pICMS, true, "$identificador  Alíquota do imposto");
-                $this->dom->addChild($icms, 'vICMS', $vICMS, true, "$identificador  Valor do ICMS");
-                $this->dom->addChild($icms, 'vCred', $vCred, false, "$identificador  Valor do Crédido");
-                break;
-            case '900':
-                $icms = $this->dom->createElement("ICMSOutraUF");
-                $this->dom->addChild($icms, 'CST', "90", true, "$identificador  Tributação do ICMS = 90 Outros");
-                $this->dom->addChild(
-                    $icms,
-                    'pRedBCOutraUF',
-                    $pRedBC,
-                    false,
-                    "$identificador  Percentual da Redução de BC"
-                );
-                $this->dom->addChild($icms, 'vBCOutraUF', $vBC, true, "$identificador  Valor da BC do ICMS");
-                $this->dom->addChild($icms, 'pICMSOutraUF', $pICMS, true, "$identificador  Alíquota do imposto");
-                $this->dom->addChild($icms, 'vICMSOutraUF', $vICMS, true, "$identificador  Valor do ICMS");
-                break;
-            case 'SN':
-                $icms = $this->dom->createElement("ICMSSN");
-                $this->dom->addChild(
-                    $icms,
-                    'CST',
-                    "90",
-                    true,
-                    "$identificador  Tributação do ICMS = 90 ICMS SIMPLES NACIONAL"
-                );
-                $this->dom->addChild($icms, 'indSN', '1', true, "$identificador  Indica se contribuinte é SN");
-                break;
-        }
-        $this->imp = $this->dom->createElement('imp');
-        $tagIcms = $this->dom->createElement('ICMS');
-
-        if (isset($icms)) {
-            $this->imp->appendChild($tagIcms);
-        }
-
-        if (isset($icms)) {
-            $tagIcms->appendChild($icms);
-        }
-        return $tagIcms;
-    }
-
-    /**
-     * Gera as tags para o elemento: "Comp" (Local de Entrega constante na Nota Fiscal)
-     * #211
-     * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "Comp" do
-     * tipo elemento (Ele = E|CE|A) e nível 3
-     *
-     * @param string $xNome Nome do componente
-     * @param string $vComp Valor do componente
-     *
-     * @return \DOMElement
-     */
-    public function compTag($xNome = '', $vComp = '')
-    {
-        $identificador = '#65 <pass> - ';
-        $this->comp[] = $this->dom->createElement('Comp');
-        $posicao = (integer) count($this->comp) - 1;
-        $this->dom->addChild(
-            $this->comp[$posicao],
-            'xNome',
-            $xNome,
-            false,
-            $identificador . 'Nome do componente'
-        );
-        $this->dom->addChild(
-            $this->comp[$posicao],
-            'vComp',
-            $vComp,
-            false,
-            $identificador . 'Valor do componente'
-        );
-        return $this->comp[$posicao];
-    }
-
-    /**
-     * Tag raiz do documento xml
-     * Função chamada pelo método [ monta ]
-     * @return \DOMElement
-     */
-    private function zCTeTag()
-    {
-        if (empty($this->CTe)) {
-            $this->CTe = $this->dom->createElement('CTe');
-            $this->CTe->setAttribute('xmlns', 'http://www.portalfiscal.inf.br/cte');
-        }
-        return $this->CTe;
-    }
-
-    /**
-     * Gera as tags para o elemento: "Entrega" (Informações ref. a previsão de entrega)
-     * #69
-     * Nível: 2
-     * Os parâmetros para esta função são todos os elementos da tag "Entrega" do
-     * tipo elemento (Ele = E|CE|A) e nível 3
-     *
-     * @return \DOMElement
-     */
-    private function zEntregaTag()
-    {
-        $this->entrega = $this->dom->createElement('Entrega');
-        return $this->entrega;
-    }
-
-    public function infCTeNormTag()
-    {
-        $this->infCTeNorm = $this->dom->createElement('infCTeNorm');
-        return $this->infCTeNorm;
-    }
-
-    public function infCargaTag($vCarga = '', $proPred = '', $xOutCat = '')
-    {
-        $identificador = '#253 <infCarga> - ';
-        $this->infCarga = $this->dom->createElement('infCarga');
-        $this->dom->addChild($this->infCarga, 'vCarga', $vCarga, false, $identificador . 'Valor Total da Carga');
-        $this->dom->addChild($this->infCarga, 'proPred', $proPred, true, $identificador . 'Produto Predominante');
-        $this->dom->addChild($this->infCarga, 'xOutCat', $xOutCat, false, $identificador . 'Outras Caract. da Carga');
-
-        return $this->infCarga;
-    }
-
-    public function infQTag($cUnid = '', $tpMed = '', $qCarga = '')
-    {
-        $identificador = '#257 <infQ> - ';
-        $this->infQ = $this->dom->createElement('infQ');
-        $this->dom->addChild($this->infQ, 'cUnid', $cUnid, true, $identificador . 'Código da Unidade de Medida');
-        $this->dom->addChild($this->infQ, 'tpMed', $tpMed, true, $identificador . 'Tipo da Medida');
-        $this->dom->addChild($this->infQ, 'qCarga', $qCarga, true, $identificador . 'Quantidade');
-
-        return $this->infQ;
-    }
-
-    public function infDocTag()
-    {
-        $this->infDoc = $this->dom->createElement('infDoc');
-        return $this->infDoc;
-    }
-
-    public function infNFTag($vCarga = '', $proPred = '', $xOutCat = '')
-    {
-        $identificador = '#262 <infNF> - ';
-        $this->infCarga = $this->dom->createElement('infNF');
-        $this->dom->addChild($this->infCarga, 'vCarga', $vCarga, false, $identificador . 'Valor Total da Carga');
-        $this->dom->addChild($this->infCarga, 'proPred', $proPred, true, $identificador . 'Produto Predominante');
-        $this->dom->addChild($this->infCarga, 'xOutCat', $xOutCat, false, $identificador . 'Outras Caract. da Carga');
-
-        return $this->infCarga;
-    }
-
-    public function infNFeTag($chave = '', $PIN = '', $dPrev = '')
-    {
-        $identificador = '#262 <infNFe> - ';
-        $this->infNFe[] = $this->dom->createElement('infNFe');
-        $posicao = (integer) count($this->infNFe) - 1;
-        $this->dom->addChild(
-            $this->infNFe[$posicao],
-            'chave',
-            $chave,
-            true,
-            $identificador . 'Chave de acesso da NF-e'
-        );
-        $this->dom->addChild($this->infNFe[$posicao], 'PIN', $PIN, false, $identificador . 'PIN SUFRAMA');
-        $this->dom->addChild(
-            $this->infNFe[$posicao],
-            'dPrev',
-            $dPrev,
-            false,
-            $identificador . 'Data prevista de entrega'
-        );
-
-        return $this->infNFe;
-    }
-
-    public function infModalTag($versaoModal = '')
-    {
-        $identificador = '#366 <infModal> - ';
-        $this->infModal = $this->dom->createElement('infModal');
-        $this->infModal->setAttribute('versaoModal', $versaoModal);
-        return $this->infModal;
-    }
-
-    public function rodoTag($RNTRC = '')
-    {
-        $identificador = '#1 <rodo> - ';
-        $this->rodo = $this->dom->createElement('rodo');
-        $this->dom->addChild($this->rodo, 'RNTRC', $RNTRC, true, $identificador . 'Registro nacional de transportadores
-            rodoviários de carga');
-        return $this->rodo;
-    }
-    
-    public function vTotTribTag($vTotTrib = '')
-    {
-        $identificador = '#250 <imp> - ';
-        $this->dom->addChild(
-            $this->imp,
-            'vTotTrib',
-            $vTotTrib,
-            false,
-            $identificador . 'Valor de tributos federais, estaduais e municipais'
-        );
+        $chCTe = preg_replace('/[^0-9]/', '', $chCTe);
         
-        return $this->vTotTrib;
-    }
-    
-    public function veicTag(
-        $RENAVAM = '',
-        $placa = '',
-        $tara = '',
-        $capKG = '',
-        $capM3 = '',
-        $tpProp = '',
-        $tpVeic = '',
-        $tpRod = '',
-        $tpCar = '',
-        $UF = '',
-        $CPF = '',
-        // Informar os zeros não significativos.
-        $CNPJ = '',
-        // Informar os zeros não significativos.
-        $RNTRC = '',
-        // Registro obrigatório do proprietário
-        $xNome = '',
-        // Nome do proprietário
-        $IE = '',
-        // Inscrição estadual caso seja Pessoa Jurídica
-        $propUF = '',
-        // Sigla da UF,
-        $tpPropProp = ''
-    ) {
-        $identificador = '#21 <veic> - ';
-        $this->veic[] = $this->dom->createElement('veic');
-        $posicao = (integer) count($this->veic) - 1;
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'RENAVAM',
-            $RENAVAM,
-            false,
-            $identificador . 'RENAVAM do veículo'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'placa',
-            $placa,
-            false,
-            $identificador . 'Placa do veículo'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'tara',
-            $tara,
-            false,
-            $identificador . 'Tara em KG'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'capKG',
-            $capKG,
-            false,
-            $identificador . 'Capacidade em KG'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'capM3',
-            $capM3,
-            false,
-            $identificador . 'Capacidade em M3'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'tpProp',
-            $tpProp,
-            false,
-            $identificador . 'Tipo de Propriedade de veículo'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'tpVeic',
-            $tpVeic,
-            false,
-            $identificador . 'Tipo do veículo'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'tpRod',
-            $tpRod,
-            false,
-            $identificador . 'Tipo do Rodado'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'tpCar',
-            $tpCar,
-            false,
-            $identificador . 'Tipo de Carroceria'
-        );
-        $this->dom->addChild(
-            $this->veic[$posicao],
-            'UF',
-            $UF,
-            false,
-            $identificador . 'UF em que veículo está licenciado'
-        );
-        if ($tpProp=='T') { // CASO FOR VEICULO DE TERCEIRO
-            $this->prop[] = $this->dom->createElement('prop');
-            $p = (integer) count($this->prop) - 1;
-            if ($CNPJ != '') {
-                $this->dom->addChild(
-                    $this->prop[$p],
-                    'CNPJ',
-                    $CNPJ,
-                    true,
-                    $identificador . 'CNPJ do proprietario'
-                );
-            } elseif ($CPF != '') {
-                $this->dom->addChild(
-                    $this->prop[$p],
-                    'CPF',
-                    $CPF,
-                    true,
-                    $identificador . 'CPF do proprietario'
-                );
-            }
-            $this->dom->addChild(
-                $this->prop[$p],
-                'RNTRC',
-                $RNTRC,
-                true,
-                $identificador . 'RNTRC do proprietario'
-            );
-            $this->dom->addChild(
-                $this->prop[$p],
-                'xNome',
-                $xNome,
-                true,
-                $identificador . 'Nome do proprietario'
-            );
-            //if( $IE !== ''){
-            $this->dom->addChild(
-                $this->prop[$p],
-                'IE',
-                $IE,
-                true,
-                $identificador . 'IE do proprietario'
-            );
-            //}
-            $this->dom->addChild(
-                $this->prop[$p],
-                'UF',
-                $propUF,
-                true,
-                $identificador . 'UF do proprietario'
-            );
-            $this->dom->addChild(
-                $this->prop[$p],
-                'tpProp',
-                $tpPropProp,
-                true,
-                $identificador . 'Tipo Proprietário'
-            );
-            $this->dom->appChild($this->veic[$posicao], $this->prop[$p], 'Falta tag "prop"');
+        //validação dos dados de entrada
+        if (strlen($chCTe) != 44) {
+            $msg = "Uma chave de CTe válida não foi passada como parâmetro $chCTe.";
+            throw new Exception\InvalidArgumentException($msg);
         }
-        return $this->veic[$posicao];
+        if ($chCTe == '' || empty(array_filter($infCorrecao))) {
+            $msg = "Preencha os campos obrigatórios!";
+            throw new Exception\InvalidArgumentException($msg);
+        }
+        $siglaUF = $this->zGetSigla(substr($chCTe, 0, 2));
+
+        //estabelece o codigo do tipo de evento CARTA DE CORRECAO
+        $tpEvento = '110110';
+
+        //Grupo de Informações de Correção
+        $correcoes = '';
+        foreach ($infCorrecao as $info) {
+            $correcoes .=
+                "<infCorrecao>"
+                    ."<grupoAlterado>".$info['grupoAlterado']."</grupoAlterado>"
+                    ."<campoAlterado>".$info['campoAlterado']."</campoAlterado>"
+                    ."<valorAlterado>".$info['valorAlterado']."</valorAlterado>"
+                    ."<nroItemAlterado>".$info['nroItemAlterado']."</nroItemAlterado>"
+                ."</infCorrecao>";
+        }
+        //monta mensagem
+        $tagAdic = Tools::serializarMensagemDoEventoCartaDeCorrecao($infCorrecao);
+        $retorno = $this->zSefazEvento($siglaUF, $chCTe, $tpAmb, $tpEvento, $nSeqEvento, $tagAdic);
+        $aRetorno = $this->aLastRetEvent;
+        return $retorno;
     }
     
-    public function motoTag($xNome = '', $CPF = '')
+    public function addProtocolo($xml = '', $xmlProt = '', $saveFile = false)
     {
-        $identificador = '#21 <veic> - ';
-        $this->moto[] = $this->dom->createElement('moto');
-        $posicao = (integer) count($this->moto) - 1;
-        $this->dom->addChild(
-            $this->moto[$posicao],
-            'xNome',
-            $xNome,
-            false,
-            $identificador . 'Nome do motorista'
+         //carrega a CTe
+         $docCte= new Dom();
+         $docCte->loadXMLString($xml);
+         $nodecte = $docCte->getNode('CTe', 0);
+        if ($nodecte == '') {
+            $msg = "O arquivo indicado como CTe não é um xml de CTe!";
+            throw new Exception\RuntimeException($msg);
+        }
+        if ($docCte->getNode('Signature') == '') {
+            $msg = "A CTe não está assinada!";
+            throw new Exception\RuntimeException($msg);
+        }
+         //carrega o protocolo
+         $docprot = new Dom();
+         $docprot->loadXMLString($xmlProt);
+         $nodeprots = $docprot->getElementsByTagName('protCTe');
+        if ($nodeprots->length == 0) {
+            $msg = "O arquivo indicado não contem um protocolo de autorização!";
+            throw new Exception\RuntimeException($msg);
+        }
+         //carrega dados da CTe
+         $tpAmb = $docCte->getNodeValue('tpAmb');
+        $anomes = date(
+            'Ym',
+            DateTime::convertSefazTimeToTimestamp($docCte->getNodeValue('dhEmi'))
         );
-        $this->dom->addChild(
-            $this->moto[$posicao],
-            'CPF',
-            $CPF,
-            false,
-            $identificador . 'CPF do motorista'
-        );
-        return $this->moto[$posicao];
+//        $infCTe = $docCte->getNode("infCTe", 0);
+//        $versao = $infCTe->getAttribute("versao");
+//        $chaveId = $infCTe->getAttribute("Id");
+//        $chaveCTe = preg_replace('/[^0-9]/', '', $chaveId);
+         $digValueCTe = $docCte->getNodeValue('DigestValue');
+         //carrega os dados do protocolo
+        for ($i = 0; $i < $nodeprots->length; $i++) {
+             $nodeprot = $nodeprots->item($i);
+             $protver = $nodeprot->getAttribute("versao");
+             $chaveProt = $nodeprot->getElementsByTagName("chCTe")->item(0)->nodeValue;
+            $digValueProt = ($nodeprot->getElementsByTagName("digVal")->length)
+                ? $nodeprot->getElementsByTagName("digVal")->item(0)->nodeValue
+                : '';
+             $infProt = $nodeprot->getElementsByTagName("infProt")->item(0);
+//            if ($digValueCTe == $digValueProt && $chaveCTe == $chaveProt) {
+//                break;
+//            }
+        }
+        if ($digValueCTe != $digValueProt) {
+            $msg = "Inconsistência! O DigestValue da CTe não combina com o do digVal do protocolo indicado!";
+            throw new Exception\RuntimeException($msg);
+        }
+ //        if ($chaveCTe != $chaveProt) {
+ //            $msg = "O protocolo indicado pertence a outra CTe. Os números das chaves não combinam !";
+ //            throw new Exception\RuntimeException($msg);
+ //        }
+         //cria a CTe processada com a tag do protocolo
+        $procCte = new \DOMDocument('1.0', 'utf-8');
+        $procCte->formatOutput = false;
+        $procCte->preserveWhiteSpace = false;
+         //cria a tag cteProc
+        $cteProc = $procCte->createElement('cteProc');
+        $procCte->appendChild($cteProc);
+         //estabele o atributo de versão
+        $cteProcAtt1 = $cteProc->appendChild($procCte->createAttribute('versao'));
+        $cteProcAtt1->appendChild($procCte->createTextNode($protver));
+         //estabelece o atributo xmlns
+        $cteProcAtt2 = $cteProc->appendChild($procCte->createAttribute('xmlns'));
+        $cteProcAtt2->appendChild($procCte->createTextNode($this->urlPortal));
+         //inclui a tag CTe
+        $node = $procCte->importNode($nodecte, true);
+         $cteProc->appendChild($node);
+         //cria tag protCTe
+        $protCTe = $procCte->createElement('protCTe');
+         $cteProc->appendChild($protCTe);
+         //estabele o atributo de versão
+        $protCTeAtt1 = $protCTe->appendChild($procCte->createAttribute('versao'));
+        $protCTeAtt1->appendChild($procCte->createTextNode($protver));
+         //cria tag infProt
+        $nodep = $procCte->importNode($infProt, true);
+         $protCTe->appendChild($nodep);
+         //salva o xml como string em uma variável
+        $procXML = $procCte->saveXML();
+         //remove as informações indesejadas
+         $procXML = Strings::clearProt($procXML);
+        if ($saveFile) {
+//            $filename = "{$chaveCTe}-protCTe.xml";
+            $filename = "{$chaveProt}-protCTe.xml";
+            $this->zGravaFile(
+                'cte',
+                $tpAmb,
+                $filename,
+                $procXML,
+                'enviadas'.DIRECTORY_SEPARATOR.'aprovadas',
+                $anomes
+            );
+        }
+         return $procXML;
     }
-    
-    public function infCTeComp($chave = '')
+     
+
+    /**
+     * addCancelamento
+     * Adiciona a tga de cancelamento a uma CTe já autorizada
+     * NOTA: não é requisito da SEFAZ, mas auxilia na identificação das CTe que foram canceladas
+     * @param string $pathCTefile
+     * @param string $pathCancfile
+     * @param bool $saveFile
+     * @return string
+     * @throws Exception\RuntimeException
+     */
+    public function addCancelamento($pathCTefile = '', $pathCancfile = '', $saveFile = false)
     {
-        $identificador = '#410 <infCteComp> - ';
-        $this->infCteComp = $this->dom->createElement('infCteComp');
-        $this->dom->addChild(
-            $this->infCteComp,
-            'chCTe',
-            $chave,
-            true,
-            $identificador . ' Chave do CT-e complementado'
+        $procXML = '';
+        //carrega a CTe
+        $docCTe = new Dom();
+        
+        if (file_exists($pathCTefile)) {
+            //carrega o XML pelo caminho do arquivo informado
+            $docCTe->loadXMLFile($pathCTefile);
+        } else {
+            //carrega o XML pelo conteúdo
+            $docCTe->loadXMLString($pathCTefile);
+        }
+        
+        $nodeCTe = $docCTe->getNode('CTe', 0);
+        if ($nodeCTe == '') {
+            $msg = "O arquivo indicado como CTe não é um xml de CTe!";
+            throw new Exception\RuntimeException($msg);
+        }
+        $proCTe = $docCTe->getNode('protCTe');
+        if ($proCTe == '') {
+            $msg = "A CTe não está protocolada ainda!!";
+            throw new Exception\RuntimeException($msg);
+        }
+        $chaveCTe = $proCTe->getElementsByTagName('chCTe')->item(0)->nodeValue;
+        //$nProtCTe = $proCTe->getElementsByTagName('nProt')->item(0)->nodeValue;
+        $tpAmb = $docCTe->getNodeValue('tpAmb');
+        $anomes = date(
+            'Ym',
+            DateTime::convertSefazTimeToTimestamp($docCTe->getNodeValue('dhEmi'))
         );
-        return $this->infCteComp;
+        //carrega o cancelamento
+        //pode ser um evento ou resultado de uma consulta com multiplos eventos
+        $doccanc = new Dom();
+        
+        if (file_exists($pathCancfile)) {
+            //carrega o XML pelo caminho do arquivo informado
+            $doccanc->loadXMLFile($pathCancfile);
+        } else {
+            //carrega o XML pelo conteúdo
+            $doccanc->loadXMLString($pathCancfile);
+        }
+        $retEvento = $doccanc->getElementsByTagName('retEventoCTe')->item(0);
+        $eventos = $retEvento->getElementsByTagName('infEvento');
+        foreach ($eventos as $evento) {
+            //evento
+            $cStat = $evento->getElementsByTagName('cStat')->item(0)->nodeValue;
+            $tpAmb = $evento->getElementsByTagName('tpAmb')->item(0)->nodeValue;
+            $chaveEvento = $evento->getElementsByTagName('chCTe')->item(0)->nodeValue;
+            $tpEvento = $evento->getElementsByTagName('tpEvento')->item(0)->nodeValue;
+            //$nProtEvento = $evento->getElementsByTagName('nProt')->item(0)->nodeValue;
+            //verifica se conferem os dados
+            //cStat = 135 ==> evento homologado
+            //cStat = 136 ==> vinculação do evento à respectiva NF-e prejudicada
+            //cStat = 155 ==> Cancelamento homologado fora de prazo
+            //tpEvento = 110111 ==> Cancelamento
+            //chave do evento == chave da CTe
+            //protocolo do evneto ==  protocolo da CTe
+            if (($cStat == '135' || $cStat == '136' || $cStat == '155') &&
+                $tpEvento == '110111' &&
+                $chaveEvento == $chaveCTe
+            ) {
+                $proCTe->getElementsByTagName('cStat')->item(0)->nodeValue = '101';
+                $proCTe->getElementsByTagName('xMotivo')->item(0)->nodeValue = 'Cancelamento de CT-e homologado';
+                $procXML = $docCTe->saveXML();
+                //remove as informações indesejadas
+                $procXML = Strings::clearProt($procXML);
+                if ($saveFile) {
+                    $filename = "$chaveCTe-protCTe.xml";
+                    $this->zGravaFile(
+                        'cte',
+                        $tpAmb,
+                        $filename,
+                        $procXML,
+                        'canceladas',
+                        $anomes
+                    );
+                }
+                break;
+            }
+        }
+        return (string) $procXML;
+    }
+
+    public static function validarXmlCte($xml, $schema)
+    {
+        $aResp = array();
+        $schem = IdentifyCTe::identificar($xml, $aResp);
+        if ($schem == '') {
+            return ["Não foi possível identificar o documento"];
+        }
+        $xsdFile = "{$aResp['Id']}_v{$aResp['versao']}.xsd";
+        $xsdPath = implode(DIRECTORY_SEPARATOR, [dirname(__DIR__), 'schemas', $schema, $xsdFile]);
+        if (!is_file($xsdPath)) {
+            return ["O arquivo XSD {$xsdFile} não foi localizado."];
+        }
+        if (!ValidXsd::validar($aResp['xml'], $xsdPath)) {
+            return ValidXsd::$errors;
+        }
+        return [];
+    }
+
+    public static function serializarMensagemDoEventoCartaDeCorrecao(array $infCorrecoes)
+    {
+        // Grupo de Informações de Correção
+        $correcoes = '';
+        foreach ($infCorrecoes as $info) {
+            $nroItemAlteradoOptionalElement = '';
+            if (key_exists('nroItemAlterado', $info)) {
+                $nroItemAlteradoOptionalElement = "<nroItemAlterado>{$info['nroItemAlterado']}</nroItemAlterado>";
+            }
+            $correcoes .= "<infCorrecao>" .
+                "<grupoAlterado>{$info['grupoAlterado']}</grupoAlterado>" .
+                "<campoAlterado>{$info['campoAlterado']}</campoAlterado>" .
+                "<valorAlterado>{$info['valorAlterado']}</valorAlterado>" .
+                "{$nroItemAlteradoOptionalElement}" .
+                "</infCorrecao>";
+        }
+        //monta mensagem
+        return "<evCCeCTe>" .
+            "<descEvento>Carta de Correcao</descEvento>" .
+            "{$correcoes}" .
+            "<xCondUso>" .
+            "A Carta de Correcao e disciplinada pelo Art. 58-B do " .
+            "CONVENIO/SINIEF 06/89: Fica permitida a utilizacao de carta de " .
+            "correcao, para regularizacao de erro ocorrido na emissao de " .
+            "documentos fiscais relativos a prestacao de servico de transporte, " .
+            "desde que o erro nao esteja relacionado com: I - as variaveis que " .
+            "determinam o valor do imposto tais como: base de calculo, " .
+            "aliquota, diferenca de preco, quantidade, valor da prestacao;II - " .
+            "a correcao de dados cadastrais que implique mudanca do emitente, " .
+            "tomador, remetente ou do destinatario;III - a data de emissao ou " .
+            "de saida." .
+            "</xCondUso>" .
+        "</evCCeCTe>";
     }
 }
