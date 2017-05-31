@@ -10,6 +10,7 @@ use NFePHP\Common\LotNumber\LotNumber;
 use NFePHP\Common\Strings\Strings;
 use NFePHP\CTe\Auxiliar\IdentifyCTe;
 use NFePHP\CTe\Auxiliar\Response;
+use NFePHP\CTe\BaseTools;
 
 /**
  * Classe principal para a comunicação com a SEFAZ
@@ -47,14 +48,14 @@ class Tools extends BaseTools
      * @var string
      */
     public $erros = array();
-
+    
     /**
      * modelo 57 (CTE-e) é um documento fiscal eletrônico,
      * instituído pelo AJUSTE SINIEF 09/07 (25/10/2007)
      * @var modelo
      */
     protected $modelo = '57';
-
+    
     /**
      * @var string
      */
@@ -117,7 +118,7 @@ class Tools extends BaseTools
         }
         $sxml = preg_replace("/<\?xml.*\?>/", "", $sxml);
         $siglaUF = $this->aConfig['siglaUF'];
-
+        
         if ($tpAmb == '') {
             $tpAmb = $this->aConfig['tpAmb'];
         }
@@ -132,12 +133,12 @@ class Tools extends BaseTools
             $siglaUF,
             $tpAmb
         );
-
+        
         if ($this->urlService == '') {
             $msg = "O envio de lote não está disponível na SEFAZ $siglaUF!!!";
             throw new Exception\RuntimeException($msg);
         }
-
+        
         // Montagem dos dados da mensagem SOAP
         $dados = "<cteDadosMsg xmlns=\"$this->urlNamespace\">"
             . "<enviCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
@@ -348,13 +349,14 @@ class Tools extends BaseTools
     /**
      * Inutiza sequencia de numeracao
      *
-     * @param int $nSerie
-     * @param int $nIni
-     * @param int $nFin
-     * @param string $xJust
-     * @param int $tpAmb
-     * @param array $aRetorno
-     * @return string
+     * @param type $nAno
+     * @param type $nSerie
+     * @param type $nIni
+     * @param type $nFin
+     * @param type $xJust
+     * @param type $tpAmb
+     * @param type $aRetorno
+     * @return boolean
      * @throws Exception\RuntimeException
      * @throws Exception\InvalidArgumentException
      */
@@ -367,12 +369,6 @@ class Tools extends BaseTools
         &$aRetorno = array(),
         $salvarMensagens = true
     ) {
-        $nSerie = (integer) $nSerie;
-        $nIni = (integer) $nIni;
-        $nFin = (integer) $nFin;
-        $xJust = Strings::cleanString($xJust);
-        //Função comentada por não estar implementada.
-//        $this->zValidParamInut($xJust, $nSerie, $nIni, $nFin);
         if ($tpAmb == '') {
             $tpAmb = $this->aConfig['tpAmb'];
         }
@@ -462,7 +458,7 @@ class Tools extends BaseTools
      * @return type
      * @throws Exception\InvalidArgumentException
      */
-    public function sefazCancela($chCTe = '', $tpAmb = '2', $xJust = '', $nProt = '', &$aRetorno = array())
+    public function sefazCancela($chCTe = '', $tpAmb = '2', $xJust = '', $nProt = '', &$aRetorno = array(), $cnpj = '')
     {
         $chCTe = preg_replace('/[^0-9]/', '', $chCTe);
         $nProt = preg_replace('/[^0-9]/', '', $nProt);
@@ -492,35 +488,9 @@ class Tools extends BaseTools
             . "<nProt>$nProt</nProt>"
             . "<xJust>$xJust</xJust>"
             . "</evCancCTe>";
-        $retorno = $this->zSefazEvento($siglaUF, $chCTe, $tpAmb, $tpEvento, $nSeqEvento, $tagAdic);
+        $retorno = $this->zSefazEvento($siglaUF, $chCTe, $tpAmb, $tpEvento, $nSeqEvento, $tagAdic, $cnpj);
         $aRetorno = $this->aLastRetEvent;
         return $retorno;
-    }
-
-    public function enviaMail($pathXml = '', $aMails = array(), $templateFile = '', $comPdf = false, $pathPdf = '')
-    {
-        $mail = new Mail($this->aMailConf);
-        // Se não for informado o caminho do PDF, monta um através do XML
-        /*
-        if ($comPdf && $this->modelo == '55' && $pathPdf == '') {
-            $docxml = Files\FilesFolders::readFile($pathXml);
-            $danfe = new Extras\Danfe($docxml, 'P', 'A4', $this->aDocFormat['pathLogoFile'], 'I', '');
-            $id = $danfe->montaDANFE();
-            $pathPdf = $this->aConfig['pathNFeFiles']
-                . DIRECTORY_SEPARATOR
-                . $this->ambiente
-                . DIRECTORY_SEPARATOR
-                . 'pdf'
-                . DIRECTORY_SEPARATOR
-                . $id . '-danfe.pdf';
-            $pdf = $danfe->printDANFE($pathPdf, 'F');
-        }
-         *
-         */
-        if ($mail->envia($pathXml, $aMails, $comPdf, $pathPdf) === false) {
-            throw new Exception\RuntimeException('Email não enviado. '.$mail->error);
-        }
-        return true;
     }
 
     /**
@@ -561,7 +531,7 @@ class Tools extends BaseTools
         }
         $aRet = $this->zTpEv($tpEvento);
         $aliasEvento = $aRet['alias'];
-        $descEvento = $aRet['desc'];
+        //$descEvento = $aRet['desc'];
         $cnpj = $this->aConfig['cnpj'];
         $dhEvento = DateTime::convertTimestampToSefazTime(time());
         $sSeqEvento = str_pad($nSeqEvento, 2, "0", STR_PAD_LEFT);
@@ -592,7 +562,7 @@ class Tools extends BaseTools
         $signedMsg = Strings::clearXml($signedMsg, true);
         //montagem dos dados da mensagem SOAP
         $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$signedMsg</cteDadosMsg>";
-
+        
         $retorno = $this->oSoap->send(
             $this->urlService,
             $this->urlNamespace,
@@ -612,16 +582,16 @@ class Tools extends BaseTools
         if ($this->aLastRetEvent['cStat'] == '134' ||
                 $this->aLastRetEvent['cStat'] == '135' ||
                 $this->aLastRetEvent['cStat'] == '136') {
-            $pasta = 'eventos'; //default
+                $pasta = 'eventos'; //default
             if ($aliasEvento == 'CancCTe') {
-                $pasta = 'canceladas';
-                $filename = "$chCTe-$aliasEvento-procEvento.xml";
+                    $pasta = 'canceladas';
+                    $filename = "$chCTe-$aliasEvento-procEvento.xml";
             } elseif ($aliasEvento == 'CCe') {
                 $pasta = 'cartacorrecao';
                 $filename = "$chCTe-$aliasEvento-$nSeqEvento-procEvento.xml";
             }
             $retorno = $this->zAddProtMsg('procEventoCTe', 'eventoCTe', $signedMsg, 'retEventoCTe', $retorno);
-            $this->zGravaFile('cte', $tpAmb, $filename, $retorno, $pasta);
+                $this->zGravaFile('cte', $tpAmb, $filename, $retorno, $pasta);
         }
         return (string) $retorno;
     }
@@ -775,7 +745,7 @@ class Tools extends BaseTools
         }
         return true;
     }
-
+    
     /**
      * Transmite a correção
      * conforme o MOC(Manual de Orientações do Contribuinte)
@@ -805,7 +775,7 @@ class Tools extends BaseTools
         &$aRetorno = array()
     ) {
         $chCTe = preg_replace('/[^0-9]/', '', $chCTe);
-
+        
         //validação dos dados de entrada
         if (strlen($chCTe) != 44) {
             $msg = "Uma chave de CTe válida não foi passada como parâmetro $chCTe.";
@@ -814,9 +784,6 @@ class Tools extends BaseTools
         if ($chCTe == '' || empty(array_filter($infCorrecao))) {
             $msg = "Preencha os campos obrigatórios!";
             throw new Exception\InvalidArgumentException($msg);
-        }
-        if ($tpAmb == '') {
-            $tpAmb = $this->aConfig['tpAmb'];
         }
         $siglaUF = $this->zGetSigla(substr($chCTe, 0, 2));
 
@@ -840,21 +807,13 @@ class Tools extends BaseTools
         $aRetorno = $this->aLastRetEvent;
         return $retorno;
     }
-
-    public function addProtocolo($pathCTeFile = '', $pathProtfile = '', $saveFile = false)
+    
+    public function addProtocolo($xml = '', $xmlProt = '', $saveFile = false)
     {
-        //carrega a CTe
-        $docCte = new Dom();
-
-        if (file_exists($pathCTeFile)) {
-            //carrega o XML pelo caminho do arquivo informado
-            $docCte->loadXMLFile($pathCTeFile);
-        } else {
-            //carrega o XML pelo conteúdo
-            $docCte->loadXMLString($pathCTeFile);
-        }
-
-        $nodecte = $docCte->getNode('CTe', 0);
+         //carrega a CTe
+         $docCte= new Dom();
+         $docCte->loadXMLString($xml);
+         $nodecte = $docCte->getNode('CTe', 0);
         if ($nodecte == '') {
             $msg = "O arquivo indicado como CTe não é um xml de CTe!";
             throw new Exception\RuntimeException($msg);
@@ -863,24 +822,16 @@ class Tools extends BaseTools
             $msg = "A CTe não está assinada!";
             throw new Exception\RuntimeException($msg);
         }
-        //carrega o protocolo
-        $docprot = new Dom();
-
-        if (file_exists($pathProtfile)) {
-            //carrega o XML pelo caminho do arquivo informado
-            $docprot->loadXMLFile($pathProtfile);
-        } else {
-            //carrega o XML pelo conteúdo
-            $docprot->loadXMLString($pathProtfile);
-        }
-
-        $nodeprots = $docprot->getElementsByTagName('protCTe');
+         //carrega o protocolo
+         $docprot = new Dom();
+         $docprot->loadXMLString($xmlProt);
+         $nodeprots = $docprot->getElementsByTagName('protCTe');
         if ($nodeprots->length == 0) {
             $msg = "O arquivo indicado não contem um protocolo de autorização!";
             throw new Exception\RuntimeException($msg);
         }
-        //carrega dados da CTe
-        $tpAmb = $docCte->getNodeValue('tpAmb');
+         //carrega dados da CTe
+         $tpAmb = $docCte->getNodeValue('tpAmb');
         $anomes = date(
             'Ym',
             DateTime::convertSefazTimeToTimestamp($docCte->getNodeValue('dhEmi'))
@@ -889,16 +840,16 @@ class Tools extends BaseTools
 //        $versao = $infCTe->getAttribute("versao");
 //        $chaveId = $infCTe->getAttribute("Id");
 //        $chaveCTe = preg_replace('/[^0-9]/', '', $chaveId);
-        $digValueCTe = $docCte->getNodeValue('DigestValue');
-        //carrega os dados do protocolo
+         $digValueCTe = $docCte->getNodeValue('DigestValue');
+         //carrega os dados do protocolo
         for ($i = 0; $i < $nodeprots->length; $i++) {
-            $nodeprot = $nodeprots->item($i);
-            $protver = $nodeprot->getAttribute("versao");
-            $chaveProt = $nodeprot->getElementsByTagName("chCTe")->item(0)->nodeValue;
+             $nodeprot = $nodeprots->item($i);
+             $protver = $nodeprot->getAttribute("versao");
+             $chaveProt = $nodeprot->getElementsByTagName("chCTe")->item(0)->nodeValue;
             $digValueProt = ($nodeprot->getElementsByTagName("digVal")->length)
                 ? $nodeprot->getElementsByTagName("digVal")->item(0)->nodeValue
                 : '';
-            $infProt = $nodeprot->getElementsByTagName("infProt")->item(0);
+             $infProt = $nodeprot->getElementsByTagName("infProt")->item(0);
 //            if ($digValueCTe == $digValueProt && $chaveCTe == $chaveProt) {
 //                break;
 //            }
@@ -907,39 +858,39 @@ class Tools extends BaseTools
             $msg = "Inconsistência! O DigestValue da CTe não combina com o do digVal do protocolo indicado!";
             throw new Exception\RuntimeException($msg);
         }
-//        if ($chaveCTe != $chaveProt) {
-//            $msg = "O protocolo indicado pertence a outra CTe. Os números das chaves não combinam !";
-//            throw new Exception\RuntimeException($msg);
-//        }
-        //cria a CTe processada com a tag do protocolo
+ //        if ($chaveCTe != $chaveProt) {
+ //            $msg = "O protocolo indicado pertence a outra CTe. Os números das chaves não combinam !";
+ //            throw new Exception\RuntimeException($msg);
+ //        }
+         //cria a CTe processada com a tag do protocolo
         $procCte = new \DOMDocument('1.0', 'utf-8');
         $procCte->formatOutput = false;
         $procCte->preserveWhiteSpace = false;
-        //cria a tag cteProc
+         //cria a tag cteProc
         $cteProc = $procCte->createElement('cteProc');
         $procCte->appendChild($cteProc);
-        //estabele o atributo de versão
+         //estabele o atributo de versão
         $cteProcAtt1 = $cteProc->appendChild($procCte->createAttribute('versao'));
         $cteProcAtt1->appendChild($procCte->createTextNode($protver));
-        //estabelece o atributo xmlns
+         //estabelece o atributo xmlns
         $cteProcAtt2 = $cteProc->appendChild($procCte->createAttribute('xmlns'));
         $cteProcAtt2->appendChild($procCte->createTextNode($this->urlPortal));
-        //inclui a tag CTe
+         //inclui a tag CTe
         $node = $procCte->importNode($nodecte, true);
-        $cteProc->appendChild($node);
-        //cria tag protCTe
+         $cteProc->appendChild($node);
+         //cria tag protCTe
         $protCTe = $procCte->createElement('protCTe');
-        $cteProc->appendChild($protCTe);
-        //estabele o atributo de versão
+         $cteProc->appendChild($protCTe);
+         //estabele o atributo de versão
         $protCTeAtt1 = $protCTe->appendChild($procCte->createAttribute('versao'));
         $protCTeAtt1->appendChild($procCte->createTextNode($protver));
-        //cria tag infProt
+         //cria tag infProt
         $nodep = $procCte->importNode($infProt, true);
-        $protCTe->appendChild($nodep);
-        //salva o xml como string em uma variável
+         $protCTe->appendChild($nodep);
+         //salva o xml como string em uma variável
         $procXML = $procCte->saveXML();
-        //remove as informações indesejadas
-        $procXML = Strings::clearProt($procXML);
+         //remove as informações indesejadas
+         $procXML = Strings::clearProt($procXML);
         if ($saveFile) {
 //            $filename = "{$chaveCTe}-protCTe.xml";
             $filename = "{$chaveProt}-protCTe.xml";
@@ -952,9 +903,9 @@ class Tools extends BaseTools
                 $anomes
             );
         }
-        return $procXML;
+         return $procXML;
     }
-
+     
 
     /**
      * addCancelamento
