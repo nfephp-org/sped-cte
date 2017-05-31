@@ -82,7 +82,7 @@ class Make extends BaseMake
      * Indicador do "papel" do tomador do serviço no CT-e
      * @var \DOMNode
      */
-    private $toma03 = '';
+    private $toma3 = '';
     /**
      * Indicador do "papel" do tomador do serviço no CT-e
      * @var \DOMNode
