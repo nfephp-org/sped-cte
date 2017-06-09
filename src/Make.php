@@ -346,6 +346,11 @@ class Make extends BaseMake
      */
     private $idDocAntEle = array();
     /**
+     * Informações de Seguro da Carga
+     * @var array
+     */
+    private $seg = array();
+    /**
      * Informações do modal
      * @var \DOMNode
      */
@@ -430,6 +435,11 @@ class Make extends BaseMake
      */
     private $valePed = array();
     /**
+     * Dados dos Veículos
+     * @var array
+     */
+    private $veic = array();
+    /**
      * Proprietários do Veículo. Só preenchido quando o veículo não pertencer à empresa emitente do CT-e
      * @var array
      */
@@ -444,7 +454,11 @@ class Make extends BaseMake
      * @var array
      */
     private $moto = array();
-
+    /**
+     * Autorizados para download do XML do DF-e
+     * @var \DOMNode
+     */
+    private $tagAutXML = '';    
     /**
      * Monta o arquivo XML usando as tag's já preenchidas
      *
@@ -552,11 +566,12 @@ class Make extends BaseMake
                     }
                 }
             }
-
+            $this->dom->appChild($this->infCTeNorm, $this->seg, 'Falta tag "seg"');
             $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
             $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
         }
-
+        $this->dom->appChild($this->imp, $this->vTotTrib, 'Falta tag "vTotTrib"');        
+        $this->dom->appChild($this->infCte, $this->tagAutXML, 'Falta tag "autXML"');
         $this->dom->appChild($this->CTe, $this->infCte, 'Falta tag "CTe"');
         $this->dom->appChild($this->dom, $this->CTe, 'Falta tag "DOMDocument"');
         $this->xml = $this->dom->saveXML();
@@ -1191,7 +1206,27 @@ class Make extends BaseMake
         );
         return $this->compl;
     }
-
+    
+    /**
+     * Gera a tag que permite a empresa(CNPJ) passada por parametro acessar o xml
+     * (usado boa pratica colocar o cnpj da ANTT, mas não obrigatório)
+     * @param string $cnpj
+     * @return \DOMElement
+     */
+    public function autXML($cnpj = '')
+    {
+        $identificador = '#396 <autXML> - ';
+        $this->tagAutXML = $this->dom->createElement('autXML');
+        $this->dom->addChild(
+            $this->tagAutXML,
+            'CNPJ',
+            $cnpj,
+            false,
+            $identificador . 'Autorizados para download do XML do DF-e'
+        );
+        return $this->tagAutXML;
+    }
+    
     /**
      * Gera as tags para o elemento: "fluxo" (Previsão do fluxo da carga)
      * #63
@@ -2326,7 +2361,7 @@ class Make extends BaseMake
             $this->dest,
             'IE',
             $IE,
-            true,
+            false,
             $identificador . 'Inscrição Estadual'
         );
         $this->dom->addChild(
@@ -2745,9 +2780,6 @@ class Make extends BaseMake
         $this->dom->addChild($this->infCarga, 'vCarga', $vCarga, false, $identificador . 'Valor Total da Carga');
         $this->dom->addChild($this->infCarga, 'proPred', $proPred, true, $identificador . 'Produto Predominante');
         $this->dom->addChild($this->infCarga, 'xOutCat', $xOutCat, false, $identificador . 'Outras Caract. da Carga');
-        $this->dom->addChild($this->infCarga, 'vCargaAverb', $vCargaAverb, false, $identificador . 'Valor da Carga para 
-            efeito de averbação');
-
         return $this->infCarga;
     }
 
