@@ -458,7 +458,7 @@ class Make extends BaseMake
      * Autorizados para download do XML do DF-e
      * @var \DOMNode
      */
-    private $tagAutXML = '';    
+    private $tagAutXML = '';
     /**
      * Monta o arquivo XML usando as tag's já preenchidas
      *
@@ -570,7 +570,7 @@ class Make extends BaseMake
             $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
             $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
         }
-        $this->dom->appChild($this->imp, $this->vTotTrib, 'Falta tag "vTotTrib"');        
+        $this->dom->appChild($this->imp, $this->vTotTrib, 'Falta tag "vTotTrib"');
         $this->dom->appChild($this->infCte, $this->tagAutXML, 'Falta tag "autXML"');
         $this->dom->appChild($this->CTe, $this->infCte, 'Falta tag "CTe"');
         $this->dom->appChild($this->dom, $this->CTe, 'Falta tag "DOMDocument"');
