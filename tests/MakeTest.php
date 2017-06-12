@@ -57,7 +57,7 @@ class MakeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($proPred, $infCargaTag->getElementsByTagName('proPred')->item(0)->nodeValue);
         $this->assertEquals(0, $infCargaTag->getElementsByTagName('vCarga')->length);
         $this->assertEquals(0, $infCargaTag->getElementsByTagName('xOutCat')->length);
-        $this->assertEquals(0, $infCargaTag->getElementsByTagName('vCargaAverb')->length);
+        //$this->assertEquals(0, $infCargaTag->getElementsByTagName('vCargaAverb')->length);
 
         $vCarga = 100.00;
         $xOutCat = 'FRIA';
@@ -66,7 +66,8 @@ class MakeTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($vCarga, $infCargaTag->getElementsByTagName('vCarga')->item(0)->nodeValue);
         $this->assertEquals($xOutCat, $infCargaTag->getElementsByTagName('xOutCat')->item(0)->nodeValue);
-        $this->assertEquals($vCargaAverb, $infCargaTag->getElementsByTagName('vCargaAverb')->item(0)->nodeValue);
+        // abaixo é opcional
+        //$this->assertEquals($vCargaAverb, $infCargaTag->getElementsByTagName('vCargaAverb')->item(0)->nodeValue);
     }
 
     public function testATagIdeNaoDeveAdicionarElementoOpcionalQuandoOValorForVazio()
