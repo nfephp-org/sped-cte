@@ -568,14 +568,14 @@ class Make extends BaseMake
             }
             $this->dom->appChild($this->infCTeNorm, $this->seg, 'Falta tag "seg"');
             $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
-            if ($this->infCteSub != ''){
+            if ($this->infCteSub != '') {
                 $this->dom->appChild($this->infCTeNorm, $this->infCteSub, 'Falta tag "infCteSub"');
-                if ($this->tomaICMS != ''){
-                  $this->dom->appChild($this->infCteSub, $this->tomaICMS, 'Falta tag "tomaICMS"');
-                  if ($this->refNF != ''){
-                    $this->dom->appChild($this->tomaICMS, $this->refNF, 'Falta tag "refNF"');
-                  }
-                }                                
+                if ($this->tomaICMS != '') {
+                    $this->dom->appChild($this->infCteSub, $this->tomaICMS, 'Falta tag "tomaICMS"');
+                    if ($this->refNF != '') {
+                        $this->dom->appChild($this->tomaICMS, $this->refNF, 'Falta tag "refNF"');
+                    }
+                }
             }
             $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
         }
@@ -3105,15 +3105,15 @@ class Make extends BaseMake
             $chCte,
             true,
             $identificador . ' Chave de acesso do CT-e a ser substituído (original) '
-        );        
-        if ($refCteAnu != ''){
-          $this->dom->addChild(
+        );
+        if ($refCteAnu != '') {
+            $this->dom->addChild(
               $this->infCteSub,
               'refCteAnu',
               $refCteAnu,
               true,
               $identificador . ' Chave de acesso do CT-e de Anulação'
-          );
+            );
         }
 //        Não utilizar antes deNT específica
 //        $this->dom->addChild(
@@ -3127,9 +3127,9 @@ class Make extends BaseMake
     }
     
      /**
-     * Gera as tags para o elemento: "tomaICMS" (Tomador é contribuinte do ICMS, 
+     * Gera as tags para o elemento: "tomaICMS" (Tomador é contribuinte do ICMS,
      * mas não é emitente de documento fiscal eletrônico)
-     * 
+     *
      * Parâmetros Choice [CE] informar apenas um ou informar refNFTag [CG]
      * #373
      * Nível: 3
@@ -3141,22 +3141,22 @@ class Make extends BaseMake
     {
         $identificador = '#373 <tomaICMS> - ';
         $this->tomaICMS = $this->dom->createElement('tomaICMS');
-        if ($refNFe != ''){
-          $this->dom->addChild(
+        if ($refNFe != '') {
+            $this->dom->addChild(
               $this->tomaICMS,
               'refNFe',
               $refNFe,
               true,
               $identificador . ' Chave de acesso do NF-e emitida pelo Tomador '
-          );
-        }elseif ($refCte != ''){
-          $this->dom->addChild(
+            );
+        } elseif ($refCte != '') {
+            $this->dom->addChild(
               $this->tomaICMS,
               'refCte',
               $refCte,
               true,
               $identificador . ' Chave de acesso do CT-e emitido pelo Tomador '
-          );
+            );
         }
                 
         return $this->tomaICMS;
@@ -3166,7 +3166,7 @@ class Make extends BaseMake
     /**
      * Gera as tags para o elemento: "refNF" (Informações da NF ou CT emitido pelo Tomador)
      * #375
-     * Nível: 4     
+     * Nível: 4
      * @param string $CNPJ
      * @param string $CPF
      * @param string $mod
@@ -3179,7 +3179,7 @@ class Make extends BaseMake
      */
     public function refNFTag(
         $CNPJ = '',
-        $CPF = '',        
+        $CPF = '',
         $mod = '',
         $serie = '',
         $subserie = '',
@@ -3188,7 +3188,7 @@ class Make extends BaseMake
         $dEmi = ''
     ) {
         $identificador = '#375 <refNF> - ';
-        $this->refNF = $this->dom->createElement('refNF');        
+        $this->refNF = $this->dom->createElement('refNF');
 
         if ($CNPJ != '') {
             $this->dom->addChild(
@@ -3206,7 +3206,7 @@ class Make extends BaseMake
                 true,
                 $identificador . 'Número do CPF'
             );
-        }        
+        }
         $this->dom->addChild($this->refNF, 'mod', $mod, true, $identificador . 'Modelo do Documento fiscal');
         $this->dom->addChild($this->refNF, 'serie', $serie, true, $identificador . 'Serie do Documento fiscal');
         $this->dom->addChild($this->refNF, 'subserie', $subserie, false, $identificador . 'Subserie do 
@@ -3214,7 +3214,7 @@ class Make extends BaseMake
         $this->dom->addChild($this->refNF, 'nro', $nro, true, $identificador . 'Número do documento fiscal');
         $this->dom->addChild($this->refNF, 'valor', $valor, true, $identificador . 'Valor do documento fiscal');
         $this->dom->addChild($this->refNF, 'dEmi', $dEmi, true, $identificador . 'Data de emissão do 
-            documento fiscal');        
+            documento fiscal');
 
         return $this->refNF;
     }
