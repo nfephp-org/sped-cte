@@ -566,7 +566,7 @@ class Make extends BaseMake
                     }
                 }
             }
-
+            $this->dom->appChild($this->infCTeNorm, $this->seg, 'Falta tag "seg"');
             $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
             if ($this->infCteSub != ''){
                 $this->dom->appChild($this->infCTeNorm, $this->infCteSub, 'Falta tag "infCteSub"');
@@ -579,7 +579,8 @@ class Make extends BaseMake
             }
             $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
         }
-
+        $this->dom->appChild($this->imp, $this->vTotTrib, 'Falta tag "vTotTrib"');
+        $this->dom->appChild($this->infCte, $this->tagAutXML, 'Falta tag "autXML"');
         $this->dom->appChild($this->CTe, $this->infCte, 'Falta tag "CTe"');
         $this->dom->appChild($this->dom, $this->CTe, 'Falta tag "DOMDocument"');
         $this->xml = $this->dom->saveXML();
@@ -1214,7 +1215,7 @@ class Make extends BaseMake
         );
         return $this->compl;
     }
-
+    
     /**
      * Gera a tag que permite a empresa(CNPJ) passada por parametro acessar o xml
      * (usado boa pratica colocar o cnpj da ANTT, mas não obrigatório)
@@ -3084,8 +3085,8 @@ class Make extends BaseMake
 
         return $this->rodo;
     }
-    
-     /**
+
+    /**
      * Gera as tags para o elemento: "infCteSub" (Detalhamento do CT-e de substituição)
      * #370
      * Nível: 2
