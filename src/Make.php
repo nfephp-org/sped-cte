@@ -566,12 +566,20 @@ class Make extends BaseMake
                     }
                 }
             }
-            $this->dom->appChild($this->infCTeNorm, $this->seg, 'Falta tag "seg"');
+
             $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
+            if ($this->infCteSub != ''){
+                $this->dom->appChild($this->infCTeNorm, $this->infCteSub, 'Falta tag "infCteSub"');
+                if ($this->tomaICMS != ''){
+                  $this->dom->appChild($this->infCteSub, $this->tomaICMS, 'Falta tag "tomaICMS"');
+                  if ($this->refNF != ''){
+                    $this->dom->appChild($this->tomaICMS, $this->refNF, 'Falta tag "refNF"');
+                  }
+                }                                
+            }
             $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
         }
-        $this->dom->appChild($this->imp, $this->vTotTrib, 'Falta tag "vTotTrib"');
-        $this->dom->appChild($this->infCte, $this->tagAutXML, 'Falta tag "autXML"');
+
         $this->dom->appChild($this->CTe, $this->infCte, 'Falta tag "CTe"');
         $this->dom->appChild($this->dom, $this->CTe, 'Falta tag "DOMDocument"');
         $this->xml = $this->dom->saveXML();
@@ -1206,7 +1214,7 @@ class Make extends BaseMake
         );
         return $this->compl;
     }
-    
+
     /**
      * Gera a tag que permite a empresa(CNPJ) passada por parametro acessar o xml
      * (usado boa pratica colocar o cnpj da ANTT, mas não obrigatório)
@@ -3076,6 +3084,140 @@ class Make extends BaseMake
 
         return $this->rodo;
     }
+    
+     /**
+     * Gera as tags para o elemento: "infCteSub" (Detalhamento do CT-e de substituição)
+     * #370
+     * Nível: 2
+     * @param string $chCte
+     * @param string $refCteAnu [CE] Choice com tomaICMSTag [CG] - Informar apenas um
+     * @param string $indAlteraToma Aguardando NT específica
+     * @return DOMElement|\DOMNode
+     */
+    public function infCTeSubTag($chCte = '', $refCteAnu = '', $indAlteraToma = '')
+    {
+        $identificador = '#370 <infCteSub> - ';
+        $this->infCteSub = $this->dom->createElement('infCteSub');
+        $this->dom->addChild(
+            $this->infCteSub,
+            'chCte',
+            $chCte,
+            true,
+            $identificador . ' Chave de acesso do CT-e a ser substituído (original) '
+        );        
+        if ($refCteAnu != ''){
+          $this->dom->addChild(
+              $this->infCteSub,
+              'refCteAnu',
+              $refCteAnu,
+              true,
+              $identificador . ' Chave de acesso do CT-e de Anulação'
+          );
+        }
+//        Não utilizar antes deNT específica
+//        $this->dom->addChild(
+//            $this->infCteSub,
+//            'indAlteraToma',
+//            $indAlteraToma,
+//            true,
+//            $identificador . ' Indicação do CT-e Alteração de Tomador'
+//        );
+        return $this->infCteSub;
+    }
+    
+     /**
+     * Gera as tags para o elemento: "tomaICMS" (Tomador é contribuinte do ICMS, 
+     * mas não é emitente de documento fiscal eletrônico)
+     * 
+     * Parâmetros Choice [CE] informar apenas um ou informar refNFTag [CG]
+     * #373
+     * Nível: 3
+     * @param string $refNFe [CE]
+     * @param string $refCte [CE]
+     * @return DOMElement|\DOMNode
+     */
+    public function tomaICMSTag($refNFe = '', $refCte = '')
+    {
+        $identificador = '#373 <tomaICMS> - ';
+        $this->tomaICMS = $this->dom->createElement('tomaICMS');
+        if ($refNFe != ''){
+          $this->dom->addChild(
+              $this->tomaICMS,
+              'refNFe',
+              $refNFe,
+              true,
+              $identificador . ' Chave de acesso do NF-e emitida pelo Tomador '
+          );
+        }elseif ($refCte != ''){
+          $this->dom->addChild(
+              $this->tomaICMS,
+              'refCte',
+              $refCte,
+              true,
+              $identificador . ' Chave de acesso do CT-e emitido pelo Tomador '
+          );
+        }
+                
+        return $this->tomaICMS;
+    }
+    
+    
+    /**
+     * Gera as tags para o elemento: "refNF" (Informações da NF ou CT emitido pelo Tomador)
+     * #375
+     * Nível: 4     
+     * @param string $CNPJ
+     * @param string $CPF
+     * @param string $mod
+     * @param string $serie
+     * @param string $subserie
+     * @param string $nro
+     * @param string $valor
+     * @param string $dEmi
+     * @return mixed
+     */
+    public function refNFTag(
+        $CNPJ = '',
+        $CPF = '',        
+        $mod = '',
+        $serie = '',
+        $subserie = '',
+        $nro = '',
+        $valor = '',
+        $dEmi = ''
+    ) {
+        $identificador = '#375 <refNF> - ';
+        $this->refNF = $this->dom->createElement('refNF');        
+
+        if ($CNPJ != '') {
+            $this->dom->addChild(
+                $this->refNF,
+                'CNPJ',
+                $CNPJ,
+                true,
+                $identificador . 'CNPJ do Emitente do Documento Fiscal'
+            );
+        } elseif ($CPF != '') {
+            $this->dom->addChild(
+                $this->refNF,
+                'CPF',
+                $CPF,
+                true,
+                $identificador . 'Número do CPF'
+            );
+        }        
+        $this->dom->addChild($this->refNF, 'mod', $mod, true, $identificador . 'Modelo do Documento fiscal');
+        $this->dom->addChild($this->refNF, 'serie', $serie, true, $identificador . 'Serie do Documento fiscal');
+        $this->dom->addChild($this->refNF, 'subserie', $subserie, false, $identificador . 'Subserie do 
+            documento fiscal');
+        $this->dom->addChild($this->refNF, 'nro', $nro, true, $identificador . 'Número do documento fiscal');
+        $this->dom->addChild($this->refNF, 'valor', $valor, true, $identificador . 'Valor do documento fiscal');
+        $this->dom->addChild($this->refNF, 'dEmi', $dEmi, true, $identificador . 'Data de emissão do 
+            documento fiscal');        
+
+        return $this->refNF;
+    }
+
 
     /**
      * Gera as tags para o elemento: "infCteComp" (Detalhamento do CT-e complementado)
