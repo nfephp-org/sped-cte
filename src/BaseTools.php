@@ -161,9 +161,10 @@ class BaseTools
     protected $urlHeader = '';
     /**
      * modelo da NFe 55 ou 65
+     * modelo da CTe 57
      * @var string
      */
-    protected $modelo = '55';
+    protected $modelo = '57';
     
     /**
      * cUFlist
