@@ -3,13 +3,14 @@ limpaTAB.php
 *~
 *.pfx
 *.pem
+messdetector.txt
+src/Tags
+src/NFe.php
+src/Tag.php
 config.json
 local
 vendor
-xml
-docs
 nbproject
 build
 composer.lock
 config.json
-.vscode/
