@@ -165,7 +165,6 @@ class BaseTools
      * @var string
      */
     protected $modelo = '57';
-
     /**
      * cUFlist
      * @var array
