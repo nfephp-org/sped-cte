@@ -37,7 +37,7 @@ class Tools extends BaseTools
     protected $urlPortal = 'http://www.portalfiscal.inf.br/cte';
 
     /**
-     * aLastRetEvent
+     * erros
      *
      * @var array
      */
@@ -58,7 +58,7 @@ class Tools extends BaseTools
     /**
      * @var string
      */
-    protected $rootDir;
+    private $rootDir;
 
     public static $PL_CTE_200 = 'PL_CTe_200';
 
@@ -530,13 +530,13 @@ class Tools extends BaseTools
         //tratar dados de retorno
         $aRetorno = Response::readReturnSefaz($servico, $retorno);
         //Comentado por não ter implementada a função de zAddProtMsg
-//        if ($aRetorno['cStat'] == '102') {
-//            $retorno = $this->zAddProtMsg('ProcInutCTe', 'inutCTe', $signedMsg, 'retInutCTe', $retorno);
-        if ($salvarMensagens) {
-            $filename = "$sAno-$modelo-$sSerie-".$sInicio."_".$sFinal."-procInutCTe.xml";
-            $this->zGravaFile('cte', $tpAmb, $filename, $retorno, 'inutilizadas');
-        }
-//        }
+        //if ($aRetorno['cStat'] == '102') {
+            //$retorno = $this->zAddProtMsg('ProcInutCTe', 'inutCTe', $signedMsg, 'retInutCTe', $retorno);
+        //if ($salvarMensagens) {
+            //$filename = "$sAno-$modelo-$sSerie-".$sInicio."_".$sFinal."-procInutCTe.xml";
+            //$this->zGravaFile('cte', $tpAmb, $filename, $retorno, 'inutilizadas');
+        //}
+        //}
         return (string) $retorno;
     }
 
