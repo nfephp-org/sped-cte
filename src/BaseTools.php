@@ -92,7 +92,7 @@ class BaseTools
      * @var int
      */
     public $soapTimeout = 10;
-    
+
     /**
      * oCertificate
      * @var Object Class
@@ -161,10 +161,11 @@ class BaseTools
     protected $urlHeader = '';
     /**
      * modelo da NFe 55 ou 65
+     * modelo da CTe 57
      * @var string
      */
-    protected $modelo = '55';
-    
+    protected $modelo = '57';
+
     /**
      * cUFlist
      * @var array
@@ -200,7 +201,7 @@ class BaseTools
         'TO'=>'17',
         'SVAN' => '91'
     );
-    
+
     /**
      * __construct
      * @param string $configJson
@@ -227,7 +228,7 @@ class BaseTools
         if (key_exists('aMailConf', $this->aConfig)) {
             $this->aMailConf  = (array) $this->aConfig['aMailConf'];
         }
-        
+
         //seta o timezone
         DateTime::tzdBR($this->aConfig['siglaUF']);
         //carrega os certificados
@@ -263,7 +264,7 @@ class BaseTools
             }
         }
     }
-    
+
     /**
      * setSSLProtocol
      * Força o uso de um determinado protocolo de encriptação
@@ -300,7 +301,7 @@ class BaseTools
             $this->zLoadSoapClass();
         }
     }
-    
+
     /**
      * getSSLProtocol
      * Retrona o protocolo que está setado
@@ -311,7 +312,7 @@ class BaseTools
         $aPr = array('default','TLSv1','SSLv2','SSLv3','TLSv1.0','TLSv1.1','TLSv1.2');
         return $aPr[$this->sslProtocol];
     }
-    
+
     /**
      * setSoapTimeOut
      * @param integer $segundos
@@ -323,7 +324,7 @@ class BaseTools
             $this->zLoadSoapClass();
         }
     }
-    
+
     /**
      * getSoapTimeOut
      * @return integer
@@ -332,7 +333,7 @@ class BaseTools
     {
         return $this->soapTimeout;
     }
-    
+
     /**
      * setAmbiente
      * Seta a varável de ambiente
@@ -345,7 +346,7 @@ class BaseTools
             $this->ambiente = 'producao';
         }
     }
-    
+
     /**
      * atualizaCertificado
      * @param string $certpfx certificado pfx em string ou o path para o certificado
@@ -365,7 +366,7 @@ class BaseTools
         $this->zLoadSoapClass();
         return true;
     }
-    
+
     /**
      * assinaDoc
      * @param string $xml
@@ -407,7 +408,7 @@ class BaseTools
         }
         return $sxml;
     }
-    
+
     /**
      * setVerAplic
      * @param string $versao
@@ -431,7 +432,7 @@ class BaseTools
             $this->sslProtocol
         );
     }
-    
+
     /**
      * zLoadServico
      * Monta o namespace e o cabecalho da comunicação SOAP
@@ -460,7 +461,7 @@ class BaseTools
         }
         $this->urlcUF = $this->getcUF($siglaUF);
         $pathXmlUrlFile = $this->zGetXmlUrlPath($tipo);
-        
+
         if ($this->enableSVCAN) {
             $aURL = self::zLoadSEFAZ($pathXmlUrlFile, $tpAmb, 'SVCAN');
         } elseif ($this->enableSVCRS) {
@@ -468,6 +469,7 @@ class BaseTools
         } else {
             $aURL = self::zLoadSEFAZ($pathXmlUrlFile, $tpAmb, $siglaUF, $tipo);
         }
+
         //recuperação da versão
         $this->urlVersion = $aURL[$service]['version'];
         //recuperação da url do serviço
@@ -478,13 +480,13 @@ class BaseTools
         $this->urlOperation = $aURL[$service]['operation'];
         //montagem do namespace do serviço
         $this->urlNamespace = sprintf("%s/wsdl/%s", $this->urlPortal, $this->urlOperation);
-        
+
         //montagem do cabeçalho da comunicação SOAP
         $this->urlHeader = $this->zMountHeader($tipo, $this->urlNamespace, $this->urlcUF, $this->urlVersion);
-       
+
         return true;
     }
-    
+
     /**
      * zGetXmlUrlPath
      * @param string $tipo
@@ -507,16 +509,16 @@ class BaseTools
         } elseif ($tipo == 'cle') {
             $path = $this->aConfig['pathXmlUrlFileCLe'];
         }
-        
+
         $pathXmlUrlFile = NFEPHP_ROOT
             . DIRECTORY_SEPARATOR
             . 'config'
             . DIRECTORY_SEPARATOR
             . $path;
-        
+
         return $pathXmlUrlFile;
     }
-    
+
     /**
      * zMountHeader
      * @param string $tipo
@@ -549,7 +551,7 @@ class BaseTools
         }
         return $header;
     }
-    
+
     /**
      * zLoadSEFAZ
      * Extrai o URL, nome do serviço e versão dos webservices das SEFAZ de
@@ -612,7 +614,7 @@ class BaseTools
             'SVRS'=>'SVRS',
             'SVCAN'=>'SVCAN',
         );
-        
+
         $autorizadores['55'] = array(
             'AC'=>'SVRS',
             'AL'=>'SVRS',
@@ -647,7 +649,7 @@ class BaseTools
             'SVCAN'=>'SVCAN',
             'SVCRS'=>'SVCRS'
         );
-        
+
         //Estados que utilizam a SVSP - Sefaz Virtual de São Paulo: AP, PE, RR
         //Estados que utilizam a SVRS - Sefaz Virtual do RS:
         //AC, AL, AM, BA, CE, DF, ES, GO, MA,
@@ -707,7 +709,7 @@ class BaseTools
         }
         return $aUrl;
     }
-    
+
     /**
      * zExtractUrl
      * @param \SimpleXMLElement $xmlWS
@@ -732,7 +734,7 @@ class BaseTools
         }
         return $aUrl;
     }
-    
+
     /**
      * zGravaFile
      * Grava os dados no diretorio das NFe
@@ -779,7 +781,7 @@ class BaseTools
     {
         return $this->cUFlist[$siglaUF];
     }
-    
+
     /**
      * zGetSigla
      * @param string $cUF
