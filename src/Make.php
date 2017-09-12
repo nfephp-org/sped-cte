@@ -612,7 +612,7 @@ class Make extends BaseMake
         }
         $this->zCTeOSTag();
 
-        if($this->infPercurso != ''){
+        if ($this->infPercurso != '') {
             foreach ($this->infPercurso as $perc) {
                 $this->dom->appChild($this->ide, $perc, 'Falta tag "infPercurso"');
             }
@@ -625,6 +625,7 @@ class Make extends BaseMake
         $this->dom->appChild($this->infCte, $this->emit, 'Falta tag "infCte"');
 
         if ($this->toma != '') {
+            //$this->dom->appChild($this->toma, $this->enderToma, 'Falta tag "toma"');
             $this->dom->appChild($this->infCte, $this->toma, 'Falta tag "infCte"');
         }
 
@@ -1053,7 +1054,7 @@ class Make extends BaseMake
         $UFFim = '',
         $dhCont = '',
         $xJust = ''
-    ){
+    ) {
         $this->tpAmb = $tpAmb;
         $identificador = '#4 <ide> - ';
         $this->ide = $this->dom->createElement('ide');
@@ -3443,11 +3444,12 @@ class Make extends BaseMake
     public function infServicoTag(
         $xDescServ = '',
         $qCarga = ''
-    ){
+    ) {
         $identificador = '#253 <infServico> - ';
 
         $this->infServico = $this->dom->createElement('infServico');
-        $this->dom->addChild($this->infServico, 'xDescServ', $xDescServ, true, $identificador . 'Descrição do Serviço Prestado');
+        $this->dom->addChild($this->infServico, 'xDescServ', $xDescServ, true, $identificador .
+                             'Descrição do Serviço Prestado');
 
         $infQ = $this->dom->createElement('infQ');
         $this->dom->addChild($infQ, 'qCarga', $qCarga, false, $identificador . 'Quantidade');
@@ -3793,8 +3795,10 @@ class Make extends BaseMake
     {
         $identificador = '#1 <rodoOS> - ';
         $this->rodo = $this->dom->createElement('rodoOS');
-        $this->dom->addChild($this->rodo, 'TAF', $TAF, false, $identificador . 'Termo de Autorização de Fretamento - TAF');
-        $this->dom->addChild($this->rodo, 'NroRegEstadual', $nroRegEstadual, false, $identificador . 'Número do Registro Estadual');
+        $this->dom->addChild($this->rodo, 'TAF', $TAF, false, $identificador .
+                             'Termo de Autorização de Fretamento - TAF');
+        $this->dom->addChild($this->rodo, 'NroRegEstadual', $nroRegEstadual, false, $identificador .
+                             'Número do Registro Estadual');
 
         return $this->rodo;
     }
