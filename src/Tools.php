@@ -37,7 +37,7 @@ class Tools extends BaseTools
     protected $urlPortal = 'http://www.portalfiscal.inf.br/cte';
 
     /**
-     * aLastRetEvent
+     * erros
      *
      * @var array
      */
@@ -58,7 +58,7 @@ class Tools extends BaseTools
     /**
      * @var string
      */
-    protected $rootDir;
+    private $rootDir;
 
     public static $PL_CTE_200 = 'PL_CTe_200';
 
@@ -133,6 +133,7 @@ class Tools extends BaseTools
             $tpAmb
         );
 
+
         if ($this->urlService == '') {
             $msg = "O envio de lote não está disponível na SEFAZ $siglaUF!!!";
             throw new Exception\RuntimeException($msg);
@@ -153,6 +154,93 @@ class Tools extends BaseTools
             $dados,
             $this->urlMethod
         );
+
+        $lastMsg = $this->oSoap->lastMsg;
+        $this->soapDebug = $this->oSoap->soapDebug;
+        //salva mensagens
+        $filename = "$idLote-enviCTe.xml";
+        $this->zGravaFile('cte', $tpAmb, $filename, $lastMsg);
+        $filename = "$idLote-retEnviCTe.xml";
+        $this->zGravaFile('cte', $tpAmb, $filename, $retorno);
+        //tratar dados de retorno
+
+        $aRetorno = Response::readReturnSefaz($servico, $retorno);
+        //caso o envio seja recebido com sucesso mover a CTe da pasta
+        //das assinadas para a pasta das enviadas
+        return (string) $retorno;
+    }
+
+    /**
+     * Transmite o xml para a sefaz
+     * @param string|array $aXml
+     * @param string $tpAmb
+     * @param string $idLote
+     * @param array $aRetorno
+     * @param int $indSinc
+     * @param boolean $compactarZip
+     * @return string
+     * @throws Exception\InvalidArgumentException
+     * @throws Exception\RuntimeException
+     */
+    public function sefazEnviaCTeOS(
+        $aXml,
+        $tpAmb = '2',
+        $idLote = '',
+        &$aRetorno = array(),
+        $indSinc = 0,
+        $compactarZip = false
+    ) {
+        $sxml = $aXml;
+
+        if (empty($aXml)) {
+            $msg = "Pelo menos uma CTe deve ser informada.";
+            throw new Exception\InvalidArgumentException($msg);
+        }
+        if (is_array($aXml)) {
+            if (count($aXml) > 1) {
+                //multiplas cte, não pode ser sincrono
+                $indSinc = 0;
+            }
+            $sxml = implode("", $sxml);
+        }
+        $sxml = preg_replace("/<\?xml.*\?>/", "", $sxml);
+        $siglaUF = $this->aConfig['siglaUF'];
+
+        if ($tpAmb == '') {
+            $tpAmb = $this->aConfig['tpAmb'];
+        }
+        //carrega serviço
+        $servico = 'CteRecepcaoOS';
+        $this->zLoadServico(
+            'cte',
+            $servico,
+            $siglaUF,
+            $tpAmb
+        );
+
+
+        if ($this->urlService == '') {
+            $msg = "O envio de lote não está disponível na SEFAZ $siglaUF!!!";
+            throw new Exception\RuntimeException($msg);
+        }
+
+        if ($idLote == '') {
+            $idLote = LotNumber::geraNumLote(15);
+        }
+
+        // Montagem dos dados da mensagem SOAP
+        $dados = "<cteDadosMsg xmlns=\"$this->urlNamespace\">"
+            . "$sxml"
+            . "</cteDadosMsg>";
+        // Envia dados via SOAP
+        $retorno = $this->oSoap->send(
+            $this->urlService,
+            $this->urlNamespace,
+            $this->urlHeader,
+            $dados,
+            $this->urlMethod
+        );
+
 
         $lastMsg = $this->oSoap->lastMsg;
         $this->soapDebug = $this->oSoap->soapDebug;
@@ -365,7 +453,8 @@ class Tools extends BaseTools
         $xJust = '',
         $tpAmb = '2',
         &$aRetorno = array(),
-        $salvarMensagens = true
+        $salvarMensagens = true,
+        $modelo = '57'
     ) {
         $nSerie = (integer) $nSerie;
         $nIni = (integer) $nIni;
@@ -402,7 +491,7 @@ class Tools extends BaseTools
         // Identificador da TAG a ser assinada formada com Código da UF +
         // precedida do literal “ID”
         // 41 posições
-        $id = 'ID'.$this->urlcUF.$cnpj.'57'.$sSerie.$sInicio.$sFinal;
+        $id = 'ID'.$this->urlcUF.$cnpj.$modelo.$sSerie.$sInicio.$sFinal;
         // Montagem do corpo da mensagem
         $dXML = "<inutCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
             ."<infInut Id=\"$id\">"
@@ -411,7 +500,7 @@ class Tools extends BaseTools
             ."<cUF>$this->urlcUF</cUF>"
             ."<ano>$sAno</ano>"
             ."<CNPJ>$cnpj</CNPJ>"
-            ."<mod>57</mod>"
+            ."<mod>$modelo</mod>"
             ."<serie>$nSerie</serie>"
             ."<nCTIni>$nIni</nCTIni>"
             ."<nCTFin>$nFin</nCTFin>"
@@ -441,13 +530,13 @@ class Tools extends BaseTools
         //tratar dados de retorno
         $aRetorno = Response::readReturnSefaz($servico, $retorno);
         //Comentado por não ter implementada a função de zAddProtMsg
-//        if ($aRetorno['cStat'] == '102') {
-//            $retorno = $this->zAddProtMsg('ProcInutCTe', 'inutCTe', $signedMsg, 'retInutCTe', $retorno);
-        if ($salvarMensagens) {
-            $filename = "$sAno-$this->modelo-$sSerie-".$sInicio."_".$sFinal."-procInutCTe.xml";
-            $this->zGravaFile('cte', $tpAmb, $filename, $retorno, 'inutilizadas');
-        }
-//        }
+        //if ($aRetorno['cStat'] == '102') {
+            //$retorno = $this->zAddProtMsg('ProcInutCTe', 'inutCTe', $signedMsg, 'retInutCTe', $retorno);
+        //if ($salvarMensagens) {
+            //$filename = "$sAno-$modelo-$sSerie-".$sInicio."_".$sFinal."-procInutCTe.xml";
+            //$this->zGravaFile('cte', $tpAmb, $filename, $retorno, 'inutilizadas');
+        //}
+        //}
         return (string) $retorno;
     }
 
@@ -758,6 +847,7 @@ class Tools extends BaseTools
             $this->erros[] = "Não foi possível identificar o documento";
             return false;
         }
+
         $xsdFile = $aResp['Id'].'_v'.$aResp['versao'].'.xsd';
         $xsdPath = $this->rootDir.DIRECTORY_SEPARATOR .
             'schemas' .
@@ -856,8 +946,11 @@ class Tools extends BaseTools
 
         $nodecte = $docCte->getNode('CTe', 0);
         if ($nodecte == '') {
-            $msg = "O arquivo indicado como CTe não é um xml de CTe!";
-            throw new Exception\RuntimeException($msg);
+            $nodecte = $docCte->getNode('CTeOS', 0);
+            if ($nodecte == '') {
+                $msg = "O arquivo indicado como CTe não é um xml de CTe!";
+                throw new Exception\RuntimeException($msg);
+            }
         }
         if ($docCte->getNode('Signature') == '') {
             $msg = "A CTe não está assinada!";
@@ -971,7 +1064,7 @@ class Tools extends BaseTools
         $procXML = '';
         //carrega a CTe
         $docCTe = new Dom();
-        
+
         if (file_exists($pathCTefile)) {
             //carrega o XML pelo caminho do arquivo informado
             $docCTe->loadXMLFile($pathCTefile);
@@ -979,11 +1072,14 @@ class Tools extends BaseTools
             //carrega o XML pelo conteúdo
             $docCTe->loadXMLString($pathCTefile);
         }
-        
+
         $nodeCTe = $docCTe->getNode('CTe', 0);
         if ($nodeCTe == '') {
-            $msg = "O arquivo indicado como CTe não é um xml de CTe!";
-            throw new Exception\RuntimeException($msg);
+            $nodeCTe = $docCTe->getNode('CTeOS', 0);
+            if ($nodeCTe == '') {
+                $msg = "O arquivo indicado como CTe não é um xml de CTe!";
+                throw new Exception\RuntimeException($msg);
+            }
         }
         $proCTe = $docCTe->getNode('protCTe');
         if ($proCTe == '') {
@@ -1000,7 +1096,7 @@ class Tools extends BaseTools
         //carrega o cancelamento
         //pode ser um evento ou resultado de uma consulta com multiplos eventos
         $doccanc = new Dom();
-        
+
         if (file_exists($pathCancfile)) {
             //carrega o XML pelo caminho do arquivo informado
             $doccanc->loadXMLFile($pathCancfile);

@@ -4,6 +4,7 @@
         <sigla>MG</sigla>
         <homologacao>
             <CteRecepcao method='CTeRecepcao' operation='CteRecepcao' version='3.00'>https://hcte.fazenda.mg.gov.br/cte/services/CteRecepcao</CteRecepcao>
+            <CteRecepcaoOS method='CteRecepcaoOS' operation='CteRecepcaoOS' version='3.00'>https://hcte.fazenda.mg.gov.br/cte/services/CteRecepcaoOS?wsdl</CteRecepcaoOS>
             <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='3.00'>https://hcte.fazenda.mg.gov.br/cte/services/CteRetRecepcao</CteRetRecepcao>
             <CteCancelamento method='CTeCancelamento' operation='CteCancelamento' version='3.00'>https://hcte.fazenda.mg.gov.br/cte/services/CteCancelamento</CteCancelamento>
             <CteInutilizacao method='CTeInutilizacao' operation='CteInutilizacao' version='3.00'>https://hcte.fazenda.mg.gov.br/cte/services/CteInutilizacao</CteInutilizacao>
@@ -13,6 +14,7 @@
         </homologacao>
         <producao>
             <CteRecepcao method='CTeRecepcao' operation='CteRecepcao' version='3.00'>https://cte.fazenda.mg.gov.br/cte/services/CteRecepcao</CteRecepcao>
+            <CteRecepcaoOS method='CteRecepcaoOS' operation='CteRecepcaoOS' version='3.00'>https://cte.fazenda.mg.gov.br/cte/services/CteRecepcaoOS</CteRecepcaoOS>
             <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='3.00'>https://cte.fazenda.mg.gov.br/cte/services/CteRetRecepcao</CteRetRecepcao>
             <CteCancelamento method='CTeCancelamento' operation='CteCancelamento' version='3.00'>https://cte.fazenda.mg.gov.br/cte/services/CteCancelamento</CteCancelamento>
             <CteInutilizacao method='CTeInutilizacao' operation='CteInutilizacao' version='3.00'>https://cte.fazenda.mg.gov.br/cte/services/CteInutilizacao</CteInutilizacao>
@@ -25,6 +27,7 @@
         <sigla>MS</sigla>
         <homologacao>
             <CteRecepcao method='CTeRecepcao' operation='CteRecepcao' version='3.00'>https://homologacao.cte.ms.gov.br/ws/CteRecepcao</CteRecepcao>
+            <CteRecepcaoOS method='CteRecepcaoOS' operation='CteRecepcaoOS' version='3.00'>https://homologacao.cte.ms.gov.br/ws/CteRecepcaoOS</CteRecepcaoOS>
             <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='3.00'>https://homologacao.cte.ms.gov.br/ws/CteRetRecepcao</CteRetRecepcao>
             <CteCancelamento method='CTeCancelamento' operation='CteCancelamento' version='3.00'>https://homologacao.cte.ms.gov.br/ws/CteCancelamento</CteCancelamento>
             <CteInutilizacao method='CTeInutilizacao' operation='CteInutilizacao' version='3.00'>https://homologacao.cte.ms.gov.br/ws/CteInutilizacao</CteInutilizacao>
@@ -35,6 +38,7 @@
         </homologacao>
         <producao>
             <CteRecepcao method='CTeRecepcao' operation='CteRecepcao' version='3.00'>https://producao.cte.ms.gov.br/ws/CteRecepcao</CteRecepcao>
+            <CteRecepcaoOS method='CteRecepcaoOS' operation='CteRecepcaoOS' version='3.00'>https://producao.cte.ms.gov.br/ws/CteRecepcaoOS</CteRecepcaoOS>
             <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='3.00'>https://producao.cte.ms.gov.br/ws/CteRetRecepcao</CteRetRecepcao>
             <CteCancelamento method='CTeCancelamento' operation='CteCancelamento' version='3.00'>https://producao.cte.ms.gov.br/ws/CteCancelamento</CteCancelamento>
             <CteInutilizacao method='CTeInutilizacao' operation='CteInutilizacao' version='3.00'>https://producao.cte.ms.gov.br/ws/CteInutilizacao</CteInutilizacao>
@@ -48,6 +52,7 @@
         <sigla>MT</sigla>
         <homologacao>
             <CteRecepcao method='CTeRecepcao' operation='CteRecepcao' version='3.00'>https://homologacao.sefaz.mt.gov.br/ctews/services/CteRecepcao</CteRecepcao>
+            <CteRecepcaoOS method='CteRecepcaoOS' operation='CteRecepcaoOS' version='3.00'>https://homologacao.sefaz.mt.gov.br/ctews/services/CteRecepcaoOS</CteRecepcaoOS>
             <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='3.00'>https://homologacao.sefaz.mt.gov.br/ctews/services/CteRetRecepcao</CteRetRecepcao>
             <CteCancelamento method='CTeCancelamento' operation='CteCancelamento' version='3.00'>https://homologacao.sefaz.mt.gov.br/ctews/services/CteCancelamento</CteCancelamento>
             <CteInutilizacao method='CTeInutilizacao' operation='CteInutilizacao' version='3.00'>https://homologacao.sefaz.mt.gov.br/ctews/services/CteInutilizacao</CteInutilizacao>
@@ -69,6 +74,7 @@
         <sigla>PR</sigla>
         <homologacao>
             <CteRecepcao method='CTeRecepcao' operation='CteRecepcao' version='3.00'>https://homologacao.cte.fazenda.pr.gov.br/cte/CteRecepcao?wsdl</CteRecepcao>
+            <CteRecepcaoOS method='CteRecepcaoOS' operation='CteRecepcaoOS' version='3.00'>https://homologacao.cte.fazenda.pr.gov.br/cte/CteRecepcaoOS?wsdl</CteRecepcaoOS>
             <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='3.00'>https://homologacao.cte.fazenda.pr.gov.br/cte/CteRetRecepcao?wsdl</CteRetRecepcao>
             <CteCancelamento method='CTeCancelamento' operation='CteCancelamento' version='3.00'>https://homologacao.cte.fazenda.pr.gov.br/cte/CteCancelamento?wsdl</CteCancelamento>
             <CteInutilizacao method='CTeInutilizacao' operation='CteInutilizacao' version='3.00'>https://homologacao.cte.fazenda.pr.gov.br/cte/CteInutilizacao?wsdl</CteInutilizacao>
@@ -78,6 +84,7 @@
         </homologacao>
         <producao>
             <CteRecepcao method='CTeRecepcao' operation='CteRecepcao' version='3.00'>https://cte.fazenda.pr.gov.br/cte/CteRecepcao?wsdl</CteRecepcao>
+            <CteRecepcaoOS method='CteRecepcaoOS' operation='CteRecepcaoOS' version='3.00'>https://cte.fazenda.pr.gov.br/cte/CteRecepcaoOS?wsdl</CteRecepcaoOS>
             <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='3.00'>https://cte.fazenda.pr.gov.br/cte/CteRetRecepcao?wsdl</CteRetRecepcao>
             <CteCancelamento method='CTeCancelamento' operation='CteCancelamento' version='3.00'>https://cte.fazenda.pr.gov.br/cte/CteCancelamento?wsdl</CteCancelamento>
             <CteInutilizacao method='CTeInutilizacao' operation='CteInutilizacao' version='3.00'>https://cte.fazenda.pr.gov.br/cte/CteInutilizacao?wsdl</CteInutilizacao>
@@ -90,6 +97,7 @@
         <sigla>RS</sigla>
         <homologacao>
             <CteRecepcao method='CTeRecepcao' operation='CteRecepcao' version='3.00'>https://cte-homologacao.svrs.rs.gov.br/ws/cterecepcao/CteRecepcao.asmx</CteRecepcao>
+			<CteRecepcaoOS method='CteRecepcaoOS' operation='CteRecepcaoOS' version='3.00'>https://cte-homologacao.svrs.rs.gov.br/ws/cterecepcaoOS/CteRecepcaoOS.asmx</CteRecepcaoOS>
             <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='3.00'>https://cte-homologacao.svrs.rs.gov.br/ws/cteretrecepcao/cteRetRecepcao.asmx</CteRetRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsulta' version='3.00'>https://cte-homologacao.svrs.rs.gov.br/ws/cteconsulta/CteConsulta.asmx</CteConsultaProtocolo>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CteRecepcaoEvento' version='3.00'>https://cte-homologacao.svrs.rs.gov.br/ws/cterecepcaoevento/cterecepcaoevento.asmx</CteRecepcaoEvento>
@@ -98,6 +106,7 @@
         </homologacao>
         <producao>
             <CteRecepcao method='CTeRecepcao' operation='CteRecepcao' version='3.00'>https://cte.svrs.rs.gov.br/ws/cterecepcao/CteRecepcao.asmx</CteRecepcao>
+            <CteRecepcaoOS method='CteRecepcaoOS' operation='CteRecepcaoOS' version='3.00'>https://cte.svrs.rs.gov.br/ws/cterecepcaoos/cterecepcaoos.asmx</CteRecepcaoOS>
             <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='3.00'>https://cte.svrs.rs.gov.br/ws/cteretrecepcao/cteRetRecepcao.asmx</CteRetRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsulta' version='3.00'>https://cte.svrs.rs.gov.br/ws/cteconsulta/CteConsulta.asmx</CteConsultaProtocolo>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CteRecepcaoEvento' version='3.00'>https://cte.svrs.rs.gov.br/ws/cterecepcaoevento/cterecepcaoevento.asmx</CteRecepcaoEvento>
@@ -109,6 +118,7 @@
         <sigla>SP</sigla>
         <homologacao>
             <CteRecepcao method='cteRecepcaoLote' operation='CteRecepcao' version='3.00'>https://homologacao.nfe.fazenda.sp.gov.br/cteWEB/services/cteRecepcao.asmx</CteRecepcao>
+            <CteRecepcaoOS method='CteRecepcaoOS' operation='CteRecepcaoOS' version='3.00'>https://homologacao.nfe.fazenda.sp.gov.br/cteWEB/services/cteRecepcaoOS.asmx</CteRecepcaoOS>
             <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='3.00'>https://homologacao.nfe.fazenda.sp.gov.br/cteWEB/services/cteRetRecepcao.asmx</CteRetRecepcao>
             <CteCancelamento method='cteCancelamentoCT' operation='CteCancelamento' version='3.00'>https://homologacao.nfe.fazenda.sp.gov.br/cteWEB/services/cteCancelamento.asmx</CteCancelamento>
             <CteInutilizacao method='cteInutilizacaoCT' operation='CteInutilizacao' version='3.00'>https://homologacao.nfe.fazenda.sp.gov.br/cteWEB/services/cteInutilizacao.asmx</CteInutilizacao>
@@ -118,6 +128,7 @@
         </homologacao>
         <producao>
             <CteRecepcao method='cteRecepcaoLote' operation='CteRecepcao' version='3.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/cteRecepcao.asmx</CteRecepcao>
+            <CteRecepcaoOS method='CteRecepcaoOS' operation='CteRecepcaoOS' version='3.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/cteRecepcaoOS.asmx</CteRecepcaoOS>
             <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='3.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/cteRetRecepcao.asmx</CteRetRecepcao>
             <CteCancelamento method='cteCancelamentoCT' operation='CteCancelamento' version='3.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/cteCancelamento.asmx</CteCancelamento>
             <CteInutilizacao method='cteInutilizacaoCT' operation='CteInutilizacao' version='3.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/cteInutilizacao.asmx</CteInutilizacao>
@@ -130,6 +141,7 @@
         <sigla>SVRS</sigla>
         <homologacao>
             <CteRecepcao method='CTeRecepcao' operation='CteRecepcao' version='3.00'>https://cte-homologacao.svrs.rs.gov.br/ws/cterecepcao/CteRecepcao.asmx</CteRecepcao>
+            <CteRecepcaoOS method='CteRecepcaoOS' operation='CteRecepcaoOS' version='3.00'>https://cte-homologacao.svrs.rs.gov.br/ws/cterecepcaoos/cterecepcaoos.asmx</CteRecepcaoOS>
             <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='3.00'>https://cte-homologacao.svrs.rs.gov.br/ws/cteretrecepcao/cteRetRecepcao.asmx</CteRetRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsulta' version='3.00'>https://cte-homologacao.svrs.rs.gov.br/ws/cteconsulta/CteConsulta.asmx</CteConsultaProtocolo>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CteRecepcaoEvento' version='3.00'>https://cte-homologacao.svrs.rs.gov.br/ws/cterecepcaoevento/cterecepcaoevento.asmx</CteRecepcaoEvento>
@@ -138,6 +150,7 @@
         </homologacao>
         <producao>
             <CteRecepcao method='CTeRecepcao' operation='CteRecepcao' version='3.00'>https://cte.svrs.rs.gov.br/ws/cterecepcao/CteRecepcao.asmx</CteRecepcao>
+            <CteRecepcaoOS method='CteRecepcaoOS' operation='CteRecepcaoOS' version='3.00'>https://cte.svrs.rs.gov.br/ws/cterecepcaoos/cterecepcaoos.asmx</CteRecepcaoOS>
             <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='3.00'>https://cte.svrs.rs.gov.br/ws/cteretrecepcao/cteRetRecepcao.asmx</CteRetRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsultaProtocolo' version='3.00'>https://cte.svrs.rs.gov.br/ws/cteconsulta/CteConsulta.asmx</CteConsultaProtocolo>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CteRecepcaoEvento' version='3.00'>https://cte.svrs.rs.gov.br/ws/cterecepcaoevento/cterecepcaoevento.asmx</CteRecepcaoEvento>
