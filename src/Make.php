@@ -4130,7 +4130,7 @@ class Make extends BaseMake
         $this->infCteComp = $this->dom->createElement('infCteComp');
         $this->dom->addChild(
             $this->infCteComp,
-            'chave',
+            'chCTe',
             $chave,
             true,
             $identificador . ' Chave do CT-e complementado'
