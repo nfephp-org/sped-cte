@@ -99,7 +99,7 @@ class MakeTest extends PHPUnit_Framework_TestCase
     public function testToma03Tag() 
     {
         $cte = new Make();
-        $resp = $cte->toma03Tag(
+        $resp = $cte->toma3Tag(
             $toma = '3'                 // Indica o "papel" do tomador: 0-Remetente; 1-Expedidor; 2-Recebedor; 3-Destinatário
         );
 

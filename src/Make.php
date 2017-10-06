@@ -3256,6 +3256,38 @@ class Make extends BaseMake
         return $this->veic[$posicao];
     }
 
+
+    /**
+     * Leiaute - Rodoviário
+     * Gera as tags para o elemento: "moto" (Informações do(s) Motorista(s))
+     * #43
+     * Nível: 1
+     * @param string $xNome
+     * @param string $CPF
+     * @return mixed
+     */
+    public function motoTag($xNome = '', $CPF = '')
+    {
+        $identificador = '#43 <moto> - ';
+        $this->moto[] = $this->dom->createElement('moto');
+        $posicao = (integer)count($this->moto) - 1;
+        $this->dom->addChild(
+            $this->moto[$posicao],
+            'xNome',
+            $xNome,
+            false,
+            $identificador . 'Nome do motorista'
+        );
+        $this->dom->addChild(
+            $this->moto[$posicao],
+            'CPF',
+            $CPF,
+            false,
+            $identificador . 'CPF do motorista'
+        );
+        return $this->moto[$posicao];
+    }
+
     /**
      * Gera as tags para o elemento: "infCteComp" (Detalhamento do CT-e complementado)
      * #410
