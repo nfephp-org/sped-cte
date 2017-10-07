@@ -13,11 +13,22 @@ namespace NFePHP\CTe;
  * @author    Roberto L. Machado <linux.rlm at gmail dot com>
  */
 
+use NFePHP\Common\Keys;
+use NFePHP\Common\DOMImproved as Dom;
+use NFePHP\Common\Strings;
+use stdClass;
+use RuntimeException;
 use DOMElement;
-use NFePHP\Common\Base\BaseMake;
+use DateTime;
 
-class Make extends BaseMake
+
+class Make
 {
+    /**
+     * @var array
+     */
+    public $erros = [];
+    
     /**
      * versao
      * numero da versão do xml da CTe
@@ -474,7 +485,26 @@ class Make extends BaseMake
      * @var array
      */
     private $moto = array();
-
+    
+    public function __construct()
+    {
+        $this->dom = new Dom('1.0', 'UTF-8');
+        $this->dom->preserveWhiteSpace = false;
+        $this->dom->formatOutput = false;
+    }
+    
+    /**
+     * Returns xml string and assembly it is necessary
+     * @return string
+     */
+    public function getXML()
+    {
+        if (empty($this->xml)) {
+            $this->montaCTe();
+        }
+        return $this->xml;
+    }
+    
     /**
      * Monta o arquivo XML usando as tag's já preenchidas
      *
@@ -595,7 +625,10 @@ class Make extends BaseMake
         }
 
         $this->dom->appChild($this->CTe, $this->infCte, 'Falta tag "CTe"');
-        $this->dom->appChild($this->dom, $this->CTe, 'Falta tag "DOMDocument"');
+        $this->dom->appendChild($this->CTe);
+        //$this->dom->appChild($this->dom, $this->CTe, 'Falta tag "DOMDocument"');
+        // testa da chave
+        $this->checkCTeKey($this->dom);
         $this->xml = $this->dom->saveXML();
         return true;
     }
@@ -674,7 +707,7 @@ class Make extends BaseMake
      * @return \DOMElement
      */
     public function infCteTag($chave = '', $versao = '')
-    {
+    {      
         $this->infCte = $this->dom->createElement('infCte');
         $this->infCte->setAttribute('Id', 'CTe' . $chave);
         $this->infCte->setAttribute('versao', $versao);
@@ -4165,5 +4198,43 @@ class Make extends BaseMake
             $identificador . ' Data de Emissão do CT-e anulado'
         );
         return $this->infCteAnu;
+    }
+    
+    protected function checkCTeKey(Dom $dom)
+    {
+        $infCTe = $dom->getElementsByTagName("infCte")->item(0);
+        $ide = $dom->getElementsByTagName("ide")->item(0);
+        $emit = $dom->getElementsByTagName("emit")->item(0);
+        $cUF = $ide->getElementsByTagName('cUF')->item(0)->nodeValue;
+        $dhEmi = $ide->getElementsByTagName('dhEmi')->item(0)->nodeValue;
+        $cnpj = $emit->getElementsByTagName('CNPJ')->item(0)->nodeValue;
+        $mod = $ide->getElementsByTagName('mod')->item(0)->nodeValue;
+        $serie = $ide->getElementsByTagName('serie')->item(0)->nodeValue;
+        $nNF = $ide->getElementsByTagName('nCT')->item(0)->nodeValue;
+        $tpEmis = $ide->getElementsByTagName('tpEmis')->item(0)->nodeValue;
+        $cCT = $ide->getElementsByTagName('cCT')->item(0)->nodeValue;
+        $chave = str_replace('CTe', '', $infCTe->getAttribute("Id"));
+
+        $dt = new DateTime($dhEmi);
+
+        $chaveMontada = Keys::build(
+            $cUF,
+            $dt->format('y'),
+            $dt->format('m'),
+            $cnpj,
+            $mod,
+            $serie,
+            $nNF,
+            $tpEmis,
+            $cCT
+        );
+        //caso a chave contida na NFe esteja errada
+        //substituir a chave
+        if ($chaveMontada != $chave) {
+            $ide->getElementsByTagName('cDV')->item(0)->nodeValue = substr($chaveMontada, -1);
+            $infCTe = $dom->getElementsByTagName("infCte")->item(0);
+            $infCTe->setAttribute("Id", "CTe" . $chaveMontada);
+            $this->chCTe = $chaveMontada;
+        }
     }
 }
