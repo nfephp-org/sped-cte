@@ -26,7 +26,7 @@ use NFePHP\CTe\Auxiliar\Response;
  *          Maison K. Sakamoto <maison.sakamoto at gmail do com>
  *          Samuel M Basso <samuelbasso at gmail do com>
  */
-class Tools_old extends BaseTools
+class ToolsOld extends BaseTools
 {
     /**
      * urlPortal
