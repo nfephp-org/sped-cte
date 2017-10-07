@@ -20,10 +20,10 @@ class Header
      */
     public static function get($namespace, $cUF, $version)
     {
-        return "<nfeCabecMsg "
+        return "<cteCabecMsg "
             . "xmlns=\"$namespace\">"
             . "<cUF>$cUF</cUF>"
             . "<versaoDados>$version</versaoDados>"
-            . "</nfeCabecMsg>";
+            . "</cteCabecMsg>";
     }
 }

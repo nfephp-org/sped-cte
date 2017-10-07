@@ -3,7 +3,7 @@
 namespace NFePHP\CTe\Factories;
 
 /**
- * This class add protocol to a xml NFe
+ * This class add protocol to a xml CTe
  *
  * @category  NFePHP
  * @package   NFePHP\CTe\Factories\Protocol
@@ -34,8 +34,8 @@ class Protocol
         $xmlprotocol
     ) {
         //test if string is a XML
-        if (!Validator::isXml($xmlnfe) ||
-            !Validator::isXml($xmlprotocol)
+        if (!Validator::isXML($xmlnfe) ||
+            !Validator::isXML($xmlprotocol)
         ) {
             throw new \InvalidArgumentException(
                 'O documento passado não é um xml.'
@@ -83,7 +83,7 @@ class Protocol
      */
     public static function remove($xmlprocnfe)
     {
-        if (!Validator::isXml($xmlprocnfe)) {
+        if (!Validator::isXML($xmlprocnfe)) {
             throw new InvalidArgumentException(
                 'O documento passado não é um xml.'
             );

@@ -16,6 +16,8 @@ namespace NFePHP\CTe\Common;
  * @link      http://github.com/nfephp-org/sped-nfe for the canonical source repository
  */
 
+use SimpleXMLElement;
+
 class Webservices
 {
     public $json;
@@ -28,7 +30,7 @@ class Webservices
      */
     public function __construct($xml)
     {
-        $this->convert($xml);
+        $this->toStd($xml);
     }
     
     /**
@@ -37,7 +39,7 @@ class Webservices
      * the storage folder
      * @param string $sigla
      * @param string $ambiente "homologacao" ou "producao"
-     * @param string $modelo "55" ou "65"
+     * @param string $modelo "57"
      * @return boolean | \stdClass
      */
     public function get($sigla, $ambiente, $modelo)
@@ -51,10 +53,30 @@ class Webservices
             );
         }
         $auto = $autorizadores[$modelo][$sigla];
-        if (empty($auto)) {
+        if (empty($auto) || empty($this->std)) {
             return false;
         }
-        return $this->std->$auto->$ambiente;
+        if (empty($this->std->$auto)) {
+            throw new \RuntimeException(
+                "Não existem webservices cadastrados para  [$sigla] no modelo [$modelo]"
+            );
+        }
+        $svw = $this->std->$auto->$ambiente;
+        if ($auto == 'SVRS' || $auto == 'SVAN') {
+            $pad = !empty($this->std->$sigla->$ambiente) ? $this->std->$sigla->$ambiente : '';
+            $pad = json_decode(json_encode($pad), true);
+            if (!empty($pad)) {
+                foreach ($pad as $key => $p) {
+                    if (!empty($svw->$key)) {
+                        $svw->$key->method = $p['method'];
+                        $svw->$key->operation = $p['operation'];
+                        $svw->$key->version = $p['version'];
+                        $svw->$key->url = $p['url'];
+                    }
+                }
+            }
+        }
+        return $svw;
     }
 
     /**
@@ -89,42 +111,42 @@ class Webservices
         $aWS = [];
         foreach ($resp->children() as $element) {
             $sigla = (string) $element->sigla;
-            $homo = $element->homologacao;
-            foreach ($homo->children() as $children) {
-                $name = (string) $children->getName();
-                $method = (string) $children['method'];
-                $operation = (string) $children['operation'];
-                $version = (string) $children['version'];
-                $url = (string) $children[0];
-                $operations = [
-                    'method' => $method,
-                    'operation' => $operation,
-                    'version' => $version,
-                    'url' => $url
-                ];
-                $amb['homologacao'][$name] = $operations;
+            $aWS[$sigla] = [];
+            if (isset($element->homologacao)) {
+                $aWS[$sigla] += $this->extract($element->homologacao, 'homologacao');
             }
-            $aWS[$sigla] = $amb;
-            $homo = $element->producao;
-            foreach ($homo->children() as $children) {
-                $name = $children->getName();
-                $name = (string) $children->getName();
-                $method = (string) $children['method'];
-                $operation = (string) $children['operation'];
-                $version = (string) $children['version'];
-                $url = (string) $children[0];
-                $operations = [
-                    'method' => $method,
-                    'operation' => $operation,
-                    'version' => $version,
-                    'url' => $url
-                ];
-                $amb['producao'][$name] = $operations;
+            if (isset($element->producao)) {
+                $aWS[$sigla] += $this->extract($element->producao, 'producao');
             }
-            $aWS[$sigla] = $amb;
-            $amb = null;
         }
         $this->json = json_encode($aWS);
         $this->std = json_decode(json_encode($aWS));
+    }
+    
+    /**
+     * Extract data from wbservices XML strorage to a array
+     * @param SimpleXMLElement $node
+     * @param string $environment
+     * @return array
+     */
+    protected function extract(SimpleXMLElement $node, $environment)
+    {
+        $amb[$environment] = [];
+        foreach ($node->children() as $children) {
+            $name = $children->getName();
+            $name = (string) $children->getName();
+            $method = (string) $children['method'];
+            $operation = (string) $children['operation'];
+            $version = (string) $children['version'];
+            $url = (string) $children[0];
+            $operations = [
+                'method' => $method,
+                'operation' => $operation,
+                'version' => $version,
+                'url' => $url
+            ];
+            $amb[$environment][$name] = $operations;
+        }
+        return $amb;
     }
 }
