@@ -21,7 +21,6 @@ use RuntimeException;
 use DOMElement;
 use DateTime;
 
-
 class Make
 {
     /**
@@ -707,7 +706,7 @@ class Make
      * @return \DOMElement
      */
     public function infCteTag($chave = '', $versao = '')
-    {      
+    {
         $this->infCte = $this->dom->createElement('infCte');
         $this->infCte->setAttribute('Id', 'CTe' . $chave);
         $this->infCte->setAttribute('versao', $versao);

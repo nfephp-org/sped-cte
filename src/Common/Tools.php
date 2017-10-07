@@ -165,7 +165,7 @@ class Tools
     /**
      * @var array
      */
-    protected $availableVersions = [        
+    protected $availableVersions = [
         '3.00' => 'PL_CTe_300'
     ];
 
@@ -326,7 +326,7 @@ class Tools
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = false;
-        $dom->loadXML($signed);        
+        $dom->loadXML($signed);
         //exception will be throw if CTe is not valid
         $this->isValid($this->versao, $signed, 'cte');
         return $signed;
@@ -502,13 +502,12 @@ class Tools
             . "/"
             . $this->urlMethod
             . "\"";
-        //montagem do SOAP Header        
+        //montagem do SOAP Header
         $this->objHeader = new \SOAPHeader(
             $this->urlNamespace,
             'cteCabecMsg',
             ['cUF' => $this->urlcUF, 'versaoDados' => $this->urlVersion]
         );
-        
     }
     
     /**
@@ -540,7 +539,7 @@ class Tools
     {
         $file = $this->pathwsfiles
             . DIRECTORY_SEPARATOR
-            . "wscte_".$this->versao."_mod57.xml";        
+            . "wscte_".$this->versao."_mod57.xml";
         if (! file_exists($file)) {
             return '';
         }

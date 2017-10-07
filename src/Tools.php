@@ -35,13 +35,13 @@ class Tools extends ToolsCommon
     /**
      * Request authorization to issue CTe in batch with one or more documents
      * @param array $aXml array of nfe's xml
-     * @param string $idLote lote number     
+     * @param string $idLote lote number
      * @param bool $compactar flag to compress data with gzip
      * @return string soap response xml
      */
     public function sefazEnviaLote(
         $aXml,
-        $idLote = '',        
+        $idLote = '',
         $compactar = false,
         &$xmls = []
     ) {
@@ -49,7 +49,7 @@ class Tools extends ToolsCommon
             throw new \InvalidArgumentException('Os XML das CTe devem ser passados em um array.');
         }
         $servico = 'CteRecepcao';
-        $this->checkContingencyForWebServices($servico);        
+        $this->checkContingencyForWebServices($servico);
         if ($this->contingency->type != '') {
             //em modo de contingencia
             //esses xml deverão ser modificados e re-assinados e retornados
@@ -70,7 +70,7 @@ class Tools extends ToolsCommon
             $this->tpAmb
         );
         $request = "<enviCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
-            . "<idLote>$idLote</idLote>"            
+            . "<idLote>$idLote</idLote>"
             . "$sxml"
             . "</enviCTe>";
         $this->isValid($this->urlVersion, $request, 'enviCTe');
@@ -317,7 +317,7 @@ class Tools extends ToolsCommon
         $this->isValid($this->urlVersion, $request, 'consStatServCte');
         $this->lastRequest = $request;
         $parameters = ['cteDadosMsg' => $request];
-        $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$request</cteDadosMsg>";        
+        $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$request</cteDadosMsg>";
         $this->lastResponse = $this->sendRequest($body, $parameters);
         return $this->lastResponse;
     }
