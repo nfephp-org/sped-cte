@@ -45,6 +45,9 @@ class Standardize
         'retConsReciCTe',
         'consSitCTe',
         'retConsSitCTe',
+        'eventoCTe',
+        'retEventoCTe',
+        'evCancCTe',
         'CTe'
     ];
     

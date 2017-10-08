@@ -6,6 +6,7 @@ require_once '../bootstrap.php';
 
 use NFePHP\CTe\Make;
 use NFePHP\CTe\Tools;
+use NFePHP\CTe\Complements;
 use NFePHP\CTe\Common\Standardize;
 use NFePHP\Common\Certificate;
 use NFePHP\Common\Soap\SoapCurl;
@@ -44,7 +45,7 @@ $cte = new Make();
 
 $dhEmi = date("Y-m-d\TH:i:s-03:00");
 
-$numeroCTE = '1';
+$numeroCTE = '127';
 
 $chave = montaChave(
     '43', date('y', strtotime($dhEmi)), date('m', strtotime($dhEmi)), $arr['cnpj'], $tools->model(), '1', $numeroCTE, '1', '10'
@@ -59,7 +60,7 @@ $cDV = substr($chave, -1);      //Digito Verificador
 
 $resp = $cte->ideTag(
     $cUF = '43', // Codigo da UF da tabela do IBGE
-    $cCT = rand('00000010', '99999999'), // Codigo numerico que compoe a chave de acesso
+    $cCT = rand('10000010', '99999999'), // Codigo numerico que compoe a chave de acesso
     $CFOP = '6932', // Codigo fiscal de operacoes e prestacoes
     $natOp = substr('PRESTACAO DE SERVICO DE TRANSPORTE A ESTABELECIMEN', 0, 60), // Natureza da operacao
     //$forPag = '',              // 0-Pago; 1-A pagar; 2-Outros
@@ -242,7 +243,7 @@ $resp = $cte->rodoTag(
 );
 
 $resp = $cte->montaCTe();
-
+$chave = $cte->chCTe;
 $filename = "xml/{$chave}-cte.xml";
 
 if ($resp) {
@@ -294,8 +295,7 @@ $stdCl = new Standardize($res);
 $arr = $stdCl->toArray();
 $std = $stdCl->toStd();
 if ($std->protCTe->infProt->cStat == 100) {//Autorizado o uso do CT-e
-  $filename = "xml/aprovadas/{$chave}-protcte.xml";
-  file_put_contents($filename, $xml);
+  //adicionar protocolo
 }
 echo '<pre>';
 print_r($arr);

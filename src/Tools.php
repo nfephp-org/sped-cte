@@ -484,8 +484,8 @@ class Tools extends ToolsCommon
     }
 
     /**
-     * Requires nfe cancellation
-     * @param  string $chave key of NFe
+     * Requires cte cancellation
+     * @param  string $chave key of CTe
      * @param  string $xJust justificative 255 characters max
      * @param  string $nProt protocol number
      * @return string
@@ -498,7 +498,11 @@ class Tools extends ToolsCommon
         );
         $tpEvento = 110111;
         $nSeqEvento = 1;
-        $tagAdic = "<nProt>$nProt</nProt><xJust>$xJust</xJust>";
+        $tagAdic = "<evCancCTe>"
+            . "<descEvento>Cancelamento</descEvento>"
+            . "<nProt>$nProt</nProt>"
+            . "<xJust>$xJust</xJust>"
+            . "</evCancCTe>";
         return $this->sefazEvento(
             $uf,
             $chave,
@@ -632,7 +636,7 @@ class Tools extends ToolsCommon
         if ($tpEvento == 110140) {
             $ignore = true;
         }
-        $servico = 'RecepcaoEvento';
+        $servico = 'CteRecepcaoEvento';
         $this->checkContingencyForWebServices($servico);
         $this->servico(
             $servico,
@@ -649,22 +653,20 @@ class Tools extends ToolsCommon
         $sSeqEvento = str_pad($nSeqEvento, 2, "0", STR_PAD_LEFT);
         $eventId = "ID".$tpEvento.$chave.$sSeqEvento;
         $cOrgao = UFList::getCodeByUF($uf);
-        $request = "<evento xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
+        $request = "<eventoCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
             . "<infEvento Id=\"$eventId\">"
             . "<cOrgao>$cOrgao</cOrgao>"
             . "<tpAmb>$this->tpAmb</tpAmb>"
             . "<CNPJ>$cnpj</CNPJ>"
-            . "<chNFe>$chave</chNFe>"
+            . "<chCTe>$chave</chCTe>"
             . "<dhEvento>$dhEvento</dhEvento>"
             . "<tpEvento>$tpEvento</tpEvento>"
             . "<nSeqEvento>$nSeqEvento</nSeqEvento>"
-            . "<verEvento>$this->urlVersion</verEvento>"
-            . "<detEvento versao=\"$this->urlVersion\">"
-            . "<descEvento>$descEvento</descEvento>"
+            . "<detEvento versaoEvento=\"$this->urlVersion\">"
             . "$tagAdic"
             . "</detEvento>"
             . "</infEvento>"
-            . "</evento>";
+            . "</eventoCTe>";
         //assinatura dos dados
         $request = Signer::sign(
             $this->certificate,
@@ -675,12 +677,8 @@ class Tools extends ToolsCommon
             $this->canonical
         );
         $request = Strings::clearXmlString($request, true);
-        $lote = $dt->format('YmdHis').rand(0, 9);
-        $request = "<envEvento xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
-            . "<idLote>$lote</idLote>"
-            . $request
-            . "</envEvento>";
-        $this->isValid($this->urlVersion, $request, 'envEvento');
+
+        $this->isValid($this->urlVersion, $request, 'eventoCTe');
         $this->lastRequest = $request;
         $parameters = ['cteDadosMsg' => $request];
         $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$request</cteDadosMsg>";
@@ -847,7 +845,7 @@ class Tools extends ToolsCommon
                 break;
             case 110111:
                 //cancelamento
-                $std->alias = 'CancNFe';
+                $std->alias = 'CancCTe';
                 $std->desc = 'Cancelamento';
                 break;
             case 110140:

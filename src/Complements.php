@@ -20,7 +20,7 @@ class Complements
     public static function toAuthorize($request, $response)
     {
         $st = new Standardize();
-        $key = ucfirst($st->whichIs($request));        
+        $key = ucfirst($st->whichIs($request));
         if ($key != 'CTe' && $key != 'EnvEvento' && $key != 'InutNFe') {
             //wrong document, this document is not able to recieve a protocol
             throw DocumentsException::wrongDocument(0, $key);
