@@ -1,15 +1,4 @@
 <?php
-/* * @category  Teste
- * @package   Spedcteexamples
- * @copyright 2009-2016 NFePHP
- * @name      testaMakeCTe.php
- * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL v.3
- * @link      http://github.com/nfephp-org/sped-cte for the canonical source repository
- * @author    Samuel M. Basso <samuelbasso@gmail.com>
- * Adaptado por Maison K. Sakamoto <maison.sakamoto@gmail.com>
- * 
- * TESTE PARA A VERSÃO 3.0 do CT-e
- * */
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
@@ -29,13 +18,10 @@ $arr = [
     "atualizacao" => "2016-11-03 18:01:21",
     "tpAmb" => 2,
     "razaosocial" => "SUA RAZAO SOCIAL LTDA",
-    "cnpj" => "99999999999999",
+    "cnpj" => "86933033000100",
     "siglaUF" => "RS",
     "schemes" => "PL_CTe_300",
     "versao" => '3.00',
-    "tokenIBPT" => "AAAAAAA",
-    "CSC" => "GPB0JBWLUR6HWFTVEAS6RJ69GPCROFPBBB8G",
-    "CSCid" => "000001",
     "proxyConf" => [
         "proxyIp" => "",
         "proxyPort" => "",
@@ -51,24 +37,14 @@ $content = file_get_contents('fixtures/certificado.pfx');
 
 //intancia a classe tools
 $tools = new Tools($configJson, Certificate::readPfx($content, '02040608'));
-//seta o modelo para 57
+
 $tools->model('57');
 
 $cte = new Make();
-//$cteTools = new Tools('../config/config.json');
 
 $dhEmi = date("Y-m-d\TH:i:s-03:00");
-//$dhEmi = date("d/m/Y");
 
-$numeroCTE = '2463';
-
-//$cteTools->aConfig['siglaUF'] = $obj->emitenteUFNome;                       // SIGLA DA UF
-//$cteTools->aConfig['cnpj']= Formatador::somenteNumeros($obj->emitenteCNPJ); // CNPJ do emitente
-//$cteTools->aConfig['ie']= Formatador::somenteNumeros($obj->emitenteIE);     // Inscricao estadual
-//$cteTools->aConfig['razaosocial']=$obj->emitenteRazao;                      // Razao social
-//$cteTools->aConfig['nomefantasia']="BARTHOLO TRANSPORTES RODOVIARIOS LTDA"; // Nome fantasia
-//$cteTools->aConfig['schemesCTe']="PL_CTe_300"; // Versao do XML
-//$cteTools->aConfig['pathXmlUrlFileCTe']="cte_ws3.xml";
+$numeroCTE = '1';
 
 $chave = montaChave(
     '43', date('y', strtotime($dhEmi)), date('m', strtotime($dhEmi)), $arr['cnpj'], $tools->model(), '1', $numeroCTE, '1', '10'
@@ -82,13 +58,13 @@ $resp = $cte->infCteTag($chave, $versao = '3.00');
 $cDV = substr($chave, -1);      //Digito Verificador
 
 $resp = $cte->ideTag(
-    $cUF = '41', // Codigo da UF da tabela do IBGE
-    $cCT = '00000010', // Codigo numerico que compoe a chave de acesso
-    $CFOP = '6352', // Codigo fiscal de operacoes e prestacoes
+    $cUF = '43', // Codigo da UF da tabela do IBGE
+    $cCT = rand('00000010', '99999999'), // Codigo numerico que compoe a chave de acesso
+    $CFOP = '6932', // Codigo fiscal de operacoes e prestacoes
     $natOp = substr('PRESTACAO DE SERVICO DE TRANSPORTE A ESTABELECIMEN', 0, 60), // Natureza da operacao
     //$forPag = '',              // 0-Pago; 1-A pagar; 2-Outros
     $mod = '57', // Modelo do documento fiscal: 57 para identificação do CT-e
-    $serie = '2', // Serie do CTe
+    $serie = '1', // Serie do CTe
     $nCT = $numeroCTE, // Numero do CTe
     $dhEmi, // Data e hora de emissão do CT-e: Formato AAAA-MM-DDTHH:MM:DD
     $tpImp = '1', // Formato de impressao do DACTE: 1-Retrato; 2-Paisagem.
@@ -99,17 +75,17 @@ $resp = $cte->ideTag(
     // 2 -CT-e de Anulação; 3 - CT-e Substituto
     $procEmi = '0', // Descricao no comentario acima
     $verProc = '3.0', // versao do aplicativo emissor
-    $indGlobalizado = '1',
+    $indGlobalizado = '',
     //$refCTE = '',             // Chave de acesso do CT-e referenciado
-    $cMunEnv = '4108304', // Utilizar a tabela do IBGE. Informar 9999999 para as operações com o exterior.
+    $cMunEnv = '4302105', // Utilizar a tabela do IBGE. Informar 9999999 para as operações com o exterior.
     $xMunEnv = 'FOZ DO IGUACU', // Informar PAIS/Municipio para as operações com o exterior.
-    $UFEnv = 'PR', // Informar 'EX' para operações com o exterior.
+    $UFEnv = 'RS', // Informar 'EX' para operações com o exterior.
     $modal = '01', // Preencher com:01-Rodoviário; 02-Aéreo; 03-Aquaviário;04-
     $tpServ = '0', // 0- Normal; 1- Subcontratação; 2- Redespacho;
     // 3- Redespacho Intermediário; 4- Serviço Vinculado a Multimodal
-    $cMunIni = '4108304', // Utilizar a tabela do IBGE. Informar 9999999 para as operações com o exterior.
+    $cMunIni = '4302105', // Utilizar a tabela do IBGE. Informar 9999999 para as operações com o exterior.
     $xMunIni = 'FOZ DO IGUACU', // Informar 'EXTERIOR' para operações com o exterior.
-    $UFIni = 'PR', // Informar 'EX' para operações com o exterior.
+    $UFIni = 'RS', // Informar 'EX' para operações com o exterior.
     $cMunFim = '3523909', // Utilizar a tabela do IBGE. Informar 9999999 para operações com o exterior.
     $xMunFim = 'ITU', // Informar 'EXTERIOR' para operações com o exterior.
     $UFFim = 'SP', // Informar 'EX' para operações com o exterior.
@@ -129,10 +105,10 @@ $resp = $cte->toma4Tag(
     $CNPJ = '11509962000197', // CNPJ
     $CPF = '', // CPF
     $IE = 'ISENTO', // Iscricao estadual
-    $xNome = 'OTIMIZY', // Razao social ou Nome
-    $xFant = 'OTIMIZY', // Nome fantasia
-    $fone = '5434625522', // Telefone
-    $email = 'contato@otimizy.com.br'   // email
+    $xNome = 'RAZAO SOCIAL', // Razao social ou Nome
+    $xFant = 'NOME FANTASIA', // Nome fantasia
+    $fone = '5532128202', // Telefone
+    $email = 'email@gmail.com'   // email
 );
 
 $resp = $cte->enderTomaTag(
@@ -150,7 +126,7 @@ $resp = $cte->enderTomaTag(
 
 $resp = $cte->emitTag(
     $CNPJ = $arr['cnpj'], // CNPJ do emitente
-    $IE = '9057800426', // Inscricao estadual
+    $IE = '0100072968', // Inscricao estadual
     $IEST = "", // Inscricao estadual
     $xNome = $arr['razaosocial'], // Razao social
     $xFant = 'Nome Fantasia' // Nome fantasia
@@ -158,10 +134,10 @@ $resp = $cte->emitTag(
 
 $resp = $cte->enderEmitTag(
     $xLgr = 'RUA CARLOS LUZ', // Logradouro
-    $nro = '33', // Numero
+    $nro = '123', // Numero
     $xCpl = '', // Complemento
     $xBairro = 'PARQUE PRESIDENTE', // Bairro
-    $cMun = '4108304', // Código do município (utilizar a tabela do IBGE)
+    $cMun = '4302105', // Código do município (utilizar a tabela do IBGE)
     $xMun = 'FOZ DO IGUACU', // Nome do municipio
     $CEP = '85863150', // CEP
     $UF = $arr['siglaUF'], // Sigla UF
@@ -288,13 +264,15 @@ if ($resp) {
 $xml = $tools->signCTe($xml);
 //header('Content-type: text/xml; charset=UTF-8');
 //print_r($xml);
+//exit();
 //Salva xml assinado
 $filename = "xml/{$chave}-cte.xml";
 file_put_contents($filename, $xml);
 
 
 $axmls[] = $xml;
-$res = $tools->sefazEnviaLote($axmls);
+$lote = substr(str_replace(',', '', number_format(microtime(true) * 1000000, 0)), 0, 15);
+$res = $tools->sefazEnviaLote($axmls, $lote);
 
 //Converte resposta
 $stdCl = new Standardize($res);
@@ -306,27 +284,24 @@ $std = $stdCl->toStd();
 
 if ($std->cStat != 103) {//103 - Lote recebido com Sucesso
   //processa erros
-} else {
-  echo "recibo: " . $std->infRec->nRec;
-  //Consulta Recibo
-  $res = $tools->sefazConsultaRecibo($std->infRec->nRec);
-  $stdCl = new Standardize($res);
-  $arr = $stdCl->toArray();
   print_r($arr);
 }
 
-exit();
-$aRetorno = array();
-$tpAmb = '2';
-$idLote = '';
-$indSinc = '1';
-$flagZip = false;
-
-$retorno = $cteTools->sefazEnvia($xml, $tpAmb = '2', $idLote, $aRetorno, $indSinc, $flagZip);
+echo "recibo: " . $std->infRec->nRec;
+//Consulta Recibo
+$res = $tools->sefazConsultaRecibo($std->infRec->nRec);
+$stdCl = new Standardize($res);
+$arr = $stdCl->toArray();
+$std = $stdCl->toStd();
+if ($std->protCTe->infProt->cStat == 100) {//Autorizado o uso do CT-e
+  $filename = "xml/aprovadas/{$chave}-protcte.xml";
+  file_put_contents($filename, $xml);
+}
 echo '<pre>';
-echo htmlspecialchars($cteTools->soapDebug);
-print_r($aRetorno);
-echo "</pre>";
+print_r($arr);
+
+
+exit();
 
 function montaChave($cUF, $ano, $mes, $cnpj, $mod, $serie, $numero, $tpEmis, $codigo = '')
 {

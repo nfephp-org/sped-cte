@@ -43,6 +43,8 @@ class Standardize
         'enviCTe',
         'retEnviCte',
         'retConsReciCTe',
+        'consSitCTe',
+        'retConsSitCTe',
         'CTe'
     ];
     

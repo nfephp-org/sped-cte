@@ -126,7 +126,7 @@ class Tools extends ToolsCommon
     }
 
     /**
-     * Check the NFe status for the 44-digit key and retrieve the protocol
+     * Check the CTe status for the 44-digit key and retrieve the protocol
      * @param string $chave
      * @param int $tpAmb
      * @return string
@@ -138,19 +138,19 @@ class Tools extends ToolsCommon
             $tpAmb = $this->tpAmb;
         }
         //carrega serviço
-        $servico = 'NfeConsultaProtocolo';
+        $servico = 'CteConsultaProtocolo';
         $this->checkContingencyForWebServices($servico);
         $this->servico(
             $servico,
             $uf,
             $tpAmb
         );
-        $request = "<consSitNFe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
+        $request = "<consSitCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
             . "<tpAmb>$tpAmb</tpAmb>"
             . "<xServ>CONSULTAR</xServ>"
-            . "<chNFe>$chave</chNFe>"
-            . "</consSitNFe>";
-        $this->isValid($this->urlVersion, $request, 'consSitNFe');
+            . "<chCTe>$chave</chCTe>"
+            . "</consSitCTe>";
+        $this->isValid($this->urlVersion, $request, 'consSitCTe');
         $this->lastRequest = $request;
         $parameters = ['cteDadosMsg' => $request];
         $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$request</cteDadosMsg>";
