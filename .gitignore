@@ -14,3 +14,7 @@ nbproject
 build
 composer.lock
 config.json
+examples/xml/*.xml
+examples/xml/aprovadas/*.xml
+examples/xml/canceladas/*.xml
+examples/xml/cce/*.xml
