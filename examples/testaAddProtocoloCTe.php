@@ -38,7 +38,7 @@ $content = file_get_contents('fixtures/certificado.pfx');
 //intancia a classe tools
 $tools = new Tools($configJson, Certificate::readPfx($content, '02040608'));
 
-$chave = '43171086933033000100570010000001271293693261';
+$chave = '43171086933033000100570010000001261361744574';
 $response = $tools->sefazConsultaChave($chave);
 $ctefile = file_get_contents("xml/{$chave}-cte.xml");
 $auth = Complements::toAuthorize($ctefile, $response);

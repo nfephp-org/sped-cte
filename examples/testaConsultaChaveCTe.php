@@ -36,40 +36,18 @@ $configJson = json_encode($arr);
 $content = file_get_contents('fixtures/certificado.pfx');
 
 try {
+//intancia a classe tools
   $tools = new Tools($configJson, Certificate::readPfx($content, '02040608'));
-  $tools->model('57');
 
-  $chave = '43171086933033000100570010000001271293693261';
-  $xJust = 'Valor do frete incorreto.';
-  $nProt = '143170000724044';
-  $response = $tools->sefazCancela($chave, $xJust, $nProt);
-//     header('Content-type: text/xml; charset=UTF-8');
-//print_r($response);
-//exit();
-//    
-  //você pode padronizar os dados de retorno atraves da classe abaixo
-  //de forma a facilitar a extração dos dados do XML
-  //NOTA: mas lembre-se que esse XML muitas vezes será necessário, 
-  //      quando houver a necessidade de protocolos
+  $chave = '43171086933033000100570010000001251373710320';
+  $response = $tools->sefazConsultaChave($chave);
   $stdCl = new Standardize($response);
-  //nesse caso $std irá conter uma representação em stdClass do XML retornado
-  $std = $stdCl->toStd();
   //nesse caso o $arr irá conter uma representação em array do XML retornado
   $arr = $stdCl->toArray();
-  //nesse caso o $json irá conter uma representação em JSON do XML retornado
-  $json = $stdCl->toJson();
+    
+  echo '<pre>';
   print_r($arr);
-  $cStat = $std->infEvento->cStat;
-  if ($cStat == '101' || $cStat == '135' || $cStat == '155') {
-    //SUCESSO PROTOCOLAR A SOLICITAÇÂO ANTES DE GUARDAR
-    $xml = Complements::toAuthorize($tools->lastRequest, $response);
-    //grave o XML protocolado e prossiga com outras tarefas de seu aplicativo
-    $filename = "xml/canceladas/{$chave}-CancCTe-procEvento.xml";
-    file_put_contents($filename, $xml);
-  } else {
-    //houve alguma falha no evento 
-    //TRATAR
-  }
+  exit();
 } catch (\Exception $e) {
   echo $e->getMessage();
   //TRATAR

@@ -21,7 +21,7 @@ class Complements
     {
         $st = new Standardize();
         $key = ucfirst($st->whichIs($request));
-        if ($key != 'CTe' && $key != 'EnvEvento' && $key != 'InutNFe') {
+        if ($key != 'CTe' && $key != 'EventoCTe' && $key != 'InutNFe') {
             //wrong document, this document is not able to recieve a protocol
             throw DocumentsException::wrongDocument(0, $key);
         }
@@ -74,70 +74,6 @@ class Complements
         $nfeb2bXML = $procb2b->saveXML();
         $nfeb2bXMLString = str_replace(array("\n","\r","\s"), '', $nfeb2bXML);
         return (string) $nfeb2bXMLString;
-    }
-    
-    /**
-     * Add cancel protocol to a autorized NFe
-     * if event is not a cancellation will return
-     * the same autorized NFe passing
-     * NOTE: This action is not necessary, I use only for my needs to
-     *       leave the NFe marked as Canceled in order to avoid mistakes
-     *       after its cancellation.
-     * @param  string $nfe content of autorized NFe XML
-     * @param  string $cancelamento content of SEFAZ response
-     * @return string
-     * @throws \InvalidArgumentException
-     */
-    public static function cancelRegister($nfe, $cancelamento)
-    {
-        $procXML = $nfe;
-        $domnfe = new DOMDocument('1.0', 'utf-8');
-        $domnfe->formatOutput = false;
-        $domnfe->preserveWhiteSpace = false;
-        $domnfe->loadXML($nfe);
-        $nodenfe = $domnfe->getElementsByTagName('NFe')->item(0);
-        $proNFe = $domnfe->getElementsByTagName('protNFe')->item(0);
-        if (empty($proNFe)) {
-            //not protocoladed NFe
-            throw DocumentsException::wrongDocument(1);
-        }
-        $chaveNFe = $proNFe->getElementsByTagName('chNFe')->item(0)->nodeValue;
-        $tpAmb = $domnfe->getElementsByTagName('tpAmb')->item(0)->nodeValue;
-        
-        $domcanc = new DOMDocument('1.0', 'utf-8');
-        $domcanc->formatOutput = false;
-        $domcanc->preserveWhiteSpace = false;
-        $domcanc->loadXML($cancelamento);
-        $retEvento = $domcanc->getElementsByTagName('retEvento')->item(0);
-        $eventos = $retEvento->getElementsByTagName('infEvento');
-        foreach ($eventos as $evento) {
-            $cStat = $evento->getElementsByTagName('cStat')
-                ->item(0)
-                ->nodeValue;
-            $tpAmb = $evento->getElementsByTagName('tpAmb')
-                ->item(0)
-                ->nodeValue;
-            $chaveEvento = $evento->getElementsByTagName('chNFe')
-                ->item(0)
-                ->nodeValue;
-            $tpEvento = $evento->getElementsByTagName('tpEvento')
-                ->item(0)
-                ->nodeValue;
-            if (in_array($cStat, ['135', '136', '155'])
-                && $tpEvento == '110111'
-                && $chaveEvento == $chaveNFe
-            ) {
-                $proNFe->getElementsByTagName('cStat')
-                    ->item(0)
-                    ->nodeValue = '101';
-                $proNFe->getElementsByTagName('xMotivo')
-                    ->item(0)
-                    ->nodeValue = 'Cancelamento de NF-e homologado';
-                $procXML = Strings::clearProtocoledXML($domnfe->saveXML());
-                break;
-            }
-        }
-        return (string) $procXML;
     }
     
     /**
@@ -272,16 +208,16 @@ class Complements
      * @return string
      * @throws InvalidArgumentException
      */
-    protected static function addEnvEventoProtocol($request, $response)
+    protected static function addEventoCTeProtocol($request, $response)
     {
         $ev = new \DOMDocument('1.0', 'UTF-8');
         $ev->preserveWhiteSpace = false;
         $ev->formatOutput = false;
         $ev->loadXML($request);
         //extrai numero do lote do envio
-        $envLote = $ev->getElementsByTagName('idLote')->item(0)->nodeValue;
+        //$envLote = $ev->getElementsByTagName('idLote')->item(0)->nodeValue;
         //extrai tag evento do xml origem (solicitação)
-        $event = $ev->getElementsByTagName('evento')->item(0);
+        $event = $ev->getElementsByTagName('eventoCTe')->item(0);
         $versao = $event->getAttribute('versao');
         
         $ret = new \DOMDocument('1.0', 'UTF-8');
@@ -289,9 +225,9 @@ class Complements
         $ret->formatOutput = false;
         $ret->loadXML($response);
         //extrai numero do lote da resposta
-        $resLote = $ret->getElementsByTagName('idLote')->item(0)->nodeValue;
+//        $resLote = $ret->getElementsByTagName('idLote')->item(0)->nodeValue;
         //extrai a rag retEvento da resposta (retorno da SEFAZ)
-        $retEv = $ret->getElementsByTagName('retEvento')->item(0);
+        $retEv = $ret->getElementsByTagName('retEventoCTe')->item(0);
         $cStat  = $retEv->getElementsByTagName('cStat')->item(0)->nodeValue;
         $xMotivo = $retEv->getElementsByTagName('xMotivo')->item(0)->nodeValue;
         $tpEvento = $retEv->getElementsByTagName('tpEvento')->item(0)->nodeValue;
@@ -302,16 +238,16 @@ class Complements
         if (!in_array($cStat, $cStatValids)) {
             throw DocumentsException::wrongDocument(4, "[$cStat] $xMotivo");
         }
-        if ($resLote !== $envLote) {
-            throw DocumentsException::wrongDocument(
-                5,
-                "Os numeros de lote dos documentos são diferentes."
-            );
-        }
+//        if ($resLote !== $envLote) {
+//            throw DocumentsException::wrongDocument(
+//                5,
+//                "Os numeros de lote dos documentos são diferentes."
+//            );
+//        }
         return self::join(
             $ev->saveXML($event),
             $ret->saveXML($retEv),
-            'procEventoNFe',
+            'procEventoCTe',
             $versao
         );
     }

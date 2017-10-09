@@ -39,13 +39,18 @@ try {
   $tools = new Tools($configJson, Certificate::readPfx($content, '02040608'));
   $tools->model('57');
 
-  $chave = '43171086933033000100570010000001271293693261';
-  $xJust = 'Valor do frete incorreto.';
-  $nProt = '143170000724044';
-  $response = $tools->sefazCancela($chave, $xJust, $nProt);
-//     header('Content-type: text/xml; charset=UTF-8');
-//print_r($response);
-//exit();
+  $chave = '43171086933033000100570010000001261361744574';
+  $infCorrecao[] = [
+      'grupoAlterado' => 'compl',
+      'campoAlterado' => 'xObs',
+      'valorAlterado' => '165',
+      'nroItemAlterado' => 1
+  ];
+  $nSeqEvento = 9;
+  $response = $tools->sefazCCe($chave, $infCorrecao, $nSeqEvento);
+//  header('Content-type: text/xml; charset=UTF-8');
+//  print_r($response);
+//  exit();
 //    
   //você pode padronizar os dados de retorno atraves da classe abaixo
   //de forma a facilitar a extração dos dados do XML
@@ -64,7 +69,7 @@ try {
     //SUCESSO PROTOCOLAR A SOLICITAÇÂO ANTES DE GUARDAR
     $xml = Complements::toAuthorize($tools->lastRequest, $response);
     //grave o XML protocolado e prossiga com outras tarefas de seu aplicativo
-    $filename = "xml/canceladas/{$chave}-CancCTe-procEvento.xml";
+    $filename = "xml/cce/{$chave}-CCe-{$nSeqEvento}-procEvento.xml";
     file_put_contents($filename, $xml);
   } else {
     //houve alguma falha no evento 
