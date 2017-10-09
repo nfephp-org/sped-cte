@@ -21,60 +21,13 @@ class Complements
     {
         $st = new Standardize();
         $key = ucfirst($st->whichIs($request));
-        if ($key != 'CTe' && $key != 'EventoCTe' && $key != 'InutNFe') {
+        if ($key != 'CTe' && $key != 'EventoCTe' && $key != 'InutCTe') {
             //wrong document, this document is not able to recieve a protocol
             throw DocumentsException::wrongDocument(0, $key);
         }
         $func = "add".$key."Protocol";
         return self::$func($request, $response);
-    }
-    
-    /**
-     * Add tags B2B, as example ANFAVEA
-     * @param  string $nfe xml nfe string content
-     * @param  string $b2b xml b2b string content
-     * @param  string $tagB2B name B2B tag default 'NFeB2BFin' from ANFAVEA
-     * @return string
-     * @throws \InvalidArgumentException
-     */
-    public static function b2bTag($nfe, $b2b, $tagB2B = 'NFeB2BFin')
-    {
-        $domnfe = new DOMDocument('1.0', 'UTF-8');
-        $domnfe->preserveWhiteSpace = false;
-        $domnfe->formatOutput = false;
-        $domnfe->loadXML($nfe);
-        $nodenfe = $domnfe->getElementsByTagName('nfeProc')->item(0);
-        if (empty($nodenfe)) {
-            //not is NFe or dont protocoladed doc
-            throw DocumentsException::wrongDocument(1);
-        }
-        //carrega o arquivo B2B
-        $domb2b = new DOMDocument('1.0', 'UTF-8');
-        $domb2b->preserveWhiteSpace = false;
-        $domb2b->formatOutput = false;
-        $domb2b->loadXML($b2b);
-        $nodeb2b = $domnfe->getElementsByTagName($tagB2B)->item(0);
-        if (empty($nodeb2b)) {
-            //xml is not protocoladed or dont is a NFe
-            throw DocumentsException::wrongDocument(2);
-        }
-        //cria a NFe processada com a tag do protocolo
-        $procb2b = new DOMDocument('1.0', 'UTF-8');
-        $procb2b->preserveWhiteSpace = false;
-        $procb2b->formatOutput = false;
-        //cria a tag nfeProc
-        $nfeProcB2B = $procb2b->createElement('nfeProcB2B');
-        $procb2b->appendChild($nfeProcB2B);
-        //inclui a tag NFe
-        $node1 = $procb2b->importNode($nodenfe, true);
-        $nfeProcB2B->appendChild($node1);
-        //inclui a tag NFeB2BFin
-        $node2 = $procb2b->importNode($nodeb2b, true);
-        $nfeProcB2B->appendChild($node2);
-        $nfeb2bXML = $procb2b->saveXML();
-        $nfeb2bXMLString = str_replace(array("\n","\r","\s"), '', $nfeb2bXML);
-        return (string) $nfeb2bXMLString;
-    }
+    }       
     
     /**
      * Authorize Inutilization of numbers
@@ -83,14 +36,14 @@ class Complements
      * @return string
      * @throws InvalidArgumentException
      */
-    protected static function addInutNFeProtocol($request, $response)
+    protected static function addInutCTeProtocol($request, $response)
     {
         $req = new DOMDocument('1.0', 'UTF-8');
         $req->preserveWhiteSpace = false;
         $req->formatOutput = false;
         $req->loadXML($request);
-        $inutNFe = $req->getElementsByTagName('inutNFe')->item(0);
-        $versao = $inutNFe->getAttribute("versao");
+        $inutCTe = $req->getElementsByTagName('inutCTe')->item(0);
+        $versao = $inutCTe->getAttribute("versao");
         $infInut = $req->getElementsByTagName('infInut')->item(0);
         $tpAmb = $infInut->getElementsByTagName('tpAmb')->item(0)->nodeValue;
         $cUF = $infInut->getElementsByTagName('cUF')->item(0)->nodeValue;
@@ -98,18 +51,18 @@ class Complements
         $cnpj = $infInut->getElementsByTagName('CNPJ')->item(0)->nodeValue;
         $mod = $infInut->getElementsByTagName('mod')->item(0)->nodeValue;
         $serie = $infInut->getElementsByTagName('serie')->item(0)->nodeValue;
-        $nNFIni = $infInut->getElementsByTagName('nNFIni')->item(0)->nodeValue;
-        $nNFFin = $infInut->getElementsByTagName('nNFFin')->item(0)->nodeValue;
+        $nCTIni = $infInut->getElementsByTagName('nCTIni')->item(0)->nodeValue;
+        $nCTFin = $infInut->getElementsByTagName('nCTFin')->item(0)->nodeValue;
         
         $ret = new DOMDocument('1.0', 'UTF-8');
         $ret->preserveWhiteSpace = false;
         $ret->formatOutput = false;
         $ret->loadXML($response);
-        $retInutNFe = $ret->getElementsByTagName('retInutNFe')->item(0);
-        if (!isset($retInutNFe)) {
-            throw DocumentsException::wrongDocument(3, "&lt;retInutNFe;");
+        $retInutCTe = $ret->getElementsByTagName('retInutCTe')->item(0);
+        if (!isset($retInutCTe)) {
+            throw DocumentsException::wrongDocument(3, "&lt;retInutCTe;");
         }
-        $retversao = $retInutNFe->getAttribute("versao");
+        $retversao = $retInutCTe->getAttribute("versao");
         $retInfInut = $ret->getElementsByTagName('infInut')->item(0);
         $cStat = $retInfInut->getElementsByTagName('cStat')->item(0)->nodeValue;
         $xMotivo = $retInfInut->getElementsByTagName('xMotivo')->item(0)->nodeValue;
@@ -122,8 +75,8 @@ class Complements
         $retcnpj = $retInfInut->getElementsByTagName('CNPJ')->item(0)->nodeValue;
         $retmod = $retInfInut->getElementsByTagName('mod')->item(0)->nodeValue;
         $retserie = $retInfInut->getElementsByTagName('serie')->item(0)->nodeValue;
-        $retnNFIni = $retInfInut->getElementsByTagName('nNFIni')->item(0)->nodeValue;
-        $retnNFFin = $retInfInut->getElementsByTagName('nNFFin')->item(0)->nodeValue;
+        $retnCTIni = $retInfInut->getElementsByTagName('nCTIni')->item(0)->nodeValue;
+        $retnCTFin = $retInfInut->getElementsByTagName('nCTFin')->item(0)->nodeValue;
         if ($versao != $retversao ||
             $tpAmb != $rettpAmb ||
             $cUF != $retcUF ||
@@ -131,15 +84,15 @@ class Complements
             $cnpj != $retcnpj ||
             $mod != $retmod ||
             $serie != $retserie ||
-            $nNFIni != $retnNFIni ||
-            $nNFFin != $retnNFFin
+            $nCTIni != $retnCTIni ||
+            $nCTFin != $retnCTFin
         ) {
             throw DocumentsException::wrongDocument(5);
         }
         return self::join(
-            $req->saveXML($inutNFe),
-            $ret->saveXML($retInutNFe),
-            'procInutNFe',
+            $req->saveXML($inutCTe),
+            $ret->saveXML($retInutCTe),
+            'procInutCTe',
             $versao
         );
     }

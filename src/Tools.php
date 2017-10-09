@@ -181,7 +181,7 @@ class Tools extends ToolsCommon
         $nSerie = (integer) $nSerie;
         $nIni = (integer) $nIni;
         $nFin = (integer) $nFin;
-        $servico = 'NfeInutilizacao';
+        $servico = 'CteInutilizacao';
         $this->checkContingencyForWebServices($servico);
         //carrega serviço
         $this->servico(
@@ -196,7 +196,6 @@ class Tools extends ToolsCommon
         $strFinal = str_pad($nFin, 9, '0', STR_PAD_LEFT);
         $idInut = "ID"
             . $this->urlcUF
-            . $strAno
             . $cnpj
             . $this->modelo
             . $strSerie
@@ -205,7 +204,7 @@ class Tools extends ToolsCommon
         //limpa os caracteres indesejados da justificativa
         $xJust = Strings::replaceSpecialsChars($xJust);
         //montagem do corpo da mensagem
-        $msg = "<inutNFe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">" .
+        $msg = "<inutCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">" .
             "<infInut Id=\"$idInut\">" .
             "<tpAmb>$tpAmb</tpAmb>" .
             "<xServ>INUTILIZAR</xServ>" .
@@ -214,10 +213,10 @@ class Tools extends ToolsCommon
             "<CNPJ>$cnpj</CNPJ>" .
             "<mod>$this->modelo</mod>" .
             "<serie>$nSerie</serie>" .
-            "<nNFIni>$nIni</nNFIni>" .
-            "<nNFFin>$nFin</nNFFin>" .
+            "<nCTIni>$nIni</nCTIni>" .
+            "<nCTFin>$nFin</nCTFin>" .
             "<xJust>$xJust</xJust>" .
-            "</infInut></inutNFe>";
+            "</infInut></inutCTe>";
         //assina a solicitação
         $request = Signer::sign(
             $this->certificate,
@@ -228,7 +227,7 @@ class Tools extends ToolsCommon
             $this->canonical
         );
         $request = Strings::clearXmlString($request, true);
-        $this->isValid($this->urlVersion, $request, 'inutNFe');
+        $this->isValid($this->urlVersion, $request, 'inutCTe');
         $this->lastRequest = $request;
         $parameters = ['cteDadosMsg' => $request];
         $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$request</cteDadosMsg>";

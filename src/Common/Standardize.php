@@ -48,6 +48,9 @@ class Standardize
         'eventoCTe',
         'retEventoCTe',
         'evCancCTe',
+        'inutCTe',
+        'retInutCTe',
+        'procInutCTe',
         'CTe'
     ];
     
