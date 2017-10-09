@@ -27,7 +27,7 @@ class Complements
         }
         $func = "add".$key."Protocol";
         return self::$func($request, $response);
-    }       
+    }
     
     /**
      * Authorize Inutilization of numbers

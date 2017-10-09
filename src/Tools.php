@@ -19,7 +19,6 @@ namespace NFePHP\CTe;
 use NFePHP\Common\Strings;
 use NFePHP\Common\Signer;
 use NFePHP\Common\UFList;
-use NFePHP\CTe\Factories\QRCode;
 use NFePHP\CTe\Factories\Events;
 use NFePHP\CTe\Common\Tools as ToolsCommon;
 use RuntimeException;

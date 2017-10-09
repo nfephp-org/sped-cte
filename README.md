@@ -26,22 +26,18 @@ Este pacote faz parte da API NFePHP e atende aos parâmetros das PSR2 e PSR4, be
 
 ## Install
 
-Pelo terminal vá até a raiz de seu projeto e lá execute :
-
-composer require nfephp-org/sped-cte
+```sh
+composer require nfephp-org/sped-cte:v4.0.x-dev
+```
 
 ## Change log
 
 Acompanhe o [CHANGELOG](CHANGELOG.md) para maiores informações sobre as alterações recentes.
 
-## Testing
-
-``` bash
-$ composer test
-```
 
 ## Contributing
-**ATENÇÂO: A versão atual corresponde a vesão 2.00 do layout da SEFAZ, tanto na branch "master" como na branch "develop". As contribuições para a proxima versão do layout da SEFAZ 3.0 devem ser feitas exclusivamente na branch v3.0.**
+**ATENÇÂO: Esta branch(v4.0) assim como a branch v3.0 correspondem a versão 3.00 do layout da SEFAZ. 
+Esta branch(4.0) contempla a o sped-common atual resolvendo os problemas com composer para quem utiliza o sped-nfe por exemplo**
 
 Para contribuir por favor observe o [CONTRIBUTING](CONTRIBUTING.md) e o  [Código de Conduta](CONDUCT.md) parea detalhes.
 
