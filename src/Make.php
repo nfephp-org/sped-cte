@@ -1360,7 +1360,7 @@ class Make
         $this->dom->addChild(
             $this->toma4,
             'IE',
-            $std->IE,
+            Strings::onlyNumbers($std->IE),
             false,
             $identificador . 'Inscrição Estadual'
         );
@@ -1442,7 +1442,7 @@ class Make
         $this->dom->addChild(
             $this->toma,
             'IE',
-            $std->IE,
+            Strings::onlyNumbers($std->IE),
             false,
             $identificador . 'Inscrição Estadual'
         );
@@ -2059,7 +2059,7 @@ class Make
         $this->dom->addChild(
             $this->emit,
             'IE',
-            $std->IE,
+            Strings::onlyNumbers($std->IE),
             true,
             $identificador . 'Inscrição Estadual do Emitente'
         );
@@ -2215,7 +2215,7 @@ class Make
         $this->dom->addChild(
             $this->rem,
             'IE',
-            $std->IE,
+            Strings::onlyNumbers($std->IE),
             true,
             $identificador . 'Inscrição Estadual do remente'
         );
@@ -2387,7 +2387,7 @@ class Make
         $this->dom->addChild(
             $this->exped,
             'IE',
-            $std->IE,
+            Strings::onlyNumbers($std->IE),
             true,
             $identificador . 'Inscrição Estadual'
         );
@@ -2551,7 +2551,7 @@ class Make
         $this->dom->addChild(
             $this->receb,
             'IE',
-            $std->IE,
+            Strings::onlyNumbers($std->IE),
             true,
             $identificador . 'Inscrição Estadual'
         );
@@ -2715,7 +2715,7 @@ class Make
         $this->dom->addChild(
             $this->dest,
             'IE',
-            $std->IE,
+            Strings::onlyNumbers($std->IE),
             true,
             $identificador . 'Inscrição Estadual'
         );
@@ -2920,7 +2920,13 @@ class Make
             case '20':
                 $icms = $this->dom->createElement("ICMS20");
                 $this->dom->addChild($icms, 'CST', $std->cst, true, "$identificador  Tributação do ICMS = 20");
-                $this->dom->addChild($icms, 'pRedBC', $std->pRedBC, true, "$identificador  Percentual da Redução de BC");
+                $this->dom->addChild(
+                    $icms,
+                    'pRedBC',
+                    $std->pRedBC,
+                    true,
+                    "$identificador  Percentual da Redução de BC"
+                );
                 $this->dom->addChild($icms, 'vBC', $std->vBC, true, "$identificador  Valor da BC do ICMS");
                 $this->dom->addChild($icms, 'pICMS', $std->pICMS, true, "$identificador  Alíquota do imposto");
                 $this->dom->addChild($icms, 'vICMS', $std->vICMS, true, "$identificador  Valor do ICMS");
@@ -2940,9 +2946,27 @@ class Make
             case '60':
                 $icms = $this->dom->createElement("ICMS60");
                 $this->dom->addChild($icms, 'CST', $std->cst, true, "$identificador  Tributação do ICMS = 60");
-                $this->dom->addChild($icms, 'vBCSTRet', $std->vBCSTRet, true, "$identificador  Valor BC do ICMS ST retido");
-                $this->dom->addChild($icms, 'vICMSSTRet', $std->vICMSSTRet, true, "$identificador  Valor do ICMS ST retido");
-                $this->dom->addChild($icms, 'pICMSSTRet', $std->pICMSSTRet, true, "$identificador  Valor do ICMS ST retido");
+                $this->dom->addChild(
+                    $icms,
+                    'vBCSTRet',
+                    $std->vBCSTRet,
+                    true,
+                    "$identificador  Valor BC do ICMS ST retido"
+                );
+                $this->dom->addChild(
+                    $icms,
+                    'vICMSSTRet',
+                    $std->vICMSSTRet,
+                    true,
+                    "$identificador  Valor do ICMS ST retido"
+                );
+                $this->dom->addChild(
+                    $icms,
+                    'pICMSSTRet',
+                    $std->pICMSSTRet,
+                    true,
+                    "$identificador  Valor do ICMS ST retido"
+                );
                 if ($vCred > 0) {
                     $this->dom->addChild($icms, 'vCred', $std->vCred, false, "$identificador  Valor do Crédito");
                 }
@@ -2952,18 +2976,36 @@ class Make
                     $icms = $this->dom->createElement("ICMSOutraUF");
                     $this->dom->addChild($icms, 'CST', $std->cst, true, "$identificador  Tributação do ICMS = 90");
                     if ($pRedBC > 0) {
-                        $this->dom->addChild($icms, 'pRedBCOutraUF', $std->pRedBC, false, "$identificador Percentual Red "
-                            . "BC Outra UF");
+                        $this->dom->addChild(
+                            $icms,
+                            'pRedBCOutraUF',
+                            $std->pRedBC,
+                            false,
+                            "$identificador Percentual Red "
+                            . "BC Outra UF"
+                        );
                     }
                     $this->dom->addChild($icms, 'vBCOutraUF', $std->vBC, true, "$identificador Valor BC ICMS Outra UF");
                     $this->dom->addChild($icms, 'pICMSOutraUF', $std->pICMS, true, "$identificador Alíquota do "
                         . "imposto Outra UF");
-                    $this->dom->addChild($icms, 'vICMSOutraUF', $std->vICMS, true, "$identificador Valor ICMS Outra UF");
+                    $this->dom->addChild(
+                        $icms,
+                        'vICMSOutraUF',
+                        $std->vICMS,
+                        true,
+                        "$identificador Valor ICMS Outra UF"
+                    );
                 } else {
                     $icms = $this->dom->createElement("ICMS90");
                     $this->dom->addChild($icms, 'CST', $std->cst, true, "$identificador Tributação do ICMS = 90");
                     if ($pRedBC > 0) {
-                        $this->dom->addChild($icms, 'pRedBC', $std->pRedBC, false, "$identificador Percentual Redução BC");
+                        $this->dom->addChild(
+                            $icms,
+                            'pRedBC',
+                            $std->pRedBC,
+                            false,
+                            "$identificador Percentual Redução BC"
+                        );
                     }
                     $this->dom->addChild($icms, 'vBC', $std->vBC, true, "$identificador  Valor da BC do ICMS");
                     $this->dom->addChild($icms, 'pICMS', $std->pICMS, true, "$identificador  Alíquota do imposto");
@@ -2988,28 +3030,82 @@ class Make
             $tagIcms->appendChild($icms);
         }
         if ($std->vTotTrib > 0) {
-            $this->dom->addChild($this->imp, 'vTotTrib', $std->vTotTrib, false, "$identificador Valor Total dos Tributos");
+            $this->dom->addChild(
+                $this->imp,
+                'vTotTrib',
+                $std->vTotTrib,
+                false,
+                "$identificador Valor Total dos Tributos"
+            );
         }
 
         if ($std->vICMSUFFim > 0 || $std->vICMSUFIni > 0) {
             $icmsDifal = $this->dom->createElement("ICMSUFFim");
-            $this->dom->addChild($icmsDifal, 'vBCUFFim', $std->vBCUFFim, true, "$identificador Valor da BC do ICMS na UF
-                de término da prestação do serviço de transporte");
-            $this->dom->addChild($icmsDifal, 'pFCPUFFim', $std->pFCPUFFim, true, "$identificador Percentual do ICMS
+            $this->dom->addChild(
+                $icmsDifal,
+                'vBCUFFim',
+                $std->vBCUFFim,
+                true,
+                "$identificador Valor da BC do ICMS na UF
+                de término da prestação do serviço de transporte"
+            );
+            $this->dom->addChild(
+                $icmsDifal,
+                'pFCPUFFim',
+                $std->pFCPUFFim,
+                true,
+                "$identificador Percentual do ICMS
                 relativo ao Fundo de Combate à pobreza (FCP) na UF de término da prestação do serviço de
-                transporte");
-            $this->dom->addChild($icmsDifal, 'pICMSUFFim', $std->pICMSUFFim, true, "$identificador Alíquota interna da UF
-                de término da prestação do serviço de transporte");
-            $this->dom->addChild($icmsDifal, 'pICMSInter', $std->pICMSInter, true, "$identificador Alíquota interestadual
-                das UF envolvidas");
-            $this->dom->addChild($icmsDifal, 'pICMSInterPart', $std->pICMSInterPart, true, "$identificador Percentual
-                provisório de partilha entre os estados");
-            $this->dom->addChild($icmsDifal, 'vFCPUFFim', $std->vFCPUFFim, true, "$identificador Valor do ICMS relativo
-                ao Fundo de Combate á Pobreza (FCP) da UF de término da prestação");
-            $this->dom->addChild($icmsDifal, 'vICMSUFFim', $std->vICMSUFFim, true, "$identificador Valor do ICMS de
-                partilha para a UF de término da prestação do serviço de transporte");
-            $this->dom->addChild($icmsDifal, 'vICMSUFIni', $std->vICMSUFIni, true, "$identificador Valor do ICMS de
-                partilha para a UF de início da prestação do serviço de transporte");
+                transporte"
+            );
+            $this->dom->addChild(
+                $icmsDifal,
+                'pICMSUFFim',
+                $std->pICMSUFFim,
+                true,
+                "$identificador Alíquota interna da UF
+                de término da prestação do serviço de transporte"
+            );
+            $this->dom->addChild(
+                $icmsDifal,
+                'pICMSInter',
+                $std->pICMSInter,
+                true,
+                "$identificador Alíquota interestadual
+                das UF envolvidas"
+            );
+            $this->dom->addChild(
+                $icmsDifal,
+                'pICMSInterPart',
+                $std->pICMSInterPart,
+                true,
+                "$identificador Percentual
+                provisório de partilha entre os estados"
+            );
+            $this->dom->addChild(
+                $icmsDifal,
+                'vFCPUFFim',
+                $std->vFCPUFFim,
+                true,
+                "$identificador Valor do ICMS relativo
+                ao Fundo de Combate á Pobreza (FCP) da UF de término da prestação"
+            );
+            $this->dom->addChild(
+                $icmsDifal,
+                'vICMSUFFim',
+                $std->vICMSUFFim,
+                true,
+                "$identificador Valor do ICMS de
+                partilha para a UF de término da prestação do serviço de transporte"
+            );
+            $this->dom->addChild(
+                $icmsDifal,
+                'vICMSUFIni',
+                $std->vICMSUFIni,
+                true,
+                "$identificador Valor do ICMS de
+                partilha para a UF de início da prestação do serviço de transporte"
+            );
 
             $this->imp->appendChild($icmsDifal);
         }
@@ -3103,11 +3199,35 @@ class Make
     {
         $identificador = '#242 <infCarga> - ';
         $this->infCarga = $this->dom->createElement('infCarga');
-        $this->dom->addChild($this->infCarga, 'vCarga', $std->vCarga, false, $identificador . 'Valor Total da Carga');
-        $this->dom->addChild($this->infCarga, 'proPred', $std->proPred, true, $identificador . 'Produto Predominante');
-        $this->dom->addChild($this->infCarga, 'xOutCat', $std->xOutCat, false, $identificador . 'Outras Caract. da Carga');
-        $this->dom->addChild($this->infCarga, 'vCargaAverb', $std->vCargaAverb, false, $identificador . 'Valor da Carga para
-            efeito de averbação');
+        $this->dom->addChild(
+            $this->infCarga,
+            'vCarga',
+            $std->vCarga,
+            false,
+            $identificador . 'Valor Total da Carga'
+        );
+        $this->dom->addChild(
+            $this->infCarga,
+            'proPred',
+            $std->proPred,
+            true,
+            $identificador . 'Produto Predominante'
+        );
+        $this->dom->addChild(
+            $this->infCarga,
+            'xOutCat',
+            $std->xOutCat,
+            false,
+            $identificador . 'Outras Caract. da Carga'
+        );
+        $this->dom->addChild(
+            $this->infCarga,
+            'vCargaAverb',
+            $std->vCargaAverb,
+            false,
+            $identificador . 'Valor da Carga para
+            efeito de averbação'
+        );
 
         return $this->infCarga;
     }
@@ -3323,14 +3443,31 @@ class Make
         $this->emiDocAnt[] = $this->dom->createElement('emiDocAnt');
         $posicao = (integer)count($this->emiDocAnt) - 1;
         if ($CNPJ != '') {
-            $this->dom->addChild($this->emiDocAnt[$posicao], 'CNPJ', $std->CNPJ, true, $identificador . 'Número do CNPJ');
-            $this->dom->addChild($this->emiDocAnt[$posicao], 'IE', $std->IE, true, $identificador . 'Inscrição Estadual');
+            $this->dom->addChild(
+                $this->emiDocAnt[$posicao],
+                'CNPJ',
+                $std->CNPJ,
+                true,
+                $identificador . 'Número do CNPJ'
+            );
+            $this->dom->addChild(
+                $this->emiDocAnt[$posicao],
+                'IE',
+                Strings::onlyNumbers($std->IE),
+                true,
+                $identificador . 'Inscrição Estadual'
+            );
             $this->dom->addChild($this->emiDocAnt[$posicao], 'UF', $std->UF, true, $identificador . 'Sigla da UF');
         } else {
             $this->dom->addChild($this->emiDocAnt[$posicao], 'CPF', $std->CPF, true, $identificador . 'Número do CPF');
         }
-        $this->dom->addChild($this->emiDocAnt[$posicao], 'xNome', $std->xNome, true, $identificador . 'Razão Social ou '
-            . ' Nome do Expedidor');
+        $this->dom->addChild(
+            $this->emiDocAnt[$posicao],
+            'xNome',
+            $std->xNome,
+            true,
+            $identificador . 'Razão Social ou Nome do Expedidor'
+        );
 
         return $this->emiDocAnt[$posicao];
     }
@@ -3399,8 +3536,14 @@ class Make
     {
         $identificador = '#1 <rodo> - ';
         $this->rodo = $this->dom->createElement('rodo');
-        $this->dom->addChild($this->rodo, 'RNTRC', $std->RNTRC, true, $identificador . 'Registro nacional de transportadores
-            rodoviários de carga');
+        $this->dom->addChild(
+            $this->rodo,
+            'RNTRC',
+            $std->RNTRC,
+            true,
+            $identificador . 'Registro nacional de transportadores
+            rodoviários de carga'
+        );
 
         return $this->rodo;
     }
@@ -3434,8 +3577,20 @@ class Make
         $identificador = '#149 <infCteSub> - ';
         $this->infCteSub = $this->dom->createElement('infCteSub');
 
-        $this->dom->addChild($this->infCteSub, 'chCTe', $std->chCTe, false, "$identificador  Chave de acesso do CTe a ser substituído (original)");
-        $this->dom->addChild($this->infCteSub, 'retCteAnu', $std->retCteAnu, false, "$identificador  Chave de acesso do CT-e de Anulação");
+        $this->dom->addChild(
+            $this->infCteSub,
+            'chCTe',
+            $std->chCTe,
+            false,
+            "$identificador  Chave de acesso do CTe a ser substituído (original)"
+        );
+        $this->dom->addChild(
+            $this->infCteSub,
+            'retCteAnu',
+            $std->retCteAnu,
+            false,
+            "$identificador  Chave de acesso do CT-e de Anulação"
+        );
         return $this->infCteSub;
     }
     
@@ -3463,7 +3618,13 @@ class Make
             $this->tomaICMS = $this->dom->createElement('tomaICMS');
         }
         $identificador = '#153 <refNFe> - ';
-        $this->dom->addChild($this->tomaICMS, 'refNFe', $std->refNFe, false, "$identificador  Chave de acesso da NF-e emitida pelo tomador");
+        $this->dom->addChild(
+            $this->tomaICMS,
+            'refNFe',
+            $std->refNFe,
+            false,
+            "$identificador  Chave de acesso da NF-e emitida pelo tomador"
+        );
 
         return $this->tomaICMS;
     }
@@ -3522,7 +3683,13 @@ class Make
             $this->tomaICMS = $this->dom->createElement('tomaICMS');
         }
         $identificador = '#163 <refCTe> - ';
-        $this->dom->addChild($this->tomaICMS, 'refCTe', $std->refCTe, false, "$identificador  Chave de acesso do CT-e emitida pelo tomador");
+        $this->dom->addChild(
+            $this->tomaICMS,
+            'refCTe',
+            $std->refCTe,
+            false,
+            "$identificador  Chave de acesso do CT-e emitida pelo tomador"
+        );
 
         return $this->tomaICMS;
     }
@@ -3656,7 +3823,7 @@ class Make
             $this->dom->addChild(
                 $this->prop[$p],
                 'IE',
-                $std->IE,
+                Strings::onlyNumbers($std->IE),
                 true,
                 $identificador . 'IE do proprietario'
             );
@@ -3748,7 +3915,7 @@ class Make
             $this->dom->addChild(
                 $this->prop,
                 'IE',
-                $std->IE,
+                Strings::onlyNumbers($std->IE),
                 true,
                 $identificador . 'IE do proprietario'
             );
