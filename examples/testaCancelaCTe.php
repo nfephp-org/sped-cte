@@ -18,7 +18,7 @@ $arr = [
     "atualizacao" => "2016-11-03 18:01:21",
     "tpAmb" => 2,
     "razaosocial" => "SUA RAZAO SOCIAL LTDA",
-    "cnpj" => "86933033000100",
+    "cnpj" => "99999999999999",
     "siglaUF" => "RS",
     "schemes" => "PL_CTe_300",
     "versao" => '3.00',
@@ -39,7 +39,7 @@ try {
   $tools = new Tools($configJson, Certificate::readPfx($content, '02040608'));
   $tools->model('57');
 
-  $chave = '43171086933033000100570010000001271293693261';
+  $chave = '43171099999999999999570010000001271293693261';
   $xJust = 'Valor do frete incorreto.';
   $nProt = '143170000724044';
   $response = $tools->sefazCancela($chave, $xJust, $nProt);

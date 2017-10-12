@@ -18,7 +18,7 @@ $arr = [
     "atualizacao" => "2016-11-03 18:01:21",
     "tpAmb" => 2,
     "razaosocial" => "SUA RAZAO SOCIAL LTDA",
-    "cnpj" => "86933033000100",
+    "cnpj" => "99999999999999",
     "siglaUF" => "RS",
     "schemes" => "PL_CTe_300",
     "versao" => '3.00',
@@ -38,7 +38,7 @@ $content = file_get_contents('fixtures/certificado.pfx');
 //intancia a classe tools
 $tools = new Tools($configJson, Certificate::readPfx($content, '02040608'));
 
-$chave = '43171086933033000100570010000001261361744574';
+$chave = '43171099999999999999570010000001261361744574';
 $response = $tools->sefazConsultaChave($chave);
 $ctefile = file_get_contents("xml/{$chave}-cte.xml");
 $auth = Complements::toAuthorize($ctefile, $response);
