@@ -191,12 +191,7 @@ class Complements
         if (!in_array($cStat, $cStatValids)) {
             throw DocumentsException::wrongDocument(4, "[$cStat] $xMotivo");
         }
-//        if ($resLote !== $envLote) {
-//            throw DocumentsException::wrongDocument(
-//                5,
-//                "Os numeros de lote dos documentos são diferentes."
-//            );
-//        }
+        
         return self::join(
             $ev->saveXML($event),
             $ret->saveXML($retEv),

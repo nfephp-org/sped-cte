@@ -19,7 +19,7 @@ $arr = [
     "atualizacao" => "2016-11-03 18:01:21",
     "tpAmb" => 2,
     "razaosocial" => "SUA RAZAO SOCIAL LTDA",
-    "cnpj" => "86933033000100",
+    "cnpj" => "99999999999999",
     "siglaUF" => "RS",
     "schemes" => "PL_CTe_300",
     "versao" => '3.00',
@@ -51,226 +51,237 @@ $chave = montaChave(
     '43', date('y', strtotime($dhEmi)), date('m', strtotime($dhEmi)), $arr['cnpj'], $tools->model(), '1', $numeroCTE, '1', '10'
 );
 
-$resp = $cte->infCteTag($chave, $versao = '3.00');
-//header('Content-type: text/xml; charset=UTF-8');
-//printf ("<pre>%s</pre>", htmlentities ($resp));
-//exit();
+$infCte = new stdClass();
+$infCte->Id = "";
+$infCte->versao = "3.00";
+$cte->taginfCTe($infCte);
 
 $cDV = substr($chave, -1);      //Digito Verificador
 
-$resp = $cte->ideTag(
-    $cUF = '43', // Codigo da UF da tabela do IBGE
-    $cCT = rand('10000010', '99999999'), // Codigo numerico que compoe a chave de acesso
-    $CFOP = '6932', // Codigo fiscal de operacoes e prestacoes
-    $natOp = substr('PRESTACAO DE SERVICO DE TRANSPORTE A ESTABELECIMEN', 0, 60), // Natureza da operacao
-    //$forPag = '',              // 0-Pago; 1-A pagar; 2-Outros
-    $mod = '57', // Modelo do documento fiscal: 57 para identificação do CT-e
-    $serie = '1', // Serie do CTe
-    $nCT = $numeroCTE, // Numero do CTe
-    $dhEmi, // Data e hora de emissão do CT-e: Formato AAAA-MM-DDTHH:MM:DD
-    $tpImp = '1', // Formato de impressao do DACTE: 1-Retrato; 2-Paisagem.
-    $tpEmis = '1', // Forma de emissao do CTe: 1-Normal; 4-EPEC pela SVC; 5-Contingência
-    $cDV, // Codigo verificador
-    $tpAmb = '2', // 1- Producao, 2-homologacao
-    $tpCTe = '0', // 0- CT-e Normal; 1 - CT-e de Complemento de Valores;
-    // 2 -CT-e de Anulação; 3 - CT-e Substituto
-    $procEmi = '0', // Descricao no comentario acima
-    $verProc = '3.0', // versao do aplicativo emissor
-    $indGlobalizado = '',
-    //$refCTE = '',             // Chave de acesso do CT-e referenciado
-    $cMunEnv = '4302105', // Utilizar a tabela do IBGE. Informar 9999999 para as operações com o exterior.
-    $xMunEnv = 'FOZ DO IGUACU', // Informar PAIS/Municipio para as operações com o exterior.
-    $UFEnv = 'RS', // Informar 'EX' para operações com o exterior.
-    $modal = '01', // Preencher com:01-Rodoviário; 02-Aéreo; 03-Aquaviário;04-
-    $tpServ = '0', // 0- Normal; 1- Subcontratação; 2- Redespacho;
-    // 3- Redespacho Intermediário; 4- Serviço Vinculado a Multimodal
-    $cMunIni = '4302105', // Utilizar a tabela do IBGE. Informar 9999999 para as operações com o exterior.
-    $xMunIni = 'FOZ DO IGUACU', // Informar 'EXTERIOR' para operações com o exterior.
-    $UFIni = 'RS', // Informar 'EX' para operações com o exterior.
-    $cMunFim = '3523909', // Utilizar a tabela do IBGE. Informar 9999999 para operações com o exterior.
-    $xMunFim = 'ITU', // Informar 'EXTERIOR' para operações com o exterior.
-    $UFFim = 'SP', // Informar 'EX' para operações com o exterior.
-    $retira = '1', // Indicador se o Recebedor retira no Aeroporto, Filial,
-    // Porto ou Estação de Destino? 0-sim; 1-não
-    $xDetRetira = '', // Detalhes do retira
-    $indIEToma = '1', $dhCont = '', // Data e Hora da entrada em contingência; no formato AAAAMM-DDTHH:MM:SS
-    $xJust = ''                 // Justificativa da entrada em contingência
-);
+$ide = new stdClass();
+$ide->cUF = '43'; // Codigo da UF da tabela do IBGE
+$ide->cCT = '99999999'; // Codigo numerico que compoe a chave de acesso
+$ide->CFOP = '6932'; // Codigo fiscal de operacoes e prestacoes
+$ide->natOp = substr('PRESTACAO DE SERVICO DE TRANSPORTE A ESTABELECIMEN', 0, 60); // Natureza da operacao
+//$ide->forPag = '';              // 0-Pago; 1-A pagar; 2-Outros
+$ide->mod = '57'; // Modelo do documento fiscal: 57 para identificação do CT-e
+$ide->serie = '1'; // Serie do CTe
+$ide->nCT = $numeroCTE; // Numero do CTe
+$ide->dhEmi = $dhEmi; // Data e hora de emissão do CT-e: Formato AAAA-MM-DDTHH:MM:DD
+$ide->tpImp = '1'; // Formato de impressao do DACTE: 1-Retrato; 2-Paisagem.
+$ide->tpEmis = '1'; // Forma de emissao do CTe: 1-Normal; 4-EPEC pela SVC; 5-Contingência
+$ide->cDV = $cDV; // Codigo verificador
+$ide->tpAmb = '2'; // 1- Producao; 2-homologacao
+$ide->tpCTe = '0'; // 0- CT-e Normal; 1 - CT-e de Complemento de Valores;
+// 2 -CT-e de Anulação; 3 - CT-e Substituto
+$ide->procEmi = '0'; // Descricao no comentario acima
+$ide->verProc = '3.0'; // versao do aplicativo emissor
+$ide->indGlobalizado = '';
+//$ide->refCTE = '';             // Chave de acesso do CT-e referenciado
+$ide->cMunEnv = '4302105'; // Utilizar a tabela do IBGE. Informar 9999999 para as operações com o exterior.
+$ide->xMunEnv = 'FOZ DO IGUACU'; // Informar PAIS/Municipio para as operações com o exterior.
+$ide->UFEnv = 'RS'; // Informar 'EX' para operações com o exterior.
+$ide->modal = '01'; // Preencher com:01-Rodoviário; 02-Aéreo; 03-Aquaviário;04-
+$ide->tpServ = '0'; // 0- Normal; 1- Subcontratação; 2- Redespacho;
+// 3- Redespacho Intermediário; 4- Serviço Vinculado a Multimodal
+$ide->cMunIni = '4302105'; // Utilizar a tabela do IBGE. Informar 9999999 para as operações com o exterior.
+$ide->xMunIni = 'FOZ DO IGUACU'; // Informar 'EXTERIOR' para operações com o exterior.
+$ide->UFIni = 'RS'; // Informar 'EX' para operações com o exterior.
+$ide->cMunFim = '3523909'; // Utilizar a tabela do IBGE. Informar 9999999 para operações com o exterior.
+$ide->xMunFim = 'ITU'; // Informar 'EXTERIOR' para operações com o exterior.
+$ide->UFFim = 'SP'; // Informar 'EX' para operações com o exterior.
+$ide->retira = '1'; // Indicador se o Recebedor retira no Aeroporto; Filial,
+// Porto ou Estação de Destino? 0-sim; 1-não
+$ide->xDetRetira = ''; // Detalhes do retira
+$ide->indIEToma = '1';
+$ide->dhCont = ''; // Data e Hora da entrada em contingência; no formato AAAAMM-DDTHH:MM:SS
+$ide->xJust = '';                 // Justificativa da entrada em contingência
 
-$resp = $cte->toma3Tag(
-    $toma = '3'                 // Indica o "papel" do tomador: 0-Remetente; 1-Expedidor; 2-Recebedor; 3-Destinatário
-);
+$cte->tagide($ide);
 
-$resp = $cte->toma4Tag(
-    $toma = '4', // 4-Outros, informar os dados cadastrais do tomador quando ele for outros
-    $CNPJ = '11509962000197', // CNPJ
-    $CPF = '', // CPF
-    $IE = 'ISENTO', // Iscricao estadual
-    $xNome = 'RAZAO SOCIAL', // Razao social ou Nome
-    $xFant = 'NOME FANTASIA', // Nome fantasia
-    $fone = '5532128202', // Telefone
-    $email = 'email@gmail.com'   // email
-);
+// Indica o "papel" do tomador: 0-Remetente; 1-Expedidor; 2-Recebedor; 3-Destinatário
+$toma3 = new stdClass();
+$toma3->toma = '3';
+$cte->tagtoma3($toma3);
 
-$resp = $cte->enderTomaTag(
-    $xLgr = 'Avenida Independência', // Logradouro
-    $nro = '482', // Numero
-    $xCpl = '', // COmplemento
-    $xBairro = 'Centro', // Bairro
-    $cMun = '4308607', // Codigo do municipio do IBEGE Informar 9999999 para operações com o exterior
-    $xMun = 'Garibaldi', // Nome do município (Informar EXTERIOR para operações com o exterior.
-    $CEP = '95720000', // CEP
-    $UF = $arr['siglaUF'], // Sigla UF (Informar EX para operações com o exterior.)
-    $cPais = '1058', // Codigo do país ( Utilizar a tabela do BACEN )
-    $xPais = 'Brasil'                   // Nome do pais
-);
+$toma4 = new stdClass();
+$toma4->toma = '4'; // 4-Outros; informar os dados cadastrais do tomador quando ele for outros
+$toma4->CNPJ = '11509962000197'; // CNPJ
+$toma4->CPF = ''; // CPF
+$toma4->IE = 'ISENTO'; // Iscricao estadual
+$toma4->xNome = 'RAZAO SOCIAL'; // Razao social ou Nome
+$toma4->xFant = 'NOME FANTASIA'; // Nome fantasia
+$toma4->fone = '5532128202'; // Telefone
+$toma4->email = 'email@gmail.com';   // email
+$cte->tagtoma4($toma4);
 
-$resp = $cte->emitTag(
-    $CNPJ = $arr['cnpj'], // CNPJ do emitente
-    $IE = '0100072968', // Inscricao estadual
-    $IEST = "", // Inscricao estadual
-    $xNome = $arr['razaosocial'], // Razao social
-    $xFant = 'Nome Fantasia' // Nome fantasia
-);
 
-$resp = $cte->enderEmitTag(
-    $xLgr = 'RUA CARLOS LUZ', // Logradouro
-    $nro = '123', // Numero
-    $xCpl = '', // Complemento
-    $xBairro = 'PARQUE PRESIDENTE', // Bairro
-    $cMun = '4302105', // Código do município (utilizar a tabela do IBGE)
-    $xMun = 'FOZ DO IGUACU', // Nome do municipio
-    $CEP = '85863150', // CEP
-    $UF = $arr['siglaUF'], // Sigla UF
-    $fone = '4535221216'                        // Fone
-);
+$enderToma = new stdClass();
+$enderToma->xLgr = 'Avenida Independência'; // Logradouro
+$enderToma->nro = '482'; // Numero
+$enderToma->xCpl = ''; // COmplemento
+$enderToma->xBairro = 'Centro'; // Bairro
+$enderToma->cMun = '4308607'; // Codigo do municipio do IBEGE Informar 9999999 para operações com o exterior
+$enderToma->xMun = 'Garibaldi'; // Nome do município (Informar EXTERIOR para operações com o exterior.
+$enderToma->CEP = '95720000'; // CEP
+$enderToma->UF = $arr['siglaUF']; // Sigla UF (Informar EX para operações com o exterior.)
+$enderToma->cPais = '1058'; // Codigo do país ( Utilizar a tabela do BACEN )
+$enderToma->xPais = 'Brasil';                   // Nome do pais
+$cte->tagenderToma($enderToma);
 
-$resp = $cte->remTag(
-    $CNPJ = '06539526000392', // CNPJ
-    $CPF = '', // CPF
-    $IE = '9057800426', // Inscricao estadual
-    $xNome = 'CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL', $Fant = 'INPET', // Nome fantasia
-    $fone = '', // Fone
-    $email = ''                           // Email
-);
 
-$resp = $cte->enderRemeTag(
-    $xLgr = 'ALD TITO MUFFATO', // Logradouro
-    $nro = '290', // Numero
-    $xCpl = 'SALA 04', // Complemento
-    $xBairro = 'JARDIM ITAMARATY', // Bairro
-    $cMun = '4108304', // Codigo Municipal (Informar 9999999 para operações com o exterior.)
-    $xMun = 'Foz do Iguacu', // Nome do municipio (Informar EXTERIOR para operações com o exterior.)
-    $CEP = '85863070', // CEP
-    $UF = 'PR', // Sigla UF (Informar EX para operações com o exterior.)
-    $cPais = '1058', // Codigo do pais ( Utilizar a tabela do BACEN )
-    $xPais = 'Brasil'                   // Nome do pais
-);
+$emit = new stdClass();
+$emit->CNPJ = $arr['cnpj']; // CNPJ do emitente
+$emit->IE = '0100072968'; // Inscricao estadual
+$emit->IEST = ""; // Inscricao estadual
+$emit->xNome = $arr['razaosocial']; // Razao social
+$emit->xFant = 'Nome Fantasia'; // Nome fantasia
+$cte->tagemit($emit);
 
-$resp = $cte->destTag(
-    $CNPJ = '06539526000120', // CNPJ
-    $CPF = '', // CPF
-    $IE = '387171890111', // Inscriao estadual
-    $xNome = 'CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL', $fone = '1148869000', // Fone
-    $ISUF = '', // Inscrição na SUFRAMA
-    $email = ''                           // Email
-);
 
-$resp = $cte->enderDestTag(
-    $xLgr = 'RODOVIA WALDOMIRO CORREA DE CAMARGO', // Logradouro
-    $nro = '7000', // Numero
-    $xCpl = 'KM 64, SP 79', // COmplemento
-    $xBairro = 'VILA MARTINS', // Bairro
-    $cMun = '3523909', // Codigo Municipal (Informar 9999999 para operações com o exterior.)
-    $xMun = 'ITU', // Nome do Municipio (Informar EXTERIOR para operações com o exterior.)
-    $CEP = '13308200', // CEP
-    $UF = 'SP', // Sigla UF (Informar EX para operações com o exterior.)
-    $cPais = '1058', // Codigo do Pais (Utilizar a tabela do BACEN)
-    $xPais = 'Brasil'               // Nome do pais
-);
+$enderEmit = new stdClass();
+$enderEmit->xLgr = 'RUA CARLOS LUZ'; // Logradouro
+$enderEmit->nro = '123'; // Numero
+$enderEmit->xCpl = ''; // Complemento
+$enderEmit->xBairro = 'PARQUE PRESIDENTE'; // Bairro
+$enderEmit->cMun = '4302105'; // Código do município (utilizar a tabela do IBGE)
+$enderEmit->xMun = 'FOZ DO IGUACU'; // Nome do municipio
+$enderEmit->CEP = '85863150'; // CEP
+$enderEmit->UF = $arr['siglaUF']; // Sigla UF
+$enderEmit->fone = '4535221216'; // Fone
+$cte->tagenderEmit($enderEmit);
 
-$resp = $cte->vPrestTag(
-    $vTPrest = 3334.32, // Valor total da prestacao do servico
-    $vRec = 3334.32      // Valor a receber
-);
 
-$resp = $cte->compTag(
-    $xNome = 'FRETE VALOR', // Nome do componente
-    $vComp = '3334.32'  // Valor do componente
-);
+$rem = new stdClass();
+$rem->CNPJ = '06539526000392'; // CNPJ
+$rem->CPF = ''; // CPF
+$rem->IE = '9057800426'; // Inscricao estadual
+$rem->xNome = 'CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL';
+$rem->xFant = 'INPET'; // Nome fantasia
+$rem->fone = ''; // Fone
+$rem->email = ''; // Email
+$cte->tagrem($rem);
 
-$resp = $cte->icmsTag(
-    $cst = '00', // 00 - Tributacao normal ICMS
-    $pRedBC = '', // Percentual de redução da BC (3 inteiros e 2 decimais)
-    $vBC = 3334.32, // Valor da BC do ICMS
-    $pICMS = 12, // Alícota do ICMS
-    $vICMS = 400.12, // Valor do ICMS
-    $vBCSTRet = '', // Valor da BC do ICMS ST retido
-    $vICMSSTRet = '', // Valor do ICMS ST retido
-    $pICMSSTRet = '', // Alíquota do ICMS
-    $vCred = '', // Valor do Crédito Outorgado/Presumido
-    $vTotTrib = 754.38, // Valor de tributos federais, estaduais e municipais
-    $outraUF = false    // ICMS devido à UF de origem da prestação, quando diferente da UF do emitente
-);
 
-$resp = $cte->infCTeNormTag();              // Grupo de informações do CT-e Normal e Substituto
+$enderReme = new stdClass();
+$enderReme->xLgr = 'ALD TITO MUFFATO'; // Logradouro
+$enderReme->nro = '290'; // Numero
+$enderReme->xCpl = 'SALA 04'; // Complemento
+$enderReme->xBairro = 'JARDIM ITAMARATY'; // Bairro
+$enderReme->cMun = '4108304'; // Codigo Municipal (Informar 9999999 para operações com o exterior.)
+$enderReme->xMun = 'Foz do Iguacu'; // Nome do municipio (Informar EXTERIOR para operações com o exterior.)
+$enderReme->CEP = '85863070'; // CEP
+$enderReme->UF = 'PR'; // Sigla UF (Informar EX para operações com o exterior.)
+$enderReme->cPais = '1058'; // Codigo do pais ( Utilizar a tabela do BACEN )
+$enderReme->xPais = 'Brasil'; // Nome do pais
+$cte->tagenderReme($enderReme);
 
-$resp = $cte->infCargaTag(
-    $vCarga = 130333.31, // Valor total da carga
-    $prodPred = 'TUBOS PLASTICOS', // Produto predominante
-    $xOutCat = ''                           // Outras caracteristicas da carga
-);
 
-$resp = $cte->infQTag(
-    $cUnid = '01', // Código da Unidade de Medida: ( 00-M3; 01-KG; 02-TON; 03-UNIDADE; 04-LITROS; 05-MMBTU
-    $tpMed = 'ESTRADO', // Tipo de Medida
-    // ( PESO BRUTO, PESO DECLARADO, PESO CUBADO, PESO AFORADO, PESO AFERIDO, LITRAGEM, CAIXAS e etc)
-    $qCarga = 18145.0000  // Quantidade (15 posições, sendo 11 inteiras e 4 decimais.)
-);
+$dest = new stdClass();
+$dest->CNPJ = '06539526000120'; // CNPJ
+$dest->CPF = ''; // CPF
+$dest->IE = '387171890111'; // Inscriao estadual
+$dest->xNome = 'CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL';
+$dest->fone = '1148869000'; // Fone
+$dest->ISUF = ''; // Inscrição na SUFRAMA
+$dest->email = ''; // Email
+$cte->tagdest($dest);
 
-$resp = $cte->infDocTag();
 
-$resp = $cte->infNFeTag(
-    $pChave = '43160472202112000136550000000010571048440722', // Chave de acesso da NF-e
-    $PIN = '', // PIN SUFRAMA
-    $dPrev = '2016-10-30'                                       // Data prevista de entrega
-);
+$enderDest = new stdClass();
+$enderDest->xLgr = 'RODOVIA WALDOMIRO CORREA DE CAMARGO'; // Logradouro
+$enderDest->nro = '7000'; // Numero
+$enderDest->xCpl = 'KM 64; SP 79'; // COmplemento
+$enderDest->xBairro = 'VILA MARTINS'; // Bairro
+$enderDest->cMun = '3523909'; // Codigo Municipal (Informar 9999999 para operações com o exterior.)
+$enderDest->xMun = 'ITU'; // Nome do Municipio (Informar EXTERIOR para operações com o exterior.)
+$enderDest->CEP = '13308200'; // CEP
+$enderDest->UF = 'SP'; // Sigla UF (Informar EX para operações com o exterior.)
+$enderDest->cPais = '1058'; // Codigo do Pais (Utilizar a tabela do BACEN)
+$enderDest->xPais = 'Brasil'; // Nome do pais
+$cte->tagenderDest($enderDest);
 
-$resp = $cte->infModalTag($versaoModal = '3.00');
 
-$resp = $cte->rodoTag(
-    $RNTRC = '00739357'    // Registro Nacional de Transportadores Rodoviários de Carga
-);
+$vPrest = new stdClass();
+$vPrest->vTPrest = 3334.32; // Valor total da prestacao do servico
+$vPrest->vRec = 3334.32;      // Valor a receber
+$cte->tagvPrest($vPrest);
 
-$resp = $cte->montaCTe();
+
+$comp = new stdClass();
+$comp->xNome = 'FRETE VALOR'; // Nome do componente
+$comp->vComp = '3334.32';  // Valor do componente
+$cte->tagComp($comp);
+
+$icms = new stdClass();
+$icms->cst = '00'; // 00 - Tributacao normal ICMS
+$icms->pRedBC = ''; // Percentual de redução da BC (3 inteiros e 2 decimais)
+$icms->vBC = 3334.32; // Valor da BC do ICMS
+$icms->pICMS = 12; // Alícota do ICMS
+$icms->vICMS = 400.12; // Valor do ICMS
+$icms->vBCSTRet = ''; // Valor da BC do ICMS ST retido
+$icms->vICMSSTRet = ''; // Valor do ICMS ST retido
+$icms->pICMSSTRet = ''; // Alíquota do ICMS
+$icms->vCred = ''; // Valor do Crédito Outorgado/Presumido
+$icms->vTotTrib = 754.38; // Valor de tributos federais; estaduais e municipais
+$icms->outraUF = false;    // ICMS devido à UF de origem da prestação; quando diferente da UF do emitente
+$icms->vICMSUFIni = 0;  
+$icms->vICMSUFFim = 0;  
+$cte->tagicms($icms);
+
+
+$cte->taginfCTeNorm();              // Grupo de informações do CT-e Normal e Substituto
+
+
+$infCarga = new stdClass();
+$infCarga->vCarga = 130333.31; // Valor total da carga
+$infCarga->proPred = 'TUBOS PLASTICOS'; // Produto predominante
+$infCarga->xOutCat = ''; // Outras caracteristicas da carga
+$infCarga->vCargaAverb = '';
+$cte->taginfCarga($infCarga);
+
+$infQ = new stdClass();
+$infQ->cUnid = '01'; // Código da Unidade de Medida: ( 00-M3; 01-KG; 02-TON; 03-UNIDADE; 04-LITROS; 05-MMBTU
+$infQ->tpMed = 'ESTRADO'; // Tipo de Medida
+// ( PESO BRUTO; PESO DECLARADO; PESO CUBADO; PESO AFORADO; PESO AFERIDO; LITRAGEM; CAIXAS e etc)
+$infQ->qCarga = 18145.0000;  // Quantidade (15 posições; sendo 11 inteiras e 4 decimais.)
+$cte->taginfQ($infQ);
+
+$cte->taginfDoc();
+
+$infNFe = new stdClass();
+$infNFe->chave = '43160472202112000136550000000010571048440722'; // Chave de acesso da NF-e
+$infNFe->PIN = ''; // PIN SUFRAMA
+$infNFe->dPrev = '2016-10-30';                                       // Data prevista de entrega
+$cte->taginfNFe($infNFe);
+
+$infModal = new stdClass();
+$infModal->versaoModal = '3.00';
+$cte->taginfModal($infModal);
+
+$rodo = new stdClass();
+$rodo->RNTRC = '00739357';
+$cte->tagrodo($rodo);
+
+//Monta CT-e
+$cte->montaCTe();
 $chave = $cte->chCTe;
 $filename = "xml/{$chave}-cte.xml";
-
-if ($resp) {
-  //header('Content-type: text/xml; charset=UTF-8');
-  $xml = $cte->getXML();
-  file_put_contents($filename, $xml);
-  //chmod($filename, 0777);
-  //echo $xml;
-} else {
-  header('Content-type: text/html; charset=UTF-8');
-  foreach ($cte->erros as $err) {
-    echo 'tag: &lt;' . $err['tag'] . '&gt; ---- ' . $err['desc'] . '<br>';
-  }
-}
-
-//exit();
-//$xml = file_get_contents($filename);
-//Assina
-$xml = $tools->signCTe($xml);
-//header('Content-type: text/xml; charset=UTF-8');
-//print_r($xml);
-//exit();
-//Salva xml assinado
-$filename = "xml/{$chave}-cte.xml";
+$xml = $cte->getXML();
 file_put_contents($filename, $xml);
 
+//Assina
+$xml = $tools->signCTe($xml);
 
+//Imprime XML na tela
+header('Content-type: text/xml; charset=UTF-8');
+print_r($xml);
+exit();
+
+
+
+
+//Envia lote e autoriza
 $axmls[] = $xml;
 $lote = substr(str_replace(',', '', number_format(microtime(true) * 1000000, 0)), 0, 15);
 $res = $tools->sefazEnviaLote($axmls, $lote);
@@ -288,7 +299,6 @@ if ($std->cStat != 103) {//103 - Lote recebido com Sucesso
   print_r($arr);
 }
 
-echo "recibo: " . $std->infRec->nRec;
 //Consulta Recibo
 $res = $tools->sefazConsultaRecibo($std->infRec->nRec);
 $stdCl = new Standardize($res);
