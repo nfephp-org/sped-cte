@@ -3,6 +3,7 @@
 namespace NFePHP\CTe\Factories;
 
 /**
+ * @todo Precisa ser refatorada!
  * Classe de conversão do TXT para XML
  *
  * @category  API

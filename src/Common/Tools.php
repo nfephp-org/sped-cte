@@ -27,7 +27,6 @@ use NFePHP\Common\TimeZoneByUF;
 use NFePHP\Common\UFList;
 use NFePHP\Common\Validator;
 use NFePHP\CTe\Factories\Contingency;
-use NFePHP\CTe\Factories\ContingencyNFe;
 use NFePHP\CTe\Factories\Header;
 use NFePHP\CTe\Factories\QRCode;
 
@@ -99,7 +98,7 @@ class Tools
      */
     protected $canonical = [true,false,null,null];
     /**
-     * Model of NFe 55 or 65
+     * Model of CTe 57 or 67
      * @var int
      */
     protected $modelo = 57;
@@ -299,7 +298,7 @@ class Tools
         $uf = $this->config->siglaUF;
         if ($uf != UFList::getUFByCode(substr($chave, 0, 2))) {
             throw new \InvalidArgumentException(
-                "A chave da NFe indicada [$chave] não pertence a [$uf]."
+                "A chave do CTe indicado [$chave] não pertence a [$uf]."
             );
         }
         return $uf;
@@ -307,8 +306,8 @@ class Tools
     
     /**
      * Sign CTe
-     * @param  string  $xml NFe xml content
-     * @return string singed NFe xml
+     * @param  string  $xml CTe xml content
+     * @return string singed CTe xml
      * @throws RuntimeException
      */
     public function signCTe($xml)
@@ -333,6 +332,7 @@ class Tools
     }
     
     /**
+     * @todo
      * Corret NFe fields when in contingency mode is set
      * @param string $xml NFe xml content
      * @return string
