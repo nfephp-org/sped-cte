@@ -990,10 +990,11 @@ class Make
      * #4
      * Nível: 1
      * Os parâmetros para esta função são todos os elementos da tag "ide" do tipo elemento (Ele = E|CE|A) e nível 2
-     * 
+     *
      * @return DOMElement|\DOMNode
      */
-    public function tagideCTeOS($std) {
+    public function tagideCTeOS($std)
+    {
         $this->tpAmb = $std->tpAmb;
         $identificador = '#4 <ide> - ';
         $this->ide = $this->dom->createElement('ide');
