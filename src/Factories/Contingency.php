@@ -3,6 +3,7 @@
 namespace NFePHP\CTe\Factories;
 
 /**
+ * @todo Precisa ser refatorada
  * Class Contingency make a structure to set contingency mode
  *
  * @category  NFePHP

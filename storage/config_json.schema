@@ -32,21 +32,7 @@
         "required": true,
         "type": "string",
         "pattern": ""
-    },
-    "tokenIBPT": {
-        "required": false,
-        "type": ["string","null"]
-    },
-    "CSC": {
-        "required": false,
-        "type": ["string","null"]
-    },
-    "CSCid": {
-        "required": false,
-        "type": ["string","null"],
-        "maxLength": 6,
-        "pattern": "^[0-9]"
-    },
+    }
     "proxyConf": {
         "required": false,
         "type": "object",

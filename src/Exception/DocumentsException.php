@@ -14,7 +14,7 @@ class DocumentsException extends \InvalidArgumentException implements ExceptionI
 {
     public static $list = [
         0 => "Este documento [{{msg}}] não recebe protocolos. Confira a ordem dos parâmetros.",
-        1 => "O arquivo indicado como NFe não está protocolado ou não é uma NFe!!",
+        1 => "O arquivo indicado como CTe não está protocolado ou não é um CTe!!",
         2 => "O arquivo indicado como B2B não contêm a tagB2B indicada!!",
         3 => "O documento de resposta não contêm o NODE {{msg}}.",
         4 => "O documento de resposta relata um erro {{msg}}.",

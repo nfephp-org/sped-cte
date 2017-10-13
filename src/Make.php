@@ -544,7 +544,7 @@ class Make
         if ($this->mod == 57) {
             $this->buildCTe();
         } else {
-            $this->buildCTeOS();
+            $this->montaCTeOS();
         }
         if ($this->toma3 != '') {
             $this->dom->appChild($this->ide, $this->toma3, 'Falta tag "ide"');
@@ -561,22 +561,22 @@ class Make
                 $this->dom->appChild($this->compl, $this->fluxo, 'Falta tag "infCte"');
             }
             if ($this->semData != '') {
-                $this->zEntregaTag();
+                $this->tagEntrega();
                 $this->dom->appChild($this->entrega, $this->semData, 'Falta tag "Entrega"');
             } elseif ($this->comData != '') {
-                $this->zEntregaTag();
+                $this->tagEntrega();
                 $this->dom->appChild($this->entrega, $this->comData, 'Falta tag "Entrega"');
             } elseif ($this->noPeriodo != '') {
-                $this->zEntregaTag();
+                $this->tagEntrega();
                 $this->dom->appChild($this->entrega, $this->noPeriodo, 'Falta tag "Entrega"');
             } elseif ($this->semHora != '') {
-                $this->zEntregaTag();
+                $this->tagEntrega();
                 $this->dom->appChild($this->entrega, $this->semHora, 'Falta tag "Entrega"');
             } elseif ($this->comHora != '') {
-                $this->zEntregaTag();
+                $this->tagEntrega();
                 $this->dom->appChild($this->entrega, $this->comHora, 'Falta tag "Entrega"');
             } elseif ($this->noInter != '') {
-                $this->zEntregaTag();
+                $this->tagEntrega();
                 $this->dom->appChild($this->entrega, $this->noInter, 'Falta tag "Entrega"');
             }
             foreach ($this->obsCont as $obsCont) {
@@ -674,7 +674,7 @@ class Make
         if (count($this->erros) > 0) {
             return false;
         }
-        $this->zCTeOSTag();
+        $this->buildCTeOS();
 
         if ($this->infPercurso != '') {
             foreach ($this->infPercurso as $perc) {
@@ -766,7 +766,7 @@ class Make
         $this->dom->addChild(
             $this->ide,
             'cCT',
-            $std->cCT,
+            str_pad($std->cCT, 8, '0', STR_PAD_LEFT),
             true,
             $identificador . 'Código numérico que compõe a Chave de Acesso'
         );
@@ -780,7 +780,7 @@ class Make
         $this->dom->addChild(
             $this->ide,
             'natOp',
-            $std->natOp,
+            Strings::replaceSpecialsChars(substr(trim($std->natOp), 0, 60)),
             true,
             $identificador . 'Natureza da Operação'
         );
@@ -977,7 +977,7 @@ class Make
         $this->dom->addChild(
             $this->ide,
             'xJust',
-            $std->xJust,
+            Strings::replaceSpecialsChars(substr(trim($std->xJust), 0, 256)),
             false,
             $identificador . 'Justificativa da entrada em contingência'
         );
@@ -990,134 +990,75 @@ class Make
      * #4
      * Nível: 1
      * Os parâmetros para esta função são todos os elementos da tag "ide" do tipo elemento (Ele = E|CE|A) e nível 2
-     * @param string $cUF Código da UF do emitente do CT-e
-     * @param string $cCT Código numérico que compõe a Chave de Acesso
-     * @param string $CFOP Código Fiscal de Operações e Prestações
-     * @param string $natOp Natureza da Operação
-     * @param string $mod Modelo do documento fiscal
-     * @param string $serie Série do CT-e
-     * @param string $nCT Número do CT-e
-     * @param string $dhEmi Data e hora de emissão do CT-e
-     * @param string $tpImp Formato de impressão do DACTE
-     * @param string $tpEmis Forma de emissão do CT-e
-     * @param string $cDV Digito Verificador da chave de acesso do CT-e
-     * @param string $tpAmb Tipo do Ambiente
-     * @param string $tpCTe Tipo do CT-e
-     * @param string $procEmi Identificador do processo de emissão do CT-e
-     * @param string $verProc Versão do processo de emissão
-     * @param string $refCTE Chave de acesso do CT-e referenciado
-     * @param string $cMunEnv Código do Município de envio do CT-e (de onde o documento foi transmitido)
-     * @param string $xMunEnv Nome do Município de envio do CT-e (de onde o documento foi transmitido)
-     * @param string $UFEnv Sigla da UF de envio do CT-e (de onde o documento foi transmitido)
-     * @param string $modal Modal
-     * @param string $tpServ Tipo do Serviço
-     * @param string $cMunIni Código do Município de início da prestação
-     * @param string $xMunIni Nome do Município do início da prestação
-     * @param string $UFIni UF do início da prestação
-     * @param string $cMunFim Código do Município de término da prestação
-     * @param string $xMunFim Nome do Município do término da prestação
-     * @param string $UFFim UF do término da prestação
-     * @param string $retira Indicador se o Recebedor retira no Aeroporto, Filial, Porto ou Estação de Destino?
-     * @param string $xDetRetira Detalhes do retira
-     * @param string $dhCont Data e Hora da entrada em contingência
-     * @param string $xJust Justificativa da entrada em contingência
+     *
      * @return DOMElement|\DOMNode
      */
-    public function ideTagCTeOS(
-        $cUF = '',
-        $cCT = '',
-        $CFOP = '',
-        $natOp = '',
-        $mod = '',
-        $serie = '',
-        $nCT = '',
-        $dhEmi = '',
-        $tpImp = '',
-        $tpEmis = '',
-        $cDV = '',
-        $tpAmb = '',
-        $tpCTe = '',
-        $procEmi = '',
-        $verProc = '',
-        $cMunEnv = '',
-        $xMunEnv = '',
-        $UFEnv = '',
-        $modal = '',
-        $tpServ = '',
-        $indIEToma = '',
-        $cMunIni = '',
-        $xMunIni = '',
-        $UFIni = '',
-        $cMunFim = '',
-        $xMunFim = '',
-        $UFFim = '',
-        $dhCont = '',
-        $xJust = ''
-    ) {
-        $this->tpAmb = $tpAmb;
+    public function tagideCTeOS($std)
+    {
+        $this->tpAmb = $std->tpAmb;
         $identificador = '#4 <ide> - ';
         $this->ide = $this->dom->createElement('ide');
         $this->dom->addChild(
             $this->ide,
             'cUF',
-            $cUF,
+            $std->cUF,
             true,
             $identificador . 'Código da UF do emitente do CT-e'
         );
         $this->dom->addChild(
             $this->ide,
             'cCT',
-            $cCT,
+            $std->cCT,
             true,
             $identificador . 'Código numérico que compõe a Chave de Acesso'
         );
         $this->dom->addChild(
             $this->ide,
             'CFOP',
-            $CFOP,
+            $std->CFOP,
             true,
             $identificador . 'Código Fiscal de Operações e Prestações'
         );
         $this->dom->addChild(
             $this->ide,
             'natOp',
-            $natOp,
+            $std->natOp,
             true,
             $identificador . 'Natureza da Operação'
         );
         $this->dom->addChild(
             $this->ide,
             'mod',
-            $mod,
+            $std->mod,
             true,
             $identificador . 'Modelo do documento fiscal'
         );
-        $this->mod = $mod;
+        $this->mod = $std->mod;
         $this->dom->addChild(
             $this->ide,
             'serie',
-            $serie,
+            $std->serie,
             true,
             $identificador . 'Série do CT-e'
         );
         $this->dom->addChild(
             $this->ide,
             'nCT',
-            $nCT,
+            $std->nCT,
             true,
             $identificador . 'Número do CT-e'
         );
         $this->dom->addChild(
             $this->ide,
             'dhEmi',
-            $dhEmi,
+            $std->dhEmi,
             true,
             $identificador . 'Data e hora de emissão do CT-e'
         );
         $this->dom->addChild(
             $this->ide,
             'tpImp',
-            $tpImp,
+            $std->tpImp,
             true,
             $identificador . 'Formato de impressão do DACTE'
         );
@@ -1145,49 +1086,49 @@ class Make
         $this->dom->addChild(
             $this->ide,
             'tpCTe',
-            $tpCTe,
+            $std->tpCTe,
             true,
             $identificador . 'Tipo do CT-e'
         );
         $this->dom->addChild(
             $this->ide,
             'procEmi',
-            $procEmi,
+            $std->procEmi,
             true,
             $identificador . 'Identificador do processo de emissão do CT-e'
         );
         $this->dom->addChild(
             $this->ide,
             'verProc',
-            $verProc,
+            $std->verProc,
             true,
             $identificador . 'Versão do processo de emissão'
         );
         $this->dom->addChild(
             $this->ide,
             'cMunEnv',
-            $cMunEnv,
+            $std->cMunEnv,
             true,
             $identificador . 'Código do Município de envio do CT-e (de onde o documento foi transmitido)'
         );
         $this->dom->addChild(
             $this->ide,
             'xMunEnv',
-            $xMunEnv,
+            $std->xMunEnv,
             true,
             $identificador . 'Nome do Município de envio do CT-e (de onde o documento foi transmitido)'
         );
         $this->dom->addChild(
             $this->ide,
             'UFEnv',
-            $UFEnv,
+            $std->UFEnv,
             true,
             $identificador . 'Sigla da UF de envio do CT-e (de onde o documento foi transmitido)'
         );
         $this->dom->addChild(
             $this->ide,
             'modal',
-            $modal,
+            $std->modal,
             true,
             $identificador . 'Modal'
         );
@@ -1195,56 +1136,56 @@ class Make
         $this->dom->addChild(
             $this->ide,
             'tpServ',
-            $tpServ,
+            $std->tpServ,
             true,
             $identificador . 'Tipo do Serviço'
         );
         $this->dom->addChild(
             $this->ide,
             'indIEToma',
-            $indIEToma,
+            $std->indIEToma,
             true,
             $identificador . 'Indicador do papel do tomador na prestação do serviço'
         );
         $this->dom->addChild(
             $this->ide,
             'cMunIni',
-            $cMunIni,
+            $std->cMunIni,
             false,
             $identificador . 'Nome do Município do início da prestação'
         );
         $this->dom->addChild(
             $this->ide,
             'xMunIni',
-            $xMunIni,
+            $std->xMunIni,
             false,
             $identificador . 'Nome do Município do início da prestação'
         );
         $this->dom->addChild(
             $this->ide,
             'UFIni',
-            $UFIni,
+            $std->UFIni,
             false,
             $identificador . 'UF do início da prestação'
         );
         $this->dom->addChild(
             $this->ide,
             'cMunFim',
-            $cMunFim,
+            $std->cMunFim,
             false,
             $identificador . 'Código do Município de término da prestação'
         );
         $this->dom->addChild(
             $this->ide,
             'xMunFim',
-            $xMunFim,
+            $std->xMunFim,
             false,
             $identificador . 'Nome do Município do término da prestação'
         );
         $this->dom->addChild(
             $this->ide,
             'UFFim',
-            $UFFim,
+            $std->UFFim,
             false,
             $identificador . 'UF do término da prestação'
         );
@@ -1252,22 +1193,22 @@ class Make
         $this->dom->addChild(
             $this->ide,
             'dhCont',
-            $dhCont,
+            $std->dhCont,
             false,
             $identificador . 'Data e Hora da entrada em contingência'
         );
         $this->dom->addChild(
             $this->ide,
             'xJust',
-            $xJust,
+            $std->xJust,
             false,
             $identificador . 'Justificativa da entrada em contingência'
         );
-        $this->tpServ = $tpServ;
+        $this->tpServ = $std->tpServ;
         return $this->ide;
     }
 
-    public function infPercursoTag($uf = '')
+    public function taginfPercurso($std)
     {
         $identificador = '#4 <infPercurso> - ';
         $this->infPercurso[] = $this->dom->createElement('infPercurso');
@@ -1275,7 +1216,7 @@ class Make
         $this->dom->addChild(
             $this->infPercurso[$posicao],
             'UFPer',
-            $uf,
+            $std->uf,
             true,
             $identificador . 'Código da UF do percurso'
         );
@@ -1912,7 +1853,7 @@ class Make
      *
      * @return \DOMElement
      */
-    public function comHoraTag($std)
+    public function tagcomHora($std)
     {
         $identificador = '#81 <comHora> - ';
         $this->comHora = $this->dom->createElement('comHora');
@@ -2424,7 +2365,7 @@ class Make
      *
      * @return \DOMElement
      */
-    public function enderExpedTag($std)
+    public function tagenderExped($std)
     {
         $identificador = '#148 <enderExped> - ';
         $this->enderExped = $this->dom->createElement('enderExped');
@@ -3119,7 +3060,7 @@ class Make
      * CTe OS
      * @return DOMElement
      */
-    public function infTribFedTag($std)
+    public function taginfTribFed($std)
     {
         $identificador = 'N02 <imp> - ';
         $tagInfTribFed = $this->dom->createElement('infTribFed');
@@ -3172,7 +3113,7 @@ class Make
      *
      * @return \DOMElement
      */
-    private function zEntregaTag()
+    private function tagEntrega()
     {
         $this->entrega = $this->dom->createElement('Entrega');
         return $this->entrega;
@@ -3853,7 +3794,7 @@ class Make
      * Nível: 1
      * @return mixed
      */
-    public function veicCTeOSTag($std)
+    public function tagveicCTeOS($std)
     {
         $identificador = '#21 <veic> - ';
         $this->veic = $this->dom->createElement('veic');
