@@ -1922,10 +1922,10 @@ class Make
      */
     public function tagobsCont($std)
     {
-        $identificador = '#91 <ObsCont> - ';
-        $posicao = (integer) count($this->obsCont) - 1;
+        $identificador = '#91 <ObsCont> - ';        
         if (count($this->obsCont) <= 10) {
             $this->obsCont[] = $this->dom->createElement('ObsCont');
+            $posicao = (integer) count($this->obsCont) - 1;
             $this->obsCont[$posicao]->setAttribute('xCampo', $std->xCampo);
             $this->dom->addChild(
                 $this->obsCont[$posicao],
