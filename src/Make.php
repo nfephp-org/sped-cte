@@ -1595,7 +1595,9 @@ class Make
     public function tagcompl($std)
     {
         $identificador = '#59 <compl> - ';
-        $this->compl = $this->dom->createElement('compl');
+        if ($this->compl == ''){
+            $this->compl = $this->dom->createElement('compl');    
+        }
         $this->dom->addChild(
             $this->compl,
             'xCaracAd',
