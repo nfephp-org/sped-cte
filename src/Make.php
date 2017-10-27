@@ -493,32 +493,37 @@ class Make extends BaseMake
             $this->dom->appChild($this->ide, $this->toma4, 'Falta tag "ide"');
         }
         $this->dom->appChild($this->infCte, $this->ide, 'Falta tag "infCte"');
+        if ($this->semData != '') {
+            $this->zEntregaTag();
+            $this->dom->appChild($this->entrega, $this->semData, 'Falta tag "Entrega"');
+        } 
+        if ($this->comData != '') {
+            $this->zEntregaTag();
+            $this->dom->appChild($this->entrega, $this->comData, 'Falta tag "Entrega"');
+        }
+        if ($this->noPeriodo != '') {
+            $this->zEntregaTag();
+            $this->dom->appChild($this->entrega, $this->noPeriodo, 'Falta tag "Entrega"');
+        }
+        if ($this->semHora != '') {
+            $this->zEntregaTag();
+            $this->dom->appChild($this->entrega, $this->semHora, 'Falta tag "Entrega"');
+        }
+        if ($this->comHora != '') {
+            $this->zEntregaTag();
+            $this->dom->appChild($this->entrega, $this->comHora, 'Falta tag "Entrega"');
+        }
+        if ($this->noInter != '') {
+            $this->zEntregaTag();
+            $this->dom->appChild($this->entrega, $this->noInter, 'Falta tag "Entrega"');
+        }
         if ($this->compl != '') {
             if ($this->fluxo != '') {
                 foreach ($this->pass as $pass) {
                     $this->dom->appChild($this->fluxo, $pass, 'Falta tag "fluxo"');
                 }
                 $this->dom->appChild($this->compl, $this->fluxo, 'Falta tag "infCte"');
-            }
-            if ($this->semData != '') {
-                $this->zEntregaTag();
-                $this->dom->appChild($this->entrega, $this->semData, 'Falta tag "Entrega"');
-            } elseif ($this->comData != '') {
-                $this->zEntregaTag();
-                $this->dom->appChild($this->entrega, $this->comData, 'Falta tag "Entrega"');
-            } elseif ($this->noPeriodo != '') {
-                $this->zEntregaTag();
-                $this->dom->appChild($this->entrega, $this->noPeriodo, 'Falta tag "Entrega"');
-            } elseif ($this->semHora != '') {
-                $this->zEntregaTag();
-                $this->dom->appChild($this->entrega, $this->semHora, 'Falta tag "Entrega"');
-            } elseif ($this->comHora != '') {
-                $this->zEntregaTag();
-                $this->dom->appChild($this->entrega, $this->comHora, 'Falta tag "Entrega"');
-            } elseif ($this->noInter != '') {
-                $this->zEntregaTag();
-                $this->dom->appChild($this->entrega, $this->noInter, 'Falta tag "Entrega"');
-            }
+            }            
             foreach ($this->obsCont as $obsCont) {
                 $this->dom->appChild($this->compl, $obsCont, 'Falta tag "compl"');
             }
@@ -1732,7 +1737,9 @@ class Make extends BaseMake
     public function complTag($xCaracAd = '', $xCaracSer = '', $xEmi = '', $origCalc = '', $destCalc = '', $xObs = '')
     {
         $identificador = '#59 <compl> - ';
-        $this->compl = $this->dom->createElement('compl');
+        if ($this->compl == ''){
+            $this->compl = $this->dom->createElement('compl');    
+        }
         $this->dom->addChild(
             $this->compl,
             'xCaracAd',
@@ -3396,8 +3403,13 @@ class Make extends BaseMake
      */
     private function zEntregaTag()
     {
-        $this->entrega = $this->dom->createElement('Entrega');
-        return $this->entrega;
+        if ($this->compl == ''){
+            $this->compl = $this->dom->createElement('compl');
+        }
+        if($this->entrega == ''){
+            $this->entrega = $this->dom->createElement('Entrega');
+            $this->dom->appChild($this->compl, $this->entrega, 'Falta tag "compl"');
+        }
     }
 
     public function infCTeNormTag()
