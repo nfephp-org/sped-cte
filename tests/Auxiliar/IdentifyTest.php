@@ -5,8 +5,9 @@
  * @author Roberto L. Machado <linux.rlm at gmail dot com>
  */
 use NFePHP\CTe\Auxiliar\IdentifyCTe;
+use PHPUnit\Framework\TestCase;
 
-class IdentifyTest extends PHPUnit_Framework_TestCase
+class IdentifyTest extends TestCase
 {
     public function testIdentificaCte()
     {

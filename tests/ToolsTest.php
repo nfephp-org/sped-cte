@@ -5,8 +5,9 @@
  * @author Roberto L. Machado <linux.rlm at gmail dot com>
  */
 use NFePHP\CTe\Tools;
+use PHPUnit\Framework\TestCase;
 
-class ToolsTest extends PHPUnit_Framework_TestCase
+class ToolsTest extends TestCase
 {
     public $cte;
 

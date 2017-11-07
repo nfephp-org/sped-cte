@@ -5,21 +5,22 @@
  * @author Roberto L. Machado <linux.rlm at gmail dot com>
  */
 use NFePHP\CTe\Make;
+use PHPUnit\Framework\TestCase;
 
-class MakeTest extends PHPUnit_Framework_TestCase
+class MakeTest extends TestCase
 {
     public $cte;
-    
+
     public function testInstanciar()
     {
         $this->cte = new Make();
     }
-    
-    public function testMontaChave() 
-    {  
+
+    public function testMontaChave()
+    {
         $cte = new Make();
         $dhEmi = date("Y-m-d\TH:i:s");
-        $numeroCTE = '71';        
+        $numeroCTE = '71';
         $chave = $cte->montaChave(
             $cUF = '41',                // Codigo da UF da tabela do IBGE: 41-PR
             $ano = date('y', strtotime($dhEmi)),
@@ -30,15 +31,15 @@ class MakeTest extends PHPUnit_Framework_TestCase
             $numero = $numeroCTE,             // Numero do CTe
             $tpEmis = '1',              // Forma de emissao do CTe: 1-Normal; 4-EPEC pela SVC; 5-Contingência
             $cCT = '10'
-        );     
+        );
     }
-    
+
     public function testIdeTag()
     {
         $cte = new Make();
-        $numeroCTE = '71';   
+        $numeroCTE = '71';
         $dhEmi = date("Y-m-d\TH:i:s");
-        
+
         $chave = $cte->montaChave(
             $cUF = '41',                // Codigo da UF da tabela do IBGE: 41-PR
             $ano = date('y', strtotime($dhEmi)),
@@ -54,7 +55,7 @@ class MakeTest extends PHPUnit_Framework_TestCase
         $resp = $cte->infCteTag($chave, $versao = '2.00');
 
         $cDV = substr($chave, -1);      //Digito Verificador
-        
+
         $resp = $cte->ideTag(
             $cUF = '41',                // Codigo da UF da tabela do IBGE
             $cCT = '00000010',          // Codigo numerico que compoe a chave de acesso (Codigo aleatorio do emitente, para evitar acessos indevidos ao documento)
@@ -93,10 +94,10 @@ class MakeTest extends PHPUnit_Framework_TestCase
             $xDetRetira = '',           // Detalhes do retira
             $dhCont = '',               // Data e Hora da entrada em contingência; no formato AAAAMM-DDTHH:MM:SS
             $xJust = ''                 // Justificativa da entrada em contingência
-        );  
+        );
     }
-    
-    public function testToma03Tag() 
+
+    public function testToma03Tag()
     {
         $cte = new Make();
         $resp = $cte->toma3Tag(
@@ -104,8 +105,8 @@ class MakeTest extends PHPUnit_Framework_TestCase
         );
 
     }
-    
-    public function testToma4Tag() 
+
+    public function testToma4Tag()
     {
 
         $cte = new Make();
@@ -120,8 +121,8 @@ class MakeTest extends PHPUnit_Framework_TestCase
             $email = 'contato@otimizy.com.br'   // email
         );
     }
-    
-    public function testEnderTomaTag() 
+
+    public function testEnderTomaTag()
     {
         $cte = new Make();
         $resp = $cte->enderTomaTag(
@@ -137,8 +138,8 @@ class MakeTest extends PHPUnit_Framework_TestCase
             $xPais = 'Brasil'                   // Nome do pais
         );
     }
-    
-    public function testEmitTag() 
+
+    public function testEmitTag()
     {
         $cte = new Make();
         $resp = $cte->emitTag(
@@ -148,8 +149,8 @@ class MakeTest extends PHPUnit_Framework_TestCase
             $xFant = 'XX' // Nome fantasia
         );
     }
-     
-    public function testEnderEmitTag() 
+
+    public function testEnderEmitTag()
     {
         $cte = new Make();
         $resp = $cte->enderEmitTag(
@@ -164,8 +165,8 @@ class MakeTest extends PHPUnit_Framework_TestCase
             $fone = '4535221216'                        // Fone
         );
     }
-    
-    public function testRemTag() 
+
+    public function testRemTag()
     {
         $cte = new Make();
         $resp = $cte->remTag(
@@ -177,7 +178,7 @@ class MakeTest extends PHPUnit_Framework_TestCase
             $fone = '',                                         // Fone
             $email = ''                           // Email
         );
-        
+
                 $resp = $cte->enderRemeTag(
             $xLgr = 'ALD TITO MUFFATO',                                        // Logradouro
             $nro = '290',                                               // Numero
@@ -191,9 +192,9 @@ class MakeTest extends PHPUnit_Framework_TestCase
             $xPais = 'Brasil'                                           // Nome do pais
         );
     }
-    
-    
-    public function testDestTag() 
+
+
+    public function testDestTag()
     {
         $cte = new Make();
         $resp = $cte->destTag(
@@ -205,7 +206,7 @@ class MakeTest extends PHPUnit_Framework_TestCase
             $ISUF = '',                                                 // Inscrição na SUFRAMA
             $email = ''                           // Email
         );
-        
+
         $resp = $cte->enderDestTag(
             $xLgr = 'RODOVIA WALDOMIRO CORREA DE CAMARGO',                        // Logradouro
             $nro = '7000',                                                // Numero
@@ -219,8 +220,8 @@ class MakeTest extends PHPUnit_Framework_TestCase
             $xPais = 'Brasil'                                           // Nome do pais
         );
     }
-    
-    public function testVPrestTag() 
+
+    public function testVPrestTag()
     {
         $cte = new Make();
         $resp = $cte->vPrestTag(
@@ -228,8 +229,8 @@ class MakeTest extends PHPUnit_Framework_TestCase
             $vRec = 3334.32      // Valor a receber
         );
     }
-    
-    public function testCompTag() 
+
+    public function testCompTag()
     {
         $cte = new Make();
         $resp = $cte->compTag(
@@ -237,9 +238,9 @@ class MakeTest extends PHPUnit_Framework_TestCase
             $vComp = '3334.32'  // Valor do componente
         );
     }
-    
-    public function testIcmsTag() 
-    {    
+
+    public function testIcmsTag()
+    {
         $cte = new Make();
         $resp = $cte->icmsTag(
             $cst = '00',        // 00 - Tributacao normal ICMS
@@ -255,8 +256,8 @@ class MakeTest extends PHPUnit_Framework_TestCase
             $outraUF = false    // ICMS devido à UF de origem da prestação, quando diferente da UF do emitente
         );
     }
-     
-    public function testInfCTeNormTag() 
+
+    public function testInfCTeNormTag()
     {
         $cte = new Make();
         $resp = $cte->infCTeNormTag();              // Grupo de informações do CT-e Normal e Substituto
@@ -273,8 +274,8 @@ class MakeTest extends PHPUnit_Framework_TestCase
             $qCarga = 18145.0000                     // Quantidade (15 posições, sendo 11 inteiras e 4 decimais.)
         );
     }
-    
-    public function testInfDocTag() 
+
+    public function testInfDocTag()
     {
         $cte = new Make();
         $resp = $cte->infDocTag();
@@ -285,8 +286,8 @@ class MakeTest extends PHPUnit_Framework_TestCase
             $dPrev = '2016-10-30'                                       // Data prevista de entrega
         );
     }
-    
-    public function testSegTag() 
+
+    public function testSegTag()
     {
         $cte = new Make();
         $resp = $cte->segTag(
@@ -296,7 +297,7 @@ class MakeTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testInfModalTag() 
+    public function testInfModalTag()
     {
         $cte = new Make();
         $resp = $cte->infModalTag($versaoModal = '2.00');
@@ -339,5 +340,5 @@ class MakeTest extends PHPUnit_Framework_TestCase
             $CPF = '59393025991'                      // CPF do motorista
         );
     }
-            
+
 }
