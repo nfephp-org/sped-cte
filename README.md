@@ -6,6 +6,9 @@ Framework para geração e comunicação das CTe com as SEFAZ autorizadoras.
 
 *sped-cte é um framework para geração CTe e eventos na comunicação com as SEFAZ autorizadoras.*
 
+**ATENÇÂO: Esta branch(v4.0) assim como a branch v3.0 correspondem a versão 3.00 do layout da SEFAZ. 
+Esta branch(4.0) contempla o sped-common atual resolvendo os problemas com composer para quem utiliza o sped-nfe por exemplo**
+
 [![Build Status][ico-travis]][link-travis]
 [![Coverage Status][ico-scrutinizer]][link-scrutinizer]
 [![Quality Score][ico-code-quality]][link-code-quality]
@@ -36,8 +39,6 @@ Acompanhe o [CHANGELOG](CHANGELOG.md) para maiores informações sobre as altera
 
 
 ## Contributing
-**ATENÇÂO: Esta branch(v4.0) assim como a branch v3.0 correspondem a versão 3.00 do layout da SEFAZ. 
-Esta branch(4.0) contempla a o sped-common atual resolvendo os problemas com composer para quem utiliza o sped-nfe por exemplo**
 
 Para contribuir por favor observe o [CONTRIBUTING](CONTRIBUTING.md) e o  [Código de Conduta](CONDUCT.md) parea detalhes.
 
