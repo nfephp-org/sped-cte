@@ -2167,10 +2167,14 @@ class Make
             true,
             $identificador . 'Inscrição Estadual do remente'
         );
+        $xNome = $std->xNome;
+        if ($this->tpAmb == '2') {
+            $xNome = 'CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL';            
+        }
         $this->dom->addChild(
             $this->rem,
             'xNome',
-            $std->xNome,
+            Strings::replaceSpecialsChars(substr(trim($xNome), 0, 60)),
             true,
             $identificador . 'Razão social ou Nome do remente'
         );
@@ -2339,10 +2343,14 @@ class Make
             true,
             $identificador . 'Inscrição Estadual'
         );
+        $xNome = $std->xNome;
+        if ($this->tpAmb == '2') {
+            $xNome = 'CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL';            
+        }
         $this->dom->addChild(
             $this->exped,
             'xNome',
-            $std->xNome,
+            Strings::replaceSpecialsChars(substr(trim($xNome), 0, 60)),
             true,
             $identificador . 'Razão social ou Nome'
         );
@@ -2503,10 +2511,14 @@ class Make
             true,
             $identificador . 'Inscrição Estadual'
         );
+        $xNome = $std->xNome;
+        if ($this->tpAmb == '2') {
+            $xNome = 'CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL';            
+        }
         $this->dom->addChild(
             $this->receb,
             'xNome',
-            $std->xNome,
+            Strings::replaceSpecialsChars(substr(trim($xNome), 0, 60)),
             true,
             $identificador . 'Razão social ou Nome'
         );
@@ -2667,10 +2679,14 @@ class Make
             true,
             $identificador . 'Inscrição Estadual'
         );
+        $xNome = $std->xNome;
+        if ($this->tpAmb == '2') {
+            $xNome = 'CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL';            
+        }
         $this->dom->addChild(
             $this->dest,
             'xNome',
-            $std->xNome,
+            Strings::replaceSpecialsChars(substr(trim($xNome), 0, 60)),
             true,
             $identificador . 'Razão social ou Nome'
         );
