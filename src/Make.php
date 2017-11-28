@@ -1306,7 +1306,7 @@ class Make
         $this->dom->addChild(
             $this->toma4,
             'IE',
-            Strings::onlyNumbers($std->IE),
+            $std->IE,
             false,
             $identificador . 'Inscrição Estadual'
         );
@@ -1388,7 +1388,7 @@ class Make
         $this->dom->addChild(
             $this->toma,
             'IE',
-            Strings::onlyNumbers($std->IE),
+            $std->IE,
             false,
             $identificador . 'Inscrição Estadual'
         );
@@ -2014,7 +2014,7 @@ class Make
         $this->dom->addChild(
             $this->emit,
             'IEST',
-            $std->IEST,
+            Strings::onlyNumbers($std->IEST),
             false,
             $identificador . 'Inscrição Estadual do Substituto Tributário'
         );
@@ -2163,7 +2163,7 @@ class Make
         $this->dom->addChild(
             $this->rem,
             'IE',
-            Strings::onlyNumbers($std->IE),
+            $std->IE,
             true,
             $identificador . 'Inscrição Estadual do remente'
         );
@@ -2339,7 +2339,7 @@ class Make
         $this->dom->addChild(
             $this->exped,
             'IE',
-            Strings::onlyNumbers($std->IE),
+            $std->IE,
             true,
             $identificador . 'Inscrição Estadual'
         );
@@ -2507,7 +2507,7 @@ class Make
         $this->dom->addChild(
             $this->receb,
             'IE',
-            Strings::onlyNumbers($std->IE),
+            $std->IE,
             true,
             $identificador . 'Inscrição Estadual'
         );
@@ -2675,7 +2675,7 @@ class Make
         $this->dom->addChild(
             $this->dest,
             'IE',
-            Strings::onlyNumbers($std->IE),
+            $std->IE,
             true,
             $identificador . 'Inscrição Estadual'
         );
