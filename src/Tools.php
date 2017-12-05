@@ -363,7 +363,6 @@ class Tools extends ToolsCommon
         $body = "<cteDistDFeInteresse xmlns=\"$this->urlNamespace\">"
             . $request
             . "</cteDistDFeInteresse>";
-        var_dump($body, $parameters); die;
         //este webservice não requer cabeçalho
         $this->objHeader = null;
         $this->lastResponse = $this->sendRequest($body, $parameters);
