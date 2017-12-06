@@ -46,8 +46,8 @@ class Protocol
         $dom->formatOutput = false;
         $dom->preserveWhiteSpace = false;
         $dom->loadXML($xmlnfe);
-        $node = $dom->getElementsByTagName('NFe')->item(0);
-        $infTag = $node->getElementsByTagName('infNFe')->item(0);
+        $node = $dom->getElementsByTagName('CTe')->item(0);
+        $infTag = $node->getElementsByTagName('infCTe')->item(0);
         $procver = $infTag->getAttribute("versao");
         $procns = $node->getAttribute("xmlns");
         
@@ -55,12 +55,12 @@ class Protocol
         $dom1->formatOutput = false;
         $dom1->preserveWhiteSpace = false;
         $dom1->loadXML($xmlprotocol);
-        $node1 = $dom1->getElementsByTagName('protNFe')->item(0);
+        $node1 = $dom1->getElementsByTagName('protCTe')->item(0);
         
         $proc = new \DOMDocument('1.0', 'UTF-8');
         $proc->formatOutput = false;
         $proc->preserveWhiteSpace = false;
-        $procNode = $proc->createElement('nfeProc');
+        $procNode = $proc->createElement('cteProc');
         $proc->appendChild($procNode);
         $procNodeAtt1 = $procNode->appendChild($proc->createAttribute('versao'));
         $procNodeAtt1->appendChild($proc->createTextNode($procver));
@@ -92,7 +92,7 @@ class Protocol
         $dom->formatOutput = false;
         $dom->preserveWhiteSpace = false;
         $dom->loadXML($xmlprocnfe);
-        $node = $dom->getElementsByTagName('NFe')->item(0);
+        $node = $dom->getElementsByTagName('CTe')->item(0);
         return '<?xml version="1.0" encoding="utf-8"?>'
             . $dom->saveXML($node);
     }
