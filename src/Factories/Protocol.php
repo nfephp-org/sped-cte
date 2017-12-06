@@ -47,7 +47,7 @@ class Protocol
         $dom->preserveWhiteSpace = false;
         $dom->loadXML($xmlnfe);
         $node = $dom->getElementsByTagName('CTe')->item(0);
-        $infTag = $node->getElementsByTagName('infCTe')->item(0);
+        $infTag = $node->getElementsByTagName('infCte')->item(0);
         $procver = $infTag->getAttribute("versao");
         $procns = $node->getAttribute("xmlns");
         
