@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WS>
     <UF>
+        <sigla>AN</sigla>
+        <homologacao>
+            <CTeDistribuicaoDFe method='CTeDistribuicaoDFe' operation='CTeDistribuicaoDFe' version='1.00'>https://www1.cte.fazenda.gov.br/CTeDistribuicaoDFe/CTeDistribuicaoDFe.asmx</CTeDistribuicaoDFe>
+        </homologacao>
+        <producao>
+            <CTeDistribuicaoDFe method='CTeDistribuicaoDFe' operation='CTeDistribuicaoDFe' version='1.00'>https://www1.cte.fazenda.gov.br/CTeDistribuicaoDFe/CTeDistribuicaoDFe.asmx</CTeDistribuicaoDFe>
+        </producao>
+    </UF>
+    <UF>
         <sigla>MG</sigla>
         <homologacao>
             <CteRecepcao method='CTeRecepcao' operation='CteRecepcao' version='3.00'>https://hcte.fazenda.mg.gov.br/cte/services/CteRecepcao</CteRecepcao>

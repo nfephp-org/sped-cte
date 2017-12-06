@@ -13,7 +13,7 @@ namespace NFePHP\CTe;
  * @license   https://opensource.org/licenses/MIT MIT
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @author    Roberto L. Machado <linux.rlm at gmail dot com>
- * @link      http://github.com/nfephp-org/sped-nfe for the canonical source repository
+ * @link      http://github.com/nfephp-org/sped-cte for the canonical source repository
  */
 
 use NFePHP\Common\Strings;
@@ -33,7 +33,7 @@ class Tools extends ToolsCommon
 
     /**
      * Request authorization to issue CTe in batch with one or more documents
-     * @param array $aXml array of nfe's xml
+     * @param array $aXml array of cte's xml
      * @param string $idLote lote number
      * @param bool $compactar flag to compress data with gzip
      * @return string soap response xml
@@ -262,7 +262,7 @@ class Tools extends ToolsCommon
             $txtFile = "CPF_$cpf";
         }
         //carrega serviço
-        $servico = 'NfeConsultaCadastro';
+        $servico = 'CteConsultaCadastro';
         $this->checkContingencyForWebServices($servico);
         $this->servico(
             $servico,
@@ -334,7 +334,7 @@ class Tools extends ToolsCommon
         $fonte = 'AN'
     ) {
         //carrega serviço
-        $servico = 'NfeDistribuicaoDFe';
+        $servico = 'CTeDistribuicaoDFe';
         $this->checkContingencyForWebServices($servico);
         $this->servico(
             $servico,
@@ -359,10 +359,10 @@ class Tools extends ToolsCommon
         $this->lastRequest = $consulta;
         //montagem dos dados da mensagem SOAP
         $request = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$consulta</cteDadosMsg>";
-        $parameters = ['nfeDistDFeInteresse' => $request];
-        $body = "<nfeDistDFeInteresse xmlns=\"$this->urlNamespace\">"
+        $parameters = ['cteDistDFeInteresse' => $request];
+        $body = "<cteDistDFeInteresse xmlns=\"$this->urlNamespace\">"
             . $request
-            . "</nfeDistDFeInteresse>";
+            . "</cteDistDFeInteresse>";
         //este webservice não requer cabeçalho
         $this->objHeader = null;
         $this->lastResponse = $this->sendRequest($body, $parameters);
@@ -671,15 +671,14 @@ class Tools extends ToolsCommon
 
     /**
      * Request the NFe download already manifested by its recipient, by the key
-     * using new service in NfeDistribuicaoDFe
-     * NOTA: NfeDownloadNF is deactivated
+     * using new service in CTeDistribuicaoDFe
      * @param  string $chave
      * @return string
      */
     public function sefazDownload($chave)
     {
         //carrega serviço
-        $servico = 'NfeDistribuicaoDFe';
+        $servico = 'CteDistribuicaoDFe';
         $this->checkContingencyForWebServices($servico);
         $this->servico(
             $servico,
@@ -699,10 +698,10 @@ class Tools extends ToolsCommon
         $this->lastRequest = $consulta;
         //montagem dos dados da mensagem SOAP
         $request = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$consulta</cteDadosMsg>";
-        $parameters = ['nfeDistDFeInteresse' => $request];
-        $body = "<nfeDistDFeInteresse xmlns=\"$this->urlNamespace\">"
+        $parameters = ['cteDistDFeInteresse' => $request];
+        $body = "<cteDistDFeInteresse xmlns=\"$this->urlNamespace\">"
             . $request
-            . "</nfeDistDFeInteresse>";
+            . "</cteDistDFeInteresse>";
         //este webservice não requer cabeçalho
         $this->objHeader = null;
         $this->lastResponse = $this->sendRequest($body, $parameters);
@@ -761,17 +760,17 @@ class Tools extends ToolsCommon
 
     /**
      * Checks the validity of an NFe, normally used for received NFe
-     * @param  string $nfe
+     * @param  string $cte
      * @return boolean
      */
-    public function sefazValidate($nfe)
+    public function sefazValidate($cte)
     {
         //verifica a assinatura da NFe, exception caso de falha
-        Signer::isSigned($nfe);
+        Signer::isSigned($cte);
         $dom = new \DOMDocument('1.0', 'utf-8');
         $dom->formatOutput = false;
         $dom->preserveWhiteSpace = false;
-        $dom->loadXML($nfe);
+        $dom->loadXML($cte);
         //verifica a validade no webservice da SEFAZ
         $tpAmb = $dom->getElementsByTagName('tpAmb')->item(0)->nodeValue;
         $infNFe  = $dom->getElementsByTagName('infNFe')->item(0);
