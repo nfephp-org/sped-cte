@@ -2336,13 +2336,15 @@ class Make
                 $identificador . 'Número do CPF'
             );
         }
-        $this->dom->addChild(
-            $this->exped,
-            'IE',
-            $std->IE,
-            true,
-            $identificador . 'Inscrição Estadual'
-        );
+        if (!empty($std->IE)) {
+            $this->dom->addChild(
+                $this->exped,
+                'IE',
+                $std->IE,
+                true,
+                $identificador . 'Inscrição Estadual'
+            );
+        }
         $xNome = $std->xNome;
         if ($this->tpAmb == '2') {
             $xNome = 'CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL';
@@ -2504,13 +2506,15 @@ class Make
                 $identificador . 'Número do CPF'
             );
         }
-        $this->dom->addChild(
-            $this->receb,
-            'IE',
-            $std->IE,
-            true,
-            $identificador . 'Inscrição Estadual'
-        );
+        if (!empty($std->IE)) {
+            $this->dom->addChild(
+                $this->receb,
+                'IE',
+                $std->IE,
+                true,
+                $identificador . 'Inscrição Estadual'
+            );
+        }
         $xNome = $std->xNome;
         if ($this->tpAmb == '2') {
             $xNome = 'CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL';
@@ -2672,13 +2676,15 @@ class Make
                 $identificador . 'Número do CPF'
             );
         }
-        $this->dom->addChild(
-            $this->dest,
-            'IE',
-            $std->IE,
-            true,
-            $identificador . 'Inscrição Estadual'
-        );
+        if (!empty($std->IE)) {
+            $this->dom->addChild(
+                $this->dest,
+                'IE',
+                $std->IE,
+                true,
+                $identificador . 'Inscrição Estadual'
+            );
+        }
         $xNome = $std->xNome;
         if ($this->tpAmb == '2') {
             $xNome = 'CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL';
