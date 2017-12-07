@@ -1,6 +1,5 @@
 {
-    "name-old": "nfephp-org/sped-cte",
-    "name": "adelio-junior/sped-cte",
+    "name": "nfephp-org/sped-cte",    
     "type": "library",
     "description": "API para geração e comunicação da CTe com as SEFAZ autorizadoras.",
     "keywords": ["cte", "sped", "nfephp"],
