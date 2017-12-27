@@ -6,8 +6,8 @@ Framework para geração e comunicação das CTe com as SEFAZ autorizadoras.
 
 *sped-cte é um framework para geração CTe e eventos na comunicação com as SEFAZ autorizadoras.*
 
-**ATENÇÂO: Esta branch(v4.0) assim como a branch v3.0 correspondem a versão 3.00 do layout da SEFAZ. 
-Esta branch(4.0) contempla o sped-common atual resolvendo os problemas com composer para quem utiliza o sped-nfe por exemplo**
+**ATENÇÂO: Esta versão (v4.0) assim como a branch v3.0 correspondem a versão 3.00 do layout da SEFAZ. 
+Esta versão 4.0 contempla o sped-common atual resolvendo os problemas com composer para quem utiliza o sped-nfe por exemplo**
 
 [![Build Status][ico-travis]][link-travis]
 [![Coverage Status][ico-scrutinizer]][link-scrutinizer]
@@ -30,7 +30,7 @@ Este pacote faz parte da API NFePHP e atende aos parâmetros das PSR2 e PSR4, be
 ## Install
 
 ```sh
-composer require nfephp-org/sped-cte:v4.0.x-dev
+composer require nfephp-org/sped-cte:dev-master
 ```
 
 ## Change log
