@@ -3418,7 +3418,7 @@ class Make
         $identificador = '#345 <emiDocAnt> - ';
         $this->emiDocAnt[] = $this->dom->createElement('emiDocAnt');
         $posicao = (integer)count($this->emiDocAnt) - 1;
-        if ($CNPJ != '') {
+        if ($std->CNPJ != '') {
             $this->dom->addChild(
                 $this->emiDocAnt[$posicao],
                 'CNPJ',
