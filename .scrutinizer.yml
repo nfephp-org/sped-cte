@@ -1,4 +1,4 @@
-fchecks:
+checks:
     php: true
 coding_style:
     php:
@@ -8,6 +8,12 @@ coding_style:
 filter:
     excluded_paths:
         - "vendor/*"
+        - "examples/*"
+        - "docs/*"
+        - "console/*"
+        - "schemes/*"
+        - "tests/*"
+        - "storage/*"
     paths:
         - "src/*"
 tools:
