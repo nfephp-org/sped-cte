@@ -512,7 +512,6 @@ class Response
         //,
           //  'evento' => self::zGetEvent($tag)
         );
-        
         /**
          * Campos 0:1 segundo a documentação
          */
