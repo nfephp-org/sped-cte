@@ -523,7 +523,7 @@ class Make extends BaseMake
                     $this->dom->appChild($this->fluxo, $pass, 'Falta tag "fluxo"');
                 }
                 $this->dom->appChild($this->compl, $this->fluxo, 'Falta tag "infCte"');
-            }            
+            }
             foreach ($this->obsCont as $obsCont) {
                 $this->dom->appChild($this->compl, $obsCont, 'Falta tag "compl"');
             }
@@ -1737,7 +1737,7 @@ class Make extends BaseMake
     public function complTag($xCaracAd = '', $xCaracSer = '', $xEmi = '', $origCalc = '', $destCalc = '', $xObs = '')
     {
         $identificador = '#59 <compl> - ';
-        if ($this->compl == ''){
+        if ($this->compl == '') {
             $this->compl = $this->dom->createElement('compl');
         }
         $this->dom->addChild(
@@ -3403,10 +3403,10 @@ class Make extends BaseMake
      */
     private function zEntregaTag()
     {
-        if ($this->compl == ''){
+        if ($this->compl == '') {
             $this->compl = $this->dom->createElement('compl');
         }
-        if($this->entrega == ''){
+        if ($this->entrega == '') {
             $this->entrega = $this->dom->createElement('Entrega');
             $this->dom->appChild($this->compl, $this->entrega, 'Falta tag "compl"');
         }
