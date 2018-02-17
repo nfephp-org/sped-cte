@@ -512,10 +512,8 @@ class Response
         //,
           //  'evento' => self::zGetEvent($tag)
         );
-        /**
-         * Campos 0:1 segundo a documentação
-         */
-        if(isset($tag->getElementsByTagName('nProt')->item(0)->nodeValue)) {
+        //Campos 0:1 segundo a documentação
+        if (isset($tag->getElementsByTagName('nProt')->item(0)->nodeValue)) {
             $aResposta = array_merge($aResposta, array(
                 'chCTe' => $tag->getElementsByTagName('chCTe')->item(0)->nodeValue,
                 'tpEvento' => $tag->getElementsByTagName('tpEvento')->item(0)->nodeValue,
