@@ -496,7 +496,7 @@ class Make extends BaseMake
         if ($this->semData != '') {
             $this->zEntregaTag();
             $this->dom->appChild($this->entrega, $this->semData, 'Falta tag "Entrega"');
-        } 
+        }
         if ($this->comData != '') {
             $this->zEntregaTag();
             $this->dom->appChild($this->entrega, $this->comData, 'Falta tag "Entrega"');
@@ -523,7 +523,7 @@ class Make extends BaseMake
                     $this->dom->appChild($this->fluxo, $pass, 'Falta tag "fluxo"');
                 }
                 $this->dom->appChild($this->compl, $this->fluxo, 'Falta tag "infCte"');
-            }            
+            }
             foreach ($this->obsCont as $obsCont) {
                 $this->dom->appChild($this->compl, $obsCont, 'Falta tag "compl"');
             }
@@ -1737,8 +1737,8 @@ class Make extends BaseMake
     public function complTag($xCaracAd = '', $xCaracSer = '', $xEmi = '', $origCalc = '', $destCalc = '', $xObs = '')
     {
         $identificador = '#59 <compl> - ';
-        if ($this->compl == ''){
-            $this->compl = $this->dom->createElement('compl');    
+        if ($this->compl == '') {
+            $this->compl = $this->dom->createElement('compl');
         }
         $this->dom->addChild(
             $this->compl,
@@ -2113,7 +2113,7 @@ class Make extends BaseMake
      */
     public function obsContTag($xCampo = '', $xTexto = '')
     {
-        $identificador = '#91 <ObsCont> - ';        
+        $identificador = '#91 <ObsCont> - ';
         if (count($this->obsCont) <= 10) {
             $this->obsCont[] = $this->dom->createElement('ObsCont');
             $posicao = (integer) count($this->obsCont) - 1;
@@ -3403,10 +3403,10 @@ class Make extends BaseMake
      */
     private function zEntregaTag()
     {
-        if ($this->compl == ''){
+        if ($this->compl == '') {
             $this->compl = $this->dom->createElement('compl');
         }
-        if($this->entrega == ''){
+        if ($this->entrega == '') {
             $this->entrega = $this->dom->createElement('Entrega');
             $this->dom->appChild($this->compl, $this->entrega, 'Falta tag "compl"');
         }
