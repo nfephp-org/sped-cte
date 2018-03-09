@@ -113,7 +113,7 @@ class Response
         );
         return $aResposta;
     }
-    
+
     /**
      * zReadRetRecepcao
      *
@@ -330,7 +330,7 @@ class Response
         );
         return $aResposta;
     }
-    
+
     /**
      * zGetEvent
      *
@@ -434,7 +434,7 @@ class Response
         }
         return $aResposta;
     }
-    
+
     /**
      * zReadStatusServico
      *
@@ -511,7 +511,7 @@ class Response
         );
         return $aResposta;
     }
-    
+
     /**
      * zReadRecepcaoOS
      *
@@ -554,7 +554,7 @@ class Response
             $xMotivo = $infProt->getElementsByTagName('xMotivo')->item(0)->nodeValue;
             $chCte = $infProt->getElementsByTagName('chCTe')->item(0)->nodeValue;
             $digVal = $infProt->getElementsByTagName('digVal')->item(0)->nodeValue;
-            $nProt = isset($infProt->getElementsByTagName('nProt')->item(0)->nodeValue) ? 
+            $nProt = isset($infProt->getElementsByTagName('nProt')->item(0)->nodeValue) ?
                 $infProt->getElementsByTagName('nProt')->item(0)->nodeValue : '';
         }
         $aResposta = array(
