@@ -554,7 +554,8 @@ class Response
             $xMotivo = $infProt->getElementsByTagName('xMotivo')->item(0)->nodeValue;
             $chCte = $infProt->getElementsByTagName('chCTe')->item(0)->nodeValue;
             $digVal = $infProt->getElementsByTagName('digVal')->item(0)->nodeValue;
-            $nProt = isset($infProt->getElementsByTagName('nProt')->item(0)->nodeValue) ? $infProt->getElementsByTagName('nProt')->item(0)->nodeValue : '';
+            $nProt = isset($infProt->getElementsByTagName('nProt')->item(0)->nodeValue) ? 
+                $infProt->getElementsByTagName('nProt')->item(0)->nodeValue : '';
         }
         $aResposta = array(
             'bStat' => true,
