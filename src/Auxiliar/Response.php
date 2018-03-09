@@ -503,14 +503,11 @@ class Response
         $aResposta = array(
             'bStat' => true,
             'versao' => $tag->getAttribute('versao'),
-            //'id' => $tag->getElementsByTagName('id')->item(0)->nodeValue,
             'tpAmb' => $tag->getElementsByTagName('tpAmb')->item(0)->nodeValue,
             'verAplic' => $tag->getElementsByTagName('verAplic')->item(0)->nodeValue,
             'cOrgao' => $tag->getElementsByTagName('cOrgao')->item(0)->nodeValue,
             'cStat' => $tag->getElementsByTagName('cStat')->item(0)->nodeValue,
             'xMotivo' => $tag->getElementsByTagName('xMotivo')->item(0)->nodeValue
-        //,
-          //  'evento' => self::zGetEvent($tag)
         );
         //Campos 0:1 segundo a documentação
         if (isset($tag->getElementsByTagName('nProt')->item(0)->nodeValue)) {
