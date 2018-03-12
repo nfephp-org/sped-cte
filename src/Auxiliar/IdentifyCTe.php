@@ -27,6 +27,7 @@ class IdentifyCTe
             'evCancCTe' => 'evCancCTe',
             'evEncCTe' => 'evEncCTe',
             'CTe' => 'cte',
+            'CTeOS' => 'cteOS',
             'eventoCTe' => 'eventoCTe',
             'procEventoCTe' => 'procEventoCTe',
             'mdfeProc' => 'procCTe',
@@ -40,7 +41,7 @@ class IdentifyCTe
         $schem = Identify::identificacao($xml, $aResp);
         $dom = $aResp['dom'];
         $node = $dom->getElementsByTagName($aResp['tag'])->item(0);
-        if ($schem == 'cte') {
+        if ($schem == 'cte' || $schem == 'cteOS') {
             //se for um nfe então é necessário pegar a versão
             // em outro node infNFe
             $node1 = $dom->getElementsByTagName('infCte')->item(0);

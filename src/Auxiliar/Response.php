@@ -55,6 +55,9 @@ class Response
             case 'CteStatusServico':
                 return self::zReadStatusServico($dom);
                 break;
+            case 'CteRecepcaoOS':
+                return self::zReadRecepcaoOS($dom);
+                break;
             case 'CteRecepcaoEvento':
                 return self::zReadRecepcaoEvento($dom);
                 break;
@@ -110,7 +113,7 @@ class Response
         );
         return $aResposta;
     }
-    
+
     /**
      * zReadRetRecepcao
      *
@@ -327,7 +330,7 @@ class Response
         );
         return $aResposta;
     }
-    
+
     /**
      * zGetEvent
      *
@@ -431,7 +434,7 @@ class Response
         }
         return $aResposta;
     }
-    
+
     /**
      * zReadStatusServico
      *
@@ -520,6 +523,67 @@ class Response
                 'nProt' => $tag->getElementsByTagName('nProt')->item(0)->nodeValue
             ));
         }
+        return $aResposta;
+    }
+
+    /**
+     * zReadRecepcaoOS
+     *
+     * @param  DOMDocument $dom
+     * @return boolean
+     */
+    protected static function zReadRecepcaoOS($dom)
+    {
+        //retorno da funçao
+        $aResposta = array(
+            'bStat' => false,
+            'versao' => '',
+            'tpAmb' => '',
+            'cUF' => '',
+            'verAplic' => '',
+            'cStat' => '',
+            'xMotivo' => '',
+            'dhRecbto' => '',
+            'chCTe' => '',
+            'digVal' => '',
+            'nProt' => ''
+        );
+        $tag = $dom->getElementsByTagName('retCTeOS')->item(0);
+        if (! isset($tag)) {
+            return $aResposta;
+        }
+        $dhRecbto = '';
+        $tpAmb = '';
+        $cStat = '';
+        $verAplic = '';
+        $xMotivo = '';
+        $chCte = '';
+        $digVal = '';
+        $infProt = $tag->getElementsByTagName('infProt')->item(0);
+        if (!empty($infProt)) {
+            $dhRecbto = $infProt->getElementsByTagName('dhRecbto')->item(0)->nodeValue;
+            $tpAmb = $infProt->getElementsByTagName('tpAmb')->item(0)->nodeValue;
+            $cStat = $infProt->getElementsByTagName('cStat')->item(0)->nodeValue;
+            $verAplic = $infProt->getElementsByTagName('verAplic')->item(0)->nodeValue;
+            $xMotivo = $infProt->getElementsByTagName('xMotivo')->item(0)->nodeValue;
+            $chCte = $infProt->getElementsByTagName('chCTe')->item(0)->nodeValue;
+            $digVal = $infProt->getElementsByTagName('digVal')->item(0)->nodeValue;
+            $nProt = isset($infProt->getElementsByTagName('nProt')->item(0)->nodeValue) ?
+                $infProt->getElementsByTagName('nProt')->item(0)->nodeValue : '';
+        }
+        $aResposta = array(
+            'bStat' => true,
+            'versao' => $tag->getAttribute('versao'),
+            'tpAmb' => $tpAmb,
+            'cUF' => $tag->getElementsByTagName('cUF')->item(0)->nodeValue,
+            'verAplic' => $verAplic,
+            'cStat' => $cStat,
+            'xMotivo' => $xMotivo,
+            'dhRecbto' => $dhRecbto,
+            'chCTe' => $chCte,
+            'digVal' => $digVal,
+            'nProt' => $nProt
+        );
         return $aResposta;
     }
 }
