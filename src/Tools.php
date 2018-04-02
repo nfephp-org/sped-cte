@@ -945,12 +945,14 @@ class Tools extends BaseTools
         }
 
         $nodecte = $docCte->getNode('CTe', 0);
+        $cte_os = false;
         if ($nodecte == '') {
             $nodecte = $docCte->getNode('CTeOS', 0);
             if ($nodecte == '') {
                 $msg = "O arquivo indicado como CTe não é um xml de CTe!";
                 throw new Exception\RuntimeException($msg);
             }
+            $cte_os = true;
         }
         if ($docCte->getNode('Signature') == '') {
             $msg = "A CTe não está assinada!";
@@ -1009,7 +1011,11 @@ class Tools extends BaseTools
         $procCte->formatOutput = false;
         $procCte->preserveWhiteSpace = false;
         //cria a tag cteProc
-        $cteProc = $procCte->createElement('cteProc');
+        if ($cte_os) {
+            $cteProc = $procCte->createElement('cteOSProc');
+        } else {
+            $cteProc = $procCte->createElement('cteProc');
+        }
         $procCte->appendChild($cteProc);
         //estabele o atributo de versão
         $cteProcAtt1 = $cteProc->appendChild($procCte->createAttribute('versao'));
