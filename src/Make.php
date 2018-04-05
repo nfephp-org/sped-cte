@@ -3009,7 +3009,7 @@ class Make
             );
         }
 
-        if ($std->vICMSUFFim > 0 || $std->vICMSUFIni > 0) {
+        if ($std->vICMSUFFim != '' || $std->vICMSUFIni != '') {
             $icmsDifal = $this->dom->createElement("ICMSUFFim");
             $this->dom->addChild(
                 $icmsDifal,
