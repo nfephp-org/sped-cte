@@ -549,7 +549,6 @@ class Make
         if ($this->toma3 != '') {
             $this->dom->appChild($this->ide, $this->toma3, 'Falta tag "ide"');
         } else {
-            $this->dom->appChild($this->toma4, $this->enderToma, 'Falta tag "toma4"');
             $this->dom->appChild($this->ide, $this->toma4, 'Falta tag "ide"');
         }
         $this->dom->appChild($this->infCte, $this->ide, 'Falta tag "infCte"');
@@ -1582,6 +1581,9 @@ class Make
             false,
             $identificador . 'Nome do país'
         );
+        
+        $node = $this->toma4->getElementsByTagName("email")->item(0);
+        $this->toma4->insertBefore($this->enderToma, $node);
         return $this->enderToma;
     }
 
