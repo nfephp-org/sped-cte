@@ -17,7 +17,7 @@
             <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='3.00'>https://hcte.fazenda.mg.gov.br/cte/services/CteRetRecepcao</CteRetRecepcao>
             <CteCancelamento method='CTeCancelamento' operation='CteCancelamento' version='3.00'>https://hcte.fazenda.mg.gov.br/cte/services/CteCancelamento</CteCancelamento>
             <CteInutilizacao method='CTeInutilizacao' operation='CteInutilizacao' version='3.00'>https://hcte.fazenda.mg.gov.br/cte/services/CteInutilizacao</CteInutilizacao>
-            <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsultaProtocolo' version='3.00'>https://hcte.fazenda.mg.gov.br/cte/services/CteConsulta</CteConsultaProtocolo>
+            <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsulta' version='3.00'>https://hcte.fazenda.mg.gov.br/cte/services/CteConsulta</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CteStatusServico' version='3.00'>https://hcte.fazenda.mg.gov.br/cte/services/CteStatusServico</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CteRecepcaoEvento' version='3.00'>https://hcte.fazenda.mg.gov.br/cte/services/RecepcaoEvento</CteRecepcaoEvento>
         </homologacao>
@@ -27,7 +27,7 @@
             <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='3.00'>https://cte.fazenda.mg.gov.br/cte/services/CteRetRecepcao</CteRetRecepcao>
             <CteCancelamento method='CTeCancelamento' operation='CteCancelamento' version='3.00'>https://cte.fazenda.mg.gov.br/cte/services/CteCancelamento</CteCancelamento>
             <CteInutilizacao method='CTeInutilizacao' operation='CteInutilizacao' version='3.00'>https://cte.fazenda.mg.gov.br/cte/services/CteInutilizacao</CteInutilizacao>
-            <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsultaProtocolo' version='3.00'>https://cte.fazenda.mg.gov.br/cte/services/CteConsulta</CteConsultaProtocolo>
+            <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsulta' version='3.00'>https://cte.fazenda.mg.gov.br/cte/services/CteConsulta</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CteStatusServico' version='3.00'>https://cte.fazenda.mg.gov.br/cte/services/CteStatusServico</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CteRecepcaoEvento' version='3.00'>https://cte.fazenda.mg.gov.br/cte/services/RecepcaoEvento</CteRecepcaoEvento>
         </producao>
