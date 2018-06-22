@@ -51,9 +51,10 @@ class Standardize
         'inutCTe',
         'retInutCTe',
         'procInutCTe',
+    	'retConsStatServCte',
         'CTe'
     ];
-    
+
     /**
      * Constructor
      * @param string $xml
@@ -62,7 +63,7 @@ class Standardize
     {
         $this->toStd($xml);
     }
-    
+
     /**
      * Identify node and extract from XML for convertion type
      * @param string $xml
@@ -91,7 +92,7 @@ class Standardize
         //documento does not belong to the SPED-NFe project
         throw DocumentsException::wrongDocument(7);
     }
-    
+
     /**
      * Returns extract node from XML
      * @return string
@@ -100,7 +101,7 @@ class Standardize
     {
         return $this->node;
     }
-    
+
     /**
      * Returns stdClass converted from xml
      * @param string $xml
@@ -111,7 +112,7 @@ class Standardize
         if (!empty($xml)) {
             $this->key = $this->whichIs($xml);
         }
-        
+
         $sxml = simplexml_load_string($this->node);
         $this->json = str_replace(
             '@attributes',
@@ -120,7 +121,7 @@ class Standardize
         );
         return json_decode($this->json);
     }
-    
+
     /**
      * Retruns JSON string form XML
      * @param string $xml
@@ -133,7 +134,7 @@ class Standardize
         }
         return $this->json;
     }
-    
+
     /**
      * Returns array from XML
      * @param string $xml
@@ -146,7 +147,7 @@ class Standardize
         }
         return json_decode($this->json, true);
     }
-    
+
     /**
      * Returns YAML from XML
      * @param string $xml

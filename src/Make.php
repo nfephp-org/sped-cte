@@ -27,7 +27,7 @@ class Make
      * @var array
      */
     public $erros = [];
-    
+
     /**
      * versao
      * numero da versão do xml da CTe
@@ -128,6 +128,11 @@ class Make
      * @var array
      */
     private $pass = array();
+    /**
+     * AutoXML
+     * @var array
+     */
+    private $autoXML = array();
     /**
      * Informações ref. a previsão de entrega
      * @var \DOMNode
@@ -484,14 +489,14 @@ class Make
      * @var array
      */
     private $moto = array();
-    
+
     public function __construct()
     {
         $this->dom = new Dom('1.0', 'UTF-8');
         $this->dom->preserveWhiteSpace = false;
         $this->dom->formatOutput = false;
     }
-    
+
     /**
      * Returns xml string and assembly it is necessary
      * @return string
@@ -503,7 +508,7 @@ class Make
         }
         return $this->xml;
     }
-    
+
     /**
      * Retorns the key number of NFe (44 digits)
      * @return string
@@ -512,7 +517,7 @@ class Make
     {
         return $this->chCTe;
     }
-    
+
     /**
      * Returns the model of CTe 57 or 67
      * @return int
@@ -521,7 +526,7 @@ class Make
     {
         return $this->mod;
     }
-    
+
     /**
      * Call method of xml assembly. For compatibility only.
      * @return boolean
@@ -530,7 +535,7 @@ class Make
     {
         return $this->monta();
     }
-    
+
     /**
      * Monta o arquivo XML usando as tag's já preenchidas
      *
@@ -549,6 +554,14 @@ class Make
         if ($this->toma3 != '') {
             $this->dom->appChild($this->ide, $this->toma3, 'Falta tag "ide"');
         } else {
+        	/**
+        	 * Comentado linha abaixo para se montar o XML na ordem correta e n�o acontecer erros de valida��o do schema do XML
+        	 *
+        	 * @author Willker Moraes Silva
+        	 * @since 2018-03-12
+        	 *
+             * $this->dom->appChild($this->toma4, $this->enderToma, 'Falta tag "toma4"');
+        	 */
             $this->dom->appChild($this->ide, $this->toma4, 'Falta tag "ide"');
         }
         $this->dom->appChild($this->infCte, $this->ide, 'Falta tag "infCte"');
@@ -577,12 +590,19 @@ class Make
             $this->dom->appChild($this->entrega, $this->noInter, 'Falta tag "Entrega"');
         }
         if ($this->compl != '') {
+            /*
+	         * Comentado por estar gerando um bug ao validar o schema XML.
+	         * a tag das passagens agora � adicionada ao adicionar o fluxo
+	         *
+	         * @author Willker Moraes Silva
+	         * @since 2018-03-12
             if ($this->fluxo != '') {
                 foreach ($this->pass as $pass) {
                     $this->dom->appChild($this->fluxo, $pass, 'Falta tag "fluxo"');
                 }
                 $this->dom->appChild($this->compl, $this->fluxo, 'Falta tag "infCte"');
             }
+            */
             foreach ($this->obsCont as $obsCont) {
                 $this->dom->appChild($this->compl, $obsCont, 'Falta tag "compl"');
             }
@@ -653,15 +673,26 @@ class Make
 
             $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
             $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
+            if ($this->infCteSub != '')
+            	$this->dom->appChild($this->infCTeNorm, $this->infCteSub, 'Falta tag "infCteSub"');
         }
         foreach ($this->veic as $veic) {
             $this->dom->appChild($this->rodo, $veic, 'Falta tag "veic"');
         }
+
+        /**
+         * Adicionado tag autXML
+         * @author Willker Moraes Silva
+         * @since 2018-03-12
+         */
+        foreach ($this->autoXML as $aut)
+        	$this->dom->appChild($this->infCte, $aut, 'Falta tag "infCTe"');
+
         //[1] tag infCTe
         $this->dom->appChild($this->CTe, $this->infCte, 'Falta tag "CTe"');
         //[0] tag CTe
         $this->dom->appendChild($this->CTe);
-        
+
         // testa da chave
         $this->checkCTeKey($this->dom);
         $this->xml = $this->dom->saveXML();
@@ -723,6 +754,9 @@ class Make
                 $this->dom->appChild($this->rodo, $this->veic, 'Falta tag "veic"');
                 $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
             }
+
+            if ($this->infCteSub != '')
+                $this->dom->appChild($this->infCTeNorm, $this->infCteSub, 'Falta tag "infCteSub"');
         }
 
         $this->dom->appChild($this->CTe, $this->infCte, 'Falta tag "CTe"');
@@ -1330,6 +1364,16 @@ class Make
             false,
             $identificador . 'Telefone'
         );
+
+        /**
+         * Para se montar o XML na ordem correta e n�o acontecer erros de valida��o do schema do XML
+         *
+         * @author Willker Moraes Silva
+         * @since 2018-03-12
+         */
+        if ($this->enderToma != '')
+        	$this->dom->appChild($this->toma4, $this->enderToma, 'Falta tag "toma4"');
+
         $this->dom->addChild(
             $this->toma4,
             'email',
@@ -1581,9 +1625,6 @@ class Make
             false,
             $identificador . 'Nome do país'
         );
-        
-        $node = $this->toma4->getElementsByTagName("email")->item(0);
-        $this->toma4->insertBefore($this->enderToma, $node);
         return $this->enderToma;
     }
 
@@ -1621,6 +1662,20 @@ class Make
             false,
             $identificador . 'Funcionário emissor do CTe'
         );
+
+        /**
+         * Adicionando para montar o fluxo e a tag de entrega quando existentes para se montar o XML
+         * na estrutura em que se aparece no schema para n�o gerar erros ao validar o schema
+         *
+         * @author Willker Moraes Silva
+         * @since 2018-03-12
+         */
+        if ($this->fluxo != '')
+        	$this->dom->appChild($this->compl, $this->fluxo, 'Falta tag "infCte"');
+
+        if($this->semData != '' || $this->comData != '' || $this->noPeriodo != '' || $this->semHora != '' || $this->comHora != '' || $this->noInter != '')
+        	$this->tagEntrega();
+
         $this->dom->addChild(
             $this->compl,
             'origCalc',
@@ -1707,6 +1762,16 @@ class Make
             false,
             $identificador . 'Sigla ou código interno da Filial/Porto/Estação/ Aeroporto de Origem'
         );
+
+        /**
+         * Adicionando as passagens quando existentes para se montar o XML na estrutura em que se aparece
+         * @author Willker Moraes Silva
+         * @since 2018-03-12
+         */
+        if (count($this->pass) > 0)
+        	foreach ($this->pass as $pass)
+        		$this->dom->appChild($this->fluxo, $pass, 'Falta tag "fluxo"');
+
         $this->dom->addChild(
             $this->fluxo,
             'xDest',
@@ -1744,6 +1809,29 @@ class Make
             $identificador . 'Sigla ou código interno da Filial/Porto/Estação/Aeroporto de Passagem'
         );
         return $this->pass[$posicao];
+    }
+
+    /**
+     * Gera as tags para o elemento: "autXML"
+     *
+     * @author Willker Moraes Silva
+     * @since 2018-03-12
+     * @return \DOMElement
+     */
+    public function tagautXML($std)
+    {
+        $identificador = '# <autXML> - autXML';
+        $this->autoXML[] = $this->dom->createElement('autXML');
+        $posicao = (integer) count($this->autoXML) - 1;
+        $tag = isset($std->CNPJ) ? 'CNPJ' : 'CPF';
+        $this->dom->addChild(
+            $this->autoXML[$posicao],
+            $tag,
+            $std->{$tag},
+            false,
+            $identificador . 'Autorizado a baixar o XML'
+        );
+        return $this->autoXML[$posicao];
     }
 
     /**
@@ -2870,7 +2958,7 @@ class Make
         );
         return $this->comp[$posicao];
     }
-    
+
     /**
      * tagICMS
      * Informações relativas ao ICMS
@@ -3011,7 +3099,7 @@ class Make
             );
         }
 
-        if ($std->vICMSUFFim != '' || $std->vICMSUFIni != '') {
+        if ($std->vICMSUFFim > 0 || $std->vICMSUFIni > 0) {
             $icmsDifal = $this->dom->createElement("ICMSUFFim");
             $this->dom->addChild(
                 $icmsDifal,
@@ -3104,7 +3192,7 @@ class Make
 
         $this->imp->appendChild($tagInfTribFed);
     }
-    
+
 
     /**
      * Tag raiz do documento xml
@@ -3544,7 +3632,7 @@ class Make
 
         return $this->rodo;
     }
-    
+
     /**
      * CT-e de substituição
      * @param type $std
@@ -3557,22 +3645,29 @@ class Make
 
         $this->dom->addChild(
             $this->infCteSub,
-            'chCTe',
+            'chCte',
             $std->chCTe,
             false,
             "$identificador  Chave de acesso do CTe a ser substituído (original)"
         );
+
+
+        if (isset($std->refCteAnu))
         $this->dom->addChild(
             $this->infCteSub,
-            'retCteAnu',
-            $std->retCteAnu,
+            'refCteAnu',
+            $std->refCteAnu,
             false,
             "$identificador  Chave de acesso do CT-e de Anulação"
         );
+
+        if ($this->tomaICMS != '')
+        	$this->dom->appChild($this->infCteSub, $this->tomaICMS, 'Falta tag "tomaICMS"');
+
         return $this->infCteSub;
     }
-    
-    
+
+
     /**
      * CT-e de substituição - tomaICMS
      * @param type $std
@@ -3584,7 +3679,7 @@ class Make
 
         return $this->tomaICMS;
     }
-    
+
     /**
      * CT-e de substituição - NF-e
      * @param type $std
@@ -3606,7 +3701,7 @@ class Make
 
         return $this->tomaICMS;
     }
-    
+
     /**
      * CT-e de substituição - NF
      * @param type $std
@@ -3627,7 +3722,7 @@ class Make
                     true,
                     $identificador . 'CNPJ do emitente'
                 );
-        } elseif ($CPF != '') {
+        } elseif ($std->CPF != '') {
             $this->dom->addChild(
                 $this->refNF,
                 'CPF',
@@ -3644,12 +3739,12 @@ class Make
         $this->dom->addChild($this->refNF, 'nro', $std->nro, false, $identificador . 'Número');
         $this->dom->addChild($this->refNF, 'valor', $std->valor, false, $identificador . 'Valor');
         $this->dom->addChild($this->refNF, 'dEmi', $std->dEmi, false, $identificador . 'Emissão');
-        
+
         $this->tomaICMS->appendChild($this->refNF);
 
         return $this->tomaICMS;
     }
-    
+
     /**
      * CT-e de substituição - CT-e
      * @param type $std
@@ -3663,7 +3758,7 @@ class Make
         $identificador = '#163 <refCTe> - ';
         $this->dom->addChild(
             $this->tomaICMS,
-            'refCTe',
+            'refCte',
             $std->refCTe,
             false,
             "$identificador  Chave de acesso do CT-e emitida pelo tomador"
@@ -3671,7 +3766,7 @@ class Make
 
         return $this->tomaICMS;
     }
-    
+
 
     /**
      * Leiaute - Rodoviário CTe OS
@@ -3935,7 +4030,7 @@ class Make
         $this->infCteComp = $this->dom->createElement('infCteComp');
         $this->dom->addChild(
             $this->infCteComp,
-            'chave',
+            'chCTe',
             $std->chave,
             true,
             $identificador . ' Chave do CT-e complementado'
@@ -3969,7 +4064,7 @@ class Make
         );
         return $this->infCteAnu;
     }
-    
+
     protected function checkCTeKey(Dom $dom)
     {
         $infCTe = $dom->getElementsByTagName("infCte")->item(0);
