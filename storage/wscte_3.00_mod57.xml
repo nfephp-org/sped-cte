@@ -54,7 +54,7 @@
             <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsultaProtocolo' version='3.00'>https://producao.cte.ms.gov.br/ws/CteConsulta</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CteStatusServico' version='3.00'>https://producao.cte.ms.gov.br/ws/CteStatusServico</CteStatusServico>
             <CTeConsultaCadastro method='CTeConsultaCadastro' operation='CTeConsultaCadastro' version='3.00'>https://producao.cte.ms.gov.br/ws/CadConsultaCadastro</CTeConsultaCadastro>
-            <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CteRecepcaoEvento' version='3.00'>http://producao.cte.ms.gov.br/ws/CteRecepcaoEvento</CteRecepcaoEvento>
+            <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CteRecepcaoEvento' version='3.00'>https://producao.cte.ms.gov.br/ws/CteRecepcaoEvento</CteRecepcaoEvento>
         </producao>
     </UF>
     <UF>
