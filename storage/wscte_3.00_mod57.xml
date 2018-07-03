@@ -3,7 +3,7 @@
     <UF>
         <sigla>AN</sigla>
         <homologacao>
-            <CTeDistribuicaoDFe method='CTeDistribuicaoDFe' operation='CTeDistribuicaoDFe' version='1.00'>https://www1.cte.fazenda.gov.br/CTeDistribuicaoDFe/CTeDistribuicaoDFe.asmx</CTeDistribuicaoDFe>
+            <CTeDistribuicaoDFe method='CTeDistribuicaoDFe' operation='CTeDistribuicaoDFe' version='1.00'>https://hom1.cte.fazenda.gov.br/CTeDistribuicaoDFe/CTeDistribuicaoDFe.asmx</CTeDistribuicaoDFe>
         </homologacao>
         <producao>
             <CTeDistribuicaoDFe method='CTeDistribuicaoDFe' operation='CTeDistribuicaoDFe' version='1.00'>https://www1.cte.fazenda.gov.br/CTeDistribuicaoDFe/CTeDistribuicaoDFe.asmx</CTeDistribuicaoDFe>
@@ -54,7 +54,7 @@
             <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsultaProtocolo' version='3.00'>https://producao.cte.ms.gov.br/ws/CteConsulta</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CteStatusServico' version='3.00'>https://producao.cte.ms.gov.br/ws/CteStatusServico</CteStatusServico>
             <CTeConsultaCadastro method='CTeConsultaCadastro' operation='CTeConsultaCadastro' version='3.00'>https://producao.cte.ms.gov.br/ws/CadConsultaCadastro</CTeConsultaCadastro>
-            <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CteRecepcaoEvento' version='3.00'>https://producao.cte.ms.gov.br/ws/CteRecepcaoEvento</CteRecepcaoEvento>
+            <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CteRecepcaoEvento' version='3.00'>http://producao.cte.ms.gov.br/ws/CteRecepcaoEvento</CteRecepcaoEvento>
         </producao>
     </UF>
     <UF>
