@@ -342,7 +342,6 @@ class Tools extends ToolsCommon
             $this->tpAmb,
             true
         );
-        // dd($this->tpAmb);
         $cUF = UFList::getCodeByUF($this->config->siglaUF);
         $ultNSU = str_pad($ultNSU, 15, '0', STR_PAD_LEFT);
         $tagNSU = "<distNSU><ultNSU>$ultNSU</ultNSU></distNSU>";
@@ -644,19 +643,19 @@ class Tools extends ToolsCommon
         $cOrgao = UFList::getCodeByUF($uf);
 
         $request = "<eventoCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
-        . "<infEvento Id=\"$eventId\">"
-        . "<cOrgao>$cOrgao</cOrgao>"
-        . "<tpAmb>$this->tpAmb</tpAmb>"
-        . "<CNPJ>$cnpj</CNPJ>"
-        . "<chCTe>$chave</chCTe>"
-        . "<dhEvento>$dhEvento</dhEvento>"
-        . "<tpEvento>$tpEvento</tpEvento>"
-        . "<nSeqEvento>$nSeqEvento</nSeqEvento>"
-        . "<detEvento versaoEvento=\"$this->urlVersion\">"
-        . "$tagAdic"
-        . "</detEvento>"
-        . "</infEvento>"
-        . "</eventoCTe>";
+            . "<infEvento Id=\"$eventId\">"
+            . "<cOrgao>$cOrgao</cOrgao>"
+            . "<tpAmb>$this->tpAmb</tpAmb>"
+            . "<CNPJ>$cnpj</CNPJ>"
+            . "<chCTe>$chave</chCTe>"
+            . "<dhEvento>$dhEvento</dhEvento>"
+            . "<tpEvento>$tpEvento</tpEvento>"
+            . "<nSeqEvento>$nSeqEvento</nSeqEvento>"
+            . "<detEvento versaoEvento=\"$this->urlVersion\">"
+            . "$tagAdic"
+            . "</detEvento>"
+            . "</infEvento>"
+            . "</eventoCTe>";
 
         //assinatura dos dados
         $request = Signer::sign(
@@ -669,11 +668,13 @@ class Tools extends ToolsCommon
         );
 
         $request = Strings::clearXmlString($request, true);
-        // $lote = $dt->format('YmdHis').rand(0, 9);
-        // $request = "<envEventoCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
-            // . "<idLote>$lote</idLote>"
-            // . $request
-            // . "</envEventoCTe>";
+        if ($tpEvento != 610110) {
+            $lote = $dt->format('YmdHis').rand(0, 9);
+            $request = "<envEventoCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
+                . "<idLote>$lote</idLote>"
+                . $request
+                . "</envEventoCTe>";
+        }
         $this->isValid($this->urlVersion, $request, 'eventoCTe');
         $this->lastRequest = $request;
         $parameters = ['cteDadosMsg' => $request];
