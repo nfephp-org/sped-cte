@@ -339,7 +339,7 @@ class Tools extends ToolsCommon
         $this->servico(
             $servico,
             $fonte,
-            1,
+            $this->tpAmb,
             true
         );
         $cUF = UFList::getCodeByUF($this->config->siglaUF);
@@ -351,7 +351,7 @@ class Tools extends ToolsCommon
         }
         //monta a consulta
         $consulta = "<distDFeInt xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
-            . "<tpAmb>1</tpAmb>"
+            . "<tpAmb>".$this->tpAmb."</tpAmb>"
             . "<cUFAutor>$cUF</cUFAutor>"
             . "<CNPJ>".$this->config->cnpj."</CNPJ>$tagNSU</distDFeInt>";
         //valida o xml da requisição
@@ -507,15 +507,24 @@ class Tools extends ToolsCommon
         $chNFe,
         $tpEvento,
         $xJust = '',
-        $nSeqEvento = 1
+        $nSeqEvento = 1,
+        $ufEvento = 'RS'
     ) {
         $tagAdic = '';
         if ($tpEvento == 210240) {
             $xJust = Strings::replaceSpecialsChars(substr(trim($xJust), 0, 255));
             $tagAdic = "<xJust>$xJust</xJust>";
         }
+        if ($tpEvento == 610110) {
+            $xJust = Strings::replaceSpecialsChars(substr(trim($xJust), 0, 255));
+            $tagAdic = "<evPrestDesacordo>"
+                . "<descEvento>Prestação do Serviço em Desacordo</descEvento>"
+                . "<indDesacordoOper>1</indDesacordoOper>"
+                . "<xObs>$xJust</xObs>"
+                . "</evPrestDesacordo>";
+        }
         return $this->sefazEvento(
-            'AN',
+            $ufEvento,
             $chNFe,
             $tpEvento,
             $nSeqEvento,
@@ -636,6 +645,7 @@ class Tools extends ToolsCommon
         $sSeqEvento = str_pad($nSeqEvento, 2, "0", STR_PAD_LEFT);
         $eventId = "ID".$tpEvento.$chave.$sSeqEvento;
         $cOrgao = UFList::getCodeByUF($uf);
+
         $request = "<eventoCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
             . "<infEvento Id=\"$eventId\">"
             . "<cOrgao>$cOrgao</cOrgao>"
@@ -650,6 +660,7 @@ class Tools extends ToolsCommon
             . "</detEvento>"
             . "</infEvento>"
             . "</eventoCTe>";
+
         //assinatura dos dados
         $request = Signer::sign(
             $this->certificate,
@@ -659,8 +670,15 @@ class Tools extends ToolsCommon
             $this->algorithm,
             $this->canonical
         );
-        $request = Strings::clearXmlString($request, true);
 
+        $request = Strings::clearXmlString($request, true);
+        if ($tpEvento != 610110) {
+            $lote = $dt->format('YmdHis').rand(0, 9);
+            $request = "<envEventoCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
+                . "<idLote>$lote</idLote>"
+                . $request
+                . "</envEventoCTe>";
+        }
         $this->isValid($this->urlVersion, $request, 'eventoCTe');
         $this->lastRequest = $request;
         $parameters = ['cteDadosMsg' => $request];
@@ -871,6 +889,11 @@ class Tools extends ToolsCommon
                 $std->alias = 'EvNaoRealizada';
                 $std->desc = 'Operacao nao Realizada';
                 break;
+            case 610110:
+                //Serviço em desacordo
+                $std->alias = 'EvPrestDesacordo';
+                $std->desc = 'Servico em desacordo';
+                break;
             default:
                 $msg = "O código do tipo de evento informado não corresponde a "
                 . "nenhum evento estabelecido.";
@@ -878,7 +901,7 @@ class Tools extends ToolsCommon
         }
         return $std;
     }
-    
+
     private static function serializerCCe(array $infCorrecoes)
     {
         // Grupo de Informações de Correção
