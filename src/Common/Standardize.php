@@ -47,11 +47,13 @@ class Standardize
         'retConsSitCTe',
         'eventoCTe',
         'retEventoCTe',
+        'cteRecepcaoOSResult',
         'evCancCTe',
         'inutCTe',
         'retInutCTe',
         'procInutCTe',
-        'CTe'
+        'CTe',
+        'CTeOS'
     ];
     
     /**
