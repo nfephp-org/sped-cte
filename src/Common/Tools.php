@@ -234,13 +234,13 @@ class Tools
     }
 
     /**
-     * Set or get model of document NFe = 55 or NFCe = 65
+     * Set or get model of document CTe = 57 or CTeOS = 67
      * @param int $model
      * @return int modelo class parameter
      */
     public function model($model = null)
     {
-        if ($model == 57) {
+        if ($model == 57 || $model == 67) {
             $this->modelo = $model;
         }
         return $this->modelo;
@@ -327,7 +327,12 @@ class Tools
         $dom->formatOutput = false;
         $dom->loadXML($signed);
         //exception will be throw if CTe is not valid
-        $this->isValid($this->versao, $signed, 'cte');
+        $modelo = $dom->getElementsByTagName('mod')->item(0)->nodeValue;
+        $method = 'cte';
+        if ($modelo == 67) {
+            $method = 'cteOS';
+        }
+        $this->isValid($this->versao, $signed, $method);
         return $signed;
     }
     

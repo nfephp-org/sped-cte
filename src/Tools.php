@@ -88,6 +88,29 @@ class Tools extends ToolsCommon
         $this->lastResponse = $this->sendRequest($body, $parameters);
         return $this->lastResponse;
     }
+    
+    /**
+     * Request authorization to issue CTe OS with one document only
+     * @param type $xml
+     * @return type
+     */
+    public function sefazEnviaCTeOS($xml)
+    {
+        //carrega serviço
+        $servico = 'CteRecepcaoOS';
+        $this->checkContingencyForWebServices($servico);
+        $this->servico(
+            $servico,
+            $this->config->siglaUF,
+            $this->tpAmb
+        );
+        $request = preg_replace("/<\?xml.*\?>/", "", $xml);
+        $this->isValid($this->urlVersion, $request, 'cteOS');
+        $this->lastRequest = $request;
+        $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$request</cteDadosMsg>";
+        $this->lastResponse = $this->sendRequest($body);
+        return $this->lastResponse;
+    }
 
     /**
      * Check status of Batch of CTe sent by receipt of this shipment
