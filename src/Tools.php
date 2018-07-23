@@ -695,13 +695,13 @@ class Tools extends ToolsCommon
         );
 
         $request = Strings::clearXmlString($request, true);
-        if ($tpEvento != 610110) {
-            $lote = $dt->format('YmdHis').rand(0, 9);
-            $request = "<envEventoCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
-                . "<idLote>$lote</idLote>"
-                . $request
-                . "</envEventoCTe>";
-        }
+//        if ($tpEvento != 610110) {
+//            $lote = $dt->format('YmdHis').rand(0, 9);
+//            $request = "<envEventoCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
+//                . "<idLote>$lote</idLote>"
+//                . $request
+//                . "</envEventoCTe>";
+//        }
         $this->isValid($this->urlVersion, $request, 'eventoCTe');
         $this->lastRequest = $request;
         $parameters = ['cteDadosMsg' => $request];
