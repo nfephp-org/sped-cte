@@ -549,7 +549,7 @@ class Make
         if ($this->mod == 57) {
             $this->buildCTe();
         } else {
-            $this->montaCTeOS();
+            return $this->montaCTeOS();
         }
         if ($this->toma3 != '') {
             $this->dom->appChild($this->ide, $this->toma3, 'Falta tag "ide"');
@@ -758,9 +758,13 @@ class Make
             if ($this->infCteSub != '')
                 $this->dom->appChild($this->infCTeNorm, $this->infCteSub, 'Falta tag "infCteSub"');
         }
-
+        
         $this->dom->appChild($this->CTe, $this->infCte, 'Falta tag "CTe"');
-        $this->dom->appChild($this->dom, $this->CTe, 'Falta tag "DOMDocument"');
+        //$this->dom->appChild($this->dom, $this->CTe, 'Falta tag "DOMDocument"');
+        $this->dom->appendChild($this->CTe);
+        
+        // testa da chave
+        $this->checkCTeKey($this->dom);
         $this->xml = $this->dom->saveXML();
         return true;
     }
@@ -1103,21 +1107,21 @@ class Make
         $this->dom->addChild(
             $this->ide,
             'tpEmis',
-            $tpEmis,
+            $std->tpEmis,
             true,
             $identificador . 'Forma de emissão do CT-e'
         );
         $this->dom->addChild(
             $this->ide,
             'cDV',
-            $cDV,
+            $std->cDV,
             true,
             $identificador . 'Digito Verificador da chave de acesso do CT-e'
         );
         $this->dom->addChild(
             $this->ide,
             'tpAmb',
-            $tpAmb,
+            $std->tpAmb,
             true,
             $identificador . 'Tipo do Ambiente'
         );
@@ -1170,7 +1174,7 @@ class Make
             true,
             $identificador . 'Modal'
         );
-        $this->modal = $modal;
+        $this->modal = $std->modal;
         $this->dom->addChild(
             $this->ide,
             'tpServ',
@@ -1498,7 +1502,7 @@ class Make
         $this->dom->addChild(
             $this->enderToma,
             'xMun',
-            $xMun,
+            $std->xMun,
             true,
             $identificador . 'Nome do município'
         );
