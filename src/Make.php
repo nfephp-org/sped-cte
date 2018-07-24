@@ -555,7 +555,8 @@ class Make
             $this->dom->appChild($this->ide, $this->toma3, 'Falta tag "ide"');
         } else {
             /**
-             * Comentado linha abaixo para se montar o XML na ordem correta e não acontecer erros de validação do schema do XML
+             * Comentado linha abaixo para se montar o XML na ordem correta e
+             * não acontecer erros de validação do schema do XML
              *
              * @author Willker Moraes Silva
              * @since 2018-03-12
@@ -673,7 +674,7 @@ class Make
 
             $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
             $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
-            if ($this->infCteSub != ''){
+            if ($this->infCteSub != '') {
                 $this->dom->appChild($this->infCTeNorm, $this->infCteSub, 'Falta tag "infCteSub"');
             }
         }
@@ -686,7 +687,7 @@ class Make
          * @author Willker Moraes Silva
          * @since 2018-03-12
          */
-        foreach ($this->autoXML as $aut){
+        foreach ($this->autoXML as $aut) {
             $this->dom->appChild($this->infCte, $aut, 'Falta tag "infCTe"');
         }
 
@@ -757,7 +758,7 @@ class Make
                 $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
             }
 
-            if ($this->infCteSub != ''){
+            if ($this->infCteSub != '') {
                 $this->dom->appChild($this->infCTeNorm, $this->infCteSub, 'Falta tag "infCteSub"');
             }
         }
@@ -1378,7 +1379,7 @@ class Make
          * @author Willker Moraes Silva
          * @since 2018-03-12
          */
-        if ($this->enderToma != ''){
+        if ($this->enderToma != '') {
             $this->dom->appChild($this->toma4, $this->enderToma, 'Falta tag "toma4"');
         }
 
@@ -1678,12 +1679,12 @@ class Make
          * @author Willker Moraes Silva
          * @since 2018-03-12
          */
-        if ($this->fluxo != ''){
+        if ($this->fluxo != '') {
             $this->dom->appChild($this->compl, $this->fluxo, 'Falta tag "infCte"');
         }
 
         if ($this->semData != '' || $this->comData != '' || $this->noPeriodo != '' ||
-            $this->semHora != '' || $this->comHora != '' || $this->noInter != ''){
+            $this->semHora != '' || $this->comHora != '' || $this->noInter != '') {
             $this->tagEntrega();
         }
 
@@ -1779,8 +1780,8 @@ class Make
          * @author Willker Moraes Silva
          * @since 2018-03-12
          */
-        if (count($this->pass) > 0){
-            foreach ($this->pass as $pass){
+        if (count($this->pass) > 0) {
+            foreach ($this->pass as $pass) {
                 $this->dom->appChild($this->fluxo, $pass, 'Falta tag "fluxo"');
             }
         }
@@ -3665,7 +3666,7 @@ class Make
         );
 
 
-        if (isset($std->refCteAnu)){
+        if (isset($std->refCteAnu)) {
             $this->dom->addChild(
                 $this->infCteSub,
                 'refCteAnu',
@@ -3675,7 +3676,7 @@ class Make
             );
         }
 
-        if ($this->tomaICMS != ''){
+        if ($this->tomaICMS != '') {
             $this->dom->appChild($this->infCteSub, $this->tomaICMS, 'Falta tag "tomaICMS"');
         }
 
