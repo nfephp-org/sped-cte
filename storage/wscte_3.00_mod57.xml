@@ -65,7 +65,7 @@
             <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='3.00'>https://homologacao.sefaz.mt.gov.br/ctews/services/CteRetRecepcao</CteRetRecepcao>
             <CteCancelamento method='CTeCancelamento' operation='CteCancelamento' version='3.00'>https://homologacao.sefaz.mt.gov.br/ctews/services/CteCancelamento</CteCancelamento>
             <CteInutilizacao method='CTeInutilizacao' operation='CteInutilizacao' version='3.00'>https://homologacao.sefaz.mt.gov.br/ctews/services/CteInutilizacao</CteInutilizacao>
-            <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsultaProtocolo' version='3.00'>https://homologacao.sefaz.mt.gov.br/ctews/services/CteConsulta</CteConsultaProtocolo>
+            <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsulta' version='3.00'>https://homologacao.sefaz.mt.gov.br/ctews/services/CteConsulta</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CteStatusServico' version='3.00'>https://homologacao.sefaz.mt.gov.br/ctews/services/CteStatusServico</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CteRecepcaoEvento' version='3.00'>https://homologacao.sefaz.mt.gov.br/ctews2/services/CteRecepcaoEvento</CteRecepcaoEvento>
         </homologacao>
@@ -161,7 +161,7 @@
             <CteRecepcao method='CTeRecepcao' operation='CteRecepcao' version='3.00'>https://cte.svrs.rs.gov.br/ws/cterecepcao/CteRecepcao.asmx</CteRecepcao>
             <CteRecepcaoOS method='CteRecepcaoOS' operation='CteRecepcaoOS' version='3.00'>https://cte.svrs.rs.gov.br/ws/cterecepcaoos/cterecepcaoos.asmx</CteRecepcaoOS>
             <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='3.00'>https://cte.svrs.rs.gov.br/ws/cteretrecepcao/cteRetRecepcao.asmx</CteRetRecepcao>
-            <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsultaProtocolo' version='3.00'>https://cte.svrs.rs.gov.br/ws/cteconsulta/CteConsulta.asmx</CteConsultaProtocolo>
+            <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsulta' version='3.00'>https://cte.svrs.rs.gov.br/ws/cteconsulta/CteConsulta.asmx</CteConsultaProtocolo>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CteRecepcaoEvento' version='3.00'>https://cte.svrs.rs.gov.br/ws/cterecepcaoevento/cterecepcaoevento.asmx</CteRecepcaoEvento>
             <CteInutilizacao method='CTeInutilizacao' operation='CteInutilizacao' version='3.00'>https://cte.svrs.rs.gov.br/ws/cteinutilizacao/cteinutilizacao.asmx</CteInutilizacao>
             <CteStatusServico method='cteStatusServicoCT' operation='CteStatusServico' version='3.00'>https://cte.svrs.rs.gov.br/ws/ctestatusservico/CteStatusServico.asmx</CteStatusServico>
@@ -180,7 +180,7 @@
             <CteRecepcao method='CTeRecepcao' operation='CteRecepcao' version='3.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/cteRecepcao.asmx</CteRecepcao>
             <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='3.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/CteRetRecepcao.asmx</CteRetRecepcao>
             <CteCancelamento method='CTeCancelamento' operation='CteCancelamento' version='3.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/CteCancelamento.asmx</CteCancelamento>
-            <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsultaProtocolo' version='3.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/CteConsulta.asmx</CteConsultaProtocolo>
+            <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsulta' version='3.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/CteConsulta.asmx</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CteStatusServico' version='3.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/CteStatusServico.asmx</CteStatusServico>
         </producao>
     </UF>
