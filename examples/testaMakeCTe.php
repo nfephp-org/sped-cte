@@ -43,10 +43,12 @@ $tools->model('57');
 
 $cte = new Make();
 
-$dhEmi = date("Y-m-d\TH:i:s-03:00");
+//$dhEmi = date("Y-m-d\TH:i:s-03:00"); Para obter a data com diferença de fuso usar 'P'
+$dhEmi = date("Y-m-d\TH:i:sP");
 
 $numeroCTE = '127';
 
+// CUIDADO: Observe que mesmo os parâmetros fixados abaixo devem ser preenchidos conforme os dados do CT-e, estude a composição da CHAVE para saber o que vai em cada campo
 $chave = montaChave(
     '43', date('y', strtotime($dhEmi)), date('m', strtotime($dhEmi)), $arr['cnpj'], $tools->model(), '1', $numeroCTE, '1', '10'
 );
@@ -262,6 +264,17 @@ $cte->taginfModal($infModal);
 $rodo = new stdClass();
 $rodo->RNTRC = '00739357';
 $cte->tagrodo($rodo);
+
+$aereo = new stdClass();
+$aereo->nMinu = '123'; // Número Minuta
+$aereo->nOCA = ''; // Número Operacional do Conhecimento Aéreo
+$aereo->dPrevAereo = date('Y-m-d');
+$aereo->natCarga_xDime = ''; // Dimensões 1234x1234x1234 em cm
+$aereo->natCarga_cInfManu = [  ]; // Informação de manuseio, com dois dígitos, pode ter mais de uma ocorrência.
+$aereo->tarifa_CL = 'G'; // M - Tarifa Mínima / G - Tarifa Geral / E - Tarifa Específica
+$aereo->tarifa_cTar = ''; // código da tarifa, deverão ser incluídos os códigos de três digítos correspondentes à tarifa
+$aereo->tarifa_vTar = 100.00; // valor da tarifa. 15 posições, sendo 13 inteiras e 2 decimais. Valor da tarifa por kg quando for o caso
+$cte->tagaereo($aereo);
 
 //Monta CT-e
 $cte->montaCTe();
