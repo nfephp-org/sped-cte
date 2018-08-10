@@ -652,12 +652,12 @@ class Make
             }
 
             $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
-            if ($this->modal=='01'){
+            if ($this->modal=='01') {
                 $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
                 foreach ($this->veic as $veic) {
                     $this->dom->appChild($this->rodo, $veic, 'Falta tag "veic"');
                 }
-            } elseif ($this->modal=='02'){
+            } elseif ($this->modal=='02') {
                 $this->dom->appChild($this->infModal, $this->aereo, 'Falta tag "aereo"');
             } else {
                 throw new Exception('Modal não informado ou não suportado.');
@@ -3588,7 +3588,7 @@ class Make
             true,
             $identificador . 'Data prevista da entrega'
         );
-        if (isset($std->natCarga_xDime) || isset($std->natCarga_cInfManu)){
+        if (isset($std->natCarga_xDime) || isset($std->natCarga_cInfManu)) {
             $identificador = '#1 <aereo> - <natCarga> - ';
             $this->natCarga = $this->dom->createElement('natCarga');
             $this->dom->addChild(
@@ -3598,11 +3598,11 @@ class Make
                 false,
                 $identificador . 'Dimensões da carga, formato: 1234x1234x1234 (cm)'
             );
-            if (isset($std->natCarga_cInfManu) && !is_array($std->natCarga_cInfManu)){
+            if (isset($std->natCarga_cInfManu) && !is_array($std->natCarga_cInfManu)) {
                 $std->natCarga_cInfManu = [$std->natCarga_cInfManu];
             }
             $cInfManuX = 0;
-            foreach ($std->natCarga_cInfManu as $cInfManu){
+            foreach ($std->natCarga_cInfManu as $cInfManu) {
                 $cInfManuX++;
                 $this->dom->addChild(
                     $this->natCarga,
@@ -3621,21 +3621,21 @@ class Make
             'CL',
             $std->tarifa_CL,
             true,
-            $identificador . 'Informar a classe da tarifa: M - Tarifa Mínima / G - Tarifa Geral / E - Tarifa Específica'
+            $identificador . 'Classe da tarifa: M - Tarifa Mínima / G - Tarifa Geral / E - Tarifa Específica'
         );
         $this->dom->addChild(
             $this->tarifa,
             'cTar',
             $std->tarifa_cTar,
             false,
-            $identificador . 'Informar o código da tarifa, deverão ser incluídos os códigos de três digítos correspondentes à tarifa.'
+            $identificador . 'Código de três digítos correspondentes à tarifa.'
         );
         $this->dom->addChild(
             $this->tarifa,
             'vTar',
             $std->tarifa_vTar,
             true,
-            $identificador . 'Informar o valor da tarifa. 15 posições, sendo 13 inteiras e 2 decimais. Valor da tarifa por kg quando for o caso.'
+            $identificador . 'Valor da tarifa. 15 posições, sendo 13 inteiras e 2 decimais.'
         );
         $this->aereo->appendChild($this->tarifa);
         return $this->aereo;
