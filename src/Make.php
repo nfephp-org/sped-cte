@@ -451,6 +451,21 @@ class Make
      */
     private $rodo = '';
     /**
+     * Informações do modal Aéreo
+     * @var \DOMNode
+     */
+    private $aereo = '';
+    /**
+     * Informações do modal Aéreo -> Dados da Carga
+     * @var \DOMNode
+     */
+    private $natCarga = '';
+    /**
+     * Informações do modal Aéreo -> Tarifas
+     * @var \DOMNode
+     */
+    private $tarifa = '';
+    /**
      * Ordens de Coleta associados
      * @var array
      */
