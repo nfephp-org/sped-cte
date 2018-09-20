@@ -37,6 +37,10 @@ class Standardize
      */
     public $key = '';
     /**
+     * @var object
+     */
+    private $sxml;
+    /**
      * @var array
      */
     public $rootTagList = [
@@ -55,7 +59,7 @@ class Standardize
         'CTe',
         'CTeOS'
     ];
-    
+
     /**
      * Constructor
      * @param string $xml
@@ -64,7 +68,7 @@ class Standardize
     {
         $this->toStd($xml);
     }
-    
+
     /**
      * Identify node and extract from XML for convertion type
      * @param string $xml
@@ -93,7 +97,7 @@ class Standardize
         //documento does not belong to the SPED-NFe project
         throw DocumentsException::wrongDocument(7);
     }
-    
+
     /**
      * Returns extract node from XML
      * @return string
@@ -102,7 +106,7 @@ class Standardize
     {
         return $this->node;
     }
-    
+
     /**
      * Returns stdClass converted from xml
      * @param string $xml
@@ -113,16 +117,29 @@ class Standardize
         if (!empty($xml)) {
             $this->key = $this->whichIs($xml);
         }
-        
-        $sxml = simplexml_load_string($this->node);
+
+        $this->sxml = simplexml_load_string($this->node);
         $this->json = str_replace(
             '@attributes',
             'attributes',
-            json_encode($sxml, JSON_PRETTY_PRINT)
+            json_encode($this->sxml, JSON_PRETTY_PRINT)
         );
         return json_decode($this->json);
     }
-    
+
+    /**
+     * Returns the SimpleXml Object
+     * @param string $xml
+     * @return object
+     */
+    public function simpleXml($xml = null)
+    {
+        if (!empty($xml)) {
+            $this->toStd($xml);
+        }
+        return $this->sxml;
+    }
+
     /**
      * Retruns JSON string form XML
      * @param string $xml
@@ -135,7 +152,7 @@ class Standardize
         }
         return $this->json;
     }
-    
+
     /**
      * Returns array from XML
      * @param string $xml
@@ -148,7 +165,7 @@ class Standardize
         }
         return json_decode($this->json, true);
     }
-    
+
     /**
      * Returns YAML from XML
      * @param string $xml
