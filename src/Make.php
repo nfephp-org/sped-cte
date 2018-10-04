@@ -454,6 +454,11 @@ class Make extends BaseMake
      * @var array
      */
     private $moto = array();
+	/**		
+     * Informações do responsavel tecnico pela emissao do DF-e		
+     * @var \DOMNode		
+     */		
+    private $infRespTec = '';
 
     /**
      * Monta o arquivo XML usando as tag's já preenchidas
@@ -573,7 +578,9 @@ class Make extends BaseMake
         foreach ($this->veic as $veic) {
             $this->dom->appChild($this->rodo, $veic, 'Falta tag "veic"');
         }
-
+		if ($this->infRespTec != '') {            
+            $this->dom->appChild($this->infCte, $this->infRespTec, 'Falta tag "infRespTec"');
+        }
         $this->dom->appChild($this->CTe, $this->infCte, 'Falta tag "CTe"');
         $this->dom->appChild($this->dom, $this->CTe, 'Falta tag "DOMDocument"');
         $this->xml = $this->dom->saveXML();
@@ -2706,6 +2713,58 @@ class Make extends BaseMake
             $identificador . 'Valor do componente'
         );
         return $this->comp[$posicao];
+    }
+	
+	/**
+     * Gera as tags para o elemento: infRespTec (Grupo de informações para informação do responsavel tecnico pelo sistema de emissão DF-e) e adiciona ao grupo infCTe
+     * Nível: 1
+     * Os parâmetros para esta função são todos os elementos da tag "infRespTec"
+     *     
+     * @param string $CNPJ  Número do CNPJ     
+     * @param string $xContato  Nome da pessoa a ser contada
+     * @param string $xNome Razão Social ou Nome
+     * @param string $email Endereço de email da pessoa a ser contatada
+     * @param string $fone Telefone da pessoa a ser contatada
+     *
+     * @return \DOMElement
+     */
+    public function infRespTec(        
+        $CNPJ = '',
+        $xContato = '',        
+        $email = '',
+        $fone = ''
+    ) {
+        $identificador = '# <infRespTec> - ';
+        $this->infRespTec = $this->dom->createElement('infRespTec');
+        $this->dom->addChild(
+            $this->infRespTec,
+            'CNPJ',
+            $CNPJ,
+            true,
+            $identificador . 'CNPJ responsável'
+        );        
+        $this->dom->addChild(
+            $this->infRespTec,
+            'xContato',
+            $xContato,
+            true,
+            $identificador . 'Contato responsável'
+        );
+        $this->dom->addChild(
+            $this->infRespTec,
+            'email',
+            $email,
+            true,
+            $identificador . 'E-mail responsavel'
+        );        
+        $this->dom->addChild(
+            $this->infRespTec,
+            'fone',
+            $fone,
+            true,
+            $identificador . 'Telefone responsavel'
+        );
+        return $this->infRespTec;
     }
 
     /**
