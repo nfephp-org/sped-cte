@@ -2964,15 +2964,15 @@ class Make
                     true,
                     "$identificador  Valor do ICMS ST retido"
                 );
-                if ($vCred > 0) {
+                if ($std->vCred > 0) {
                     $this->dom->addChild($icms, 'vCred', $std->vCred, false, "$identificador  Valor do Crédito");
                 }
                 break;
             case '90':
-                if ($outraUF == true) {
+                if ($std->outraUF == true) {
                     $icms = $this->dom->createElement("ICMSOutraUF");
                     $this->dom->addChild($icms, 'CST', $std->cst, true, "$identificador  Tributação do ICMS = 90");
-                    if ($pRedBC > 0) {
+                    if ($std->pRedBC > 0) {
                         $this->dom->addChild(
                             $icms,
                             'pRedBCOutraUF',
@@ -2995,7 +2995,7 @@ class Make
                 } else {
                     $icms = $this->dom->createElement("ICMS90");
                     $this->dom->addChild($icms, 'CST', $std->cst, true, "$identificador Tributação do ICMS = 90");
-                    if ($pRedBC > 0) {
+                    if ($std->pRedBC > 0) {
                         $this->dom->addChild(
                             $icms,
                             'pRedBC',
@@ -3007,7 +3007,7 @@ class Make
                     $this->dom->addChild($icms, 'vBC', $std->vBC, true, "$identificador  Valor da BC do ICMS");
                     $this->dom->addChild($icms, 'pICMS', $std->pICMS, true, "$identificador  Alíquota do imposto");
                     $this->dom->addChild($icms, 'vICMS', $std->vICMS, true, "$identificador  Valor do ICMS");
-                    if ($vCred > 0) {
+                    if ($std->vCred > 0) {
                         $this->dom->addChild($icms, 'vCred', $std->vCred, false, "$identificador  Valor do Crédido");
                     }
                 }
