@@ -451,6 +451,21 @@ class Make
      */
     private $rodo = '';
     /**
+     * Informações do modal Aéreo
+     * @var \DOMNode
+     */
+    private $aereo = '';
+    /**
+     * Informações do modal Aéreo -> Dados da Carga
+     * @var \DOMNode
+     */
+    private $natCarga = '';
+    /**
+     * Informações do modal Aéreo -> Tarifas
+     * @var \DOMNode
+     */
+    private $tarifa = '';
+    /**
      * Ordens de Coleta associados
      * @var array
      */
@@ -652,10 +667,16 @@ class Make
             }
 
             $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
-            $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
-        }
-        foreach ($this->veic as $veic) {
-            $this->dom->appChild($this->rodo, $veic, 'Falta tag "veic"');
+            if ($this->modal=='01') {
+                $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
+                foreach ($this->veic as $veic) {
+                    $this->dom->appChild($this->rodo, $veic, 'Falta tag "veic"');
+                }
+            } elseif ($this->modal=='02') {
+                $this->dom->appChild($this->infModal, $this->aereo, 'Falta tag "aereo"');
+            } else {
+                throw new Exception('Modal não informado ou não suportado.');
+            }
         }
         //[1] tag infCTe
         $this->dom->appChild($this->CTe, $this->infCte, 'Falta tag "CTe"');
@@ -3549,6 +3570,92 @@ class Make
         return $this->rodo;
     }
     
+    /**
+     * Leiaute - Aéreo
+     * Gera as tags para o elemento: "aereo" (Informações do modal Aéreo)
+     * @author Newton Pasqualini Filho
+     * #1
+     * Nível: 0
+     * @return DOMElement|\DOMNode
+     */
+    public function tagaereo($std)
+    {
+        $identificador = '#1 <aereo> - ';
+        $this->aereo = $this->dom->createElement('aereo');
+        $this->dom->addChild(
+            $this->aereo,
+            'nMinu',
+            $std->nMinu,
+            false,
+            $identificador . 'Número da Minuta'
+        );
+        $this->dom->addChild(
+            $this->aereo,
+            'nOCA',
+            $std->nOCA,
+            false,
+            $identificador . 'Número Operacional do Conhecimento Aéreo'
+        );
+        $this->dom->addChild(
+            $this->aereo,
+            'dPrevAereo',
+            $std->dPrevAereo,
+            true,
+            $identificador . 'Data prevista da entrega'
+        );
+        if (isset($std->natCarga_xDime) || isset($std->natCarga_cInfManu)) {
+            $identificador = '#1 <aereo> - <natCarga> - ';
+            $this->natCarga = $this->dom->createElement('natCarga');
+            $this->dom->addChild(
+                $this->natCarga,
+                'xDime',
+                $std->natCarga_xDime,
+                false,
+                $identificador . 'Dimensões da carga, formato: 1234x1234x1234 (cm)'
+            );
+            if (isset($std->natCarga_cInfManu) && !is_array($std->natCarga_cInfManu)) {
+                $std->natCarga_cInfManu = [$std->natCarga_cInfManu];
+            }
+            $cInfManuX = 0;
+            foreach ($std->natCarga_cInfManu as $cInfManu) {
+                $cInfManuX++;
+                $this->dom->addChild(
+                    $this->natCarga,
+                    'cInfManu',
+                    $cInfManu,
+                    false,
+                    $identificador . 'Informação de manuseio, com dois dígitos, pode ter mais de uma ocorrência.'
+                );
+            }
+            $this->aereo->appendChild($this->natCarga);
+        }
+        $identificador = '#1 <aereo> - <tarifa> - ';
+        $this->tarifa = $this->dom->createElement('tarifa');
+        $this->dom->addChild(
+            $this->tarifa,
+            'CL',
+            $std->tarifa_CL,
+            true,
+            $identificador . 'Classe da tarifa: M - Tarifa Mínima / G - Tarifa Geral / E - Tarifa Específica'
+        );
+        $this->dom->addChild(
+            $this->tarifa,
+            'cTar',
+            $std->tarifa_cTar,
+            false,
+            $identificador . 'Código de três digítos correspondentes à tarifa.'
+        );
+        $this->dom->addChild(
+            $this->tarifa,
+            'vTar',
+            $std->tarifa_vTar,
+            true,
+            $identificador . 'Valor da tarifa. 15 posições, sendo 13 inteiras e 2 decimais.'
+        );
+        $this->aereo->appendChild($this->tarifa);
+        return $this->aereo;
+    }
+
     /**
      * CT-e de substituição
      * @param type $std
