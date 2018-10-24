@@ -635,7 +635,11 @@ class Make
             $this->dom->appChild($this->infCte, $this->infCTeNorm, 'Falta tag "infCTeNorm"');
             $this->dom->appChild($this->infCTeNorm, $this->infCarga, 'Falta tag "infCarga"');
             foreach ($this->infQ as $infQ) {
-                $this->dom->appChild($this->infCarga, $infQ, 'Falta tag "infQ"');
+                if (end($this->infQ) == $infQ) {
+                    $this->infCarga->insertBefore($infQ, $this->infCarga->getElementsByTagName("vCargaAverb")->item(0));
+                } else {
+                    $this->dom->appChild($this->infCarga, $infQ, 'Falta tag "infQ"');
+                }
             }
 
             $this->dom->appChild($this->infCTeNorm, $this->infDoc, 'Falta tag "infDoc"');

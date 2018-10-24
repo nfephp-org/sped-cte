@@ -37,7 +37,7 @@ $configJson = json_encode($arr);
 $content = file_get_contents('fixtures/certificado.pfx');
 
 //intancia a classe tools
-$tools = new Tools($configJson, Certificate::readPfx($content, '02040608'));
+$tools = new Tools($configJson, Certificate::readPfx($content, '123456'));
 
 $tools->model('57');
 
@@ -105,17 +105,17 @@ $cte->tagide($ide);
 $toma3 = new stdClass();
 $toma3->toma = '3';
 $cte->tagtoma3($toma3);
-
-$toma4 = new stdClass();
-$toma4->toma = '4'; // 4-Outros; informar os dados cadastrais do tomador quando ele for outros
-$toma4->CNPJ = '11509962000197'; // CNPJ
-$toma4->CPF = ''; // CPF
-$toma4->IE = 'ISENTO'; // Iscricao estadual
-$toma4->xNome = 'RAZAO SOCIAL'; // Razao social ou Nome
-$toma4->xFant = 'NOME FANTASIA'; // Nome fantasia
-$toma4->fone = '5532128202'; // Telefone
-$toma4->email = 'email@gmail.com';   // email
-$cte->tagtoma4($toma4);
+//
+//$toma4 = new stdClass();
+//$toma4->toma = '4'; // 4-Outros; informar os dados cadastrais do tomador quando ele for outros
+//$toma4->CNPJ = '11509962000197'; // CNPJ
+//$toma4->CPF = ''; // CPF
+//$toma4->IE = 'ISENTO'; // Iscricao estadual
+//$toma4->xNome = 'RAZAO SOCIAL'; // Razao social ou Nome
+//$toma4->xFant = 'NOME FANTASIA'; // Nome fantasia
+//$toma4->fone = '5532128202'; // Telefone
+//$toma4->email = 'email@gmail.com';   // email
+//$cte->tagtoma4($toma4);
 
 
 $enderToma = new stdClass();
@@ -238,8 +238,8 @@ $cte->taginfCTeNorm();              // Grupo de informações do CT-e Normal e S
 $infCarga = new stdClass();
 $infCarga->vCarga = 130333.31; // Valor total da carga
 $infCarga->proPred = 'TUBOS PLASTICOS'; // Produto predominante
-$infCarga->xOutCat = ''; // Outras caracteristicas da carga
-$infCarga->vCargaAverb = '';
+$infCarga->xOutCat = 6.00; // Outras caracteristicas da carga
+$infCarga->vCargaAverb = 1.99;
 $cte->taginfCarga($infCarga);
 
 $infQ = new stdClass();
@@ -247,6 +247,11 @@ $infQ->cUnid = '01'; // Código da Unidade de Medida: ( 00-M3; 01-KG; 02-TON; 03
 $infQ->tpMed = 'ESTRADO'; // Tipo de Medida
 // ( PESO BRUTO; PESO DECLARADO; PESO CUBADO; PESO AFORADO; PESO AFERIDO; LITRAGEM; CAIXAS e etc)
 $infQ->qCarga = 18145.0000;  // Quantidade (15 posições; sendo 11 inteiras e 4 decimais.)
+$cte->taginfQ($infQ);
+$infQ->cUnid = '02'; // Código da Unidade de Medida: ( 00-M3; 01-KG; 02-TON; 03-UNIDADE; 04-LITROS; 05-MMBTU
+$infQ->tpMed = 'OUTROS'; // Tipo de Medida
+// ( PESO BRUTO; PESO DECLARADO; PESO CUBADO; PESO AFORADO; PESO AFERIDO; LITRAGEM; CAIXAS e etc)
+$infQ->qCarga = 31145.0000;  // Quantidade (15 posições; sendo 11 inteiras e 4 decimais.)
 $cte->taginfQ($infQ);
 
 $cte->taginfDoc();
