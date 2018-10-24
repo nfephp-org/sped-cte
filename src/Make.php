@@ -1606,9 +1606,10 @@ class Make
             false,
             $identificador . 'Nome do país'
         );
-        
-        $node = $this->toma4->getElementsByTagName("email")->item(0);
-        $this->toma4->insertBefore($this->enderToma, $node);
+
+        if (!empty($this->toma4)) {
+            $this->toma4->insertBefore($this->enderToma, $this->toma4->getElementsByTagName("email")->item(0));
+        }
         return $this->enderToma;
     }
 
