@@ -800,50 +800,51 @@ class Tools extends ToolsCommon
     }
 
     /**
-     * Checks the validity of an NFe, normally used for received NFe
+     * Checks the validity of an CTe, normally used for received CTe
      * @param  string $cte
      * @return boolean
      */
     public function sefazValidate($cte)
     {
-        //verifica a assinatura da NFe, exception caso de falha
-        Signer::isSigned($cte);
+        if (empty($cte)) {
+            throw new InvalidArgumentException('Validacao CT-e: a string do CT-e esta vazio!');
+        }
+        //verifica a assinatura do CTe, exception caso de falha
+        Signer::isSigned($cte, 'infCte');
         $dom = new \DOMDocument('1.0', 'utf-8');
         $dom->formatOutput = false;
         $dom->preserveWhiteSpace = false;
         $dom->loadXML($cte);
         //verifica a validade no webservice da SEFAZ
         $tpAmb = $dom->getElementsByTagName('tpAmb')->item(0)->nodeValue;
-        $infNFe  = $dom->getElementsByTagName('infNFe')->item(0);
-        $chNFe = preg_replace('/[^0-9]/', '', $infNFe->getAttribute("Id"));
+        $infCTe  = $dom->getElementsByTagName('infCte')->item(0);
+        $chCTe = preg_replace('/[^0-9]/', '', $infCTe->getAttribute("Id"));
         $protocol = $dom->getElementsByTagName('nProt')->item(0)->nodeValue;
         $digval = $dom->getElementsByTagName('DigestValue')->item(0)->nodeValue;
-        //consulta a NFe
-        $response = $this->sefazConsultaChave($chNFe, $tpAmb);
+        //consulta o CTe
+        $response = $this->sefazConsultaChave($chCTe, $tpAmb);
         $ret = new \DOMDocument('1.0', 'UTF-8');
         $ret->preserveWhiteSpace = false;
         $ret->formatOutput = false;
         $ret->loadXML($response);
-        $retProt = $ret->getElementsByTagName('protNFe')->item(0);
+        $retProt = $ret->getElementsByTagName('protCTe')->item(0);
         if (!isset($retProt)) {
-            throw new InvalidArgumentException(
-                'O documento de resposta não contêm o NODE "protNFe".'
-            );
+            $xMotivo = $ret->getElementsByTagName('xMotivo')->item(0);
+            if (isset($xMotivo)) {
+                throw new InvalidArgumentException('Validacao CT-e: ' . $xMotivo->nodeValue);
+            } else {
+                throw new InvalidArgumentException('O documento de resposta nao contem o node "protCTe".');
+            }
         }
         $infProt = $ret->getElementsByTagName('infProt')->item(0);
-        $cStat  = $infProt->getElementsByTagName('cStat')->item(0)->nodeValue;
-        $xMotivo = $infProt->getElementsByTagName('xMotivo')->item(0)->nodeValue;
         $dig = $infProt->getElementsByTagName("digVal")->item(0);
         $digProt = '000';
         if (isset($dig)) {
             $digProt = $dig->nodeValue;
         }
-        $chProt = $infProt->getElementsByTagName("chNFe")->item(0)->nodeValue;
+        $chProt = $infProt->getElementsByTagName("chCTe")->item(0)->nodeValue;
         $nProt = $infProt->getElementsByTagName("nProt")->item(0)->nodeValue;
-        if ($protocol == $nProt
-            && $digval == $digProt
-            && $chNFe == $chProt
-        ) {
+        if ($protocol == $nProt && $digval == $digProt && $chCTe == $chProt) {
             return true;
         }
         return false;
