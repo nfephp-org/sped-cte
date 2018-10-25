@@ -499,6 +499,11 @@ class Make
      * @var array
      */
     private $moto = array();
+    /**
+     * Autorizados para download do XML do DF-e
+     * @var array
+     */
+    private $autXML = array();
     
     public function __construct()
     {
@@ -682,6 +687,11 @@ class Make
                 throw new Exception('Modal não informado ou não suportado.');
             }
         }
+
+        foreach ($this->autXML as $autXML) {
+            $this->dom->appChild($this->infCte, $autXML, 'Falta tag "autXML"');
+        }
+
         //[1] tag infCTe
         $this->dom->appChild($this->CTe, $this->infCte, 'Falta tag "CTe"');
         //[0] tag CTe
@@ -4084,6 +4094,40 @@ class Make
             $identificador . ' Data de Emissão do CT-e anulado'
         );
         return $this->infCteAnu;
+    }
+
+    /**
+     * Gera as tags para o elemento: "autXML" (Autorizados para download do XML)
+     * #396
+     * Nível: 1
+     * Os parâmetros para esta função são todos os elementos da tag "autXML"
+     *
+     * @return boolean
+     */
+    public function tagautXML($std)
+    {
+        $identificador = '#396 <autXML> - ';
+        $autXML = $this->dom->createElement('autXML');
+        if (isset($std->CNPJ) && $std->CNPJ != '') {
+            $this->dom->addChild(
+                $autXML,
+                'CNPJ',
+                $std->CNPJ,
+                true,
+                $identificador . 'CNPJ do Cliente Autorizado'
+            );
+        } elseif (isset($std->CPF) && $std->CPF != '') {
+            $this->dom->addChild(
+                $autXML,
+                'CPF',
+                $std->CPF,
+                true,
+                $identificador . 'CPF do Cliente Autorizado'
+            );
+        }
+
+        $this->autXML[] = $autXML;
+        return $autXML;
     }
     
     protected function checkCTeKey(Dom $dom)
