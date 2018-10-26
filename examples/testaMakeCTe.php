@@ -281,6 +281,10 @@ $aereo->tarifa_cTar = ''; // código da tarifa, deverão ser incluídos os códi
 $aereo->tarifa_vTar = 100.00; // valor da tarifa. 15 posições, sendo 13 inteiras e 2 decimais. Valor da tarifa por kg quando for o caso
 $cte->tagaereo($aereo);
 
+$autXML = new stdClass();
+$autXML->CPF = '59195248471'; // CPF ou CNPJ dos autorizados para download do XML
+$cte->tagautXML($autXML);
+
 //Monta CT-e
 $cte->montaCTe();
 $chave = $cte->chCTe;
