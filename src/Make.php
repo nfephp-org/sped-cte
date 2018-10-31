@@ -2006,7 +2006,7 @@ class Make
     {
         $identificador = '#94 <ObsFisco> - ';
         if (count($this->obsFisco) <= 10) {
-            $this->obsFisco[] = $this->dom->createElement('obsFisco');
+            $this->obsFisco[] = $this->dom->createElement('ObsFisco');
             $posicao = (integer) count($this->obsFisco) - 1;
             $this->obsFisco[$posicao]->setAttribute('xCampo', $std->xCampo);
             $this->dom->addChild(
