@@ -2005,9 +2005,9 @@ class Make
     public function tagobsFisco($std)
     {
         $identificador = '#94 <ObsFisco> - ';
-        $posicao = (integer) count($this->obsFisco) - 1;
         if (count($this->obsFisco) <= 10) {
             $this->obsFisco[] = $this->dom->createElement('obsFisco');
+            $posicao = (integer) count($this->obsFisco) - 1;
             $this->obsFisco[$posicao]->setAttribute('xCampo', $std->xCampo);
             $this->dom->addChild(
                 $this->obsFisco[$posicao],
