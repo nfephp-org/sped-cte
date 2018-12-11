@@ -3050,6 +3050,15 @@ class Make
                 "$identificador Valor Total dos Tributos"
             );
         }
+        if (isset($std->infAdFisco)) {
+            $this->dom->addChild(
+                $this->imp,
+                'infAdFisco',
+                $std->infAdFisco,
+                false,
+                "$identificador Informações adicionais de interesse do Fisco"
+            );
+        }
 
         if ($std->vICMSUFFim != '' || $std->vICMSUFIni != '') {
             $icmsDifal = $this->dom->createElement("ICMSUFFim");
