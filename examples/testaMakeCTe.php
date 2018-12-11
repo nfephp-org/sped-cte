@@ -228,7 +228,8 @@ $icms->vCred = ''; // Valor do Crédito Outorgado/Presumido
 $icms->vTotTrib = 754.38; // Valor de tributos federais; estaduais e municipais
 $icms->outraUF = false;    // ICMS devido à UF de origem da prestação; quando diferente da UF do emitente
 $icms->vICMSUFIni = 0;  
-$icms->vICMSUFFim = 0;  
+$icms->vICMSUFFim = 0;
+$icms->infAdFisco = 'Informações ao fisco';
 $cte->tagicms($icms);
 
 
