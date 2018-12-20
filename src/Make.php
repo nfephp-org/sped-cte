@@ -753,10 +753,14 @@ class Make
                 $this->dom->appChild($this->infCTeNorm, $seg, 'Falta tag "seg"');
             }
 
-            if ($this->infModal != '') {
+            if ($this->infModal != '' ) {
                 $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
-                $this->dom->appChild($this->rodo, $this->veic, 'Falta tag "veic"');
-                $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
+                if(!empty($this->veic)){
+                    $this->dom->appChild($this->rodo, $this->veic, 'Falta tag "veic"');
+                }
+                if(!empty($this->rodo)){
+                    $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
+                }
             }
         }
         
@@ -1423,13 +1427,16 @@ class Make
                 $identificador . 'Número do CPF'
             );
         }
-        $this->dom->addChild(
-            $this->toma,
-            'IE',
-            $std->IE,
-            false,
-            $identificador . 'Inscrição Estadual'
-        );
+        if ($std->CNPJ != '' || $std->IE != '') {
+
+            $this->dom->addChild(
+                $this->toma,
+                'IE',
+                $std->IE,
+                true,
+                $identificador . 'Inscrição Estadual'
+            );
+        }
         $this->dom->addChild(
             $this->toma,
             'xNome',
@@ -4071,6 +4078,20 @@ class Make
         $this->dom->addChild(
             $this->infCteComp,
             'chave',
+            $std->chave,
+            true,
+            $identificador . ' Chave do CT-e complementado'
+        );
+        return $this->infCteComp;
+    }
+    
+     public function taginfCTeOsComp($std)
+    {
+        $identificador = '#410 <infCteComp> - ';
+        $this->infCteComp = $this->dom->createElement('infCteComp');
+        $this->dom->addChild(
+            $this->infCteComp,
+            'chCTe',
             $std->chave,
             true,
             $identificador . ' Chave do CT-e complementado'
