@@ -2046,13 +2046,15 @@ class Make
             true,
             $identificador . 'CNPJ do emitente'
         );
-        $this->dom->addChild(
-            $this->emit,
-            'IE',
-            Strings::onlyNumbers($std->IE),
-            true,
-            $identificador . 'Inscrição Estadual do Emitente'
-        );
+        if( $std->IE != '' ){
+            $this->dom->addChild(
+                $this->emit,
+                'IE',
+                Strings::onlyNumbers($std->IE),
+                true,
+                $identificador . 'Inscrição Estadual do Emitente'
+            );
+        }
         $this->dom->addChild(
             $this->emit,
             'IEST',
