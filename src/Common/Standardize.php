@@ -53,7 +53,8 @@ class Standardize
         'retInutCTe',
         'procInutCTe',
         'CTe',
-        'CTeOS'
+        'CTeOS',
+        'retConsStatServCte'
     ];
     
     /**
