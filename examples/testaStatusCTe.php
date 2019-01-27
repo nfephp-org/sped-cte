@@ -36,7 +36,7 @@ $configJson = json_encode($arr);
 $content = file_get_contents('fixtures/certificado.pfx');
 
 //intancia a classe tools
-$tools = new Tools($configJson, Certificate::readPfx($content, '02040608'));
+$tools = new Tools($configJson, Certificate::readPfx($content, '0123456789'));
 //seta o modelo para 57
 $tools->model('57');
 

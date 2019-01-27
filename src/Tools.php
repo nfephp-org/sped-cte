@@ -534,10 +534,6 @@ class Tools extends ToolsCommon
         $ufEvento = 'RS'
     ) {
         $tagAdic = '';
-        if ($tpEvento == 210240) {
-            $xJust = Strings::replaceSpecialsChars(substr(trim($xJust), 0, 255));
-            $tagAdic = "<xJust>$xJust</xJust>";
-        }
         if ($tpEvento == 610110) {
             $xJust = Strings::replaceSpecialsChars(substr(trim($xJust), 0, 255));
             $tagAdic = "<evPrestDesacordo>"
@@ -695,13 +691,6 @@ class Tools extends ToolsCommon
         );
 
         $request = Strings::clearXmlString($request, true);
-//        if ($tpEvento != 610110) {
-//            $lote = $dt->format('YmdHis').rand(0, 9);
-//            $request = "<envEventoCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
-//                . "<idLote>$lote</idLote>"
-//                . $request
-//                . "</envEventoCTe>";
-//        }
         $this->isValid($this->urlVersion, $request, 'eventoCTe');
         $this->lastRequest = $request;
         $parameters = ['cteDadosMsg' => $request];
@@ -872,46 +861,11 @@ class Tools extends ToolsCommon
                 $std->alias = 'CancCTe';
                 $std->desc = 'Cancelamento';
                 break;
-            case 110140:
+            case 110113:
                 //EPEC
                 //emissão em contingência EPEC
                 $std->alias = 'EPEC';
                 $std->desc = 'EPEC';
-                break;
-            case 111500:
-            case 111501:
-                //EPP
-                //Pedido de prorrogação
-                $std->alias = 'EPP';
-                $std->desc = 'Pedido de Prorrogacao';
-                break;
-            case 111502:
-            case 111503:
-                //ECPP
-                //Cancelamento do Pedido de prorrogação
-                $std->alias = 'ECPP';
-                $std->desc = 'Cancelamento de Pedido de Prorrogacao';
-                break;
-            case 210200:
-                //Confirmacao da Operacao
-                $std->alias = 'EvConfirma';
-                $std->desc = 'Confirmacao da Operacao';
-                break;
-            case 210210:
-                //Ciencia da Operacao
-                $std->alias = 'EvCiencia';
-                $std->desc = 'Ciencia da Operacao';
-                $std->tpAutor = 2;
-                break;
-            case 210220:
-                //Desconhecimento da Operacao
-                $std->alias = 'EvDesconh';
-                $std->desc = 'Desconhecimento da Operacao';
-                break;
-            case 210240:
-                //Operacao não Realizada
-                $std->alias = 'EvNaoRealizada';
-                $std->desc = 'Operacao nao Realizada';
                 break;
             case 610110:
                 //Serviço em desacordo
