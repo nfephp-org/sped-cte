@@ -1,4 +1,4 @@
-# SPED-CTE v4.0 (em desenvolvimento)
+# SPED-CTE v4.0
 
 [![Chat][ico-gitter]][link-gitter]
 
