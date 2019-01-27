@@ -972,7 +972,7 @@ REENTREGA; DEVOLUÇÃO; REFATURAMENTO; etc</xs:documentation>
 											<xs:documentation>Informar zeros não significativos</xs:documentation>
 										</xs:annotation>
 									</xs:element>
-									<xs:element name="IE">
+									<xs:element name="IE" minOccurs="0">
 										<xs:annotation>
 											<xs:documentation>Inscrição Estadual do Emitente</xs:documentation>
 										</xs:annotation>
