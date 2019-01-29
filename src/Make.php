@@ -755,8 +755,16 @@ class Make
 
             if ($this->infModal != '') {
                 $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
-                $this->dom->appChild($this->rodo, $this->veic, 'Falta tag "veic"');
-                $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
+                if ($this->veic != '') {
+                    $this->dom->appChild($this->rodo, $this->veic, 'Falta tag "veic"');
+                }
+                if ($this->rodo != '') {
+                    $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
+                }
+            }
+            
+            if ($this->infCteSub != '') {
+                $this->dom->appChild($this->infCTeNorm, $this->infCteSub, 'Falta tag "infCteSub"');
             }
         }
         
@@ -3701,6 +3709,33 @@ class Make
             $this->infCteSub,
             'retCteAnu',
             $std->retCteAnu,
+            false,
+            "$identificador  Chave de acesso do CT-e de Anulação"
+        );
+        return $this->infCteSub;
+    }
+    
+    /**
+     * CT-e OS de substituição
+     * @param type $std
+     * @return type
+     */
+    public function taginfCteSubOS($std)
+    {
+        $identificador = '#149 <infCteSub> - ';
+        $this->infCteSub = $this->dom->createElement('infCteSub');
+
+        $this->dom->addChild(
+            $this->infCteSub,
+            'chCte',
+            $std->chCte,
+            false,
+            "$identificador  Chave de acesso do CTe a ser substituído (original)"
+        );
+        $this->dom->addChild(
+            $this->infCteSub,
+            'refCteAnu',
+            $std->refCteAnu,
             false,
             "$identificador  Chave de acesso do CT-e de Anulação"
         );
