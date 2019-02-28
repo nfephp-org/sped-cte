@@ -4070,8 +4070,8 @@ class Make
         $this->infCteComp = $this->dom->createElement('infCteComp');
         $this->dom->addChild(
             $this->infCteComp,
-            'chave',
-            $std->chave,
+            'chCTe',
+            $std->chCTe,
             true,
             $identificador . ' Chave do CT-e complementado'
         );
