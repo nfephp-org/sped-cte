@@ -504,6 +504,12 @@ class Make
      * @var array
      */
     private $autXML = array();
+
+    /**
+     * Dados do Fretamento - CTe-OS
+     * @var
+     */
+    private $infFretamento;
     
     public function __construct()
     {
@@ -756,6 +762,7 @@ class Make
             if ($this->infModal != '') {
                 $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
                 $this->dom->appChild($this->rodo, $this->veic, 'Falta tag "veic"');
+                $this->dom->appChild($this->rodo, $this->infFretamento, 'Falta tag "infFretamento"');
                 $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
             }
         }
@@ -3762,7 +3769,7 @@ class Make
                     true,
                     $identificador . 'CNPJ do emitente'
                 );
-        } elseif ($CPF != '') {
+        } elseif ($std->CPF != '') {
             $this->dom->addChild(
                 $this->refNF,
                 'CPF',
@@ -3910,11 +3917,11 @@ class Make
                     true,
                     $identificador . 'CNPJ do proprietario'
                 );
-            } elseif ($CPF != '') {
+            } elseif ($std->CPF != '') {
                 $this->dom->addChild(
                     $this->prop[$p],
                     'CPF',
-                    $CPF,
+                    $std->CPF,
                     true,
                     $identificador . 'CPF do proprietario'
                 );
@@ -3995,7 +4002,7 @@ class Make
                     true,
                     $identificador . 'CNPJ do proprietario'
                 );
-            } elseif ($CPF != '') {
+            } elseif ($std->CPF != '') {
                 $this->dom->addChild(
                     $this->prop,
                     'CPF',
@@ -4056,6 +4063,28 @@ class Make
             $identificador . 'UF em que veículo está licenciado'
         );
         return $this->veic;
+    }
+
+    public function infFretamento($std)
+    {
+        $identificador = '#21 <infFretamento> - ';
+        $this->infFretamento = $this->dom->createElement('infFretamento');
+
+        $this->dom->addChild(
+            $this->infFretamento,
+            'tpFretamento',
+            $std->tpFretamento,
+            true,
+            $identificador . 'Tipo do Fretamento de Pessoas'
+        );
+        $this->dom->addChild(
+            $this->infFretamento,
+            'dhViagem',
+            $std->dhViagem,
+            false,
+            $identificador . 'Data e hora da viagem'
+        );
+        return $this->infFretamento;
     }
 
     /**
