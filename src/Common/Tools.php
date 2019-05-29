@@ -167,6 +167,10 @@ class Tools
     protected $availableVersions = [
         '3.00' => 'PL_CTe_300'
     ];
+    /**
+     * @var string
+     */
+    protected $typePerson = 'J';
 
     /**
      * Constructor
@@ -187,6 +191,7 @@ class Tools
         $this->version($this->config->versao);
         $this->setEnvironmentTimeZone($this->config->siglaUF);
         $this->certificate = $certificate;
+        $this->typePerson = $this->getTypeOfPersonFromCertificate();
         $this->setEnvironment($this->config->tpAmb);
         $this->contingency = new Contingency();
     }
@@ -200,7 +205,31 @@ class Tools
     {
         date_default_timezone_set(TimeZoneByUF::get($acronym));
     }
-    
+
+    /**
+     * Return J or F from existing type in ASN.1 certificate
+     * J - pessoa juridica (CNPJ)
+     * F - pessoa física (CPF)
+     * @return string
+     */
+    public function getTypeOfPersonFromCertificate()
+    {
+        $cnpj = $this->certificate->getCnpj();
+        $type = 'J';
+        if (substr($cnpj, 0, 1) === 'N') {
+            //não é CNPJ, então verificar se é CPF
+            $cpf = $this->certificate->getCpf();
+            if (substr($cpf, 0, 1) !== 'N') {
+                $type = 'F';
+            } else {
+                //não foi localizado nem CNPJ e nem CPF esse certificado não é usável
+                //throw new RuntimeException('Faltam elementos CNPJ/CPF no certificado digital.');
+                $type = '';
+            }
+        }
+        return $type;
+    }
+
     /**
      * Set application version
      * @param string $ver

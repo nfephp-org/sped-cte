@@ -231,9 +231,13 @@ class Tools extends ToolsCommon
             "<tpAmb>$tpAmb</tpAmb>" .
             "<xServ>INUTILIZAR</xServ>" .
             "<cUF>$this->urlcUF</cUF>" .
-            "<ano>$strAno</ano>" .
-            "<CNPJ>$cnpj</CNPJ>" .
-            "<mod>$this->modelo</mod>" .
+            "<ano>$strAno</ano>";
+        if ($this->typePerson === 'J') {
+            $msg .= "<CNPJ>$cnpj</CNPJ>";
+        } else {
+            $msg .= "<CPF>$cnpj</CPF>";
+        }
+        $msg .= "<mod>$this->modelo</mod>" .
             "<serie>$nSerie</serie>" .
             "<nCTIni>$nIni</nCTIni>" .
             "<nCTFin>$nFin</nCTFin>" .
@@ -365,6 +369,7 @@ class Tools extends ToolsCommon
             $this->tpAmb,
             true
         );
+        $cnpj = $this->config->cnpj;
         $cUF = UFList::getCodeByUF($this->config->siglaUF);
         $ultNSU = str_pad($ultNSU, 15, '0', STR_PAD_LEFT);
         $tagNSU = "<distNSU><ultNSU>$ultNSU</ultNSU></distNSU>";
@@ -375,8 +380,13 @@ class Tools extends ToolsCommon
         //monta a consulta
         $consulta = "<distDFeInt xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
             . "<tpAmb>".$this->tpAmb."</tpAmb>"
-            . "<cUFAutor>$cUF</cUFAutor>"
-            . "<CNPJ>".$this->config->cnpj."</CNPJ>$tagNSU</distDFeInt>";
+            . "<cUFAutor>$cUF</cUFAutor>";
+        if ($this->typePerson === 'J') {
+            $consulta .= "<CNPJ>$cnpj</CNPJ>";
+        } else {
+            $consulta .= "<CPF>$cnpj</CPF>";
+        }
+        $consulta .= "$tagNSU</distDFeInt>";
         //valida o xml da requisição
         $this->isValid($this->urlVersion, $consulta, 'distDFeInt');
         $this->lastRequest = $consulta;
@@ -664,13 +674,16 @@ class Tools extends ToolsCommon
         $sSeqEvento = str_pad($nSeqEvento, 2, "0", STR_PAD_LEFT);
         $eventId = "ID".$tpEvento.$chave.$sSeqEvento;
         $cOrgao = UFList::getCodeByUF($uf);
-
         $request = "<eventoCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
             . "<infEvento Id=\"$eventId\">"
             . "<cOrgao>$cOrgao</cOrgao>"
-            . "<tpAmb>$this->tpAmb</tpAmb>"
-            . "<CNPJ>$cnpj</CNPJ>"
-            . "<chCTe>$chave</chCTe>"
+            . "<tpAmb>$this->tpAmb</tpAmb>";
+        if ($this->typePerson === 'J') {
+            $request .= "<CNPJ>$cnpj</CNPJ>";
+        } else {
+            $request .= "<CPF>$cnpj</CPF>";
+        }
+        $request .= "<chCTe>$chave</chCTe>"
             . "<dhEvento>$dhEvento</dhEvento>"
             . "<tpEvento>$tpEvento</tpEvento>"
             . "<nSeqEvento>$nSeqEvento</nSeqEvento>"
@@ -718,11 +731,17 @@ class Tools extends ToolsCommon
         );
         $cUF = UFList::getCodeByUF($this->config->siglaUF);
         $tagChave = "<consChNFe><chNFe>$chave</chNFe></consChNFe>";
+        $cnpj = $this->config->cnpj;
         //monta a consulta
         $consulta = "<distDFeInt xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
             . "<tpAmb>".$this->tpAmb."</tpAmb>"
-            . "<cUFAutor>$cUF</cUFAutor>"
-            . "<CNPJ>".$this->config->cnpj."</CNPJ>$tagChave</distDFeInt>";
+            . "<cUFAutor>$cUF</cUFAutor>";
+        if ($this->typePerson === 'J') {
+            $consulta .= "<CNPJ>$cnpj</CNPJ>";
+        } else {
+            $consulta .= "<CPF>$cnpj</CPF>";
+        }
+        $consulta .= "$tagChave</distDFeInt>";
         //valida o xml da requisição
         $this->isValid($this->urlVersion, $consulta, 'distDFeInt');
         $this->lastRequest = $consulta;
