@@ -74,7 +74,7 @@
             <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='3.00'>https://cte.sefaz.mt.gov.br/ctews/services/CteRetRecepcao</CteRetRecepcao>
             <CteCancelamento method='CTeCancelamento' operation='CteCancelamento' version='3.00'>https://cte.sefaz.mt.gov.br/ctews/services/CteCancelamento</CteCancelamento>
             <CteInutilizacao method='CTeInutilizacao' operation='CteInutilizacao' version='3.00'>https://cte.sefaz.mt.gov.br/ctews/services/CteInutilizacao</CteInutilizacao>
-            <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsultaProtocolo' version='3.00'>https://cte.sefaz.mt.gov.br/ctews/services/CteConsulta</CteConsultaProtocolo>
+            <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsulta' version='3.00'>https://cte.sefaz.mt.gov.br/ctews/services/CteConsulta</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CteStatusServico' version='3.00'>https://cte.sefaz.mt.gov.br/ctews/services/CteStatusServico</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CteRecepcaoEvento' version='3.00'>https://cte.sefaz.mt.gov.br/ctews2/services/CteRecepcaoEvento</CteRecepcaoEvento>
         </producao>
@@ -87,7 +87,7 @@
             <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='3.00'>https://homologacao.cte.fazenda.pr.gov.br/cte/CteRetRecepcao?wsdl</CteRetRecepcao>
             <CteCancelamento method='CTeCancelamento' operation='CteCancelamento' version='3.00'>https://homologacao.cte.fazenda.pr.gov.br/cte/CteCancelamento?wsdl</CteCancelamento>
             <CteInutilizacao method='CTeInutilizacao' operation='CteInutilizacao' version='3.00'>https://homologacao.cte.fazenda.pr.gov.br/cte/CteInutilizacao?wsdl</CteInutilizacao>
-            <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsultaProtocolo' version='3.00'>https://homologacao.cte.fazenda.pr.gov.br/cte/CteConsulta?wsdl</CteConsultaProtocolo>
+            <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsulta' version='3.00'>https://homologacao.cte.fazenda.pr.gov.br/cte/CteConsulta?wsdl</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CteStatusServico' version='3.00'>https://homologacao.cte.fazenda.pr.gov.br/cte/CteStatusServico?wsdl</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CteRecepcaoEvento' version='3.00'>https://homologacao.cte.fazenda.pr.gov.br/cte/CteRecepcaoEvento?wsdl</CteRecepcaoEvento>
         </homologacao>
@@ -97,7 +97,7 @@
             <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='3.00'>https://cte.fazenda.pr.gov.br/cte/CteRetRecepcao?wsdl</CteRetRecepcao>
             <CteCancelamento method='CTeCancelamento' operation='CteCancelamento' version='3.00'>https://cte.fazenda.pr.gov.br/cte/CteCancelamento?wsdl</CteCancelamento>
             <CteInutilizacao method='CTeInutilizacao' operation='CteInutilizacao' version='3.00'>https://cte.fazenda.pr.gov.br/cte/CteInutilizacao?wsdl</CteInutilizacao>
-            <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsultaProtocolo' version='3.00'>https://cte.fazenda.pr.gov.br/cte/CteConsulta?wsdl</CteConsultaProtocolo>
+            <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsulta' version='3.00'>https://cte.fazenda.pr.gov.br/cte/CteConsulta?wsdl</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CteStatusServico' version='3.00'>https://cte.fazenda.pr.gov.br/cte/CteStatusServico?wsdl</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CteRecepcaoEvento' version='3.00'>https://cte.fazenda.pr.gov.br/cte/CteRecepcaoEvento?wsdl</CteRecepcaoEvento>
         </producao>
