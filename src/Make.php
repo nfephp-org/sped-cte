@@ -456,6 +456,11 @@ class Make
      */
     private $aereo = '';
     /**
+     * Informações do modal Aquaviario
+     * @var \DOMNode
+     */
+    private $aquav = '';
+    /**
      * Informações do modal Aéreo -> Dados da Carga
      * @var \DOMNode
      */
@@ -689,6 +694,8 @@ class Make
                 }
             } elseif ($this->modal=='02') {
                 $this->dom->appChild($this->infModal, $this->aereo, 'Falta tag "aereo"');
+            } elseif ($this->modal=='03') {
+                $this->dom->appChild($this->infModal, $this->aquav, 'Falta tag "aquav"');
             } else {
                 throw new Exception('Modal não informado ou não suportado.');
             }
@@ -3580,6 +3587,70 @@ class Make
         );
 
         return $this->rodo;
+    }
+
+    /**
+     * Leiaute - Aquaviario
+     * Gera as tags para o elemento: "aquav" (informações do modal Aquaviario)
+     * @author Anderson Minuto Consoni Vaz
+     * #1
+     * Nivel: 0
+     * @return DOMElement|\DOMNode
+     */
+    public function tagaquav($std)
+    {
+        $identificador = '#1 <aquav> - ';
+        $this->aquav = $this->dom->createElement('aquav');
+        $this->dom->addChild(
+            $this->aquav,
+            'vPrest',
+            $std->vPrest,
+            true,
+            $identificador . 'vPrest'
+        );
+        $this->dom->addChild(
+            $this->aquav,
+            'vAFRMM',
+            $std->vAFRMM,
+            true,
+            $identificador . 'vAFRMM'
+        );
+        $this->dom->addChild(
+            $this->aquav,
+            'xNavio',
+            $std->xNavio,
+            true,
+            $identificador . 'xNavio'
+        );
+        $this->dom->addChild(
+            $this->aquav,
+            'nViag',
+            $std->nViag,
+            true,
+            $identificador . 'nViag'
+        );
+        $this->dom->addChild(
+            $this->aquav,
+            'direc',
+            $std->direc,
+            true,
+            $identificador . 'direc'
+        );
+        $this->dom->addChild(
+            $this->aquav,
+            'irin',
+            $std->irin,
+            true,
+            $identificador . 'irin'
+        );
+        $this->dom->addChild(
+            $this->aquav,
+            'tpNav',
+            $std->tpNav,
+            true,
+            $identificador . 'tpNav'
+        );
+        return $this->aquav;
     }
 
     /**
