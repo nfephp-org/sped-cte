@@ -56,7 +56,7 @@ class Tools extends ToolsCommon
             //pois serão alterados
             foreach ($aXml as $doc) {
                 //corrigir o xml para o tipo de contigência setado
-                $xmls[] = $this->correctNFeForContingencyMode($doc);
+                $xmls[] = $this->correctCTeForContingencyMode($doc);
             }
             $aXml = $xmls;
         }
@@ -564,7 +564,7 @@ class Tools extends ToolsCommon
         if ($this->contingency->type !== 'EPEC') {
             throw new \RuntimeException('A contingência EPEC deve estar ativada.');
         }
-        $xml = $this->correctNFeForContingencyMode($xml);
+        $xml = $this->correctCTeForContingencyMode($xml);
         $dom = new \DOMDocument('1.0', 'UTF-8');
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = false;
