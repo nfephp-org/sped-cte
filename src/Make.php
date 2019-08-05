@@ -3730,6 +3730,20 @@ class Make
         );
         return $this->infCteComp;
     }
+    
+    public function taginfCTeOsComp($std)
+    {
+        $identificador = '#410 <infCteComp> - ';
+        $this->infCteComp = $this->dom->createElement('infCteComp');
+        $this->dom->addChild(
+            $this->infCteComp,
+            'chCTe',
+            $std->chave,
+            true,
+            $identificador . ' Chave do CT-e complementado'
+        );
+        return $this->infCteComp;
+    }
 
     /**
      * Gera as tags para o elemento: "infCteAnu" (Detalhamento do CT-e de Anulação)
