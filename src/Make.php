@@ -670,6 +670,11 @@ class Make
             $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
             if ($this->modal == '01') {
                 $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
+                if ($this->rodo) {
+                    foreach ($this->occ as $occ) {
+                        $this->dom->appChild($this->rodo, $occ, 'Falta tag "occ"');
+                    }
+                }
             } elseif ($this->modal == '02') {
                 $this->dom->appChild($this->infModal, $this->aereo, 'Falta tag "aereo"');
             } else {
@@ -2192,6 +2197,83 @@ class Make
             $identificador . 'Endereço de email'
         );
         return $this->exped;
+    }
+
+ /**
+     * Gera as tags para o elemento: "occ" (Dados da ordem de coleta)
+     * #3
+     * Nível: 1/2
+     * Os parâmetros para esta função são todos os elementos da tag "occ"sss
+     *
+     * @return \DOMElement
+     */
+    public function tagocc($std)
+    {
+        $identificador = '#3 <occ> - ';
+        $occ = $this->dom->createElement('occ');
+        $this->dom->addChild(
+            $occ,
+            'serie',
+            $std->serie,
+            false,
+            $identificador . 'Série da OCC'
+        );
+        $this->dom->addChild(
+            $occ,
+            'nOcc',
+            $std->nOcc,
+            true,
+            $identificador . 'Número da Ordem de coleta'
+        );
+        $this->dom->addChild(
+            $occ,
+            'dEmi',
+            $std->dEmi,
+            true,
+            $identificador . 'Data de emissão da ordem de coleta'
+        );
+        //emitente
+        $identificador = '#7 <emiOcc> - ';
+        $emiOcc = $this->dom->createElement('emiOcc');
+        $this->dom->addChild(
+            $emiOcc,
+            'CNPJ',
+            $std->CNPJ,
+            true,
+            $identificador . 'Número do CNPJ'
+        );
+        $this->dom->addChild(
+            $emiOcc,
+            'cInt',
+            $std->cInt,
+            false,
+            $identificador . 'Código interno de uso da transportadora'
+        );
+        $this->dom->addChild(
+            $emiOcc,
+            'IE',
+            $std->IE,
+            true,
+            $identificador . 'Inscrição Estadual'
+        );
+        $this->dom->addChild(
+            $emiOcc,
+            'UF',
+            $std->UF,
+            true,
+            $identificador . 'Sigla da UF'
+        );
+        $this->dom->addChild(
+            $emiOcc,
+            'fone',
+            $std->fone,
+            false,
+            $identificador . 'Telefone'
+        );
+
+        $this->dom->appChild($occ, $emiOcc, 'Falta tag "emiOcc"');
+        $this->occ[] = $occ;
+        return $occ;
     }
 
     /**
