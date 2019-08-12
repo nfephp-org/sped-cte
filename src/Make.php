@@ -654,11 +654,11 @@ class Make
             $this->dom->appChild($this->infCTeNorm, $this->infDoc, 'Falta tag "infCTeNorm"');
             if ($this->idDocAntEle != []) { //Caso tenha CT-es Anteriores viculados
                 $this->dom->appChild($this->infCTeNorm, $this->docAnt, 'Falta tag "docAnt"');
-                foreach ($this->emiDocAnt as $emiDocAnt) {
+                foreach ($this->emiDocAnt as $indice => $emiDocAnt) {
                     $this->dom->appChild($this->docAnt, $emiDocAnt, 'Falta tag "emiDocAnt"');
-                    $this->dom->appChild($emiDocAnt, $this->idDocAnt, 'Falta tag "idDocAnt"');
-                    foreach ($this->idDocAntEle as $idDocAntEle) {
-                        $this->dom->appChild($this->idDocAnt, $idDocAntEle, 'Falta tag "emiDocAnt"');
+                    $this->dom->appChild($emiDocAnt, $this->idDocAnt[$indice], 'Falta tag "idDocAnt"');
+                    foreach ($this->idDocAntEle[$indice] as $idDocAntEle) {
+                        $this->dom->appChild($this->idDocAnt[$indice], $idDocAntEle, 'Falta tag "emiDocAnt"');
                     }
                 }
             }
@@ -3184,7 +3184,7 @@ class Make
      */
     public function tagidDocAnt()
     {
-        $this->idDocAnt = $this->dom->createElement('idDocAnt');
+        $this->idDocAnt[count($this->emiDocAnt) - 1] = $this->dom->createElement('idDocAnt');
         return $this->idDocAnt;
     }
 
@@ -3362,12 +3362,13 @@ class Make
     public function tagidDocAntEle($std)
     {
         $identificador = '#358 <idDocAntEle> - ';
-        $this->idDocAntEle[] = $this->dom->createElement('idDocAntEle');
-        $posicao = (int) count($this->idDocAntEle) - 1;
-        $this->dom->addChild($this->idDocAntEle[$posicao], 'chCTe', $std->chCTe, true, $identificador . 'Chave de '
+
+        $this->idDocAntEle[count($this->emiDocAnt) - 1][] = $this->dom->createElement('idDocAntEle');
+        $posicao = (int) count($this->idDocAntEle[count($this->emiDocAnt) - 1]) - 1;
+        $this->dom->addChild($this->idDocAntEle[count($this->emiDocAnt) - 1][$posicao], 'chCTe', $std->chCTe, true, $identificador . 'Chave de '
             . 'Acesso do CT-e');
 
-        return $this->idDocAntEle[$posicao];
+        return $this->idDocAntEle[count($this->emiDocAnt) - 1][$posicao];
     }
 
 
