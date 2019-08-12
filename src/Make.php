@@ -652,13 +652,20 @@ class Make
                 $this->dom->appChild($this->infDoc, $infOutros, 'Falta tag "infOutros"');
             }
             $this->dom->appChild($this->infCTeNorm, $this->infDoc, 'Falta tag "infCTeNorm"');
-            if ($this->idDocAntEle != []) { //Caso tenha CT-es Anteriores viculados
+            if ($this->idDocAntEle != [] || $this->idDocAntPap != []) { //Caso tenha CT-es Anteriores viculados
                 $this->dom->appChild($this->infCTeNorm, $this->docAnt, 'Falta tag "docAnt"');
                 foreach ($this->emiDocAnt as $indice => $emiDocAnt) {
                     $this->dom->appChild($this->docAnt, $emiDocAnt, 'Falta tag "emiDocAnt"');
                     $this->dom->appChild($emiDocAnt, $this->idDocAnt[$indice], 'Falta tag "idDocAnt"');
-                    foreach ($this->idDocAntEle[$indice] as $idDocAntEle) {
-                        $this->dom->appChild($this->idDocAnt[$indice], $idDocAntEle, 'Falta tag "emiDocAnt"');
+                    if (array_key_exists($indice, $this->idDocAntEle)) {
+                        foreach ($this->idDocAntEle[$indice] as $idDocAntEle) {
+                            $this->dom->appChild($this->idDocAnt[$indice], $idDocAntEle, 'Falta tag "emiDocAnt"');
+                        }
+                    }
+                    if (array_key_exists($indice, $this->idDocAntPap)) {
+                        foreach ($this->idDocAntPap[$indice] as $idDocAntPap) {
+                            $this->dom->appChild($this->idDocAnt[$indice], $idDocAntPap, 'Falta tag "idDocAntEle"');
+                        }
                     }
                 }
             }
@@ -3369,6 +3376,27 @@ class Make
             . 'Acesso do CT-e');
 
         return $this->idDocAntEle[count($this->emiDocAnt) - 1][$posicao];
+    }
+
+    /**
+     * Gera as tags para o elemento: "idDocAntEle" (Informações dos CT-es Anteriores)
+     * #348
+     * Nível: 4
+     * @return mixed
+     */
+    public function tagidDocAntPap($std)
+    {
+        $identificador = '#358 <idDocAntPap> - ';
+
+        $this->idDocAntPap[count($this->emiDocAnt) - 1][] = $this->dom->createElement('idDocAntPap');
+        $posicao = (int) count($this->idDocAntPap[count($this->emiDocAnt) - 1]) - 1;
+
+        $this->dom->addChild($this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao], 'tpDoc', $std->tpDoc, true, $identificador . 'Tipo do Documento de Transporte Anterior');
+        $this->dom->addChild($this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao], 'serie', $std->serie, true, $identificador . 'Série do Documento Fiscal');
+        $this->dom->addChild($this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao], 'subser', $std->subser, false, $identificador . 'Série do Documento Fiscal');
+        $this->dom->addChild($this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao], 'nDoc', $std->nDoc, true, $identificador . 'Número do Documento Fiscal');
+        $this->dom->addChild($this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao], 'dEmi', $std->dEmi, true, $identificador . 'Data de emissão (AAAA-MM-DD)');
+        return $this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao];
     }
 
 
