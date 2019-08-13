@@ -3174,8 +3174,13 @@ class Make
             Unidade de Medida');
         $this->dom->addChild($this->infQ[$posicao], 'tpMed', $std->tpMed, true, $identificador . 'Tipo da Medida');
         $this->dom->addChild($this->infQ[$posicao], 'qCarga', $std->qCarga, true, $identificador . 'Quantidade');
-        $this->dom->addChild($this->infQ[$posicao], 'vCargaAverb', $std->vCargaAverb, false, $identificador . 'Valor da Carga para efeito de averbação');
-
+        $this->dom->addChild(
+            $this->infQ[$posicao],
+            'vCargaAverb',
+            $std->vCargaAverb,
+            false,
+            $identificador . 'Valor da Carga para efeito de averbação'
+        );
         return $this->infQ[$posicao];
     }
 
@@ -3381,7 +3386,13 @@ class Make
         $identificador = '#358 <idDocAntEle> - ';
         $this->idDocAntEle[count($this->emiDocAnt) - 1][] = $this->dom->createElement('idDocAntEle');
         $posicao = (int)count($this->idDocAntEle[count($this->emiDocAnt) - 1]) - 1;
-        $this->dom->addChild($this->idDocAntEle[count($this->emiDocAnt) - 1][$posicao], 'chCTe', $std->chCTe, true, $identificador . 'Chave de Acesso do CT-e');
+        $this->dom->addChild(
+            $this->idDocAntEle[count($this->emiDocAnt) - 1][$posicao],
+            'chCTe',
+            $std->chCTe,
+            true,
+            $identificador . 'Chave de Acesso do CT-e'
+        );
         return $this->idDocAntEle[count($this->emiDocAnt) - 1][$posicao];
     }
 
@@ -3419,10 +3430,34 @@ class Make
         $this->idDocAntPap[count($this->emiDocAnt) - 1][] = $this->dom->createElement('idDocAntPap');
         $posicao = (int)count($this->idDocAntPap[count($this->emiDocAnt) - 1]) - 1;
 
-        $this->dom->addChild($this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao], 'tpDoc', $std->tpDoc, true, $identificador . 'Tipo do Documento de Transporte Anterior');
-        $this->dom->addChild($this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao], 'serie', $std->serie, true, $identificador . 'Série do Documento Fiscal');
-        $this->dom->addChild($this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao], 'subser', $std->subser, false, $identificador . 'Série do Documento Fiscal');
-        $this->dom->addChild($this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao], 'nDoc', $std->nDoc, true, $identificador . 'Número do Documento Fiscal');
+        $this->dom->addChild(
+            $this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao],
+            'tpDoc',
+            $std->tpDoc,
+            true,
+            $identificador . 'Tipo do Documento de Transporte Anterior'
+        );
+        $this->dom->addChild(
+            $this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao],
+            'serie',
+            $std->serie,
+            true, 
+            $identificador . 'Série do Documento Fiscal'
+        );
+        $this->dom->addChild(
+            $this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao],
+            'subser',
+            $std->subser,
+            false,
+            $identificador . 'Série do Documento Fiscal'
+        );
+        $this->dom->addChild(
+            $this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao],
+            'nDoc',
+            $std->nDoc,
+            true,
+            $identificador . 'Número do Documento Fiscal'
+        );
         $this->dom->addChild($this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao], 'dEmi', $std->dEmi, true, $identificador . 'Data de emissão (AAAA-MM-DD)');
         return $this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao];
     }

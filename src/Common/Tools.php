@@ -183,8 +183,8 @@ class Tools
     {
         $this->config = json_decode($configJson);
         $this->pathwsfiles = realpath(
-                __DIR__ . '/../../storage'
-            ) . '/';
+            __DIR__ . '/../../storage'
+        ) . '/';
         $this->version($this->config->versao);
         $this->setEnvironmentTimeZone($this->config->siglaUF);
         $this->certificate = $certificate;
@@ -262,8 +262,8 @@ class Tools
             $this->versao = $version;
             $this->config->schemes = $this->availableVersions[$version];
             $this->pathschemes = realpath(
-                    __DIR__ . '/../../schemes/' . $this->config->schemes
-                ) . '/';
+                __DIR__ . '/../../schemes/' . $this->config->schemes
+            ) . '/';
         }
         return $this->versao;
     }
@@ -440,8 +440,7 @@ class Tools
         $uf,
         $tpAmb,
         $ignoreContingency = false
-    )
-    {
+    ) {
         $ambiente = $tpAmb == 1 ? "producao" : "homologacao";
         $webs = new Webservices($this->getXmlUrlPath());
         $sigla = $uf;
