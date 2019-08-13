@@ -636,15 +636,14 @@ class Make
         if ($this->infCteAnu != '') { // Caso seja um CTe tipo anulação
             $this->dom->appChild($this->infCte, $this->infCteAnu, 'Falta tag "infCteAnu"');
         }
+        if ($this->infCteSub != '') { // Caso seja um CTe tipo anulação
+            $this->dom->appChild($this->infCte, $this->infCteSub, 'Falta tag "infCteSub"');
+        }
         if ($this->infCTeNorm != '') { // Caso seja um CTe tipo normal
             $this->dom->appChild($this->infCte, $this->infCTeNorm, 'Falta tag "infCTeNorm"');
             $this->dom->appChild($this->infCTeNorm, $this->infCarga, 'Falta tag "infCarga"');
             foreach ($this->infQ as $infQ) {
-                if (end($this->infQ) == $infQ) {
-                    $this->infCarga->insertBefore($infQ, $this->infCarga->getElementsByTagName("vCargaAverb")->item(0));
-                } else {
-                    $this->dom->appChild($this->infCarga, $infQ, 'Falta tag "infQ"');
-                }
+                $this->dom->appChild($this->infCarga, $infQ, 'Falta tag "infQ"');
             }
             foreach ($this->infNF as $infNF) {
                 $this->dom->appChild($this->infDoc, $infNF, 'Falta tag "infNF"');
@@ -679,6 +678,11 @@ class Make
             $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
             if ($this->modal == '01') {
                 $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
+                if ($this->rodo) {
+                    foreach ($this->occ as $occ) {
+                        $this->dom->appChild($this->rodo, $occ, 'Falta tag "occ"');
+                    }
+                }
             } elseif ($this->modal == '02') {
                 $this->dom->appChild($this->infModal, $this->aereo, 'Falta tag "aereo"');
             } else {
@@ -704,6 +708,86 @@ class Make
         $this->xml = $this->dom->saveXML();
         return true;
     }
+
+     /**
+     * Gera as tags para o elemento: "occ" (ordem de coletas)
+     * #3
+     * Nível:1
+     * Os parâmetros para esta função são todos os elementos da tag "occ" do
+     * tipo elemento (Ele = E|CE|A) e nível 1
+     *
+     * @return \DOMElement
+     */
+
+    public function tagocc($std)
+    {
+        $identificador = '#3 <occ> - ';
+        $occ = $this->dom->createElement('occ');
+        $this->dom->addChild(
+            $occ,
+            'serie',
+            $std->serie,
+            false,
+            $identificador . 'Série da OCC'
+        );
+        $this->dom->addChild(
+            $occ,
+            'nOcc',
+            $std->nOcc,
+            true,
+            $identificador . 'Número da Ordem de coleta'
+        );
+        $this->dom->addChild(
+            $occ,
+            'dEmi',
+            $std->dEmi,
+            true,
+            $identificador . 'Data de emissão da ordem de coleta'
+        );
+        //emitente
+        $identificador = '#7 <emiOcc> - ';
+        $emiOcc = $this->dom->createElement('emiOcc');
+        $this->dom->addChild(
+            $emiOcc,
+            'CNPJ',
+            $std->CNPJ,
+            true,
+            $identificador . 'Número do CNPJ'
+        );
+        $this->dom->addChild(
+            $emiOcc,
+            'cInt',
+            $std->cInt,
+            false,
+            $identificador . 'Código interno de uso da transportadora'
+        );
+        $this->dom->addChild(
+            $emiOcc,
+            'IE',
+            $std->IE,
+            true,
+            $identificador . 'Inscrição Estadual'
+        );
+        $this->dom->addChild(
+            $emiOcc,
+            'UF',
+            $std->UF,
+            true,
+            $identificador . 'Sigla da UF'
+        );
+        $this->dom->addChild(
+            $emiOcc,
+            'fone',
+            $std->fone,
+            false,
+            $identificador . 'Telefone'
+        );
+
+        $this->dom->appChild($occ, $emiOcc, 'Falta tag "emiOcc"');
+        $this->occ[] = $occ;
+        return $occ;
+    }
+
 
     /**
      * Monta o arquivo XML usando as tag's já preenchidas
@@ -3035,15 +3119,6 @@ class Make
             false,
             $identificador . 'Outras Caract. da Carga'
         );
-        $this->dom->addChild(
-            $this->infCarga,
-            'vCargaAverb',
-            $std->vCargaAverb,
-            false,
-            $identificador . 'Valor da Carga para
-            efeito de averbação'
-        );
-
         return $this->infCarga;
     }
 
@@ -3092,6 +3167,7 @@ class Make
             Unidade de Medida');
         $this->dom->addChild($this->infQ[$posicao], 'tpMed', $std->tpMed, true, $identificador . 'Tipo da Medida');
         $this->dom->addChild($this->infQ[$posicao], 'qCarga', $std->qCarga, true, $identificador . 'Quantidade');
+        $this->dom->addChild($this->infQ[$posicao], 'vCargaAverb', $std->vCargaAverb, false, $identificador . 'Valor da Carga para efeito de averbação');
 
         return $this->infQ[$posicao];
     }
@@ -3296,12 +3372,9 @@ class Make
     public function tagidDocAntEle($std)
     {
         $identificador = '#358 <idDocAntEle> - ';
-
         $this->idDocAntEle[count($this->emiDocAnt) - 1][] = $this->dom->createElement('idDocAntEle');
         $posicao = (int) count($this->idDocAntEle[count($this->emiDocAnt) - 1]) - 1;
-        $this->dom->addChild($this->idDocAntEle[count($this->emiDocAnt) - 1][$posicao], 'chCTe', $std->chCTe, true, $identificador . 'Chave de '
-            . 'Acesso do CT-e');
-
+        $this->dom->addChild($this->idDocAntEle[count($this->emiDocAnt) - 1][$posicao], 'chCTe', $std->chCTe, true, $identificador . 'Chave de . 'Acesso do CT-e');
         return $this->idDocAntEle[count($this->emiDocAnt) - 1][$posicao];
     }
 
