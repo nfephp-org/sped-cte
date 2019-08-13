@@ -17,7 +17,6 @@ namespace NFePHP\CTe\Common;
 
 use DOMDocument;
 use InvalidArgumentException;
-use RuntimeException;
 use NFePHP\Common\Certificate;
 use NFePHP\Common\Signer;
 use NFePHP\Common\Soap\SoapCurl;
@@ -27,8 +26,10 @@ use NFePHP\Common\TimeZoneByUF;
 use NFePHP\Common\UFList;
 use NFePHP\Common\Validator;
 use NFePHP\CTe\Factories\Contingency;
+use NFePHP\CTe\Factories\ContingencyCTe;
 use NFePHP\CTe\Factories\Header;
 use NFePHP\CTe\Factories\QRCode;
+use RuntimeException;
 
 class Tools
 {
@@ -96,7 +97,7 @@ class Tools
      * Canonical conversion options
      * @var array
      */
-    protected $canonical = [true,false,null,null];
+    protected $canonical = [true, false, null, null];
     /**
      * Model of CTe 57 or 67
      * @var int
@@ -165,7 +166,7 @@ class Tools
      * @var array
      */
     protected $availableVersions = [
-        '3.00' => 'PL_CTe_300'
+        '3.00' => 'PL_CTe_300a'
     ];
 
     /**
@@ -183,14 +184,14 @@ class Tools
         $this->config = json_decode($configJson);
         $this->pathwsfiles = realpath(
             __DIR__ . '/../../storage'
-        ).'/';
+        ) . '/';
         $this->version($this->config->versao);
         $this->setEnvironmentTimeZone($this->config->siglaUF);
         $this->certificate = $certificate;
         $this->setEnvironment($this->config->tpAmb);
         $this->contingency = new Contingency();
     }
-    
+
     /**
      * Sets environment time zone
      * @param string $acronym (ou seja a sigla do estado)
@@ -200,7 +201,7 @@ class Tools
     {
         date_default_timezone_set(TimeZoneByUF::get($acronym));
     }
-    
+
     /**
      * Set application version
      * @param string $ver
@@ -222,7 +223,7 @@ class Tools
         $this->soap = $soap;
         $this->soap->loadCertificate($this->certificate);
     }
-    
+
     /**
      * Set OPENSSL Algorithm using OPENSSL constants
      * @param int $algorithm
@@ -245,7 +246,7 @@ class Tools
         }
         return $this->modelo;
     }
-    
+
     /**
      * Set or get parameter layout version
      * @param string $version
@@ -261,12 +262,12 @@ class Tools
             $this->versao = $version;
             $this->config->schemes = $this->availableVersions[$version];
             $this->pathschemes = realpath(
-                __DIR__ . '/../../schemes/'. $this->config->schemes
-            ).'/';
+                __DIR__ . '/../../schemes/' . $this->config->schemes
+            ) . '/';
         }
         return $this->versao;
     }
-    
+
     /**
      * Recover cUF number from state acronym
      * @param string $acronym Sigla do estado
@@ -276,7 +277,7 @@ class Tools
     {
         return UFlist::getCodeByUF($acronym);
     }
-    
+
     /**
      * Recover state acronym from cUF number
      * @param int $cUF
@@ -286,7 +287,7 @@ class Tools
     {
         return UFlist::getUFByCode($cUF);
     }
-    
+
     /**
      * Validate cUF from the key content and returns the state acronym
      * @param string $chave
@@ -303,10 +304,10 @@ class Tools
         }
         return $uf;
     }
-    
+
     /**
      * Sign CTe
-     * @param  string  $xml CTe xml content
+     * @param  string $xml CTe xml content
      * @return string singed CTe xml
      * @throws RuntimeException
      */
@@ -332,23 +333,27 @@ class Tools
         if ($modelo == 67) {
             $method = 'cteOS';
         }
+        $isInfCTeSupl = !empty($dom->getElementsByTagName('infCTeSupl')->item(0));
+        if (!$isInfCTeSupl) {
+            $signed = $this->addQRCode($dom);
+        }
         $this->isValid($this->versao, $signed, $method);
         return $signed;
     }
-    
+
     /**
      * @todo
      * Corret NFe fields when in contingency mode is set
-     * @param string $xml NFe xml content
+     * @param string $xml CTe xml content
      * @return string
      */
-    protected function correctNFeForContingencyMode($xml)
+    protected function correctCTeForContingencyMode($xml)
     {
         if ($this->contingency->type == '') {
             return $xml;
         }
-        $xml = ContingencyNFe::adjust($xml, $this->contingency);
-        return $this->signNFe($xml);
+        $xml = ContingencyCTe::adjust($xml, $this->contingency);
+        return $this->signCTe($xml);
     }
 
     /**
@@ -362,7 +367,7 @@ class Tools
      */
     protected function isValid($version, $body, $method)
     {
-        $schema = $this->pathschemes.$method."_v$version.xsd";
+        $schema = $this->pathschemes . $method . "_v$version.xsd";
         if (!is_file($schema)) {
             return true;
         }
@@ -371,7 +376,7 @@ class Tools
             $schema
         );
     }
-    
+
     /**
      * Verifies the existence of the service
      * @param string $service
@@ -380,10 +385,10 @@ class Tools
     protected function checkContingencyForWebServices($service)
     {
         $permit = [
-            55 => ['SVCAN', 'SVCRS', 'EPEC', 'FSDA'],
-            65 => ['FSDA', 'EPEC', 'OFFLINE']
+            57 => ['SVSP', 'SVRS'],
+            67 => ['SVSP', 'SVRS']
         ];
-        
+
         $type = $this->contingency->type;
         $mod = $this->modelo;
         if (!empty($type)) {
@@ -394,22 +399,8 @@ class Tools
                 );
             }
         }
-        
-        //se a contingencia é OFFLINE ou FSDA nenhum servidor está disponivel
-        //se a contigencia EPEC está ativa apenas o envio de Lote está ativo,
-        //então gerar um RunTimeException
-        if ($type == 'FSDA'
-            || $type == 'OFFLINE'
-            || ($type == 'EPEC' && $service != 'RecepcaoEvento')
-        ) {
-            throw new RuntimeException(
-                "Quando operando em modo de contingência ["
-                . $this->contingency->type
-                . "], este serviço [$service] não está disponível."
-            );
-        }
     }
-    
+
     /**
      * Alter environment from "homologacao" to "producao" and vice-versa
      * @param int $tpAmb
@@ -422,20 +413,20 @@ class Tools
             $this->ambiente = ($tpAmb == 1) ? 'producao' : 'homologacao';
         }
     }
-    
+
     /**
      * Set option for canonical transformation see C14n
      * @param array $opt
      * @return array
      */
-    public function canonicalOptions($opt = [true,false,null,null])
+    public function canonicalOptions($opt = [true, false, null, null])
     {
         if (!empty($opt) && is_array($opt)) {
             $this->canonical = $opt;
         }
         return $this->canonical;
     }
-    
+
     /**
      * Assembles all the necessary parameters for soap communication
      * @param string $service
@@ -456,7 +447,7 @@ class Tools
         if (!$ignoreContingency) {
             $contType = $this->contingency->type;
             if (!empty($contType)
-                && ($contType == 'SVCRS' || $contType == 'SVCAN')
+                && ($contType == 'SVRS' || $contType == 'SVSP')
             ) {
                 $sigla = $contType;
             }
@@ -473,13 +464,13 @@ class Tools
                 "Este serviço [$service] não está disponivel para esta "
                 . "unidade da federação [$uf] ou para este modelo de Nota ["
                 . $this->modelo
-                ."]."
+                . "]."
             );
         }
         //recuperação do cUF
         $this->urlcUF = $this->getcUF($uf);
         if ($this->urlcUF > 91) {
-            //foi solicitado dado de SVCRS ou SVCAN
+            //foi solicitado dado de SVRS ou SVSP
             $this->urlcUF = $this->getcUF($this->config->siglaUF);
         }
         //recuperação da versão
@@ -514,7 +505,7 @@ class Tools
             ['cUF' => $this->urlcUF, 'versaoDados' => $this->urlVersion]
         );
     }
-    
+
     /**
      * Send request message to webservice
      * @param array $parameters
@@ -524,7 +515,7 @@ class Tools
     protected function sendRequest($request, array $parameters = [])
     {
         $this->checkSoap();
-        return (string) $this->soap->send(
+        return (string)$this->soap->send(
             $this->urlService,
             $this->urlMethod,
             $this->urlAction,
@@ -535,7 +526,7 @@ class Tools
             $this->objHeader
         );
     }
-    
+
     /**
      * Recover path to xml data base with list of soap services
      * @return string
@@ -544,13 +535,13 @@ class Tools
     {
         $file = $this->pathwsfiles
             . DIRECTORY_SEPARATOR
-            . "wscte_".$this->versao."_mod57.xml";
-        if (! file_exists($file)) {
+            . "wscte_" . $this->versao . "_mod57.xml";
+        if (!file_exists($file)) {
             return '';
         }
         return file_get_contents($file);
     }
-    
+
     /**
      * Add QRCode Tag to signed XML from a NFCe
      * @param DOMDocument $dom
@@ -558,49 +549,12 @@ class Tools
      */
     protected function addQRCode(DOMDocument $dom)
     {
-        $memmod = $this->modelo;
-        $this->modelo = 65;
-        $uf = UFList::getUFByCode(
-            $dom->getElementsByTagName('cUF')->item(0)->nodeValue
-        );
-        $this->servico(
-            'NfeConsultaQR',
-            $uf,
-            $dom->getElementsByTagName('tpAmb')->item(0)->nodeValue
-        );
         $signed = QRCode::putQRTag(
-            $dom,
-            $this->config->CSC,
-            $this->config->CSCid,
-            $this->urlVersion,
-            $this->urlService,
-            $this->getURIConsultaNFCe($uf)
+            $dom
         );
-        $this->modelo = $memmod;
         return Strings::clearXmlString($signed);
     }
 
-    /**
-     * Get URI for search NFCe by chave
-     * NOTE: exists only in 4.00 layout
-     * @param string $uf
-     * @return string
-     */
-    protected function getURIConsultaNFCe($uf)
-    {
-        if ($this->versao < '4.00') {
-            return '';
-        }
-        //existe no XML apenas para layout >= 4.x
-        //os URI estão em storage/uri_consulta_nfce.json
-        $std = json_decode(
-            file_get_contents(
-                $this->pathwsfiles.'uri_consulta_nfce.json'
-            )
-        );
-        return $std->$uf;
-    }
-    
     /**
      * Verify if SOAP class is loaded, if not, force load SoapCurl
      */

@@ -20,14 +20,11 @@ use NFePHP\Common\Strings;
 
 class Contingency
 {
-    
-    const SVCAN = 'SVCAN';
-    const SVCRS = 'SVCRS';
-    const OFFLINE = 'OFFLINE';
-    const EPEC = 'EPEC';
-    const FSDA = 'FS-DA';
-    
-    
+
+    const SVSP = 'SVSP';
+    const SVRS = 'SVRS';
+
+
     /**
      * @var \stdClass
      */
@@ -60,7 +57,7 @@ class Contingency
             $this->load($contingency);
         }
     }
-    
+
     /**
      * Load json string with contingency configurations
      * @param string $contingency
@@ -74,7 +71,7 @@ class Contingency
         $this->motive = $this->config->motive;
         $this->tpEmis = $this->config->tpEmis;
     }
-    
+
     /**
      * Create a object with contingency data
      * @param string $acronym Sigla do estado
@@ -86,43 +83,43 @@ class Contingency
     {
         $dt = new \DateTime('now');
         $list = array(
-            'AC'=>'SVCAN',
-            'AL'=>'SVCAN',
-            'AM'=>'SVCAN',
-            'AP'=>'SVCRS',
-            'BA'=>'SVCRS',
-            'CE'=>'SVCRS',
-            'DF'=>'SVCAN',
-            'ES'=>'SVCRS',
-            'GO'=>'SVCRS',
-            'MA'=>'SVCRS',
-            'MG'=>'SVCAN',
-            'MS'=>'SVCRS',
-            'MT'=>'SVCRS',
-            'PA'=>'SVCRS',
-            'PB'=>'SVCAN',
-            'PE'=>'SVCRS',
-            'PI'=>'SVCRS',
-            'PR'=>'SVCRS',
-            'RJ'=>'SVCAN',
-            'RN'=>'SVCRS',
-            'RO'=>'SVCAN',
-            'RR'=>'SVCAN',
-            'RS'=>'SVCAN',
-            'SC'=>'SVCAN',
-            'SE'=>'SVCAN',
-            'SP'=>'SVCAN',
-            'TO'=>'SVCAN'
+            'AC' => 'SVRS',
+            'AL' => 'SVRS',
+            'AM' => 'SVRS',
+            'AP' => 'SVSP',
+            'BA' => 'SVRS',
+            'CE' => 'SVRS',
+            'DF' => 'SVRS',
+            'ES' => 'SVRS',
+            'GO' => 'SVRS',
+            'MA' => 'SVRS',
+            'MG' => 'SVSP',
+            'MS' => 'SVRS',
+            'MT' => 'SVRS',
+            'PA' => 'SVRS',
+            'PB' => 'SVRS',
+            'PE' => 'SVSP',
+            'PI' => 'SVRS',
+            'PR' => 'SVSP',
+            'RJ' => 'SVRS',
+            'RN' => 'SVRS',
+            'RO' => 'SVRS',
+            'RR' => 'SVSP',
+            'RS' => 'SVSP',
+            'SC' => 'SVRS',
+            'SE' => 'SVRS',
+            'SP' => 'SVRS',
+            'TO' => 'SVRS'
         );
         $type = strtoupper(str_replace('-', '', $type));
-        
+
         if (empty($type)) {
-            $type = (string) $list[$acronym];
+            $type = (string)$list[$acronym];
         }
         $this->config = $this->configBuild($dt->getTimestamp(), $motive, $type);
         return $this->__toString();
     }
-    
+
     /**
      * Deactivate contingency mode
      * @return string
@@ -145,7 +142,7 @@ class Contingency
     {
         return json_encode($this->config);
     }
-    
+
     /**
      * Build parameter config as stdClass
      * @param int $timestamp
@@ -156,23 +153,11 @@ class Contingency
     private function configBuild($timestamp, $motive, $type)
     {
         switch ($type) {
-            case 'EPEC':
-                $tpEmis = 4;
-                break;
-            case 'FS-DA':
-            case 'FSDA':
-                $tpEmis = 5;
-                break;
-            case 'SVC-AN':
-            case 'SVCAN':
-                $tpEmis = 6;
-                break;
-            case 'SVC-RS':
-            case 'SVCRS':
+            case 'SVRS':
                 $tpEmis = 7;
                 break;
-            case 'OFFLINE': //this is only to model 65 NFCe
-                $tpEmis = 9;
+            case 'SVSP':
+                $tpEmis = 8;
                 break;
             default:
                 if ($type == '') {

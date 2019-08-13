@@ -456,6 +456,11 @@ class Make
      */
     private $aereo = '';
     /**
+     * Informações do modal Aquaviario
+     * @var \DOMNode
+     */
+    private $aquav = '';
+    /**
      * Informações do modal Aéreo -> Dados da Carga
      * @var \DOMNode
      */
@@ -636,15 +641,14 @@ class Make
         if ($this->infCteAnu != '') { // Caso seja um CTe tipo anulação
             $this->dom->appChild($this->infCte, $this->infCteAnu, 'Falta tag "infCteAnu"');
         }
+        if ($this->infCteSub != '') { // Caso seja um CTe tipo anulação
+            $this->dom->appChild($this->infCte, $this->infCteSub, 'Falta tag "infCteSub"');
+        }
         if ($this->infCTeNorm != '') { // Caso seja um CTe tipo normal
             $this->dom->appChild($this->infCte, $this->infCTeNorm, 'Falta tag "infCTeNorm"');
             $this->dom->appChild($this->infCTeNorm, $this->infCarga, 'Falta tag "infCarga"');
             foreach ($this->infQ as $infQ) {
-                if (end($this->infQ) == $infQ) {
-                    $this->infCarga->insertBefore($infQ, $this->infCarga->getElementsByTagName("vCargaAverb")->item(0));
-                } else {
-                    $this->dom->appChild($this->infCarga, $infQ, 'Falta tag "infQ"');
-                }
+                $this->dom->appChild($this->infCarga, $infQ, 'Falta tag "infQ"');
             }
             foreach ($this->infNF as $infNF) {
                 $this->dom->appChild($this->infDoc, $infNF, 'Falta tag "infNF"');
@@ -656,13 +660,20 @@ class Make
                 $this->dom->appChild($this->infDoc, $infOutros, 'Falta tag "infOutros"');
             }
             $this->dom->appChild($this->infCTeNorm, $this->infDoc, 'Falta tag "infCTeNorm"');
-            if ($this->idDocAntEle != []) { //Caso tenha CT-es Anteriores viculados
+            if ($this->idDocAntEle != [] || $this->idDocAntPap != []) { //Caso tenha CT-es Anteriores viculados
                 $this->dom->appChild($this->infCTeNorm, $this->docAnt, 'Falta tag "docAnt"');
-                foreach ($this->emiDocAnt as $emiDocAnt) {
+                foreach ($this->emiDocAnt as $indice => $emiDocAnt) {
                     $this->dom->appChild($this->docAnt, $emiDocAnt, 'Falta tag "emiDocAnt"');
-                    $this->dom->appChild($emiDocAnt, $this->idDocAnt, 'Falta tag "idDocAnt"');
-                    foreach ($this->idDocAntEle as $idDocAntEle) {
-                        $this->dom->appChild($this->idDocAnt, $idDocAntEle, 'Falta tag "emiDocAnt"');
+                    $this->dom->appChild($emiDocAnt, $this->idDocAnt[$indice], 'Falta tag "idDocAnt"');
+                    if (array_key_exists($indice, $this->idDocAntEle)) {
+                        foreach ($this->idDocAntEle[$indice] as $idDocAntEle) {
+                            $this->dom->appChild($this->idDocAnt[$indice], $idDocAntEle, 'Falta tag "emiDocAnt"');
+                        }
+                    }
+                    if (array_key_exists($indice, $this->idDocAntPap)) {
+                        foreach ($this->idDocAntPap[$indice] as $idDocAntPap) {
+                            $this->dom->appChild($this->idDocAnt[$indice], $idDocAntPap, 'Falta tag "idDocAntEle"');
+                        }
                     }
                 }
             }
@@ -671,9 +682,16 @@ class Make
             }
             $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
             if ($this->modal == '01') {
-                $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
+                if ($this->rodo) {
+                    foreach ($this->occ as $occ) {
+                        $this->dom->appChild($this->rodo, $occ, 'Falta tag "occ"');
+                    }
+                    $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
+                }
             } elseif ($this->modal == '02') {
                 $this->dom->appChild($this->infModal, $this->aereo, 'Falta tag "aereo"');
+            } elseif ($this->modal == '03') {
+                $this->dom->appChild($this->infModal, $this->aquav, 'Falta tag "aquav"');
             } else {
                 throw new Exception('Modal não informado ou não suportado.');
             }
@@ -697,6 +715,86 @@ class Make
         $this->xml = $this->dom->saveXML();
         return true;
     }
+
+    /**
+     * Gera as tags para o elemento: "occ" (ordem de coletas)
+     * #3
+     * Nível:1
+     * Os parâmetros para esta função são todos os elementos da tag "occ" do
+     * tipo elemento (Ele = E|CE|A) e nível 1
+     *
+     * @return \DOMElement
+     */
+
+    public function tagocc($std)
+    {
+        $identificador = '#3 <occ> - ';
+        $occ = $this->dom->createElement('occ');
+        $this->dom->addChild(
+            $occ,
+            'serie',
+            $std->serie,
+            false,
+            $identificador . 'Série da OCC'
+        );
+        $this->dom->addChild(
+            $occ,
+            'nOcc',
+            $std->nOcc,
+            true,
+            $identificador . 'Número da Ordem de coleta'
+        );
+        $this->dom->addChild(
+            $occ,
+            'dEmi',
+            $std->dEmi,
+            true,
+            $identificador . 'Data de emissão da ordem de coleta'
+        );
+        //emitente
+        $identificador = '#7 <emiOcc> - ';
+        $emiOcc = $this->dom->createElement('emiOcc');
+        $this->dom->addChild(
+            $emiOcc,
+            'CNPJ',
+            $std->CNPJ,
+            true,
+            $identificador . 'Número do CNPJ'
+        );
+        $this->dom->addChild(
+            $emiOcc,
+            'cInt',
+            $std->cInt,
+            false,
+            $identificador . 'Código interno de uso da transportadora'
+        );
+        $this->dom->addChild(
+            $emiOcc,
+            'IE',
+            $std->IE,
+            true,
+            $identificador . 'Inscrição Estadual'
+        );
+        $this->dom->addChild(
+            $emiOcc,
+            'UF',
+            $std->UF,
+            true,
+            $identificador . 'Sigla da UF'
+        );
+        $this->dom->addChild(
+            $emiOcc,
+            'fone',
+            $std->fone,
+            false,
+            $identificador . 'Telefone'
+        );
+
+        $this->dom->appChild($occ, $emiOcc, 'Falta tag "emiOcc"');
+        $this->occ[] = $occ;
+        return $occ;
+    }
+
 
     /**
      * Monta o arquivo XML usando as tag's já preenchidas
@@ -1039,7 +1137,7 @@ class Make
     {
         $identificador = '#4 <infPercurso> - ';
         $this->infPercurso[] = $this->dom->createElement('infPercurso');
-        $posicao = (integer)count($this->infPercurso) - 1;
+        $posicao = (int)count($this->infPercurso) - 1;
         $this->dom->addChild(
             $this->infPercurso[$posicao],
             'UFPer',
@@ -1556,7 +1654,7 @@ class Make
     {
         $identificador = '#65 <pass> - ';
         $this->pass[] = $this->dom->createElement('pass');
-        $posicao = (integer)count($this->pass) - 1;
+        $posicao = (int)count($this->pass) - 1;
         $this->dom->addChild(
             $this->pass[$posicao],
             'xPass',
@@ -1755,7 +1853,7 @@ class Make
         $identificador = '#91 <ObsCont> - ';
         if (count($this->obsCont) <= 10) {
             $this->obsCont[] = $this->dom->createElement('ObsCont');
-            $posicao = (integer)count($this->obsCont) - 1;
+            $posicao = (int)count($this->obsCont) - 1;
             $this->obsCont[$posicao]->setAttribute('xCampo', $std->xCampo);
             $this->dom->addChild(
                 $this->obsCont[$posicao],
@@ -1788,7 +1886,7 @@ class Make
         $identificador = '#94 <ObsFisco> - ';
         if (count($this->obsFisco) <= 10) {
             $this->obsFisco[] = $this->dom->createElement('ObsFisco');
-            $posicao = (integer)count($this->obsFisco) - 1;
+            $posicao = (int)count($this->obsFisco) - 1;
             $this->obsFisco[$posicao]->setAttribute('xCampo', $std->xCampo);
             $this->dom->addChild(
                 $this->obsFisco[$posicao],
@@ -2674,7 +2772,7 @@ class Make
     {
         $identificador = '#65 <pass> - ';
         $this->comp[] = $this->dom->createElement('Comp');
-        $posicao = (integer)count($this->comp) - 1;
+        $posicao = (int)count($this->comp) - 1;
         $this->dom->addChild(
             $this->comp[$posicao],
             'xNome',
@@ -3028,15 +3126,6 @@ class Make
             false,
             $identificador . 'Outras Caract. da Carga'
         );
-        $this->dom->addChild(
-            $this->infCarga,
-            'vCargaAverb',
-            $std->vCargaAverb,
-            false,
-            $identificador . 'Valor da Carga para
-            efeito de averbação'
-        );
-
         return $this->infCarga;
     }
 
@@ -3080,12 +3169,18 @@ class Make
     {
         $identificador = '#257 <infQ> - ';
         $this->infQ[] = $this->dom->createElement('infQ');
-        $posicao = (integer)count($this->infQ) - 1;
+        $posicao = (int)count($this->infQ) - 1;
         $this->dom->addChild($this->infQ[$posicao], 'cUnid', $std->cUnid, true, $identificador . 'Código da
             Unidade de Medida');
         $this->dom->addChild($this->infQ[$posicao], 'tpMed', $std->tpMed, true, $identificador . 'Tipo da Medida');
         $this->dom->addChild($this->infQ[$posicao], 'qCarga', $std->qCarga, true, $identificador . 'Quantidade');
-
+        $this->dom->addChild(
+            $this->infQ[$posicao],
+            'vCargaAverb',
+            $std->vCargaAverb,
+            false,
+            $identificador . 'Valor da Carga para efeito de averbação'
+        );
         return $this->infQ[$posicao];
     }
 
@@ -3111,7 +3206,7 @@ class Make
      */
     public function tagidDocAnt()
     {
-        $this->idDocAnt = $this->dom->createElement('idDocAnt');
+        $this->idDocAnt[count($this->emiDocAnt) - 1] = $this->dom->createElement('idDocAnt');
         return $this->idDocAnt;
     }
 
@@ -3125,7 +3220,7 @@ class Make
     {
         $identificador = '#262 <infNF> - ';
         $this->infNF[] = $this->dom->createElement('infNF');
-        $posicao = (integer)count($this->infNF) - 1;
+        $posicao = (int)count($this->infNF) - 1;
 
         $this->dom->addChild($this->infNF[$posicao], 'nRoma', $std->nRoma, false, $identificador . 'Número do
             Romaneio da NF');
@@ -3166,7 +3261,7 @@ class Make
     {
         $identificador = '#297 <infNFe> - ';
         $this->infNFe[] = $this->dom->createElement('infNFe');
-        $posicao = (integer)count($this->infNFe) - 1;
+        $posicao = (int)count($this->infNFe) - 1;
         $this->dom->addChild(
             $this->infNFe[$posicao],
             'chave',
@@ -3201,7 +3296,7 @@ class Make
     {
         $ident = '#319 <infOutros> - ';
         $this->infOutros[] = $this->dom->createElement('infOutros');
-        $posicao = (integer)count($this->infOutros) - 1;
+        $posicao = (int)count($this->infOutros) - 1;
         $this->dom->addChild($this->infOutros[$posicao], 'tpDoc', $std->tpDoc, true, $ident . 'Tipo '
             . 'de documento originário');
         $this->dom->addChild($this->infOutros[$posicao], 'descOutros', $std->descOutros, false, $ident . 'Descrição '
@@ -3226,7 +3321,7 @@ class Make
     {
         $ident = '#319 <infDocRef> - ';
         $this->infDocRef[] = $this->dom->createElement('infDocRef');
-        $posicao = (integer)count($this->infDocRef) - 1;
+        $posicao = (int)count($this->infDocRef) - 1;
         $this->dom->addChild($this->infDocRef[$posicao], 'nDoc', $std->nDoc, false, $ident . 'Número '
             . 'do documento');
         $this->dom->addChild($this->infDocRef[$posicao], 'serie', $std->serie, false, $ident . 'Série '
@@ -3249,7 +3344,7 @@ class Make
     {
         $identificador = '#345 <emiDocAnt> - ';
         $this->emiDocAnt[] = $this->dom->createElement('emiDocAnt');
-        $posicao = (integer)count($this->emiDocAnt) - 1;
+        $posicao = (int)count($this->emiDocAnt) - 1;
         if ($std->CNPJ != '') {
             $this->dom->addChild(
                 $this->emiDocAnt[$posicao],
@@ -3289,12 +3384,16 @@ class Make
     public function tagidDocAntEle($std)
     {
         $identificador = '#358 <idDocAntEle> - ';
-        $this->idDocAntEle[] = $this->dom->createElement('idDocAntEle');
-        $posicao = (integer)count($this->idDocAntEle) - 1;
-        $this->dom->addChild($this->idDocAntEle[$posicao], 'chCTe', $std->chCTe, true, $identificador . 'Chave de '
-            . 'Acesso do CT-e');
-
-        return $this->idDocAntEle[$posicao];
+        $this->idDocAntEle[count($this->emiDocAnt) - 1][] = $this->dom->createElement('idDocAntEle');
+        $posicao = (int)count($this->idDocAntEle[count($this->emiDocAnt) - 1]) - 1;
+        $this->dom->addChild(
+            $this->idDocAntEle[count($this->emiDocAnt) - 1][$posicao],
+            'chCTe',
+            $std->chCTe,
+            true,
+            $identificador . 'Chave de Acesso do CT-e'
+        );
+        return $this->idDocAntEle[count($this->emiDocAnt) - 1][$posicao];
     }
 
 
@@ -3308,7 +3407,7 @@ class Make
     {
         $identificador = '#360 <seg> - ';
         $this->seg[] = $this->dom->createElement('seg');
-        $posicao = (integer)count($this->seg) - 1;
+        $posicao = (int)count($this->seg) - 1;
 
         $this->dom->addChild($this->seg[$posicao], 'respSeg', $std->respSeg, true, $identificador . 'Responsável
             pelo Seguro');
@@ -3317,6 +3416,58 @@ class Make
         $this->dom->addChild($this->seg[$posicao], 'nApol', $std->nApol, false, $identificador . 'Número da Apólice');
         return $this->seg[$posicao];
     }
+
+    /**
+     * Gera as tags para o elemento: "idDocAntEle" (Informações dos CT-es Anteriores)
+     * #348
+     * Nível: 4
+     * @return mixed
+     */
+    public function tagidDocAntPap($std)
+    {
+        $identificador = '#358 <idDocAntPap> - ';
+
+        $this->idDocAntPap[count($this->emiDocAnt) - 1][] = $this->dom->createElement('idDocAntPap');
+        $posicao = (int)count($this->idDocAntPap[count($this->emiDocAnt) - 1]) - 1;
+
+        $this->dom->addChild(
+            $this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao],
+            'tpDoc',
+            $std->tpDoc,
+            true,
+            $identificador . 'Tipo do Documento de Transporte Anterior'
+        );
+        $this->dom->addChild(
+            $this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao],
+            'serie',
+            $std->serie,
+            true,
+            $identificador . 'Série do Documento Fiscal'
+        );
+        $this->dom->addChild(
+            $this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao],
+            'subser',
+            $std->subser,
+            false,
+            $identificador . 'Série do Documento Fiscal'
+        );
+        $this->dom->addChild(
+            $this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao],
+            'nDoc',
+            $std->nDoc,
+            true,
+            $identificador . 'Número do Documento Fiscal'
+        );
+        $this->dom->addChild(
+            $this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao],
+            'dEmi',
+            $std->dEmi,
+            true,
+            $identificador . 'Data de emissão (AAAA-MM-DD)'
+        );
+        return $this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao];
+    }
+
 
     /**
      * Gera as tags para o elemento: "infModal" (Informações do modal)
@@ -3354,6 +3505,70 @@ class Make
         );
 
         return $this->rodo;
+    }
+
+    /**
+     * Leiaute - Aquaviario
+     * Gera as tags para o elemento: "aquav" (informações do modal Aquaviario)
+     * @author Anderson Minuto Consoni Vaz
+     * #1
+     * Nivel: 0
+     * @return DOMElement|\DOMNode
+     */
+    public function tagaquav($std)
+    {
+        $identificador = '#1 <aquav> - ';
+        $this->aquav = $this->dom->createElement('aquav');
+        $this->dom->addChild(
+            $this->aquav,
+            'vPrest',
+            $std->vPrest,
+            true,
+            $identificador . 'vPrest'
+        );
+        $this->dom->addChild(
+            $this->aquav,
+            'vAFRMM',
+            $std->vAFRMM,
+            true,
+            $identificador . 'vAFRMM'
+        );
+        $this->dom->addChild(
+            $this->aquav,
+            'xNavio',
+            $std->xNavio,
+            true,
+            $identificador . 'xNavio'
+        );
+        $this->dom->addChild(
+            $this->aquav,
+            'nViag',
+            $std->nViag,
+            true,
+            $identificador . 'nViag'
+        );
+        $this->dom->addChild(
+            $this->aquav,
+            'direc',
+            $std->direc,
+            true,
+            $identificador . 'direc'
+        );
+        $this->dom->addChild(
+            $this->aquav,
+            'irin',
+            $std->irin,
+            true,
+            $identificador . 'irin'
+        );
+        $this->dom->addChild(
+            $this->aquav,
+            'tpNav',
+            $std->tpNav,
+            true,
+            $identificador . 'tpNav'
+        );
+        return $this->aquav;
     }
 
     /**
