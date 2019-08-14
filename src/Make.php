@@ -3441,7 +3441,7 @@ class Make
             $this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao],
             'serie',
             $std->serie,
-            true, 
+            true,
             $identificador . 'Série do Documento Fiscal'
         );
         $this->dom->addChild(
