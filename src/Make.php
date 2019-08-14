@@ -3458,7 +3458,13 @@ class Make
             true,
             $identificador . 'Número do Documento Fiscal'
         );
-        $this->dom->addChild($this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao], 'dEmi', $std->dEmi, true, $identificador . 'Data de emissão (AAAA-MM-DD)');
+        $this->dom->addChild(
+            $this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao],
+            'dEmi',
+            $std->dEmi,
+            true,
+            $identificador . 'Data de emissão (AAAA-MM-DD)'
+        );
         return $this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao];
     }
 
