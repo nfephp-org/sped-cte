@@ -695,10 +695,11 @@ class Make
             } else {
                 throw new Exception('Modal não informado ou não suportado.');
             }
+            foreach ($this->veicNovos as $veicNovos) {
+                $this->dom->appChild($this->infCTeNorm, $veicNovos, 'Falta tag "infCte"');
+            }
         }
-        foreach ($this->veicNovos as $veicNovos) {
-            $this->dom->appChild($this->infCte, $veicNovos, 'Falta tag "infCte"');
-        }
+
         if ($this->cobr != '') {
             $this->dom->appChild($this->infCte, $this->cobr, 'Falta tag "infCte"');
         }
