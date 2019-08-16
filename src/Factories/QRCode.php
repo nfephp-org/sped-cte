@@ -34,9 +34,10 @@ class QRCode
         $ide = $dom->getElementsByTagName('ide')->item(0);
         $chCTe = preg_replace('/[^0-9]/', '', $infCte->getAttribute("Id"));
         $tpAmb = $ide->getElementsByTagName('tpAmb')->item(0)->nodeValue;
-        $qrcode = "https://dfe-portal.svrs.rs.gov.br/cte/qrCode?chCTe=$chCTe&tpAmb=$tpAmb";
+        $urlQRCode = "https://dfe-portal.svrs.rs.gov.br/cte/qrCode?chCTe=$chCTe&tpAmb=$tpAmb";
         $infCTeSupl = $dom->createElement("infCTeSupl");
-        $infCTeSupl->appendChild($dom->createElement('qrCodCTe', $qrcode));
+        $qrCode = $infCTeSupl->appendChild($dom->createElement('qrCodCTe'));
+        $qrCode->appendChild($dom->createCDATASection($urlQRCode));
         $signature = $dom->getElementsByTagName('Signature')->item(0);
         $cte->insertBefore($infCTeSupl, $signature);
         $dom->formatOutput = false;

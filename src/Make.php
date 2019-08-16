@@ -695,10 +695,11 @@ class Make
             } else {
                 throw new Exception('Modal não informado ou não suportado.');
             }
+            foreach ($this->veicNovos as $veicNovos) {
+                $this->dom->appChild($this->infCTeNorm, $veicNovos, 'Falta tag "infCte"');
+            }
         }
-        foreach ($this->veicNovos as $veicNovos) {
-            $this->dom->appChild($this->infCte, $veicNovos, 'Falta tag "infCte"');
-        }
+
         if ($this->cobr != '') {
             $this->dom->appChild($this->infCte, $this->cobr, 'Falta tag "infCte"');
         }
@@ -1137,7 +1138,7 @@ class Make
     {
         $identificador = '#4 <infPercurso> - ';
         $this->infPercurso[] = $this->dom->createElement('infPercurso');
-        $posicao = (int)count($this->infPercurso) - 1;
+        $posicao = (int) count($this->infPercurso) - 1;
         $this->dom->addChild(
             $this->infPercurso[$posicao],
             'UFPer',
@@ -1654,7 +1655,7 @@ class Make
     {
         $identificador = '#65 <pass> - ';
         $this->pass[] = $this->dom->createElement('pass');
-        $posicao = (int)count($this->pass) - 1;
+        $posicao = (int) count($this->pass) - 1;
         $this->dom->addChild(
             $this->pass[$posicao],
             'xPass',
@@ -1853,7 +1854,7 @@ class Make
         $identificador = '#91 <ObsCont> - ';
         if (count($this->obsCont) <= 10) {
             $this->obsCont[] = $this->dom->createElement('ObsCont');
-            $posicao = (int)count($this->obsCont) - 1;
+            $posicao = (int) count($this->obsCont) - 1;
             $this->obsCont[$posicao]->setAttribute('xCampo', $std->xCampo);
             $this->dom->addChild(
                 $this->obsCont[$posicao],
@@ -1865,9 +1866,9 @@ class Make
             return true;
         }
         $this->errors[] = array(
-            'tag' => (string)'<ObsCont>',
-            'desc' => (string)'Campo de uso livre do contribuinte',
-            'erro' => (string)'Tag deve aparecer de 0 a 10 vezes'
+            'tag' => (string) '<ObsCont>',
+            'desc' => (string) 'Campo de uso livre do contribuinte',
+            'erro' => (string) 'Tag deve aparecer de 0 a 10 vezes'
         );
         return false;
     }
@@ -1886,7 +1887,7 @@ class Make
         $identificador = '#94 <ObsFisco> - ';
         if (count($this->obsFisco) <= 10) {
             $this->obsFisco[] = $this->dom->createElement('ObsFisco');
-            $posicao = (int)count($this->obsFisco) - 1;
+            $posicao = (int) count($this->obsFisco) - 1;
             $this->obsFisco[$posicao]->setAttribute('xCampo', $std->xCampo);
             $this->dom->addChild(
                 $this->obsFisco[$posicao],
@@ -1898,9 +1899,9 @@ class Make
             return true;
         }
         $this->errors[] = array(
-            'tag' => (string)'<ObsFisco>',
-            'desc' => (string)'Campo de uso livre do contribuinte',
-            'erro' => (string)'Tag deve aparecer de 0 a 10 vezes'
+            'tag' => (string) '<ObsFisco>',
+            'desc' => (string) 'Campo de uso livre do contribuinte',
+            'erro' => (string) 'Tag deve aparecer de 0 a 10 vezes'
         );
         return false;
     }
@@ -2772,7 +2773,7 @@ class Make
     {
         $identificador = '#65 <pass> - ';
         $this->comp[] = $this->dom->createElement('Comp');
-        $posicao = (int)count($this->comp) - 1;
+        $posicao = (int) count($this->comp) - 1;
         $this->dom->addChild(
             $this->comp[$posicao],
             'xNome',
@@ -2873,7 +2874,7 @@ class Make
                             $std->pRedBC,
                             false,
                             "$identificador Percentual Red "
-                            . "BC Outra UF"
+                                . "BC Outra UF"
                         );
                     }
                     $this->dom->addChild($icms, 'vBCOutraUF', $std->vBC, true, "$identificador Valor BC ICMS Outra UF");
@@ -2973,14 +2974,6 @@ class Make
                 true,
                 "$identificador Alíquota interestadual
                 das UF envolvidas"
-            );
-            $this->dom->addChild(
-                $icmsDifal,
-                'pICMSInterPart',
-                $std->pICMSInterPart,
-                true,
-                "$identificador Percentual
-                provisório de partilha entre os estados"
             );
             $this->dom->addChild(
                 $icmsDifal,
@@ -3169,7 +3162,7 @@ class Make
     {
         $identificador = '#257 <infQ> - ';
         $this->infQ[] = $this->dom->createElement('infQ');
-        $posicao = (int)count($this->infQ) - 1;
+        $posicao = (int) count($this->infQ) - 1;
         $this->dom->addChild($this->infQ[$posicao], 'cUnid', $std->cUnid, true, $identificador . 'Código da
             Unidade de Medida');
         $this->dom->addChild($this->infQ[$posicao], 'tpMed', $std->tpMed, true, $identificador . 'Tipo da Medida');
@@ -3220,7 +3213,7 @@ class Make
     {
         $identificador = '#262 <infNF> - ';
         $this->infNF[] = $this->dom->createElement('infNF');
-        $posicao = (int)count($this->infNF) - 1;
+        $posicao = (int) count($this->infNF) - 1;
 
         $this->dom->addChild($this->infNF[$posicao], 'nRoma', $std->nRoma, false, $identificador . 'Número do
             Romaneio da NF');
@@ -3261,7 +3254,7 @@ class Make
     {
         $identificador = '#297 <infNFe> - ';
         $this->infNFe[] = $this->dom->createElement('infNFe');
-        $posicao = (int)count($this->infNFe) - 1;
+        $posicao = (int) count($this->infNFe) - 1;
         $this->dom->addChild(
             $this->infNFe[$posicao],
             'chave',
@@ -3296,7 +3289,7 @@ class Make
     {
         $ident = '#319 <infOutros> - ';
         $this->infOutros[] = $this->dom->createElement('infOutros');
-        $posicao = (int)count($this->infOutros) - 1;
+        $posicao = (int) count($this->infOutros) - 1;
         $this->dom->addChild($this->infOutros[$posicao], 'tpDoc', $std->tpDoc, true, $ident . 'Tipo '
             . 'de documento originário');
         $this->dom->addChild($this->infOutros[$posicao], 'descOutros', $std->descOutros, false, $ident . 'Descrição '
@@ -3321,7 +3314,7 @@ class Make
     {
         $ident = '#319 <infDocRef> - ';
         $this->infDocRef[] = $this->dom->createElement('infDocRef');
-        $posicao = (int)count($this->infDocRef) - 1;
+        $posicao = (int) count($this->infDocRef) - 1;
         $this->dom->addChild($this->infDocRef[$posicao], 'nDoc', $std->nDoc, false, $ident . 'Número '
             . 'do documento');
         $this->dom->addChild($this->infDocRef[$posicao], 'serie', $std->serie, false, $ident . 'Série '
@@ -3344,7 +3337,7 @@ class Make
     {
         $identificador = '#345 <emiDocAnt> - ';
         $this->emiDocAnt[] = $this->dom->createElement('emiDocAnt');
-        $posicao = (int)count($this->emiDocAnt) - 1;
+        $posicao = (int) count($this->emiDocAnt) - 1;
         if ($std->CNPJ != '') {
             $this->dom->addChild(
                 $this->emiDocAnt[$posicao],
@@ -3385,7 +3378,7 @@ class Make
     {
         $identificador = '#358 <idDocAntEle> - ';
         $this->idDocAntEle[count($this->emiDocAnt) - 1][] = $this->dom->createElement('idDocAntEle');
-        $posicao = (int)count($this->idDocAntEle[count($this->emiDocAnt) - 1]) - 1;
+        $posicao = (int) count($this->idDocAntEle[count($this->emiDocAnt) - 1]) - 1;
         $this->dom->addChild(
             $this->idDocAntEle[count($this->emiDocAnt) - 1][$posicao],
             'chCTe',
@@ -3407,7 +3400,7 @@ class Make
     {
         $identificador = '#360 <seg> - ';
         $this->seg[] = $this->dom->createElement('seg');
-        $posicao = (int)count($this->seg) - 1;
+        $posicao = (int) count($this->seg) - 1;
 
         $this->dom->addChild($this->seg[$posicao], 'respSeg', $std->respSeg, true, $identificador . 'Responsável
             pelo Seguro');
@@ -3428,7 +3421,7 @@ class Make
         $identificador = '#358 <idDocAntPap> - ';
 
         $this->idDocAntPap[count($this->emiDocAnt) - 1][] = $this->dom->createElement('idDocAntPap');
-        $posicao = (int)count($this->idDocAntPap[count($this->emiDocAnt) - 1]) - 1;
+        $posicao = (int) count($this->idDocAntPap[count($this->emiDocAnt) - 1]) - 1;
 
         $this->dom->addChild(
             $this->idDocAntPap[count($this->emiDocAnt) - 1][$posicao],
@@ -4170,7 +4163,7 @@ class Make
             $std->CNPJ,
             true,
             "Informar o CNPJ da pessoa jurídica responsável pelo sistema "
-            . "utilizado na emissão do documento fiscal eletrônico"
+                . "utilizado na emissão do documento fiscal eletrônico"
         );
         $this->dom->addChild(
             $infRespTec,
@@ -4178,7 +4171,7 @@ class Make
             $std->xContato,
             true,
             "Informar o nome da pessoa a ser contatada na empresa desenvolvedora "
-            . "do sistema utilizado na emissão do documento fiscal eletrônico"
+                . "do sistema utilizado na emissão do documento fiscal eletrônico"
         );
         $this->dom->addChild(
             $infRespTec,
@@ -4186,7 +4179,7 @@ class Make
             $std->email,
             true,
             "Informar o e-mail da pessoa a ser contatada na empresa "
-            . "desenvolvedora do sistema."
+                . "desenvolvedora do sistema."
         );
         $this->dom->addChild(
             $infRespTec,
@@ -4194,7 +4187,7 @@ class Make
             $std->fone,
             true,
             "Informar o telefone da pessoa a ser contatada na empresa "
-            . "desenvolvedora do sistema."
+                . "desenvolvedora do sistema."
         );
         if (!empty($std->CSRT) && !empty($std->idCSRT)) {
             $this->csrt = $std->CSRT;
