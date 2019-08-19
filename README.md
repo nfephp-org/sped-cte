@@ -76,6 +76,7 @@ Caso você encontre algum problema relativo a segurança, por favor envie um ema
 
 ## Credits
 
+- Cleiton Perin (Owner)
 - Roberto L. Machado (Owner)
 - Samuel Basso (Mantenedor)
 - Gleidson Brito (Colaborador)

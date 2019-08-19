@@ -406,7 +406,7 @@
 									<xs:element name="procEmi" type="TProcEmi">
 										<xs:annotation>
 											<xs:documentation>Identificador do processo de emissão do CT-e</xs:documentation>
-											<xs:documentation>Preencher com: 
+											<xs:documentation>Preencher com:
 											0 - emissão de CT-e com aplicativo do contribuinte;
 											3- emissão CT-e pelo contribuinte com aplicativo fornecido pelo SEBRAE.</xs:documentation>
 										</xs:annotation>
@@ -468,7 +468,7 @@
 									<xs:element name="tpServ">
 										<xs:annotation>
 											<xs:documentation>Tipo do Serviço</xs:documentation>
-											<xs:documentation>Preencher com: 
+											<xs:documentation>Preencher com:
 0 - Normal;1 - Subcontratação;
 2 - Redespacho;3 - Redespacho Intermediário; 4 - Serviço Vinculado a Multimodal</xs:documentation>
 										</xs:annotation>
@@ -611,7 +611,7 @@
 													<xs:element name="toma">
 														<xs:annotation>
 															<xs:documentation>Tomador do Serviço</xs:documentation>
-															<xs:documentation>Preencher com: 
+															<xs:documentation>Preencher com:
 															4 - Outros
 															Obs: Informar os dados cadastrais do tomador do serviço</xs:documentation>
 														</xs:annotation>
@@ -626,7 +626,7 @@
 														<xs:element name="CNPJ" type="TCnpjOpc">
 															<xs:annotation>
 																<xs:documentation>Número do CNPJ</xs:documentation>
-																<xs:documentation>Em caso de empresa não estabelecida no Brasil, será informado o CNPJ com zeros.															
+																<xs:documentation>Em caso de empresa não estabelecida no Brasil, será informado o CNPJ com zeros.
 Informar os zeros não significativos.</xs:documentation>
 															</xs:annotation>
 														</xs:element>
@@ -1709,8 +1709,8 @@ Opcional para Redespacho Intermediario e Serviço vinculado a multimodal.</xs:do
 																	<xs:element name="mod" type="TModNF">
 																		<xs:annotation>
 																			<xs:documentation>Modelo da Nota Fiscal</xs:documentation>
-																			<xs:documentation>Preencher com: 
-01 - NF Modelo 01/1A e Avulsa; 
+																			<xs:documentation>Preencher com:
+01 - NF Modelo 01/1A e Avulsa;
 04 - NF de Produtor</xs:documentation>
 																		</xs:annotation>
 																	</xs:element>
@@ -1880,7 +1880,7 @@ Opcional para Redespacho Intermediario e Serviço vinculado a multimodal.</xs:do
 																			<xs:documentation>Preencher com:
 															00 - Declaração;
 															10 - Dutoviário;
-							
+
 
 59 - CF-e SAT;
 
@@ -2025,7 +2025,7 @@ Opcional para Redespacho Intermediario e Serviço vinculado a multimodal.</xs:do
 																							<xs:annotation>
 																								<xs:documentation>Tipo do Documento de Transporte Anterior</xs:documentation>
 																								<xs:documentation>Preencher com:
-07-ATRE;							
+07-ATRE;
 08-DTA (Despacho de Transito Aduaneiro);
 09-Conhecimento Aéreo Internacional;
 10 – Conhecimento - Carta de Porte Internacional;
@@ -2688,16 +2688,16 @@ Onde v9.99 é a a designação genérica para a versão do arquivo. Por exemplo,
 										<xs:annotation>
 											<xs:documentation>Tipo do CT-e OS</xs:documentation>
 											<xs:documentation>Preencher com:
-0 - CT-e Normal; 
-1 - CT-e Complementar; 
-2 - CT-e de Anulação; 
+0 - CT-e Normal;
+1 - CT-e Complementar;
+2 - CT-e de Anulação;
 3 - CT-e de Substituição.</xs:documentation>
 										</xs:annotation>
 									</xs:element>
 									<xs:element name="procEmi" type="TProcEmi">
 										<xs:annotation>
 											<xs:documentation>Identificador do processo de emissão do CT-e OS</xs:documentation>
-											<xs:documentation>Preencher com: 
+											<xs:documentation>Preencher com:
 											0 - emissão de CT-e com aplicativo do contribuinte;
 											3- emissão CT-e pelo contribuinte com aplicativo fornecido pelo Fisco.</xs:documentation>
 										</xs:annotation>
@@ -2751,7 +2751,7 @@ Onde v9.99 é a a designação genérica para a versão do arquivo. Por exemplo,
 									<xs:element name="tpServ">
 										<xs:annotation>
 											<xs:documentation>Tipo do Serviço</xs:documentation>
-											<xs:documentation>Preencher com: 
+											<xs:documentation>Preencher com:
 
 6 - Transporte de Pessoas;
 7 - Transporte de Valores;
@@ -5399,7 +5399,7 @@ Observação: 28 caracteres são representados no schema como 20 bytes do tipo b
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:whiteSpace value="preserve"/>
-			<xs:pattern value="[0-9]{8}|ISENTO"/>
+			<xs:pattern value="ISENTO|[0-9]{8}"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="TCIOT">
