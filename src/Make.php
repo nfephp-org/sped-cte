@@ -3554,13 +3554,6 @@ class Make
             true,
             $identificador . 'irin'
         );
-        $this->dom->addChild(
-            $this->aquav,
-            'tpNav',
-            $std->tpNav,
-            true,
-            $identificador . 'tpNav'
-        );
         return $this->aquav;
     }
 
