@@ -461,6 +461,11 @@ class Make
      */
     private $aquav = '';
     /**
+     * Informações do modal Dutoviário
+     * @var \DOMNode
+     */
+    private $duto = '';
+    /**
      * Informações do modal Aéreo -> Dados da Carga
      * @var \DOMNode
      */
@@ -692,6 +697,8 @@ class Make
                 $this->dom->appChild($this->infModal, $this->aereo, 'Falta tag "aereo"');
             } elseif ($this->modal == '03') {
                 $this->dom->appChild($this->infModal, $this->aquav, 'Falta tag "aquav"');
+            } elseif ($this->modal == '05') {
+                $this->dom->appChild($this->infModal, $this->duto, 'Falta tag "duto"');
             } else {
                 throw new Exception('Modal não informado ou não suportado.');
             }
@@ -3498,6 +3505,42 @@ class Make
         );
 
         return $this->rodo;
+    }
+
+    /**
+     * Leiaute - Dutoviário
+     * Gera as tags para o elemento: "duto" (informações do modal Dutoviário)
+     * @author Uilasmar Guedes
+     * #1
+     * Nivel: 0
+     * @return DOMElement|\DOMNode
+     */
+    public function tagduto($std)
+    {
+        $identificador = '#1 <duto> - ';
+        $this->duto = $this->dom->createElement('duto');
+        $this->dom->addChild(
+            $this->duto,
+            'vTar',
+            $std->vTar,
+            false,
+            $identificador . 'Valor da tarifa '
+        );
+        $this->dom->addChild(
+            $this->duto,
+            'dIni',
+            $std->dIni,
+            true,
+            $identificador . 'Data de Início da prestação do serviço'
+        );
+        $this->dom->addChild(
+            $this->duto,
+            'dFim',
+            $std->dFim,
+            true,
+            $identificador . 'Data de Fim da prestação do serviço'
+        );
+        return $this->duto;
     }
 
     /**
