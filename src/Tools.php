@@ -840,6 +840,98 @@ class Tools extends ToolsCommon
     }
 
     /**
+     * Requires comprovante de entrega
+     * @param  string $chave key of CTe
+     * @param  string $nProt Protocolo do CTe
+     * @param  string $xNome Nome de quem recebeu a carga
+     * @param  string $nDoc  Documento de quem recebeu a carga
+     * @param  int    $latitude  Documento de quem recebeu a carga
+     * @param  int    $longitude  Documento de quem recebeu a carga
+     * @param  string $hash  hash
+     * @param  string $data  Documento de quem recebeu a carga
+     * @param  string $hora  Documento de quem recebeu a carga
+     * @param  array  $aNFes Chave da NFes entregues
+     * @param  int    $nSeqEvento No. sequencial do evento
+     * @return string
+     */
+    public function sefazCE(
+		$chave, 
+		$nProt, 
+		$xNome, 
+		$nDoc, 
+		$latitude = 0, 
+		$longitude = 0, 
+		$hash = '', 
+		$data, 
+		$hora, 
+		$aNFes, 
+		$nSeqEvento = 1)
+    {
+        $uf = $this->validKeyByUF($chave);
+        $tpEvento = 110180;
+        $nSeqEvento = 1;
+        $dt = new \DateTime();
+        $dhEventoEntrega = $dt->format('Y-m-d\TH:i:sP');
+        
+        /* relaciona as chaves daS NFes */
+        $infEntrega = '';
+		foreach ($aNFes as $NFe) {
+			$infEntrega .= "<infEntrega>"
+				. "<chNFe>$NFe</chNFe>"
+				. "</infEntrega>";
+		}
+
+        $tagAdic = "<evCECTe>"
+            . "<descEvento>Comprovante de Entrega do CT-e</descEvento>"
+            . "<nProt>$nProt</nProt>"
+            . "<dhEntrega>$dhEventoEntrega</dhEntrega>"
+            . "<nDoc>$nDoc</nDoc>"
+            . "<xNome>$xNome</xNome>"
+            . "<latitude>$latitude</latitude>"
+            . "<longitude>$longitude</longitude>"
+			. "<hashEntrega>$hash</hashEntrega>"
+			. "<dhHashEntrega>$dhEventoEntrega</dhHashEntrega>" 
+			. $infEntrega 
+            . "</evCECTe>";
+        return $this->sefazEvento(
+            $uf,
+            $chave,
+            $tpEvento,
+            $nSeqEvento,
+            $tagAdic
+        );
+    }
+
+    /**
+     * Requires CE cancellation
+     * @param  string $chave key of CTe
+     * @param  string $nProt protocol number
+     * @param  string $nProtCEC protocol number
+     * @return string
+     */
+    public function sefazCancelaCE($chave, $nProt, $nProtCE)
+    {
+        $uf = $this->validKeyByUF($chave);
+        $xJust = Strings::replaceSpecialsChars(
+            substr(trim($xJust), 0, 255)
+        );
+        $tpEvento = 110181;
+        $nSeqEvento = 1;
+        $tagAdic = "<evCancCECTe>"
+            . "<descEvento>Cancelamento do Comprovante de Entrega do CT-e</descEvento>"
+            . "<nProt>$nProt</nProt>"
+            . "<nProtCE>$nProtCE</nProtCE>"
+            . "</evCancCECTe>";
+        return $this->sefazEvento(
+            $uf,
+            $chave,
+            $tpEvento,
+            $nSeqEvento,
+            $tagAdic
+        );
+    }
+
+    /**
      *
      * @param  int $tpEvento
      * @return \stdClass
@@ -866,6 +958,16 @@ class Tools extends ToolsCommon
                 //emissão em contingência EPEC
                 $std->alias = 'EPEC';
                 $std->desc = 'EPEC';
+                break;
+            case 110180:
+                //comprovante de entrega
+                $std->alias = 'evCECTe';
+                $std->desc = 'Comprovante de Entrega';
+                break;
+            case 110181:
+                //comprovante de entrega
+                $std->alias = 'evCancCECTe';
+                $std->desc = 'Cancelamento do Comprovante de Entrega';
                 break;
             case 610110:
                 //Serviço em desacordo
