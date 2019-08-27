@@ -859,19 +859,17 @@ class Tools extends ToolsCommon
 		$nProt, 
 		$xNome, 
 		$nDoc, 
-		$latitude = 0, 
-		$longitude = 0, 
-		$hash = '', 
+		$hash, 
 		$data, 
 		$hora, 
 		$aNFes, 
-		$nSeqEvento = 1)
+		$latitude, 
+		$longitude, 
+		$nSeqEvento,
+		$dhEventoEntrega)
     {
         $uf = $this->validKeyByUF($chave);
         $tpEvento = 110180;
-        $nSeqEvento = 1;
-        $dt = new \DateTime();
-        $dhEventoEntrega = $dt->format('Y-m-d\TH:i:sP');
         
         /* relaciona as chaves daS NFes */
         $infEntrega = '';
