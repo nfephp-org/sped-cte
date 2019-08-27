@@ -40,7 +40,7 @@
             <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='3.00'>https://homologacao.cte.ms.gov.br/ws/CteRetRecepcao</CteRetRecepcao>
             <CteCancelamento method='CTeCancelamento' operation='CteCancelamento' version='3.00'>https://homologacao.cte.ms.gov.br/ws/CteCancelamento</CteCancelamento>
             <CteInutilizacao method='CTeInutilizacao' operation='CteInutilizacao' version='3.00'>https://homologacao.cte.ms.gov.br/ws/CteInutilizacao</CteInutilizacao>
-            <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsultaProtocolo' version='3.00'>https://homologacao.cte.ms.gov.br/ws/CteConsulta</CteConsultaProtocolo>
+            <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsulta' version='3.00'>https://homologacao.cte.ms.gov.br/ws/CteConsulta</CteConsultaProtocolo>
             <CteStatusServico method='CTeStatusServico' operation='CteStatusServico' version='3.00'>https://homologacao.cte.ms.gov.br/ws/CteStatusServico</CteStatusServico>
             <CTeConsultaCadastro method='CTeConsultaCadastro' operation='CTeConsultaCadastro' version='3.00'>https://homologacao.cte.ms.gov.br/ws/CadConsultaCadastro</CTeConsultaCadastro>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CteRecepcaoEvento' version='3.00'>https://homologacao.cte.ms.gov.br/ws/CteRecepcaoEvento</CteRecepcaoEvento>
@@ -51,7 +51,7 @@
             <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='3.00'>https://producao.cte.ms.gov.br/ws/CteRetRecepcao</CteRetRecepcao>
             <CteCancelamento method='CTeCancelamento' operation='CteCancelamento' version='3.00'>https://producao.cte.ms.gov.br/ws/CteCancelamento</CteCancelamento>
             <CteInutilizacao method='CTeInutilizacao' operation='CteInutilizacao' version='3.00'>https://producao.cte.ms.gov.br/ws/CteInutilizacao</CteInutilizacao>
-            <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsultaProtocolo' version='3.00'>https://producao.cte.ms.gov.br/ws/CteConsulta</CteConsultaProtocolo>
+            <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsulta' version='3.00'>https://producao.cte.ms.gov.br/ws/CteConsulta</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CteStatusServico' version='3.00'>https://producao.cte.ms.gov.br/ws/CteStatusServico</CteStatusServico>
             <CTeConsultaCadastro method='CTeConsultaCadastro' operation='CTeConsultaCadastro' version='3.00'>https://producao.cte.ms.gov.br/ws/CadConsultaCadastro</CTeConsultaCadastro>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CteRecepcaoEvento' version='3.00'>https://producao.cte.ms.gov.br/ws/CteRecepcaoEvento</CteRecepcaoEvento>
