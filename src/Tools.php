@@ -907,14 +907,13 @@ class Tools extends ToolsCommon
      * @param  string $nProtCEC protocol number
      * @return string
      */
-    public function sefazCancelaCE($chave, $nProt, $nProtCE)
+    public function sefazCancelaCE($chave, $nProt, $nProtCE, $nSeqEvento)
     {
         $uf = $this->validKeyByUF($chave);
         $xJust = Strings::replaceSpecialsChars(
             substr(trim($xJust), 0, 255)
         );
         $tpEvento = 110181;
-        $nSeqEvento = 1;
         $tagAdic = "<evCancCECTe>"
             . "<descEvento>Cancelamento do Comprovante de Entrega do CT-e</descEvento>"
             . "<nProt>$nProt</nProt>"
