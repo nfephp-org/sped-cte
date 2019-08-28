@@ -845,36 +845,36 @@ class Tools extends ToolsCommon
      * @param  string $nProt Protocolo do CTe
      * @param  string $xNome Nome de quem recebeu a entrega
      * @param  string $nDoc  Documento de quem recebeu a entrega
-     * @param  string $hash  Hash da Chave de acesso do CT-e + Imagem da assinatura no formato Base64 
-     * @param  array  $aNFes Chave das NFes entregues
+     * @param  string $hash  Hash da Chave de acesso do CT-e + Imagem da assinatura no formato Base64
      * @param  int    $latitude  Latitude do ponto da entrega
      * @param  int    $longitude  Longitude do ponto da entrega
      * @param  int    $nSeqEvento No. sequencial do evento
      * @param  string $dhEventoEntrega Data e hora da geração do hash da entrega
+     * @param  array  $aNFes Chave das NFes entregues
      * @return string
      */
     public function sefazCE(
-		$chave, 
-		$nProt, 
-		$xNome, 
-		$nDoc, 
-		$hash, 
-		$aNFes, 
-		$latitude, 
-		$longitude, 
-		$nSeqEvento,
-		$dhEventoEntrega)
-    {
+        $chave,
+        $nProt,
+        $xNome,
+        $nDoc,
+        $hash,
+        $latitude,
+        $longitude,
+        $nSeqEvento,
+        $dhEventoEntrega,
+        $aNFes = []
+    ) {
         $uf = $this->validKeyByUF($chave);
         $tpEvento = 110180;
         
         /* relaciona as chaves das NFes */
         $infEntrega = '';
-		foreach ($aNFes as $NFe) {
-			$infEntrega .= "<infEntrega>"
-				. "<chNFe>$NFe</chNFe>"
-				. "</infEntrega>";
-		}
+        foreach ($aNFes as $NFe) {
+            $infEntrega .= "<infEntrega>"
+                . "<chNFe>$NFe</chNFe>"
+                . "</infEntrega>";
+        }
 
         $tagAdic = "<evCECTe>"
             . "<descEvento>Comprovante de Entrega do CT-e</descEvento>"
@@ -884,9 +884,9 @@ class Tools extends ToolsCommon
             . "<xNome>$xNome</xNome>"
             . "<latitude>$latitude</latitude>"
             . "<longitude>$longitude</longitude>"
-			. "<hashEntrega>$hash</hashEntrega>"
-			. "<dhHashEntrega>$dhEventoEntrega</dhHashEntrega>" 
-			. $infEntrega 
+            . "<hashEntrega>$hash</hashEntrega>"
+            . "<dhHashEntrega>$dhEventoEntrega</dhHashEntrega>"
+            . $infEntrega
             . "</evCECTe>";
         return $this->sefazEvento(
             $uf,
