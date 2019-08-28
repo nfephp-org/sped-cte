@@ -846,11 +846,11 @@ class Tools extends ToolsCommon
      * @param  string $xNome Nome de quem recebeu a entrega
      * @param  string $nDoc  Documento de quem recebeu a entrega
      * @param  string $hash  Hash da Chave de acesso do CT-e + Imagem da assinatura no formato Base64
-     * @param  array  $aNFes Chave das NFes entregues
      * @param  int    $latitude  Latitude do ponto da entrega
      * @param  int    $longitude  Longitude do ponto da entrega
      * @param  int    $nSeqEvento No. sequencial do evento
      * @param  string $dhEventoEntrega Data e hora da geração do hash da entrega
+     * @param  array  $aNFes Chave das NFes entregues
      * @return string
      */
     public function sefazCE(
