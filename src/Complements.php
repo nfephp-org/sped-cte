@@ -25,10 +25,10 @@ class Complements
             //wrong document, this document is not able to recieve a protocol
             throw DocumentsException::wrongDocument(0, $key);
         }
-        $func = "add".$key."Protocol";
+        $func = "add" . $key . "Protocol";
         return self::$func($request, $response);
     }
-    
+
     /**
      * Authorize Inutilization of numbers
      * @param string $request
@@ -53,7 +53,7 @@ class Complements
         $serie = $infInut->getElementsByTagName('serie')->item(0)->nodeValue;
         $nCTIni = $infInut->getElementsByTagName('nCTIni')->item(0)->nodeValue;
         $nCTFin = $infInut->getElementsByTagName('nCTFin')->item(0)->nodeValue;
-        
+
         $ret = new DOMDocument('1.0', 'UTF-8');
         $ret->preserveWhiteSpace = false;
         $ret->formatOutput = false;
@@ -77,7 +77,8 @@ class Complements
         $retserie = $retInfInut->getElementsByTagName('serie')->item(0)->nodeValue;
         $retnCTIni = $retInfInut->getElementsByTagName('nCTIni')->item(0)->nodeValue;
         $retnCTFin = $retInfInut->getElementsByTagName('nCTFin')->item(0)->nodeValue;
-        if ($versao != $retversao ||
+        if (
+            $versao != $retversao ||
             $tpAmb != $rettpAmb ||
             $cUF != $retcUF ||
             $ano != $retano ||
@@ -110,7 +111,7 @@ class Complements
         $req->preserveWhiteSpace = false;
         $req->formatOutput = false;
         $req->loadXML($request);
-        
+
         $cte = $req->getElementsByTagName('CTe')->item(0);
         $infCTe = $req->getElementsByTagName('infCte')->item(0);
         $versao = $infCTe->getAttribute("versao");
@@ -118,7 +119,7 @@ class Complements
         $digCTe = $req->getElementsByTagName('DigestValue')
             ->item(0)
             ->nodeValue;
-                
+
         $ret = new DOMDocument('1.0', 'UTF-8');
         $ret->preserveWhiteSpace = false;
         $ret->formatOutput = false;
@@ -153,7 +154,7 @@ class Complements
             $versao
         );
     }
-    
+
     /**
      * Authorize CTeOS
      * @param string $request
@@ -167,7 +168,7 @@ class Complements
         $req->preserveWhiteSpace = false;
         $req->formatOutput = false;
         $req->loadXML($request);
-        
+
         $cte = $req->getElementsByTagName('CTeOS')->item(0);
         $infCTe = $req->getElementsByTagName('infCte')->item(0);
         $versao = $infCTe->getAttribute("versao");
@@ -175,7 +176,7 @@ class Complements
         $digCTe = $req->getElementsByTagName('DigestValue')
             ->item(0)
             ->nodeValue;
-                
+
         $ret = new DOMDocument('1.0', 'UTF-8');
         $ret->preserveWhiteSpace = false;
         $ret->formatOutput = false;
@@ -210,7 +211,7 @@ class Complements
             $versao
         );
     }
-    
+
     /**
      * Authorize Event
      * @param string $request
@@ -229,13 +230,13 @@ class Complements
         //extrai tag evento do xml origem (solicitação)
         $event = $ev->getElementsByTagName('eventoCTe')->item(0);
         $versao = $event->getAttribute('versao');
-        
+
         $ret = new \DOMDocument('1.0', 'UTF-8');
         $ret->preserveWhiteSpace = false;
         $ret->formatOutput = false;
         $ret->loadXML($response);
         //extrai numero do lote da resposta
-//        $resLote = $ret->getElementsByTagName('idLote')->item(0)->nodeValue;
+        //        $resLote = $ret->getElementsByTagName('idLote')->item(0)->nodeValue;
         //extrai a rag retEvento da resposta (retorno da SEFAZ)
         $retEv = $ret->getElementsByTagName('retEventoCTe')->item(0);
         $cStat  = $retEv->getElementsByTagName('cStat')->item(0)->nodeValue;
@@ -248,7 +249,7 @@ class Complements
         if (!in_array($cStat, $cStatValids)) {
             throw DocumentsException::wrongDocument(4, "[$cStat] $xMotivo");
         }
-        
+
         return self::join(
             $ev->saveXML($event),
             $ret->saveXML($retEv),
@@ -256,7 +257,73 @@ class Complements
             $versao
         );
     }
-    
+
+
+    /**
+     * Add cancel protocol to a autorized CTe
+     * if event is not a cancellation will return
+     * the same autorized CTe passing
+     * NOTE: This action is not necessary, I use only for my needs to
+     * leave the CTe marked as Canceled in order to avoid mistakes
+     * after its cancellation.
+     * @param string $cte content of autorized CTe XML
+     * @param string $cancelamento content of SEFAZ response
+     * @return string
+     * @throws \InvalidArgumentException
+     */
+    public static function cancelRegister($cte, $cancelamento)
+    {
+        $procXML = $cte;
+        $domcte = new DOMDocument('1.0', 'utf-8');
+        $domcte->formatOutput = false;
+        $domcte->preserveWhiteSpace = false;
+        $domcte->loadXML($cte);
+        $proCTe = $domcte->getElementsByTagName('protCTe')->item(0);
+        if (empty($proCTe)) {
+            //not protocoladed CTe
+            throw DocumentsException::wrongDocument(1);
+        }
+        $chaveCTe = $proCTe->getElementsByTagName('chCTe')->item(0)->nodeValue;
+        $domcanc = new DOMDocument('1.0', 'utf-8');
+        $domcanc->formatOutput = false;
+        $domcanc->preserveWhiteSpace = false;
+        $domcanc->loadXML($cancelamento);
+        $eventos = $domcanc->getElementsByTagName('retEventoCTe');
+        foreach ($eventos as $evento) {
+            $infEvento = $evento->getElementsByTagName('infEvento')->item(0);
+            $cStat = $infEvento->getElementsByTagName('cStat')
+                ->item(0)
+                ->nodeValue;
+            $nProt = $infEvento->getElementsByTagName('nProt')
+                ->item(0)
+                ->nodeValue;
+            $chaveEvento = $infEvento->getElementsByTagName('chCTe')
+                ->item(0)
+                ->nodeValue;
+            $tpEvento = $infEvento->getElementsByTagName('tpEvento')
+                ->item(0)
+                ->nodeValue;
+            if (
+                in_array($cStat, ['135', '136', '155'])
+                && $tpEvento == '110111'
+                && $chaveEvento == $chaveCTe
+            ) {
+                $proCTe->getElementsByTagName('cStat')
+                    ->item(0)
+                    ->nodeValue = '101';
+                $proCTe->getElementsByTagName('nProt')
+                    ->item(0)
+                    ->nodeValue = $nProt;
+                $proCTe->getElementsByTagName('xMotivo')
+                    ->item(0)
+                    ->nodeValue = 'Cancelamento de CT-e homologado';
+                $procXML = Strings::clearProtocoledXML($domcte->saveXML());
+                break;
+            }
+        }
+        return $procXML;
+    }
+
     /**
      * Join the pieces of the source document with those of the answer
      * @param string $first
@@ -268,8 +335,8 @@ class Complements
     protected static function join($first, $second, $nodename, $versao)
     {
         $xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                . "<$nodename versao=\"$versao\" "
-                . "xmlns=\"".self::$urlPortal."\">";
+            . "<$nodename versao=\"$versao\" "
+            . "xmlns=\"" . self::$urlPortal . "\">";
         $xml .= $first;
         $xml .= $second;
         $xml .= "</$nodename>";
