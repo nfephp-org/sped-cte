@@ -338,7 +338,50 @@ class Tools
             $signed = $this->addQRCode($dom);
         }
         $this->isValid($this->versao, $signed, $method);
+        $modal = (int) $dom->getElementsByTagName('modal')->item(0)->nodeValue;
+        if ($modelo != 67) {
+            switch ($modal) {
+                case 1:
+                    //Rodoviário
+                    $this->isValid($this->versao, $this->getModalXML($dom, 'rodo'), $method . 'ModalRodoviario');
+                    break;
+                case 2:
+                    //Aéreo
+                    $this->isValid($this->versao, $this->getModalXML($dom, 'aereo'), $method . 'ModalAereo');
+                    break;
+                case 3:
+                    //Aquaviário
+                    $this->isValid($this->versao, $this->getModalXML($dom, 'aquav'), $method . 'ModalAquaviario');
+                    break;
+                case 4:
+                    //Ferroviário
+                    $this->isValid($this->versao, $this->getModalXML($dom, 'ferrov'), $method . 'ModalFerroviario');
+                    break;
+                case 5:
+                    //Dutoviário
+                    $this->isValid($this->versao, $this->getModalXML($dom, 'duto'), $method . 'ModalDutoviario');
+                    break;
+                case 6:
+                    //Multimodal
+                    $this->isValid($this->versao, $this->getModalXML($dom, 'multimodal'), $method . 'MultiModal');
+                    break;
+            }
+        }
         return $signed;
+    }
+
+    /**
+     * @todo
+     * Retorna o xml do modal especifico
+     * @param string $Dom CTe xml content
+     * @param string $xml CTe xml content
+     * @return string
+     */
+    public function getModalXML($dom, $modal)
+    {
+        $modal = $dom->getElementsByTagName($modal)->item(0);
+        $modal->setAttribute("xmlns", "http://www.portalfiscal.inf.br/cte");
+        return $dom->saveXML($modal);
     }
 
     /**
@@ -395,7 +438,7 @@ class Tools
             if (array_search($type, $permit[$mod]) === false) {
                 throw new RuntimeException(
                     "Esse modo de contingência [$type] não é aceito "
-                    . "para o modelo [$mod]"
+                        . "para o modelo [$mod]"
                 );
             }
         }
@@ -446,7 +489,8 @@ class Tools
         $sigla = $uf;
         if (!$ignoreContingency) {
             $contType = $this->contingency->type;
-            if (!empty($contType)
+            if (
+                !empty($contType)
                 && ($contType == 'SVRS' || $contType == 'SVSP')
             ) {
                 $sigla = $contType;
@@ -456,15 +500,15 @@ class Tools
         if ($stdServ === false) {
             throw new \RuntimeException(
                 "Nenhum serviço foi localizado para esta unidade "
-                . "da federação [$sigla], com o modelo [$this->modelo]."
+                    . "da federação [$sigla], com o modelo [$this->modelo]."
             );
         }
         if (empty($stdServ->$service->url)) {
             throw new \RuntimeException(
                 "Este serviço [$service] não está disponivel para esta "
-                . "unidade da federação [$uf] ou para este modelo de Nota ["
-                . $this->modelo
-                . "]."
+                    . "unidade da federação [$uf] ou para este modelo de Nota ["
+                    . $this->modelo
+                    . "]."
             );
         }
         //recuperação do cUF
@@ -515,7 +559,7 @@ class Tools
     protected function sendRequest($request, array $parameters = [])
     {
         $this->checkSoap();
-        return (string)$this->soap->send(
+        return (string) $this->soap->send(
             $this->urlService,
             $this->urlMethod,
             $this->urlAction,
