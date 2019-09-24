@@ -593,9 +593,33 @@ class Tools
      */
     protected function addQRCode(DOMDocument $dom)
     {
+        $tpAmb = $this->config->tpAmb == 1 ? 'producao' : 'homologacao';
+        $sigla = $this->config->siglaUF;
+
+        $webs = new Webservices($this->getXmlUrlPath());
+        $std = $webs->get($sigla, $tpAmb, $this->modelo);
+
+        if ($std === false) {
+            throw new \RuntimeException(
+                "Nenhum serviço foi localizado para esta unidade "
+                . "da federação [$sigla], com o modelo [$this->modelo]."
+            );
+        }
+
+        if (empty($std->QRCode->url)) {
+            throw new \RuntimeException(
+                "Este serviço [QRCode] não está disponivel para esta "
+                . "unidade da federação [$sigla] ou para este modelo de Nota ["
+                . $this->modelo
+                . "]."
+            );
+        }
+
         $signed = QRCode::putQRTag(
-            $dom
+            $dom,
+            $std->QRCode->url
         );
+
         return Strings::clearXmlString($signed);
     }
 
