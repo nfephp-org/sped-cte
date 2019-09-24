@@ -23,18 +23,20 @@ class QRCode
     /**
      * putQRTag
      * @param DOMDocument $dom CTe
+     * @param string $url
      * @return string
-     * @throws DocumentsException
      */
     public static function putQRTag(
-        \DOMDocument $dom
-    ) {
+        \DOMDocument $dom,
+        $url = ''
+    )
+    {
         $cte = $dom->getElementsByTagName('CTe')->item(0);
         $infCte = $dom->getElementsByTagName('infCte')->item(0);
         $ide = $dom->getElementsByTagName('ide')->item(0);
         $chCTe = preg_replace('/[^0-9]/', '', $infCte->getAttribute("Id"));
         $tpAmb = $ide->getElementsByTagName('tpAmb')->item(0)->nodeValue;
-        $urlQRCode = "https://dfe-portal.svrs.rs.gov.br/cte/qrCode?chCTe=$chCTe&tpAmb=$tpAmb";
+        $urlQRCode = "$url?chCTe=$chCTe&tpAmb=$tpAmb";
         $infCTeSupl = $dom->createElement("infCTeSupl");
         $qrCode = $infCTeSupl->appendChild($dom->createElement('qrCodCTe'));
         $qrCode->appendChild($dom->createCDATASection($urlQRCode));
