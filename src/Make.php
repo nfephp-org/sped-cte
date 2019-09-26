@@ -646,9 +646,6 @@ class Make
         if ($this->infCteAnu != '') { // Caso seja um CTe tipo anulação
             $this->dom->appChild($this->infCte, $this->infCteAnu, 'Falta tag "infCteAnu"');
         }
-        if ($this->infCteSub != '') { // Caso seja um CTe tipo anulação
-            $this->dom->appChild($this->infCte, $this->infCteSub, 'Falta tag "infCteSub"');
-        }
         if ($this->infCTeNorm != '') { // Caso seja um CTe tipo normal
             $this->dom->appChild($this->infCte, $this->infCTeNorm, 'Falta tag "infCTeNorm"');
             $this->dom->appChild($this->infCTeNorm, $this->infCarga, 'Falta tag "infCarga"');
@@ -704,6 +701,9 @@ class Make
             }
             foreach ($this->veicNovos as $veicNovos) {
                 $this->dom->appChild($this->infCTeNorm, $veicNovos, 'Falta tag "infCte"');
+            }
+            if ($this->infCteSub != '') { // Caso seja um CTe tipo anulação
+                $this->dom->appChild($this->infCTeNorm, $this->infCteSub, 'Falta tag "infCteSub"');
             }
         }
 
@@ -3723,15 +3723,15 @@ class Make
 
         $this->dom->addChild(
             $this->infCteSub,
-            'chCTe',
-            $std->chCTe,
+            'chCte',
+            $std->chCte,
             false,
             "$identificador  Chave de acesso do CTe a ser substituído (original)"
         );
         $this->dom->addChild(
             $this->infCteSub,
-            'retCteAnu',
-            $std->retCteAnu,
+            'refCteAnu',
+            $std->refCteAnu,
             false,
             "$identificador  Chave de acesso do CT-e de Anulação"
         );
