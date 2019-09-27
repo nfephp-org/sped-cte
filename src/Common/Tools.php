@@ -379,8 +379,14 @@ class Tools
      */
     public function getModalXML($dom, $modal)
     {
-        $modal = $dom->getElementsByTagName($modal)->item(0);
-        $modal->setAttribute("xmlns", "http://www.portalfiscal.inf.br/cte");
+        if (isset($dom->getElementsByTagName($modal)->item(0)->nodeValue)) {
+            $modal = $dom->getElementsByTagName($modal)->item(0);
+            $modal->setAttribute("xmlns", "http://www.portalfiscal.inf.br/cte");
+        } else {
+            $modal = $dom->getElementsByTagName('Signature')->item(0);
+            $modal->setAttribute("xmlns", "http://www.w3.org/2000/09/xmldsig#");
+        }
+
         return $dom->saveXML($modal);
     }
 
