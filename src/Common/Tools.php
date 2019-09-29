@@ -307,7 +307,7 @@ class Tools
 
     /**
      * Sign CTe
-     * @param  string $xml CTe xml content
+     * @param string $xml CTe xml content
      * @return string singed CTe xml
      * @throws RuntimeException
      */
@@ -338,32 +338,50 @@ class Tools
             $signed = $this->addQRCode($dom);
         }
         $this->isValid($this->versao, $signed, $method);
-        $modal = (int) $dom->getElementsByTagName('modal')->item(0)->nodeValue;
+        $modal = (int)$dom->getElementsByTagName('modal')->item(0)->nodeValue;
         if ($modelo != 67) {
             switch ($modal) {
                 case 1:
                     //Rodoviário
-                    $this->isValid($this->versao, $this->getModalXML($dom, 'rodo'), $method . 'ModalRodoviario');
+                    $rodo = $this->getModalXML($dom, 'rodo');
+                    if ($rodo) {
+                        $this->isValid($this->versao, $rodo, $method . 'ModalRodoviario');
+                    }
                     break;
                 case 2:
                     //Aéreo
-                    $this->isValid($this->versao, $this->getModalXML($dom, 'aereo'), $method . 'ModalAereo');
+                    $aereo = $this->getModalXML($dom, 'aereo');
+                    if ($aereo) {
+                        $this->isValid($this->versao, $aereo, $method . 'ModalAereo');
+                    }
                     break;
                 case 3:
                     //Aquaviário
-                    $this->isValid($this->versao, $this->getModalXML($dom, 'aquav'), $method . 'ModalAquaviario');
+                    $aquav = $this->getModalXML($dom, 'aquav');
+                    if ($aquav) {
+                        $this->isValid($this->versao, $aquav, $method . 'ModalAquaviario');
+                    }
                     break;
                 case 4:
                     //Ferroviário
-                    $this->isValid($this->versao, $this->getModalXML($dom, 'ferrov'), $method . 'ModalFerroviario');
+                    $ferrov = $this->getModalXML($dom, 'ferrov');
+                    if ($ferrov) {
+                        $this->isValid($this->versao, $ferrov, $method . 'ModalFerroviario');
+                    }
                     break;
                 case 5:
                     //Dutoviário
-                    $this->isValid($this->versao, $this->getModalXML($dom, 'duto'), $method . 'ModalDutoviario');
+                    $duto = $this->getModalXML($dom, 'duto');
+                    if ($duto) {
+                        $this->isValid($this->versao, $duto, $method . 'ModalDutoviario');
+                    }
                     break;
                 case 6:
                     //Multimodal
-                    $this->isValid($this->versao, $this->getModalXML($dom, 'multimodal'), $method . 'MultiModal');
+                    $multimodal = $this->getModalXML($dom, 'multimodal');
+                    if ($multimodal) {
+                        $this->isValid($this->versao, $multimodal, $method . 'MultiModal');
+                    }
                     break;
             }
         }
@@ -371,17 +389,20 @@ class Tools
     }
 
     /**
-     * @todo
-     * Retorna o xml do modal especifico
      * @param string $Dom CTe xml content
      * @param string $xml CTe xml content
-     * @return string
+     * @return string|bool
+     * @todo
+     * Retorna o xml do modal especifico
      */
     public function getModalXML($dom, $modal)
     {
         $modal = $dom->getElementsByTagName($modal)->item(0);
-        $modal->setAttribute("xmlns", "http://www.portalfiscal.inf.br/cte");
-        return $dom->saveXML($modal);
+        if (!empty($modal)) {
+            $modal->setAttribute("xmlns", "http://www.portalfiscal.inf.br/cte");
+            return $dom->saveXML($modal);
+        }
+        return false;
     }
 
     /**
