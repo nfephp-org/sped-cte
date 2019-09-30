@@ -702,8 +702,12 @@ class Make
             foreach ($this->veicNovos as $veicNovos) {
                 $this->dom->appChild($this->infCTeNorm, $veicNovos, 'Falta tag "infCte"');
             }
-            if ($this->infCteSub != '') { // Caso seja um CTe tipo anulação
+            if ($this->infCteSub != '') {
                 $this->dom->appChild($this->infCTeNorm, $this->infCteSub, 'Falta tag "infCteSub"');
+
+                if ($this->tomaICMS != '') {
+                    $this->dom->appChild($this->infCteSub, $this->tomaICMS, 'Falta tag "infCteSub"');
+                }
             }
         }
 
