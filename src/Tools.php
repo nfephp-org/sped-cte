@@ -537,7 +537,7 @@ class Tools extends ToolsCommon
         if ($tpEvento == 610110) {
             $xJust = Strings::replaceSpecialsChars(substr(trim($xJust), 0, 255));
             $tagAdic = "<evPrestDesacordo>"
-                . "<descEvento>Prestação do Serviço em Desacordo</descEvento>"
+                . "<descEvento>Prestacao do Servico em Desacordo</descEvento>"
                 . "<indDesacordoOper>1</indDesacordoOper>"
                 . "<xObs>$xJust</xObs>"
                 . "</evPrestDesacordo>";
