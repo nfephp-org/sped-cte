@@ -3328,13 +3328,19 @@ class Make
         $posicao = (int) count($this->infDocRef) - 1;
         $this->dom->addChild($this->infDocRef[$posicao], 'nDoc', $std->nDoc, false, $ident . 'Número '
             . 'do documento');
-        $this->dom->addChild($this->infDocRef[$posicao], 'serie', $std->serie, false, $ident . 'Série '
+        if (isset($std->serie)) {
+            $this->dom->addChild($this->infDocRef[$posicao], 'serie', $std->serie, false, $ident . 'Série '
             . 'do documento');
-        $this->dom->addChild($this->infDocRef[$posicao], 'subserie', $std->subserie, false, $ident . 'Subserie '
+        }
+        if (isset($std->subserie)) {
+            $this->dom->addChild($this->infDocRef[$posicao], 'subserie', $std->subserie, false, $ident . 'Subserie '
             . 'do documento');
+        }
         $this->dom->addChild($this->infDocRef[$posicao], 'dEmi', $std->dEmi, false, $ident . 'Data de Emissão');
-        $this->dom->addChild($this->infDocRef[$posicao], 'vDoc', $std->vDoc, false, $ident . 'Valor '
+        if (isset($std->vDoc)) {
+            $this->dom->addChild($this->infDocRef[$posicao], 'vDoc', $std->vDoc, false, $ident . 'Valor '
             . 'do documento');
+        }
         return $this->infDocRef[$posicao];
     }
 
