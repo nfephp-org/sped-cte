@@ -33,7 +33,7 @@ class QRCode
     {
         $mod = $dom->getElementsByTagName('mod')->item(0)->nodeValue;
         # se for CTe-OS, pega a tag raiz correspondente
-        if($mod == 67) {
+        if ($mod == 67) {
             $cte = $dom->getElementsByTagName('CTeOS')->item(0);
         } else {
             $cte = $dom->getElementsByTagName('CTe')->item(0);
