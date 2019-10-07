@@ -29,8 +29,7 @@ class QRCode
     public static function putQRTag(
         \DOMDocument $dom,
         $url = ''
-    )
-    {
+    ) {
         $mod = $dom->getElementsByTagName('mod')->item(0)->nodeValue;
         # se for CTe-OS, pega a tag raiz correspondente
         if ($mod == 67) {
