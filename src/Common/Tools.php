@@ -510,10 +510,7 @@ class Tools
         $sigla = $uf;
         if (!$ignoreContingency) {
             $contType = $this->contingency->type;
-            if (
-                !empty($contType)
-                && ($contType == 'SVRS' || $contType == 'SVSP')
-            ) {
+            if (!empty($contType) && ($contType == 'SVRS' || $contType == 'SVSP')) {
                 $sigla = $contType;
             }
         }

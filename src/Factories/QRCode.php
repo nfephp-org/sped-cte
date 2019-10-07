@@ -29,9 +29,15 @@ class QRCode
     public static function putQRTag(
         \DOMDocument $dom,
         $url = ''
-    )
-    {
-        $cte = $dom->getElementsByTagName('CTe')->item(0);
+    ) {
+        $mod = $dom->getElementsByTagName('mod')->item(0)->nodeValue;
+        # se for CTe-OS, pega a tag raiz correspondente
+        if ($mod == 67) {
+            $cte = $dom->getElementsByTagName('CTeOS')->item(0);
+        } else {
+            $cte = $dom->getElementsByTagName('CTe')->item(0);
+        }
+
         $infCte = $dom->getElementsByTagName('infCte')->item(0);
         $ide = $dom->getElementsByTagName('ide')->item(0);
         $chCTe = preg_replace('/[^0-9]/', '', $infCte->getAttribute("Id"));
