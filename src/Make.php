@@ -854,7 +854,9 @@ class Make
             }
             if ($this->infModal != '') {
                 $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
-                $this->dom->appChild($this->rodo, $this->veic, 'Falta tag "veic"');
+                if (!empty($this->veic)) {
+                    $this->dom->appChild($this->rodo, $this->veic, 'Falta tag "veic"');
+                }
                 $this->dom->appChild($this->rodo, $this->infFretamento, 'Falta tag "infFretamento"');
                 $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
             }
