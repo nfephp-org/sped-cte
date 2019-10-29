@@ -3611,9 +3611,11 @@ class Make
         return $this->infQ[$posicao];
     }
 
-    public function taginfDoc()
+    private function taginfDoc()
     {
-        $this->infDoc = $this->dom->createElement('infDoc');
+        if (empty($this->infDoc)) {
+            $this->infDoc = $this->dom->createElement('infDoc');
+        }
         return $this->infDoc;
     }
 
@@ -3662,125 +3664,138 @@ class Make
             'nCFOP',
             'nPeso',
             'PIN',
-            'dPrev'
+            'dPrev',
+            'infUnidCarga',
+            'infUnidTransp',
+            'nItem'
         ];
-
+        $this->taginfDoc();
         $std = $this->equilizeParameters($std, $possible);
 
         $identificador = '#262 <infNF> - ';
-        $this->infNF[] = $this->dom->createElement('infNF');
-        $posicao = (int)count($this->infNF) - 1;
+        $infNF = $this->dom->createElement('infNF');
         $this->dom->addChild(
-            $this->infNF[$posicao],
+            $infNF,
             'nRoma',
             $std->nRoma,
             false,
             $identificador . 'Número do Romaneio da NF'
         );
         $this->dom->addChild(
-            $this->infNF[$posicao],
+            $infNF,
             'nPed',
             $std->nPed,
             false,
             $identificador . 'Número do Pedido da NF'
         );
         $this->dom->addChild(
-            $this->infNF[$posicao],
+            $infNF,
             'mod',
             $std->mod,
             true, $identificador . 'Modelo da Nota Fiscal'
         );
         $this->dom->addChild(
-            $this->infNF[$posicao],
+            $infNF,
             'serie',
             $std->serie,
             true,
             $identificador . 'Série'
         );
         $this->dom->addChild(
-            $this->infNF[$posicao],
+            $infNF,
             'nDoc',
             $std->nDoc,
             true,
             $identificador . 'Número'
         );
         $this->dom->addChild(
-            $this->infNF[$posicao],
+            $infNF,
             'dEmi',
             $std->dEmi,
             true,
             $identificador . 'Data de Emissão'
         );
         $this->dom->addChild(
-            $this->infNF[$posicao],
+            $infNF,
             'vBC',
             $std->vBC,
             true,
             $identificador . 'Valor da Base de Cálculo do ICMS'
         );
         $this->dom->addChild(
-            $this->infNF[$posicao],
+            $infNF,
             'vICMS',
             $std->vICMS,
             true,
             $identificador . 'Valor Totaldo ICMS'
         );
         $this->dom->addChild(
-            $this->infNF[$posicao],
+            $infNF,
             'vBCST',
             $std->vBCST,
             true,
             $identificador . 'Valor da Base de Cálculo do ICMS ST');
         $this->dom->addChild(
-            $this->infNF[$posicao],
+            $infNF,
             'vST',
             $std->vST,
             true,
             $identificador . 'Valor Total do ICMS ST'
         );
         $this->dom->addChild(
-            $this->infNF[$posicao],
+            $infNF,
             'vProd',
             $std->vProd,
             true,
             $identificador . 'Valor Total dos Produtos'
         );
         $this->dom->addChild(
-            $this->infNF[$posicao],
+            $infNF,
             'vNF',
             $std->vNF,
             true,
             $identificador . 'Valor Total da NF'
         );
         $this->dom->addChild(
-            $this->infNF[$posicao],
+            $infNF,
             'nCFOP',
             $std->nCFOP,
             true,
             $identificador . 'CFOP Predominante'
         );
         $this->dom->addChild(
-            $this->infNF[$posicao],
+            $infNF,
             'nPeso',
             $std->nPeso,
             false,
             $identificador . 'Peso total em Kg'
         );
         $this->dom->addChild(
-            $this->infNF[$posicao],
+            $infNF,
             'PIN',
             $std->PIN,
             false,
             $identificador . 'PIN SUFRAMA'
         );
         $this->dom->addChild(
-            $this->infNF[$posicao],
+            $infNF,
             'dPrev',
             $std->dPrev,
             false,
             $identificador . 'Data prevista de entrega'
         );
-        return $this->infNF[$posicao];
+        if ($std->infUnidCarga) {
+            foreach ($std->infUnidCarga as $value) {
+                $this->dom->appChild($infNF, $this->taginfUnidCarga($value), 'Falta tag "infUnidCarga"');
+            }
+        }
+        if ($std->infUnidTransp) {
+            foreach ($std->infUnidTransp as $value) {
+                $this->dom->appChild($infNF, $this->taginfUnidTransp($value), 'Falta tag "infUnidTransp"');
+            }
+        }
+        $this->infNF[$std->nItem][] = $infNF;
+        return $infNF;
     }
 
     /**
@@ -3795,36 +3810,49 @@ class Make
         $possible = [
             'chave',
             'PIN',
-            'dPrev'
+            'dPrev',
+            'infUnidCarga',
+            'infUnidTransp',
+            'nItem'
         ];
-
+        $this->taginfDoc();
         $std = $this->equilizeParameters($std, $possible);
 
         $identificador = '#297 <infNFe> - ';
-        $this->infNFe[] = $this->dom->createElement('infNFe');
-        $posicao = (int)count($this->infNFe) - 1;
+        $infNFe = $this->dom->createElement('infNFe');
         $this->dom->addChild(
-            $this->infNFe[$posicao],
+            $infNFe,
             'chave',
             $std->chave,
             true,
             $identificador . 'Chave de acesso da NF-e'
         );
         $this->dom->addChild(
-            $this->infNFe[$posicao],
+            $infNFe,
             'PIN',
             $std->PIN,
             false,
             $identificador . 'PIN SUFRAMA'
         );
         $this->dom->addChild(
-            $this->infNFe[$posicao],
+            $infNFe,
             'dPrev',
             $std->dPrev,
             false,
             $identificador . 'Data prevista de entrega'
         );
-        return $this->infNFe[$posicao];
+        if ($std->infUnidCarga) {
+            foreach ($std->infUnidCarga as $value) {
+                $this->dom->appChild($infNFe, $this->taginfUnidCarga($value), 'Falta tag "infUnidCarga"');
+            }
+        }
+        if ($std->infUnidTransp) {
+            foreach ($std->infUnidTransp as $value) {
+                $this->dom->appChild($infNFe, $this->taginfUnidTransp($value), 'Falta tag "infUnidTransp"');
+            }
+        }
+        $this->infNFe[$std->nItem][] = $infNFe;
+        return $infNFe;
     }
 
     /**
@@ -3842,57 +3870,192 @@ class Make
             'nDoc',
             'dEmi',
             'vDocFisc',
-            'dPrev'
+            'dPrev',
+            'infUnidCarga',
+            'infUnidTransp',
+            'nItem'
         ];
-
+        $this->taginfDoc();
         $std = $this->equilizeParameters($std, $possible);
 
         $ident = '#319 <infOutros> - ';
-        $this->infOutros[] = $this->dom->createElement('infOutros');
-        $posicao = (int)count($this->infOutros) - 1;
+        $infOutros = $this->dom->createElement('infOutros');
         $this->dom->addChild(
-            $this->infOutros[$posicao],
+            $infOutros,
             'tpDoc',
             $std->tpDoc,
             true,
             $ident . 'Tipo de documento originário'
         );
         $this->dom->addChild(
-            $this->infOutros[$posicao],
+            $infOutros,
             'descOutros',
             $std->descOutros,
             false,
             $ident . 'Descrição do documento'
         );
         $this->dom->addChild(
-            $this->infOutros[$posicao],
+            $infOutros,
             'nDoc',
             $std->nDoc,
             false,
             $ident . 'Número do documento'
         );
         $this->dom->addChild(
-            $this->infOutros[$posicao],
+            $infOutros,
             'dEmi',
             $std->dEmi,
             false,
             $ident . 'Data de Emissão'
         );
         $this->dom->addChild(
-            $this->infOutros[$posicao],
+            $infOutros,
             'vDocFisc',
             $std->vDocFisc,
             false,
             $ident . 'Valor do documento'
         );
         $this->dom->addChild(
-            $this->infOutros[$posicao],
+            $infOutros,
             'dPrev',
             $std->dPrev,
             false,
             $ident . 'Data ista de entrega'
         );
-        return $this->infOutros[$posicao];
+        if ($std->infUnidCarga) {
+            foreach ($std->infUnidCarga as $value) {
+                $this->dom->appChild($infOutros, $this->taginfUnidCarga($value), 'Falta tag "infUnidCarga"');
+            }
+        }
+        if ($std->infUnidTransp) {
+            foreach ($std->infUnidTransp as $value) {
+                $this->dom->appChild($infOutros, $this->taginfUnidTransp($value), 'Falta tag "infUnidTransp"');
+            }
+        }
+        $this->infOutros[$std->nItem][] = $infOutros;
+        return $infOutros;
+    }
+
+    /**
+     * taginfUnidCarga
+     * tag CTe/infCte/infDoc/(infNF/infNFe/infOutros)/infUnidCarga
+     *
+     * @param  stdClass $std
+     * @return DOMElement
+     */
+    private function taginfUnidCarga(stdClass $std)
+    {
+        $possible = [
+            'tpUnidCarga',
+            'idUnidCarga',
+            'lacUnidCarga',
+            'qtdRat'
+        ];
+        $std = $this->equilizeParameters($std, $possible);
+        $infUnidCarga = $this->dom->createElement("infUnidCarga");
+        $this->dom->addChild(
+            $infUnidCarga,
+            "tpUnidCarga",
+            $std->tpUnidCarga,
+            false,
+            "Tipo da Unidade de Carga"
+        );
+        $this->dom->addChild(
+            $infUnidCarga,
+            "idUnidCarga",
+            $std->idUnidCarga,
+            false,
+            "Identificação da Unidade de Carga "
+        );
+        if ($std->lacUnidCarga != null) {
+            $possible = [
+                'nLacre'
+            ];
+            $stdlacUnidCarga = $this->equilizeParameters($std->lacUnidCarga, $possible);
+            foreach ($stdlacUnidCarga->nLacre as $nLacre) {
+                $lacUnidCarga = $this->dom->createElement("lacUnidCarga");
+                $this->dom->addChild(
+                    $lacUnidCarga,
+                    "nLacre",
+                    $nLacre,
+                    true,
+                    "Número do lacre"
+                );
+                $this->dom->appChild($infUnidCarga, $lacUnidCarga, 'Falta tag "infUnidCarga"');
+            }
+        }
+        $this->dom->addChild(
+            $infUnidCarga,
+            "qtdRat",
+            $std->qtdRat,
+            false,
+            "Quantidade rateada (Peso,Volume)"
+        );
+        return $infUnidCarga;
+    }
+
+    /**
+     * taginfUnidTransp
+     * tag CTe/infCte/infDoc/(infNF/infNFe/infOutros)/infUnidTransp
+     *
+     * @param  stdClass $std
+     * @return DOMElement
+     */
+    private function taginfUnidTransp(stdClass $std)
+    {
+        $possible = [
+            'tpUnidTransp',
+            'idUnidTransp',
+            'qtdRat',
+            'lacUnidTransp',
+            'infUnidCarga'
+        ];
+        $std = $this->equilizeParameters($std, $possible);
+        $infUnidTransp = $this->dom->createElement("infUnidTransp");
+        $this->dom->addChild(
+            $infUnidTransp,
+            "tpUnidTransp",
+            $std->tpUnidTransp,
+            true,
+            "Tipo da Unidade de Transporte"
+        );
+        $this->dom->addChild(
+            $infUnidTransp,
+            "idUnidTransp",
+            $std->idUnidTransp,
+            false,
+            "Identificação da Unidade de Transporte"
+        );
+        if ($std->lacUnidTransp != null) {
+            $possible = [
+                'nLacre'
+            ];
+            $stdlacUnidTransp = $this->equilizeParameters($std->lacUnidTransp, $possible);
+            foreach ($stdlacUnidTransp->nLacre as $nLacre) {
+                $lacUnidTransp = $this->dom->createElement("lacUnidTransp");
+                $this->dom->addChild(
+                    $lacUnidTransp,
+                    "nLacre",
+                    $nLacre,
+                    true,
+                    "Número do lacre"
+                );
+                $this->dom->appChild($infUnidTransp, $lacUnidTransp, 'Falta tag "infUnidTransp"');
+            }
+        }
+        if ($std->infUnidCarga) {
+            foreach ($std->infUnidCarga as $value) {
+                $this->dom->appChild($infUnidTransp, $this->taginfUnidCarga($value), 'Falta tag "infUnidCarga"');
+            }
+        }
+        $this->dom->addChild(
+            $infUnidTransp,
+            "qtdRat",
+            $std->qtdRat,
+            false,
+            "Quantidade rateada (Peso,Volume) "
+        );
+        return $infUnidTransp;
     }
 
     /**

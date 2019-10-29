@@ -255,8 +255,6 @@ $infQ->tpMed = 'OUTROS'; // Tipo de Medida
 $infQ->qCarga = 31145.0000;  // Quantidade (15 posições; sendo 11 inteiras e 4 decimais.)
 $cte->taginfQ($infQ);
 
-$cte->taginfDoc();
-
 $infNFe = new stdClass();
 $infNFe->chave = '43160472202112000136550000000010571048440722'; // Chave de acesso da NF-e
 $infNFe->PIN = ''; // PIN SUFRAMA
