@@ -3691,7 +3691,8 @@ class Make
             $infNF,
             'mod',
             $std->mod,
-            true, $identificador . 'Modelo da Nota Fiscal'
+            true,
+            $identificador . 'Modelo da Nota Fiscal'
         );
         $this->dom->addChild(
             $infNF,
@@ -3733,7 +3734,8 @@ class Make
             'vBCST',
             $std->vBCST,
             true,
-            $identificador . 'Valor da Base de Cálculo do ICMS ST');
+            $identificador . 'Valor da Base de Cálculo do ICMS ST'
+        );
         $this->dom->addChild(
             $infNF,
             'vST',

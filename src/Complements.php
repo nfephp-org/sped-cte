@@ -77,8 +77,7 @@ class Complements
         $retserie = $retInfInut->getElementsByTagName('serie')->item(0)->nodeValue;
         $retnCTIni = $retInfInut->getElementsByTagName('nCTIni')->item(0)->nodeValue;
         $retnCTFin = $retInfInut->getElementsByTagName('nCTFin')->item(0)->nodeValue;
-        if (
-            $versao != $retversao ||
+        if ($versao != $retversao ||
             $tpAmb != $rettpAmb ||
             $cUF != $retcUF ||
             $ano != $retano ||
@@ -303,8 +302,7 @@ class Complements
             $tpEvento = $infEvento->getElementsByTagName('tpEvento')
                 ->item(0)
                 ->nodeValue;
-            if (
-                in_array($cStat, ['135', '136', '155'])
+            if (in_array($cStat, ['135', '136', '155'])
                 && $tpEvento == '110111'
                 && $chaveEvento == $chaveCTe
             ) {
