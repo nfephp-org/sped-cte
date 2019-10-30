@@ -3666,8 +3666,7 @@ class Make
             'PIN',
             'dPrev',
             'infUnidCarga',
-            'infUnidTransp',
-            'nItem'
+            'infUnidTransp'
         ];
         $this->taginfDoc();
         $std = $this->equilizeParameters($std, $possible);
@@ -3794,7 +3793,7 @@ class Make
                 $this->dom->appChild($infNF, $this->taginfUnidTransp($value), 'Falta tag "infUnidTransp"');
             }
         }
-        $this->infNF[$std->nItem][] = $infNF;
+        $this->infNF[] = $infNF;
         return $infNF;
     }
 
@@ -3812,8 +3811,7 @@ class Make
             'PIN',
             'dPrev',
             'infUnidCarga',
-            'infUnidTransp',
-            'nItem'
+            'infUnidTransp'
         ];
         $this->taginfDoc();
         $std = $this->equilizeParameters($std, $possible);
@@ -3851,7 +3849,7 @@ class Make
                 $this->dom->appChild($infNFe, $this->taginfUnidTransp($value), 'Falta tag "infUnidTransp"');
             }
         }
-        $this->infNFe[$std->nItem] = $infNFe;
+        $this->infNFe[] = $infNFe;
         return $infNFe;
     }
 
@@ -3872,8 +3870,7 @@ class Make
             'vDocFisc',
             'dPrev',
             'infUnidCarga',
-            'infUnidTransp',
-            'nItem'
+            'infUnidTransp'
         ];
         $this->taginfDoc();
         $std = $this->equilizeParameters($std, $possible);
@@ -3932,7 +3929,7 @@ class Make
                 $this->dom->appChild($infOutros, $this->taginfUnidTransp($value), 'Falta tag "infUnidTransp"');
             }
         }
-        $this->infOutros[$std->nItem][] = $infOutros;
+        $this->infOutros[] = $infOutros;
         return $infOutros;
     }
 
