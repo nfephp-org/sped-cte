@@ -3851,7 +3851,7 @@ class Make
                 $this->dom->appChild($infNFe, $this->taginfUnidTransp($value), 'Falta tag "infUnidTransp"');
             }
         }
-        $this->infNFe[$std->nItem][] = $infNFe;
+        $this->infNFe[$std->nItem] = $infNFe;
         return $infNFe;
     }
 
