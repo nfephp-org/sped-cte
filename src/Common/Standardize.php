@@ -54,7 +54,8 @@ class Standardize
         'procInutCTe',
         'CTe',
         'CTeOS',
-        'retConsStatServCte'
+        'retConsStatServCte',
+        'cteDistDFeInteresseResponse'
     ];
     
     /**

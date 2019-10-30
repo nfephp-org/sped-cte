@@ -712,7 +712,7 @@ class Tools extends ToolsCommon
     public function sefazDownload($chave)
     {
         //carrega serviço
-        $servico = 'CteDistribuicaoDFe';
+        $servico = 'CTeDistribuicaoDFe';
         $this->checkContingencyForWebServices($servico);
         $this->servico(
             $servico,
