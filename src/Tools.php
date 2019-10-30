@@ -376,7 +376,11 @@ class Tools extends ToolsCommon
         $consulta = "<distDFeInt xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
             . "<tpAmb>".$this->tpAmb."</tpAmb>"
             . "<cUFAutor>$cUF</cUFAutor>"
-            . "<CNPJ>".$this->config->cnpj."</CNPJ>$tagNSU</distDFeInt>";
+            . ((strlen($this->config->cnpj)==14) ? 
+                "<CNPJ>".$this->config->cnpj."</CNPJ>" : 
+                "<CPF>".$this->config->cnpj."</CPF>"
+              )
+            . $tagNSU."</distDFeInt>";
         //valida o xml da requisição
         $this->isValid($this->urlVersion, $consulta, 'distDFeInt');
         $this->lastRequest = $consulta;
@@ -719,10 +723,11 @@ class Tools extends ToolsCommon
         $cUF = UFList::getCodeByUF($this->config->siglaUF);
         $tagChave = "<consChNFe><chNFe>$chave</chNFe></consChNFe>";
         //monta a consulta
-        $consulta = "<distDFeInt xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
-            . "<tpAmb>".$this->tpAmb."</tpAmb>"
-            . "<cUFAutor>$cUF</cUFAutor>"
-            . "<CNPJ>".$this->config->cnpj."</CNPJ>$tagChave</distDFeInt>";
+            . ((strlen($this->config->cnpj)==14) ? 
+                "<CNPJ>".$this->config->cnpj."</CNPJ>" : 
+                "<CPF>".$this->config->cnpj."</CPF>"
+              )
+            . $tagChave."</distDFeInt>";
         //valida o xml da requisição
         $this->isValid($this->urlVersion, $consulta, 'distDFeInt');
         $this->lastRequest = $consulta;
