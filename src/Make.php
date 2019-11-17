@@ -657,6 +657,9 @@ class Make
                     $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
                 }
             } elseif ($this->modal == '02') {
+                foreach ($this->peri as $peri) {
+                    $this->dom->appChild($this->aereo, $peri, 'Falta tag "aereo"');
+                }
                 $this->dom->appChild($this->infModal, $this->aereo, 'Falta tag "aereo"');
             } elseif ($this->modal == '03') {
                 $this->dom->appChild($this->infModal, $this->aquav, 'Falta tag "aquav"');
@@ -4618,6 +4621,62 @@ class Make
         );
         $this->aereo->appendChild($this->tarifa);
         return $this->aereo;
+    }
+
+    /**
+     * Leiaute - Aéreo
+     * Gera as tags para o elemento: "aereo" (Informações do modal Aéreo)
+     * #1
+     * Nível: 0
+     * @return DOMElement|\DOMNode
+     */
+    public function tagaperi($std)
+    {
+
+        $possible = [
+            'nONU',
+            'qTotEmb',
+            'qTotProd',
+            'uniAP '
+        ];
+
+        $std = $this->equilizeParameters($std, $possible);
+
+        $identificador = '#1 <aereo> - <peri> - ';
+        $peri = $this->dom->createElement('peri');
+        $this->dom->addChild(
+            $peri,
+            'nONU',
+            $std->nONU,
+            true,
+            $identificador . 'Número ONU/UN'
+        );
+        $this->dom->addChild(
+            $peri,
+            'qTotEmb',
+            $std->qTotEmb,
+            true,
+            $identificador . 'Quantidade total de volumes contendo artigos perigosos'
+        );
+        $identificador = '#1 <peri> - <infTotAP> - ';
+        $infTotAP = $this->dom->createElement('infTotAP');
+        $this->dom->addChild(
+            $infTotAP,
+            'qTotProd',
+            $std->qTotProd,
+            false,
+            $identificador . 'Quantidade total de artigos perigosos'
+        );
+        $this->dom->addChild(
+            $infTotAP,
+            'uniAP',
+            $std->uniAP,
+            true,
+            $identificador . 'Unidade de medida'
+        );
+        $peri->appendChild($infTotAP);
+        $this->peri[] = $peri;
+        return $peri;
     }
 
     /**
