@@ -4630,7 +4630,7 @@ class Make
      * Nível: 0
      * @return DOMElement|\DOMNode
      */
-    public function tagaperi($std)
+    public function tagperi($std)
     {
 
         $possible = [
