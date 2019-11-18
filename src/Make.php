@@ -409,6 +409,13 @@ class Make
      */
     private $aereo = '';
     /**
+     * Informações do modal Ferroviario
+     * @var \DOMNode
+     */
+    private $ferrov = '';
+
+    private $ferroEnv = '';
+    /**
      * Informações do modal Aquaviario
      * @var \DOMNode
      */
@@ -418,16 +425,6 @@ class Make
      * @var \DOMNode
      */
     private $duto = '';
-    /**
-     * Informações do modal Aéreo -> Dados da Carga
-     * @var \DOMNode
-     */
-    private $natCarga = '';
-    /**
-     * Informações do modal Aéreo -> Tarifas
-     * @var \DOMNode
-     */
-    private $tarifa = '';
     /**
      * Ordens de Coleta associados
      * @var array
@@ -661,6 +658,11 @@ class Make
                     $this->dom->appChild($this->aereo, $peri, 'Falta tag "aereo"');
                 }
                 $this->dom->appChild($this->infModal, $this->aereo, 'Falta tag "aereo"');
+            } elseif ($this->modal == '04') {
+                foreach ($this->ferroEnv as $ferroEnv) {
+                    $this->ferrov->insertBefore($ferroEnv, $this->ferrov->getElementsByTagName('fluxo')->item(0));
+                }
+                $this->dom->appChild($this->infModal, $this->ferrov, 'Falta tag "ferrov"');
             } elseif ($this->modal == '03') {
                 $this->dom->appChild($this->infModal, $this->aquav, 'Falta tag "aquav"');
             } elseif ($this->modal == '05') {
@@ -4572,9 +4574,9 @@ class Make
         );
         if (isset($std->natCarga_xDime) || isset($std->natCarga_cInfManu)) {
             $identificador = '#1 <aereo> - <natCarga> - ';
-            $this->natCarga = $this->dom->createElement('natCarga');
+            $natCarga = $this->dom->createElement('natCarga');
             $this->dom->addChild(
-                $this->natCarga,
+                $natCarga,
                 'xDime',
                 $std->natCarga_xDime,
                 false,
@@ -4587,39 +4589,39 @@ class Make
             foreach ($std->natCarga_cInfManu as $cInfManu) {
                 $cInfManuX++;
                 $this->dom->addChild(
-                    $this->natCarga,
+                    $natCarga,
                     'cInfManu',
                     $cInfManu,
                     false,
                     $identificador . 'Informação de manuseio, com dois dígitos, pode ter mais de uma ocorrência.'
                 );
             }
-            $this->aereo->appendChild($this->natCarga);
+            $this->aereo->appendChild($natCarga);
         }
         $identificador = '#1 <aereo> - <tarifa> - ';
-        $this->tarifa = $this->dom->createElement('tarifa');
+        $tarifa = $this->dom->createElement('tarifa');
         $this->dom->addChild(
-            $this->tarifa,
+            $tarifa,
             'CL',
             $std->tarifa_CL,
             true,
             $identificador . 'Classe da tarifa: M - Tarifa Mínima / G - Tarifa Geral / E - Tarifa Específica'
         );
         $this->dom->addChild(
-            $this->tarifa,
+            $tarifa,
             'cTar',
             $std->tarifa_cTar,
             false,
             $identificador . 'Código de três digítos correspondentes à tarifa.'
         );
         $this->dom->addChild(
-            $this->tarifa,
+            $tarifa,
             'vTar',
             $std->tarifa_vTar,
             true,
             $identificador . 'Valor da tarifa. 15 posições, sendo 13 inteiras e 2 decimais.'
         );
-        $this->aereo->appendChild($this->tarifa);
+        $this->aereo->appendChild($tarifa);
         return $this->aereo;
     }
 
@@ -4637,7 +4639,7 @@ class Make
             'nONU',
             'qTotEmb',
             'qTotProd',
-            'uniAP '
+            'uniAP'
         ];
 
         $std = $this->equilizeParameters($std, $possible);
@@ -4677,6 +4679,183 @@ class Make
         $peri->appendChild($infTotAP);
         $this->peri[] = $peri;
         return $peri;
+    }
+
+    public function tagferrov($std)
+    {
+
+        $possible = [
+            'tpTraf',
+            'respFat',
+            'ferrEmi',
+            'vFrete',
+            'chCTeFerroOrigem ',
+            'fluxo'
+        ];
+
+        $std = $this->equilizeParameters($std, $possible);
+
+        $identificador = '#1 <ferrov> - ';
+        $this->ferrov = $this->dom->createElement('ferrov');
+        $this->dom->addChild(
+            $this->ferrov,
+            'tpTraf',
+            $std->tpTraf,
+            true,
+            $identificador . 'Tipo de Tráfego'
+        );
+        $identificador = '#1 <ferrov> - <trafMut> - ';
+        $trafMut = $this->dom->createElement('trafMut');
+        $this->dom->addChild(
+            $trafMut,
+            'respFat',
+            $std->respFat,
+            true,
+            $identificador . 'Responsável pelo Faturamento'
+        );
+        $this->dom->addChild(
+            $trafMut,
+            'ferrEmi',
+            $std->ferrEmi,
+            true,
+            $identificador . 'Ferrovia Emitente do CTe'
+        );
+        $this->dom->addChild(
+            $trafMut,
+            'vFrete',
+            $std->vFrete,
+            true,
+            $identificador . 'Valor do Frete do Tráfego Mútuo '
+        );
+        $this->dom->addChild(
+            $trafMut,
+            'chCTeFerroOrigem',
+            $std->chCTeFerroOrigem,
+            false,
+            $identificador . 'Chave de acesso do CT-e emitido pelo ferrovia de origem'
+        );
+        $this->ferrov->appendChild($trafMut);
+        $this->dom->addChild(
+            $this->ferrov,
+            'fluxo',
+            $std->fluxo,
+            true,
+            $identificador . 'Fluxo Ferroviário '
+        );
+    }
+
+    public function tagferroEnv($std)
+    {
+
+        $possible = [
+            'CNPJ',
+            'cInt',
+            'IE',
+            'xNome',
+            'xLgr',
+            'nro',
+            'xCpl',
+            'xBairro',
+            'cMun',
+            'xMun',
+            'CEP',
+            'UF',
+            'fluxo'
+        ];
+
+        $std = $this->equilizeParameters($std, $possible);
+
+        $identificador = '#1 <trafMut> - <ferroEnv> - ';
+        $ferroEnv = $this->dom->createElement('ferroEnv');
+        $this->dom->addChild(
+            $ferroEnv,
+            'CNPJ',
+            $std->CNPJ,
+            true,
+            $identificador . 'Número do CNPJ'
+        );
+        $this->dom->addChild(
+            $ferroEnv,
+            'cInt',
+            $std->cInt,
+            false,
+            $identificador . 'Código interno da Ferrovia envolvida'
+        );
+        $this->dom->addChild(
+            $ferroEnv,
+            'IE',
+            $std->IE,
+            false,
+            $identificador . 'Inscrição Estadual'
+        );
+        $this->dom->addChild(
+            $ferroEnv,
+            'xNome',
+            $std->xNome,
+            false,
+            $identificador . 'Razão Social ou Nome'
+        );
+        $identificador = '#1 <ferroEnv> - <enderFerro> - ';
+        $enderFerro = $this->dom->createElement('enderFerro');
+        $this->dom->addChild(
+            $enderFerro,
+            'xLgr',
+            $std->xLgr,
+            true,
+            $identificador . 'Logradouro'
+        );
+        $this->dom->addChild(
+            $enderFerro,
+            'nro',
+            $std->nro,
+            false,
+            $identificador . 'Número'
+        );
+        $this->dom->addChild(
+            $enderFerro,
+            'xCpl',
+            $std->xCpl,
+            false,
+            $identificador . 'Complemento'
+        );
+        $this->dom->addChild(
+            $enderFerro,
+            'xBairro',
+            $std->xBairro,
+            false,
+            $identificador . 'Bairro'
+        );
+        $this->dom->addChild(
+            $enderFerro,
+            'cMun',
+            $std->cMun,
+            true,
+            $identificador . 'Código do município'
+        );
+        $this->dom->addChild(
+            $enderFerro,
+            'xMun',
+            $std->xMun,
+            true,
+            $identificador . 'Nome do município'
+        );
+        $this->dom->addChild(
+            $enderFerro,
+            'CEP',
+            $std->CEP,
+            true,
+            $identificador . 'CEP'
+        );
+        $this->dom->addChild(
+            $enderFerro,
+            'UF',
+            $std->UF,
+            true,
+            $identificador . 'Sigla da UF'
+        );
+        $ferroEnv->appendChild($enderFerro);
+        $this->ferroEnv[] = $ferroEnv;
+        return $ferroEnv;
     }
 
     /**
