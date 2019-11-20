@@ -5590,6 +5590,15 @@ class Make
             $this->chCTe = $chaveMontada;
         }
     }
+    
+    /**
+     * Retorna os erros detectados
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
 
     /**
      * Includes missing or unsupported properties in stdClass
