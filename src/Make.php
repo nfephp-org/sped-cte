@@ -1185,7 +1185,7 @@ class Make
         $this->dom->addChild(
             $this->infPercurso[$posicao],
             'UFPer',
-            $std->uf,
+            $std->UFPer,
             true,
             $identificador . 'Código da UF do percurso'
         );
