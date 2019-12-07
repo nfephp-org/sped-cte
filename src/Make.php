@@ -3163,7 +3163,7 @@ class Make
     {
 
         $possible = [
-            'CST',
+            'cst',
             'vBC',
             'pICMS',
             'vICMS',
