@@ -3257,7 +3257,7 @@ class Make
                 if ($std->outraUF == true) {
                     $icms = $this->dom->createElement("ICMSOutraUF");
                     $this->dom->addChild($icms, 'CST', $std->cst, true, "$identificador  Tributação do ICMS = 90");
-                    if ($std->pRedBC > 0) {
+                    if ($std->vICMSOutraUF > 0) {
                         $this->dom->addChild(
                             $icms,
                             'pRedBCOutraUF',
@@ -3267,13 +3267,13 @@ class Make
                             . "BC Outra UF"
                         );
                     }
-                    $this->dom->addChild($icms, 'vBCOutraUF', $std->vBC, true, "$identificador Valor BC ICMS Outra UF");
-                    $this->dom->addChild($icms, 'pICMSOutraUF', $std->pICMS, true, "$identificador Alíquota do "
+                    $this->dom->addChild($icms, 'vBCOutraUF', $std->vBCOutraUF, true, "$identificador Valor BC ICMS Outra UF");
+                    $this->dom->addChild($icms, 'pICMSOutraUF', $std->pICMSOutraUF, true, "$identificador Alíquota do "
                         . "imposto Outra UF");
                     $this->dom->addChild(
                         $icms,
                         'vICMSOutraUF',
-                        $std->vICMS,
+                        $std->vICMSOutraUF,
                         true,
                         "$identificador Valor ICMS Outra UF"
                     );
