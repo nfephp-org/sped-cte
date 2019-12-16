@@ -20,15 +20,15 @@ class DocumentsException extends \InvalidArgumentException implements ExceptionI
         4 => "O documento de resposta relata um erro {{msg}}.",
         5 => "Os documentos se referem a diferentes objetos. {{msg}}.",
         6 => "O argumento passado não é um XML válido.",
-        7 => "Este xml não pertence ao projeto SPED-NFe.",
+        7 => "Este xml não pertence ao projeto SPED-CTe.",
         8 => "A configuração (config.json) não é válido {{msg}}.",
         9 => "Falta o CSC no config.json.",
         10 => "Falta o CSCId no config.json.",
-        11 => "Falta a URL do serviço NfeConsultaQR.",
-        12 => "O TXT não representa uma NFe",
+        11 => "Falta a URL do serviço CteConsultaQR.",
+        12 => "O TXT não representa uma CTe",
         13 => "O numero de notas indicado na primeira linha do TXT é diferente do numero total de notas do txt.",
         14 => "Falha na validação do TXT:\n {{msg}}.",
-        15 => "Um TXT de NFe deve ser passado como parâmetro, e nada foi passado.",
+        15 => "Um TXT de CTe deve ser passado como parâmetro, e nada foi passado.",
         16 => "O txt tem um campo não definido {{msg}}"
     ];
     
