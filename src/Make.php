@@ -530,10 +530,7 @@ class Make
      */
     public function monta()
     {
-        $this->errors = $this->dom->errors;
-        if (count($this->errors) > 0) {
-            return false;
-        }
+        $this->errors = $this->dom->errors;       
         if ($this->mod == 57) {
             $this->buildCTe();
         } else {
@@ -682,7 +679,7 @@ class Make
             }
         }
         if ($this->cobr != '') {
-            $this->dom->appChild($this->infCte, $this->cobr, 'Falta tag "infCte"');
+            $this->dom->appChild($this->infCTeNorm, $this->cobr, 'Falta tag "infCte"');
         }
         foreach ($this->autXML as $autXML) {
             $this->dom->appChild($this->infCte, $autXML, 'Falta tag "infCte"');
@@ -695,6 +692,9 @@ class Make
         // testa da chave
         $this->checkCTeKey($this->dom);
         $this->xml = $this->dom->saveXML();
+        if (count($this->errors) > 0) {
+            throw new RuntimeException('Existem erros nas tags. Obtenha os erros com getErrors().');
+        }
         return true;
     }
 
@@ -1185,7 +1185,7 @@ class Make
         $this->dom->addChild(
             $this->infPercurso[$posicao],
             'UFPer',
-            $std->uf,
+            $std->UFPer,
             true,
             $identificador . 'Código da UF do percurso'
         );
@@ -3163,7 +3163,7 @@ class Make
     {
 
         $possible = [
-            'CST',
+            'cst',
             'vBC',
             'pICMS',
             'vICMS',
@@ -3257,7 +3257,7 @@ class Make
                 if ($std->outraUF == true) {
                     $icms = $this->dom->createElement("ICMSOutraUF");
                     $this->dom->addChild($icms, 'CST', $std->cst, true, "$identificador  Tributação do ICMS = 90");
-                    if ($std->pRedBC > 0) {
+                    if ($std->vICMSOutraUF > 0) {
                         $this->dom->addChild(
                             $icms,
                             'pRedBCOutraUF',
@@ -3267,13 +3267,13 @@ class Make
                             . "BC Outra UF"
                         );
                     }
-                    $this->dom->addChild($icms, 'vBCOutraUF', $std->vBC, true, "$identificador Valor BC ICMS Outra UF");
-                    $this->dom->addChild($icms, 'pICMSOutraUF', $std->pICMS, true, "$identificador Alíquota do "
+                    $this->dom->addChild($icms, 'vBCOutraUF', $std->vBCOutraUF, true, "$identificador Valor BC ICMS Outra UF");
+                    $this->dom->addChild($icms, 'pICMSOutraUF', $std->pICMSOutraUF, true, "$identificador Alíquota do "
                         . "imposto Outra UF");
                     $this->dom->addChild(
                         $icms,
                         'vICMSOutraUF',
-                        $std->vICMS,
+                        $std->vICMSOutraUF,
                         true,
                         "$identificador Valor ICMS Outra UF"
                     );
@@ -3944,7 +3944,7 @@ class Make
      * taginfUnidCarga
      * tag CTe/infCte/infDoc/(infNF/infNFe/infOutros)/infUnidCarga
      *
-     * @param  stdClass $std
+     * @param stdClass $std
      * @return DOMElement
      */
     private function taginfUnidCarga(stdClass $std)
@@ -4002,7 +4002,7 @@ class Make
      * taginfUnidTransp
      * tag CTe/infCte/infDoc/(infNF/infNFe/infOutros)/infUnidTransp
      *
-     * @param  stdClass $std
+     * @param stdClass $std
      * @return DOMElement
      */
     private function taginfUnidTransp(stdClass $std)
@@ -4365,10 +4365,10 @@ class Make
     /**
      * Leiaute - Dutoviário
      * Gera as tags para o elemento: "duto" (informações do modal Dutoviário)
+     * @return DOMElement|\DOMNode
      * @author Uilasmar Guedes
      * #1
      * Nivel: 0
-     * @return DOMElement|\DOMNode
      */
     public function tagduto($std)
     {
@@ -4410,10 +4410,10 @@ class Make
     /**
      * Leiaute - Aquaviario
      * Gera as tags para o elemento: "aquav" (informações do modal Aquaviario)
+     * @return DOMElement|\DOMNode
      * @author Anderson Minuto Consoni Vaz
      * #1
      * Nivel: 0
-     * @return DOMElement|\DOMNode
      */
     public function tagaquav($std)
     {
@@ -4528,10 +4528,10 @@ class Make
     /**
      * Leiaute - Aéreo
      * Gera as tags para o elemento: "aereo" (Informações do modal Aéreo)
+     * @return DOMElement|\DOMNode
      * @author Newton Pasqualini Filho
      * #1
      * Nível: 0
-     * @return DOMElement|\DOMNode
      */
     public function tagaereo($std)
     {
@@ -5416,13 +5416,15 @@ class Make
             false,
             "Valor Original da Fatura"
         );
-        $this->dom->addChild(
-            $fat,
-            "vDesc",
-            $std->vDesc,
-            false,
-            "Valor do desconto"
-        );
+        if ($std->vDesc > 0) {
+            $this->dom->addChild(
+                $fat,
+                "vDesc",
+                $std->vDesc,
+                false,
+                "Valor do desconto"
+            );
+        }
         $this->dom->addChild(
             $fat,
             "vLiq",
@@ -5590,13 +5592,22 @@ class Make
             $this->chCTe = $chaveMontada;
         }
     }
+    
+    /**
+     * Retorna os erros detectados
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
 
     /**
      * Includes missing or unsupported properties in stdClass
      * Replace all unsuported chars
      *
-     * @param  stdClass $std
-     * @param  array $possible
+     * @param stdClass $std
+     * @param array $possible
      * @return stdClass
      */
     private function equilizeParameters(stdClass $std, $possible)
