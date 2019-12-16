@@ -679,7 +679,7 @@ class Make
             }
         }
         if ($this->cobr != '') {
-            $this->dom->appChild($this->infCte, $this->cobr, 'Falta tag "infCte"');
+            $this->dom->appChild($this->infCTeNorm, $this->cobr, 'Falta tag "infCte"');
         }
         foreach ($this->autXML as $autXML) {
             $this->dom->appChild($this->infCte, $autXML, 'Falta tag "infCte"');
@@ -3944,7 +3944,7 @@ class Make
      * taginfUnidCarga
      * tag CTe/infCte/infDoc/(infNF/infNFe/infOutros)/infUnidCarga
      *
-     * @param  stdClass $std
+     * @param stdClass $std
      * @return DOMElement
      */
     private function taginfUnidCarga(stdClass $std)
@@ -4002,7 +4002,7 @@ class Make
      * taginfUnidTransp
      * tag CTe/infCte/infDoc/(infNF/infNFe/infOutros)/infUnidTransp
      *
-     * @param  stdClass $std
+     * @param stdClass $std
      * @return DOMElement
      */
     private function taginfUnidTransp(stdClass $std)
@@ -4365,10 +4365,10 @@ class Make
     /**
      * Leiaute - Dutoviário
      * Gera as tags para o elemento: "duto" (informações do modal Dutoviário)
+     * @return DOMElement|\DOMNode
      * @author Uilasmar Guedes
      * #1
      * Nivel: 0
-     * @return DOMElement|\DOMNode
      */
     public function tagduto($std)
     {
@@ -4410,10 +4410,10 @@ class Make
     /**
      * Leiaute - Aquaviario
      * Gera as tags para o elemento: "aquav" (informações do modal Aquaviario)
+     * @return DOMElement|\DOMNode
      * @author Anderson Minuto Consoni Vaz
      * #1
      * Nivel: 0
-     * @return DOMElement|\DOMNode
      */
     public function tagaquav($std)
     {
@@ -4528,10 +4528,10 @@ class Make
     /**
      * Leiaute - Aéreo
      * Gera as tags para o elemento: "aereo" (Informações do modal Aéreo)
+     * @return DOMElement|\DOMNode
      * @author Newton Pasqualini Filho
      * #1
      * Nível: 0
-     * @return DOMElement|\DOMNode
      */
     public function tagaereo($std)
     {
@@ -5416,13 +5416,15 @@ class Make
             false,
             "Valor Original da Fatura"
         );
-        $this->dom->addChild(
-            $fat,
-            "vDesc",
-            $std->vDesc,
-            false,
-            "Valor do desconto"
-        );
+        if ($std->vDesc > 0) {
+            $this->dom->addChild(
+                $fat,
+                "vDesc",
+                $std->vDesc,
+                false,
+                "Valor do desconto"
+            );
+        }
         $this->dom->addChild(
             $fat,
             "vLiq",
@@ -5604,8 +5606,8 @@ class Make
      * Includes missing or unsupported properties in stdClass
      * Replace all unsuported chars
      *
-     * @param  stdClass $std
-     * @param  array $possible
+     * @param stdClass $std
+     * @param array $possible
      * @return stdClass
      */
     private function equilizeParameters(stdClass $std, $possible)
