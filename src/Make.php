@@ -5030,7 +5030,7 @@ class Make
     {
 
         $possible = [
-            'refCTe'
+            'refCte'
         ];
 
         $std = $this->equilizeParameters($std, $possible);
@@ -5041,7 +5041,7 @@ class Make
         $identificador = '#163 <refCTe> - ';
         $this->dom->addChild(
             $this->tomaICMS,
-            'refCTe',
+            'refCte',
             $std->refCTe,
             false,
             "$identificador  Chave de acesso do CT-e emitida pelo tomador"
