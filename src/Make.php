@@ -5038,11 +5038,11 @@ class Make
         if (empty($this->tomICMS)) {
             $this->tomaICMS = $this->dom->createElement('tomaICMS');
         }
-        $identificador = '#163 <refCTe> - ';
+        $identificador = '#163 <refCte> - ';
         $this->dom->addChild(
             $this->tomaICMS,
             'refCte',
-            $std->refCTe,
+            $std->refCte,
             false,
             "$identificador  Chave de acesso do CT-e emitida pelo tomador"
         );
