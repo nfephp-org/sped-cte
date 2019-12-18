@@ -5030,7 +5030,7 @@ class Make
     {
 
         $possible = [
-            'refCTe'
+            'refCte'
         ];
 
         $std = $this->equilizeParameters($std, $possible);
