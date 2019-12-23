@@ -712,7 +712,7 @@ class Make
             }
             if (!empty($this->infDoc)) {
                 $this->dom->appChild($this->infCTeNorm, $this->infDoc, 'Falta tag "infCTeNorm"');
-            }            
+            }
             if ($this->idDocAntEle != [] || $this->idDocAntPap != []) { //Caso tenha CT-es Anteriores viculados
                 $this->dom->appChild($this->infCTeNorm, $this->docAnt, 'Falta tag "docAnt"');
                 foreach ($this->emiDocAnt as $indice => $emiDocAnt) {
