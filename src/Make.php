@@ -4515,7 +4515,7 @@ class Make
         $this->dom->addChild(
             $this->rodo,
             'NroRegEstadual',
-            $std->nroRegEstadual,
+            $std->NroRegEstadual,
             false,
             $identificador . 'Número do Registro Estadual'
         );
