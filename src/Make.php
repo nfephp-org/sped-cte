@@ -1657,6 +1657,7 @@ class Make
             $identificador . 'Funcionário emissor do CTe'
         );
         if ($this->mod == 57) {
+            $this->tagEntrega();
             $this->dom->addChild(
                 $this->compl,
                 'origCalc',
