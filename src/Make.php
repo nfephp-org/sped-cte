@@ -1657,7 +1657,6 @@ class Make
             $this->dom->appChild($this->entrega, $this->noInter, 'Falta tag "Entrega"');
         }
         if ($this->mod == 57) {
-            $this->tagEntrega();
             $this->dom->addChild(
                 $this->compl,
                 'origCalc',
