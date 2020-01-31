@@ -168,6 +168,10 @@ class Tools
     protected $availableVersions = [
         '3.00' => 'PL_CTe_300a'
     ];
+    /**
+     * @var string
+     */
+    protected $timezone;
 
     /**
      * Constructor
@@ -199,7 +203,7 @@ class Tools
      */
     public function setEnvironmentTimeZone($acronym)
     {
-        date_default_timezone_set(TimeZoneByUF::get($acronym));
+        $this->timezone = TimeZoneByUF::get($acronym);
     }
 
     /**
