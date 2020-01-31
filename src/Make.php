@@ -530,7 +530,7 @@ class Make
      */
     public function monta()
     {
-        $this->errors = $this->dom->errors;       
+        $this->errors = $this->dom->errors;
         if ($this->mod == 57) {
             $this->buildCTe();
         } else {
@@ -593,7 +593,7 @@ class Make
             }
             if (!empty($this->infDoc)) {
                 $this->dom->appChild($this->infCTeNorm, $this->infDoc, 'Falta tag "infCTeNorm"');
-            }            
+            }
             if ($this->idDocAntEle != [] || $this->idDocAntPap != []) { //Caso tenha CT-es Anteriores viculados
                 $this->dom->appChild($this->infCTeNorm, $this->docAnt, 'Falta tag "docAnt"');
                 foreach ($this->emiDocAnt as $indice => $emiDocAnt) {
@@ -3269,9 +3269,20 @@ class Make
                             . "BC Outra UF"
                         );
                     }
-                    $this->dom->addChild($icms, 'vBCOutraUF', $std->vBCOutraUF, true, "$identificador Valor BC ICMS Outra UF");
-                    $this->dom->addChild($icms, 'pICMSOutraUF', $std->pICMSOutraUF, true, "$identificador Alíquota do "
-                        . "imposto Outra UF");
+                    $this->dom->addChild(
+                        $icms,
+                        'vBCOutraUF',
+                        $std->vBCOutraUF,
+                        true,
+                        "$identificador Valor BC ICMS Outra UF"
+                    );
+                    $this->dom->addChild(
+                        $icms,
+                        'pICMSOutraUF',
+                        $std->pICMSOutraUF,
+                        true,
+                        "$identificador Alíquota do imposto Outra UF"
+                    );
                     $this->dom->addChild(
                         $icms,
                         'vICMSOutraUF',
