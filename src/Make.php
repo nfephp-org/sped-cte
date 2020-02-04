@@ -374,6 +374,16 @@ class Make
      */
     private $infCteSub = '';
     /**
+     * Informações do Serviço Vinculado a Multimodal
+     * @var \DOMNode
+     */
+    private $infServVinc = '';
+    /**
+     * Informações do CT-e multimodal vinculado
+     * @var \DOMNode
+     */
+    private $infCTeMultimodal = array();
+    /**
      * Tomador é contribuinte do ICMS
      * @var \DOMNode
      */
@@ -647,6 +657,13 @@ class Make
 
                 if ($this->tomaICMS != '') {
                     $this->dom->appChild($this->infCteSub, $this->tomaICMS, 'Falta tag "infCteSub"');
+                }
+            }
+            if ($this->infServVinc != '') {
+                $this->dom->appChild($this->infCTeNorm, $this->infServVinc, 'Falta tag "infServVinc"');
+
+                foreach ($this->infCTeMultimodal as $infCTeMultimodal) {
+                    $this->dom->appChild($this->infServVinc, $infCTeMultimodal, 'Falta tag "infCTeMultimodal"');
                 }
             }
         }
@@ -4899,6 +4916,33 @@ class Make
         return $this->infCteSub;
     }
 
+    /**
+     * Informações do Serviço Vinculado a Multimodal
+     * @return type
+     */
+    public function infCTeMultimodal($std)
+    {
+        $possible = [
+            'chCTeMultimodal',
+        ];
+
+        $std = $this->equilizeParameters($std, $possible);
+
+        if (empty($this->infServVinc)) $this->infServVinc = $this->dom->createElement('infServVinc');
+
+        $identificador = '#388 <infCTeMultimodal> - ';
+        $infCTeMultimodal = $this->dom->createElement('infCTeMultimodal');
+        $this->dom->addChild(
+            $infCTeMultimodal,
+            'chCTeMultimodal',
+            $std->chCTeMultimodal,
+            true,
+            $identificador . 'Chave de acesso do CT-e Multimodal '
+        );
+
+        $this->infCTeMultimodal[] = $infCTeMultimodal;
+        return $infCTeMultimodal;
+    }
 
     /**
      * CT-e de substituição - tomaICMS
