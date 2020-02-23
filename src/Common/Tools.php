@@ -187,13 +187,29 @@ class Tools
     {
         $this->config = json_decode($configJson);
         $this->pathwsfiles = realpath(
-            __DIR__ . '/../../storage'
-        ) . '/';
+                __DIR__ . '/../../storage'
+            ) . '/';
         $this->version($this->config->versao);
         $this->setEnvironmentTimeZone($this->config->siglaUF);
+        $this->setEnvironmentHttpVersion($this->config->siglaUF);
         $this->certificate = $certificate;
         $this->setEnvironment($this->config->tpAmb);
         $this->contingency = new Contingency();
+    }
+
+    /**
+     * set version in http
+     *
+     * @param string $sigla Sigla da uf
+     * @return void
+     */
+    private function setEnvironmentHttpVersion($sigla)
+    {
+        if (in_array($sigla, ['SP'])) {
+            $soap = new SoapCurl();
+            $soap->httpVersion('1.1');
+            $this->loadSoapClass($soap);
+        }
     }
 
     /**
@@ -266,8 +282,8 @@ class Tools
             $this->versao = $version;
             $this->config->schemes = $this->availableVersions[$version];
             $this->pathschemes = realpath(
-                __DIR__ . '/../../schemes/' . $this->config->schemes
-            ) . '/';
+                    __DIR__ . '/../../schemes/' . $this->config->schemes
+                ) . '/';
         }
         return $this->versao;
     }
@@ -463,7 +479,7 @@ class Tools
             if (array_search($type, $permit[$mod]) === false) {
                 throw new RuntimeException(
                     "Esse modo de contingência [$type] não é aceito "
-                        . "para o modelo [$mod]"
+                    . "para o modelo [$mod]"
                 );
             }
         }
@@ -508,7 +524,8 @@ class Tools
         $uf,
         $tpAmb,
         $ignoreContingency = false
-    ) {
+    )
+    {
         $ambiente = $tpAmb == 1 ? "producao" : "homologacao";
         $webs = new Webservices($this->getXmlUrlPath());
         $sigla = $uf;
@@ -522,15 +539,15 @@ class Tools
         if ($stdServ === false) {
             throw new \RuntimeException(
                 "Nenhum serviço foi localizado para esta unidade "
-                    . "da federação [$sigla], com o modelo [$this->modelo]."
+                . "da federação [$sigla], com o modelo [$this->modelo]."
             );
         }
         if (empty($stdServ->$service->url)) {
             throw new \RuntimeException(
                 "Este serviço [$service] não está disponivel para esta "
-                    . "unidade da federação [$uf] ou para este modelo de Nota ["
-                    . $this->modelo
-                    . "]."
+                . "unidade da federação [$uf] ou para este modelo de Nota ["
+                . $this->modelo
+                . "]."
             );
         }
         //recuperação do cUF
@@ -581,7 +598,7 @@ class Tools
     protected function sendRequest($request, array $parameters = [])
     {
         $this->checkSoap();
-        return (string) $this->soap->send(
+        return (string)$this->soap->send(
             $this->urlService,
             $this->urlMethod,
             $this->urlAction,
