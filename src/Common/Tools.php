@@ -191,9 +191,9 @@ class Tools
             ) . '/';
         $this->version($this->config->versao);
         $this->setEnvironmentTimeZone($this->config->siglaUF);
-        $this->setEnvironmentHttpVersion($this->config->siglaUF);
         $this->certificate = $certificate;
         $this->setEnvironment($this->config->tpAmb);
+        $this->setEnvironmentHttpVersion($this->config->siglaUF);
         $this->contingency = new Contingency();
     }
 
