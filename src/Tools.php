@@ -663,7 +663,7 @@ class Tools extends ToolsCommon
         $aliasEvento = $ev->alias;
         $descEvento = $ev->desc;
         $cnpj = $this->config->cnpj;
-        $dt = new \DateTime(date(), new \DateTimeZone($this->timezone));
+        $dt = new \DateTime('now', new \DateTimeZone($this->timezone));
         $dhEvento = $dt->format('Y-m-d\TH:i:sP');
         $sSeqEvento = str_pad($nSeqEvento, 2, "0", STR_PAD_LEFT);
         $eventId = "ID".$tpEvento.$chave.$sSeqEvento;
