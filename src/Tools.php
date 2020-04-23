@@ -91,8 +91,8 @@ class Tools extends ToolsCommon
 
     /**
      * Request authorization to issue CTe OS with one document only
-     * @param type $xml
-     * @return type
+     * @param string $xml
+     * @return string
      */
     public function sefazEnviaCTeOS($xml)
     {
