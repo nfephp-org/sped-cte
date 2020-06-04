@@ -185,7 +185,7 @@
         <sigla>SVSP</sigla>
         <homologacao>
             <CteRecepcao method='CTeRecepcao' operation='CteRecepcao' version='3.00'>https://homologacao.nfe.fazenda.sp.gov.br/cteWEB/services/CteRecepcao.asmx</CteRecepcao>
-            <CteRecepcaoOS method='CteRecepcaoOS' operation='CteRecepcaoOS' version='3.00'>https://homologacao.nfe.fazenda.sp.gov.br/cteWEB/services/cteRecepcao.asmx</CteRecepcaoOS>
+            <CteRecepcaoOS method='CteRecepcaoOS' operation='CteRecepcaoOS' version='3.00'>https://homologacao.nfe.fazenda.sp.gov.br/cteWEB/services/cteRecepcaoOS.asmx</CteRecepcaoOS>
             <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='3.00'>https://homologacao.nfe.fazenda.sp.gov.br/cteWEB/services/CteRetRecepcao.asmx</CteRetRecepcao>
             <CteCancelamento method='CTeCancelamento' operation='CteCancelamento' version='3.00'>https://homologacao.nfe.fazenda.sp.gov.br/cteWEB/services/CteCancelamento.asmx</CteCancelamento>
             <CteInutilizacao method='cteInutilizacaoCT' operation='CteInutilizacao' version='3.00'>https://homologacao.nfe.fazenda.sp.gov.br/cteWEB/services/cteInutilizacao.asmx</CteInutilizacao>
