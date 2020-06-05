@@ -431,6 +431,37 @@ class Make
      */
     private $aquav = '';
     /**
+     * Informações de Lacre para modal Aquaviario
+     * @var array
+     */
+    private $lacre = array();
+    /**
+     * Informações de Balsa para modal Aquaviario
+     * @var array
+     */
+    private $balsa = array();
+    /**
+     * Informações de Container para modal Aquaviario
+     * @var array
+     */
+    private $detCont = array();
+    /**
+     * Informações dos documentos de conteiner para modal Aquaviario
+     * @var array
+     */
+    private $infDocCont = array();
+    /**
+     * Informações de NF de conteiner para modal Aquaviario
+     * @var array
+     */
+    private $infNFCont = array();
+    /**
+     * Informações de NFe de conteiner para modal Aquaviario
+     * @var array
+     */
+    private $infNFeCont = array();
+
+    /**
      * Informações do modal Dutoviário
      * @var \DOMNode
      */
@@ -644,6 +675,33 @@ class Make
                 $this->dom->appChild($this->infModal, $this->ferrov, 'Falta tag "ferrov"');
             } elseif ($this->modal == '03') {
                 $this->dom->appChild($this->infModal, $this->aquav, 'Falta tag "aquav"');
+                if ($this->detCont != []) { //Caso tenha informações de conteiner
+                    foreach ($this->detCont as $indice => $conteiner) {
+                        $this->dom->appChild($this->aquav, $conteiner, 'Falta tag "detCont"');
+                        if ($this->lacre != []) {
+                            foreach ($this->lacre[$indice] as $lacre) {
+                                $this->dom->appChild($this->detCont[$indice], $lacre, 'Falta tag "lacre"');
+                            }
+                        }
+                        if (array_key_exists($indice, $this->infNFCont)) {
+                            foreach ($this->infNFCont[$indice] as $infNFCont) {
+                                $this->dom->appChild($this->infDocCont[$indice], $infNFCont, 'Falta tag "infNF"');
+                            }
+                        }
+                        if (array_key_exists($indice, $this->infNFeCont)) {
+                            foreach ($this->infNFeCont[$indice] as $infNFeCont) {
+                                $this->dom->appChild($this->infDocCont[$indice], $infNFeCont, 'Falta tag "infNFe"');
+                            }
+                        }
+                        if (array_key_exists($indice, $this->infDocCont)) {
+                            $this->dom->appChild($this->detCont[$indice], $this->infDocCont[$indice], 'Falta tag "infDoc"');
+                        }
+
+                    }
+                }
+                foreach ($this->balsa as $balsa) {
+                    $this->aquav->insertBefore($balsa, $this->aquav->getElementsByTagName('nViag')->item(0));
+                }
             } elseif ($this->modal == '05') {
                 $this->dom->appChild($this->infModal, $this->duto, 'Falta tag "duto"');
             } else {
@@ -4515,6 +4573,167 @@ class Make
     }
 
     /**
+     * Leiaute - Aquaviario
+     * Gera as tags de balsa para o elemento: "aquav" (informações do modal Aquaviario)
+     * @return DOMElement|\DOMNode
+     * @author Gabriel Kliemaschewsk Rondon
+     * #5
+     * Nivel: 1
+     */
+    public function tagbalsa($std)
+    {
+        $possible = [
+            'xBalsa',
+        ];
+
+        $std = $this->equilizeParameters($std, $possible);
+
+        $identificador = '#5 <balsa> - ';
+        $this->balsa[] = $this->dom->createElement('balsa');
+
+        $this->dom->addChild(
+            $this->balsa[count($this->balsa) - 1],
+            'xBalsa',
+            $std->xBalsa,
+            true,
+            $identificador . 'xBalsa'
+        );
+        return $this->balsa;
+    }
+
+    /**
+     * Leiaute - Aquaviario
+     * Gera as tags de Conteiner específicas do modal aquaviário
+     * @return DOMElement|\DOMNode
+     * @author Gabriel Kliemaschewsk Rondon
+     * #10
+     * Nivel: 1
+     */
+    public function tagdetCont($std)
+    {
+        $possible = [
+            'nCont',
+        ];
+
+        $std = $this->equilizeParameters($std, $possible);
+
+        $identificador = '#10 <detCont> - ';
+        $this->detCont[] = $this->dom->createElement('detCont');
+
+        $this->dom->addChild(
+            $this->detCont[count($this->detCont) - 1],
+            'nCont',
+            $std->nCont,
+            true,
+            $identificador . 'detCont'
+        );
+        return $this->detCont;
+    }
+
+    /**
+     * Leiaute - Aquaviario
+     * Gera as tags de lacre para os containeres do elemento: "aquav" (informações do modal Aquaviario)
+     * @return DOMElement|\DOMNode
+     * @author Gabriel Kliemaschewsk Rondon
+     * #12
+     * Nivel: 2
+     */
+    public function taglacre($std)
+    {
+        $possible = [
+            'nLacre',
+        ];
+
+        $std = $this->equilizeParameters($std, $possible);
+
+        $identificador = '#12 <detCont> - ';
+        $this->lacre[count($this->detCont) - 1][] = $this->dom->createElement('lacre');
+        $posicao = (int)count($this->lacre[count($this->detCont) - 1]) - 1;
+
+        $this->dom->addChild(
+            $this->lacre[count($this->detCont) - 1][$posicao],
+            'nLacre',
+            $std->nLacre,
+            true,
+            $identificador . 'Lacre'
+        );
+        return $this->lacre[count($this->detCont) - 1][$posicao];
+    }
+
+    public function taginfDocCont()
+    {
+        $this->infDocCont[count($this->detCont) - 1] = $this->dom->createElement('infDoc');
+        return $this->infDocCont;
+    }
+
+    public function taginfNFCont($std)
+    {
+        $possible = [
+            'serie',
+            'nDoc',
+            'unidRat',
+        ];
+        $std = $this->equilizeParameters($std, $possible);
+        $identificador = '#15 <detCont> <infNF> - ';
+        $this->infNFCont[count($this->detCont) - 1][] = $this->dom->createElement('infNF');
+        $posicao = (int)count($this->infNFCont[count($this->detCont) - 1]) - 1;
+
+        $this->dom->addChild(
+            $this->infNFCont[count($this->detCont) - 1][$posicao],
+            'serie',
+            $std->serie,
+            true,
+            $identificador . 'serie'
+        );
+
+        $this->dom->addChild(
+            $this->infNFCont[count($this->detCont) - 1][$posicao],
+            'nDoc',
+            $std->nDoc,
+            true,
+            $identificador . 'nDoc'
+        );
+
+        $this->dom->addChild(
+            $this->infNFCont[count($this->detCont) - 1][$posicao],
+            'unidRat',
+            $std->unidRat,
+            false,
+            $identificador . 'unidRat'
+        );
+
+        return $this->infNFCont[count($this->detCont) - 1][$posicao];
+    }
+
+    public function taginfNFeCont($std)
+    {
+        $possible = [
+            'chave',
+            'unidRat',
+        ];
+
+        $std = $this->equilizeParameters($std, $possible);
+        $identificador = '#19 <infNFe> - ';
+        $this->infNFeCont[count($this->detCont) - 1][] = $this->dom->createElement('infNFe');
+        $posicao = (int)count($this->infNFeCont[count($this->detCont) - 1]) - 1;
+
+        $this->dom->addChild(
+            $this->infNFeCont[count($this->detCont) - 1][$posicao],
+            'chave',
+            $std->chave,
+            true,
+            $identificador . 'chave'
+        );
+
+        $this->dom->addChild(
+            $this->infNFeCont[count($this->detCont) - 1][$posicao],
+            'unidRat',
+            $std->unidRat,
+            false,
+            $identificador . 'unidRat'
+        );
+    }
+    /**
      * Leiaute - Rodoviário
      * Gera as tags para o elemento: "rodo" (Informações do modal Rodoviário) CT-e OS
      * #1
@@ -5644,7 +5863,7 @@ class Make
             $this->chCTe = $chaveMontada;
         }
     }
-    
+
     /**
      * Retorna os erros detectados
      * @return array
