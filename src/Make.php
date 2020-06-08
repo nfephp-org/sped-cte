@@ -678,7 +678,7 @@ class Make
                 if ($this->detCont != []) { //Caso tenha informações de conteiner
                     foreach ($this->detCont as $indice => $conteiner) {
                         $this->dom->appChild($this->aquav, $conteiner, 'Falta tag "detCont"');
-                        if ($this->lacre != []) {
+                        if (array_key_exists($indice, $this->lacre)) {
                             foreach ($this->lacre[$indice] as $lacre) {
                                 $this->dom->appChild($this->detCont[$indice], $lacre, 'Falta tag "lacre"');
                             }
