@@ -694,9 +694,12 @@ class Make
                             }
                         }
                         if (array_key_exists($indice, $this->infDocCont)) {
-                            $this->dom->appChild($this->detCont[$indice], $this->infDocCont[$indice], 'Falta tag "infDoc"');
+                            $this->dom->appChild(
+                                $this->detCont[$indice],
+                                $this->infDocCont[$indice],
+                                'Falta tag "infDoc"'
+                            );
                         }
-
                     }
                 }
                 foreach ($this->balsa as $balsa) {
@@ -5147,7 +5150,9 @@ class Make
 
         $std = $this->equilizeParameters($std, $possible);
 
-        if (empty($this->infServVinc)) $this->infServVinc = $this->dom->createElement('infServVinc');
+        if (empty($this->infServVinc)) {
+            $this->infServVinc = $this->dom->createElement('infServVinc');
+        }
 
         $identificador = '#388 <infCTeMultimodal> - ';
         $infCTeMultimodal = $this->dom->createElement('infCTeMultimodal');
