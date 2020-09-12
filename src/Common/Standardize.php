@@ -51,6 +51,7 @@ class Standardize
         'inutCTe',
         'retInutCTe',
         'procInutCTe',
+        'protCTe',
         'CTe',
         'CTeOS',
         'retConsStatServCte',
