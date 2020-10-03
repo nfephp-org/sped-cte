@@ -5513,7 +5513,7 @@ class Make
     {
 
         $possible = [
-            'chave',
+            'chCte',
             'dEmi'
         ];
 
@@ -5524,14 +5524,14 @@ class Make
         $this->dom->addChild(
             $this->infCteAnu,
             'chCte',
-            $std->chave,
+            $std->chCte,
             true,
             $identificador . ' Chave do CT-e anulado'
         );
         $this->dom->addChild(
             $this->infCteAnu,
             'dEmi',
-            $std->data,
+            $std->dEmi,
             true,
             $identificador . ' Data de Emissão do CT-e anulado'
         );
