@@ -491,6 +491,16 @@ class Make
      */
     private $prop = array();
     /**
+     * Informações do CTe Multimodal
+     * @var array
+     */
+    private $multimodal = '';
+    /**
+     * Informações do seguro no CTe Multimodal
+     * @var array
+     */
+    private $segMultim = '';
+    /**
      * Autorizados para download do XML do DF-e
      * @var array
      */
@@ -710,6 +720,11 @@ class Make
                 }
             } elseif ($this->modal == '05') {
                 $this->dom->appChild($this->infModal, $this->duto, 'Falta tag "duto"');
+            } elseif ($this->modal == '06') {
+                if ($this->segMultim != '') {
+                    $this->dom->appChild($this->multimodal, $this->segMultim, 'Falta tag "seg"');
+                }
+                $this->dom->appChild($this->infModal, $this->multimodal, 'Falta tag "multimodal"');
             } else {
                 throw new Exception('Modal não informado ou não suportado.');
             }
@@ -5108,6 +5123,90 @@ class Make
         return $ferroEnv;
     }
 
+    /**
+     * Leiaute - Multimodal
+     * Gera as tags do leaiute específico de multimodal
+     * @return DOMElement|\DOMNode
+     * @author Gabriel Kliemaschewsk Rondon
+     * Nivel: 1
+     */
+    public function tagmultimodal($std)
+    {
+
+        $possible = [
+            'COTM',
+            'indNegociavel',
+        ];
+
+        $std = $this->equilizeParameters($std, $possible);
+
+        $identificador = '#1 <multimodal> - ';
+        $this->multimodal = $this->dom->createElement('multimodal');
+        $this->dom->addChild(
+            $this->multimodal,
+            'COTM',
+            $std->COTM,
+            true,
+            $identificador . 'COTM'
+        );
+        $this->dom->addChild(
+            $this->multimodal,
+            'indNegociavel',
+            $std->indNegociavel,
+            true,
+            $identificador . 'indNegociavel'
+        );
+        
+        return $this->multimodal;
+    }
+
+    public function tagSegMultimodal($std)
+    {
+
+        $possible = [
+            'xSeg',
+            'CNPJ',
+            'nApol',
+            'nAver'
+        ];
+
+        $std = $this->equilizeParameters($std, $possible);
+
+        $identificador = '#4 <multimodal> - ';
+        $this->segMultim = $this->dom->createElement('seg');
+        $infSeg = $this->dom->createElement('infSeg');
+        $this->dom->addChild(
+            $infSeg,
+            'xSeg',
+            $std->xSeg,
+            true,
+            $identificador . 'xSeg'
+        );
+        $this->dom->addChild(
+            $infSeg,
+            'CNPJ',
+            $std->CNPJ,
+            false,
+            $identificador . 'indNegociavel'
+        );
+        $this->segMultim->appendChild($infSeg);
+        $this->dom->addChild(
+            $this->segMultim,
+            'nApol',
+            $std->nApol,
+            true,
+            $identificador . 'nApol'
+        );
+        $this->dom->addChild(
+            $this->segMultim,
+            'nAver',
+            $std->nAver,
+            false,
+            $identificador . 'nAver'
+        );
+
+        return $this->segMultim;
+    }
     /**
      * CT-e de substituição
      * @return type
