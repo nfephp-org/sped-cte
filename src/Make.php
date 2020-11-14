@@ -659,16 +659,34 @@ class Make
                     $this->dom->appChild($this->docAnt, $emiDocAnt, 'Falta tag "emiDocAnt"');
                     $indiceIdDocant = 0;
                     if (array_key_exists($indice, $this->idDocAntEle)) {
-                        $this->dom->appChild($emiDocAnt, $this->idDocAnt[$indice][$indiceIdDocant], 'Falta tag "idDocAnt"');
+                        $this->dom->appChild(
+                            $emiDocAnt,
+                            $this->idDocAnt[$indice][$indiceIdDocant],
+                            'Falta tag "idDocAnt"'
+                        );
                         foreach ($this->idDocAntEle[$indice] as $idDocAntEle) {
-                            $this->dom->appChild($this->idDocAnt[$indice][$indiceIdDocant], $idDocAntEle, 'Falta tag "emiDocAnt"');
+                            $this->dom->appChild(
+                                $this->idDocAnt[$indice][$indiceIdDocant],
+                                $idDocAntEle,
+                                'Falta tag "emiDocAnt"'
+                            );
                         }
                     }
-                    if (count($this->idDocAnt[$indice]) > 1) $indiceIdDocant = $indiceIdDocant + 1;
+                    if (count($this->idDocAnt[$indice]) > 1) {
+                        $indiceIdDocant = $indiceIdDocant + 1;
+                    }
                     if (array_key_exists($indice, $this->idDocAntPap)) {
-                        $this->dom->appChild($emiDocAnt, $this->idDocAnt[$indice][$indiceIdDocant], 'Falta tag "idDocAnt"');
+                        $this->dom->appChild(
+                            $emiDocAnt,
+                            $this->idDocAnt[$indice][$indiceIdDocant],
+                            'Falta tag "idDocAnt"'
+                        );
                         foreach ($this->idDocAntPap[$indice] as $idDocAntPap) {
-                            $this->dom->appChild($this->idDocAnt[$indice][$indiceIdDocant], $idDocAntPap, 'Falta tag "idDocAntEle"');
+                            $this->dom->appChild(
+                                $this->idDocAnt[$indice][$indiceIdDocant],
+                                $idDocAntPap,
+                                'Falta tag "idDocAntEle"'
+                            );
                         }
                     }
                 }
