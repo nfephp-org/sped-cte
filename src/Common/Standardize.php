@@ -4,7 +4,7 @@ namespace NFePHP\CTe\Common;
 
 /**
  * Class for identification and convertion of eletronic documents in xml
- * for documents used in sped-nfe, sped-esocial, sped-cte, sped-mdfe, etc.
+ * for documents used in sped-cte, sped-esocial, sped-cte, sped-mdfe, etc.
  *
  * @category  NFePHP
  * @package   NFePHP\Common\Standardize
@@ -13,7 +13,7 @@ namespace NFePHP\CTe\Common;
  * @license   https://opensource.org/licenses/MIT MIT
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @author    Roberto L. Machado <linux.rlm at gmail dot com>
- * @link      http://github.com/nfephp-org/sped-nfe for the canonical source repository
+ * @link      http://github.com/nfephp-org/sped-cte for the canonical source repository
  */
 
 use NFePHP\Common\Validator;
@@ -51,10 +51,11 @@ class Standardize
         'inutCTe',
         'retInutCTe',
         'procInutCTe',
-        'CTe',
-        'CTeOS',
         'retConsStatServCte',
         'cteDistDFeInteresseResponse',
+        'cteProc',
+        'CTe',
+        'CTeOS',
         'protCTe'
     ];
 
@@ -92,7 +93,7 @@ class Standardize
                 return $key;
             }
         }
-        //documento does not belong to the SPED-NFe project
+        //documento does not belong to the SPED-CTe project
         throw DocumentsException::wrongDocument(7);
     }
 

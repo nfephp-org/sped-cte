@@ -3,8 +3,8 @@ error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 require_once '../bootstrap.php';
 
-use NFePHP\CTe\Tools;
 use NFePHP\Common\Certificate;
+use NFePHP\CTe\Tools;
 
 // tanto o config.json como o certificado.pfx podem estar
 // armazenados em uma base de dados, então não é necessário
@@ -14,25 +14,14 @@ $arr = [
     "atualizacao" => "2016-11-03 18:01:21",
     "tpAmb" => 2,
     "razaosocial" => "SUA RAZAO SOCIAL LTDA",
-    "cnpj" => "99999999999999",
-    "siglaUF" => "SP",
-    "schemes" => "PL008i2",
-    "versao" => '3.10',
-    "tokenIBPT" => "AAAAAAA",
-    "CSC" => "GPB0JBWLUR6HWFTVEAS6RJ69GPCROFPBBB8G",
-    "CSCid" => "000001",
-    "proxyConf" => [
-        "proxyIp" => "",
-        "proxyPort" => "",
-        "proxyUser" => "",
-        "proxyPass" => ""
-    ]
+    "cnpj" => "21357379000161",
+    "siglaUF" => "PR"
 ];
 
 $configJson = json_encode($arr);
-$pfxcontent = file_get_contents('fixtures/expired_certificate.pfx');
+$pfxcontent = file_get_contents('21357379000161.pfx');
 
-$tools = new Tools($configJson, Certificate::readPfx($pfxcontent, 'associacao'));
+$tools = new Tools($configJson, Certificate::readPfx($pfxcontent, '1234'));
 
 //sempre que ativar a contingência pela primeira vez essa informação deverá ser 
 //gravada na base de dados ou em um arquivo para uso posterior, até que a mesma seja 
@@ -49,6 +38,9 @@ $response = $tools->sefazDistDFe(
     0
 );
 
-echo "<pre>";
-print_r($response);
-echo "</pre>";
+header("Content-type: text/plain");
+echo $response;
+
+//echo "<pre>";
+//var_dump($response);
+//echo "</pre>";

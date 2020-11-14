@@ -515,6 +515,14 @@ class Make
      */
     protected $infRespTec;
     /**
+     * @var DOMElement
+     */
+    protected $indAlteraToma;
+    /**
+     * @var DOMElement
+     */
+    protected $infGlobalizado;
+    /**
      * @var boolean
      */
     protected $replaceAccentedChars = false;
@@ -737,6 +745,18 @@ class Make
                 if ($this->tomaICMS != '') {
                     $this->dom->appChild($this->infCteSub, $this->tomaICMS, 'Falta tag "infCteSub"');
                 }
+                if (!empty($this->indAlteraToma)) {
+                    $this->dom->addChild(
+                        $this->infCteSub,
+                        'indAlteraToma',
+                        $this->indAlteraToma,
+                        false,
+                        'Indicador de CT-e Alteração de Tomador'
+                    );
+                }
+            }
+            if ($this->infGlobalizado != '') {
+                $this->dom->appChild($this->infCTeNorm, $this->infGlobalizado, 'Falta tag "infGlobalizado"');
             }
             if ($this->infServVinc != '') {
                 $this->dom->appChild($this->infCTeNorm, $this->infServVinc, 'Falta tag "infServVinc"');
@@ -5426,6 +5446,50 @@ class Make
         );
 
         return $this->tomaICMS;
+    }
+
+    /**
+     * CT-e de substituição - CT-e
+     * @param type $std
+     * @return type
+     */
+    public function tagindAlteraToma($std)
+    {
+
+        $possible = [
+            'indAlteraToma'
+        ];
+
+        $std = $this->equilizeParameters($std, $possible);
+
+        $this->indAlteraToma = $std->indAlteraToma;
+        return $this->indAlteraToma;
+    }
+
+    /**
+     * Informações do CT-e Globalizado
+     * @param type $std
+     * @return type
+     */
+    public function taginfGlobalizado($std)
+    {
+
+        $possible = [
+            'xObs'
+        ];
+
+        $std = $this->equilizeParameters($std, $possible);
+
+        $infGlobalizado = $this->dom->createElement('infGlobalizado');
+        $identificador = '#163 <infGlobalizado> - ';
+        $this->dom->addChild(
+            $infGlobalizado,
+            'xObs',
+            $std->xObs,
+            true,
+            "$identificador - Preencher com informações adicionais, legislação do regime especial, etc"
+        );
+        return $this->infGlobalizado;
     }
 
     /**
