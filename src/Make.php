@@ -3187,7 +3187,7 @@ class Make
         $this->dom->addChild(
             $this->comp[$posicao],
             'vComp',
-            $std->vComp,
+            $this->conditionalNumberFormatting($std->vComp),
             false,
             $identificador . 'Valor do componente'
         );
@@ -5171,7 +5171,7 @@ class Make
             true,
             $identificador . 'indNegociavel'
         );
-        
+
         return $this->multimodal;
     }
 
@@ -5997,8 +5997,8 @@ class Make
     {
         return Strings::equilizeParameters($std, $possible, $this->replaceAccentedChars);
     }
-    
-        /**
+
+    /**
      * Formatação numerica condicional
      * @param string|float|int|null $value
      * @param int $decimal
