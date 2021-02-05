@@ -752,7 +752,7 @@ class Make
                 }
                 $this->dom->appChild($this->infModal, $this->multimodal, 'Falta tag "multimodal"');
             } else {
-                throw new Exception('Modal não informado ou não suportado.');
+                throw new \Exception('Modal não informado ou não suportado.');
             }
             foreach ($this->veicNovos as $veicNovos) {
                 $this->dom->appChild($this->infCTeNorm, $veicNovos, 'Falta tag "infCte"');
