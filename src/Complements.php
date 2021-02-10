@@ -293,9 +293,6 @@ class Complements
             $cStat = $infEvento->getElementsByTagName('cStat')
                 ->item(0)
                 ->nodeValue;
-            $nProt = $infEvento->getElementsByTagName('nProt')
-                ->item(0)
-                ->nodeValue;
             $chaveEvento = $infEvento->getElementsByTagName('chCTe')
                 ->item(0)
                 ->nodeValue;
@@ -306,16 +303,8 @@ class Complements
                 && $tpEvento == '110111'
                 && $chaveEvento == $chaveCTe
             ) {
-                $proCTe->getElementsByTagName('cStat')
-                    ->item(0)
-                    ->nodeValue = '101';
-                $proCTe->getElementsByTagName('nProt')
-                    ->item(0)
-                    ->nodeValue = $nProt;
-                $proCTe->getElementsByTagName('xMotivo')
-                    ->item(0)
-                    ->nodeValue = 'Cancelamento de CT-e homologado';
-                $procXML = Strings::clearProtocoledXML($domcte->saveXML());
+                $node = $domcte->importNode($evento, true);
+                $domcte->documentElement->appendChild($node);
                 break;
             }
         }
