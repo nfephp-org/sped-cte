@@ -272,7 +272,6 @@ class Complements
      */
     public static function cancelRegister($cte, $cancelamento)
     {
-        $procXML = $cte;
         $domcte = new DOMDocument('1.0', 'utf-8');
         $domcte->formatOutput = false;
         $domcte->preserveWhiteSpace = false;
@@ -308,7 +307,7 @@ class Complements
                 break;
             }
         }
-        return $procXML;
+        return $domcte->saveXML();
     }
 
     /**
