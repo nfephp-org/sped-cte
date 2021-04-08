@@ -12,14 +12,15 @@ use NFePHP\Common\Certificate;
 use NFePHP\Common\Soap\SoapCurl;
 
 //tanto o config.json como o certificado.pfx podem estar
-//armazenados em uma base de dados, então não é necessário 
-///trabalhar com arquivos, este script abaixo serve apenas como 
+//armazenados em uma base de dados, então não é necessário
+///trabalhar com arquivos, este script abaixo serve apenas como
 //exemplo durante a fase de desenvolvimento e testes.
 $arr = [
     "atualizacao" => "2016-11-03 18:01:21",
     "tpAmb" => 2,
     "razaosocial" => "SUA RAZAO SOCIAL LTDA",
     "cnpj" => "99999999999999",
+    "cpf" => "00000000000",
     "siglaUF" => "RS",
     "schemes" => "PL_CTe_300",
     "versao" => '3.00',
@@ -227,7 +228,7 @@ $icms->pICMSSTRet = ''; // Alíquota do ICMS
 $icms->vCred = ''; // Valor do Crédito Outorgado/Presumido
 $icms->vTotTrib = 754.38; // Valor de tributos federais; estaduais e municipais
 $icms->outraUF = false;    // ICMS devido à UF de origem da prestação; quando diferente da UF do emitente
-$icms->vICMSUFIni = 0;  
+$icms->vICMSUFIni = 0;
 $icms->vICMSUFFim = 0;
 $icms->infAdFisco = 'Informações ao fisco';
 $cte->tagicms($icms);

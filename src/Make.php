@@ -2202,6 +2202,7 @@ class Make
     {
         $possible = [
             'CNPJ',
+            'CPF',
             'IE',
             'IEST',
             'xNome',
@@ -2210,13 +2211,23 @@ class Make
         $std = $this->equilizeParameters($std, $possible);
         $identificador = '#97 <emit> - ';
         $this->emit = $this->dom->createElement('emit');
-        $this->dom->addChild(
-            $this->emit,
-            'CNPJ',
-            $std->CNPJ,
-            true,
-            $identificador . 'CNPJ do emitente'
-        );
+        if (!empty($std->CNPJ)) {
+            $this->dom->addChild(
+                $this->emit,
+                'CNPJ',
+                $std->CNPJ,
+                true,
+                $identificador . 'CNPJ do emitente'
+            );
+        } else {
+            $this->dom->addChild(
+                $this->emit,
+                'CPF',
+                $std->CPF,
+                true,
+                $identificador . 'CPF do emitente'
+            );
+        }
         $this->dom->addChild(
             $this->emit,
             'IE',
@@ -4250,47 +4261,58 @@ class Make
             'serie',
             'subserie',
             'dEmi',
-            'vDoc'
+            'vDoc',
+            'chBPe'
         ];
         $std = $this->equilizeParameters($std, $possible);
         $ident = '#319 <infDocRef> - ';
         $this->infDocRef[] = $this->dom->createElement('infDocRef');
         $posicao = (int)count($this->infDocRef) - 1;
-        $this->dom->addChild(
-            $this->infDocRef[$posicao],
-            'nDoc',
-            $std->nDoc,
-            false,
-            $ident . 'Número do documento'
-        );
-        $this->dom->addChild(
-            $this->infDocRef[$posicao],
-            'serie',
-            $std->serie,
-            false,
-            $ident . 'Série do documento'
-        );
-        $this->dom->addChild(
-            $this->infDocRef[$posicao],
-            'subserie',
-            $std->subserie,
-            false,
-            $ident . 'Subserie do documento'
-        );
-        $this->dom->addChild(
-            $this->infDocRef[$posicao],
-            'dEmi',
-            $std->dEmi,
-            false,
-            $ident . 'Data de Emissão'
-        );
-        $this->dom->addChild(
-            $this->infDocRef[$posicao],
-            'vDoc',
-            $this->conditionalNumberFormatting($std->vDoc),
-            false,
-            $ident . 'Valor do documento'
-        );
+        if (!empty($std->chBPe)) {
+            $this->dom->addChild(
+                $this->infDocRef[$posicao],
+                'chBPe',
+                $std->chBPe,
+                true,
+                $ident . 'Chave de acesso do BP-e que possui eventos excesso de bagagem'
+            );
+        } else {
+            $this->dom->addChild(
+                $this->infDocRef[$posicao],
+                'nDoc',
+                $std->nDoc,
+                false,
+                $ident . 'Número do documento'
+            );
+            $this->dom->addChild(
+                $this->infDocRef[$posicao],
+                'serie',
+                $std->serie,
+                false,
+                $ident . 'Série do documento'
+            );
+            $this->dom->addChild(
+                $this->infDocRef[$posicao],
+                'subserie',
+                $std->subserie,
+                false,
+                $ident . 'Subserie do documento'
+            );
+            $this->dom->addChild(
+                $this->infDocRef[$posicao],
+                'dEmi',
+                $std->dEmi,
+                false,
+                $ident . 'Data de Emissão'
+            );
+            $this->dom->addChild(
+                $this->infDocRef[$posicao],
+                'vDoc',
+                $this->conditionalNumberFormatting($std->vDoc),
+                false,
+                $ident . 'Valor do documento'
+            );
+        }
         return $this->infDocRef[$posicao];
     }
 
@@ -5569,7 +5591,7 @@ class Make
             $this->veic,
             'UF',
             $std->uf,
-            true,
+            false,
             $identificador . 'UF em que veículo está licenciado'
         );
         return $this->veic;

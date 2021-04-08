@@ -659,10 +659,8 @@ class Tools extends ToolsCommon
             $this->tpAmb,
             $ignore
         );
-        $ev = $this->tpEv($tpEvento);
-        $aliasEvento = $ev->alias;
-        $descEvento = $ev->desc;
         $cnpj = $this->config->cnpj;
+        $cpf = $this->config->cpf;
         $dt = new \DateTime('now', new \DateTimeZone($this->timezone));
         $dhEvento = $dt->format('Y-m-d\TH:i:sP');
         $sSeqEvento = str_pad($nSeqEvento, 2, "0", STR_PAD_LEFT);
@@ -672,9 +670,13 @@ class Tools extends ToolsCommon
         $request = "<eventoCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
             . "<infEvento Id=\"$eventId\">"
             . "<cOrgao>$cOrgao</cOrgao>"
-            . "<tpAmb>$this->tpAmb</tpAmb>"
-            . "<CNPJ>$cnpj</CNPJ>"
-            . "<chCTe>$chave</chCTe>"
+            . "<tpAmb>$this->tpAmb</tpAmb>";
+        if (!empty($cnpj)) {
+            $request .= "<CNPJ>$cnpj</CNPJ>";
+        } else {
+            $request .= "<CPF>$cpf</CPF>";
+        }
+        $request .= "<chCTe>$chave</chCTe>"
             . "<dhEvento>$dhEvento</dhEvento>"
             . "<tpEvento>$tpEvento</tpEvento>"
             . "<nSeqEvento>$nSeqEvento</nSeqEvento>"
