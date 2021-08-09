@@ -5552,7 +5552,7 @@ class Make
                 $this->dom->addChild(
                     $this->prop,
                     'NroRegEstadual',
-                    $std->nroRegEstadual,
+                    $std->NroRegEstadual,
                     false,
                     $identificador . 'Número do Registro Estadual'
                 );
