@@ -48,6 +48,7 @@ class Standardize
         'cteOSProc',
         'procEventoCTe',
         'retEventoCTe',
+        'cteRetRecepcaoResult',
         'cteRecepcaoOSResult',
         'retInutCTe',
         'inutCTe',
