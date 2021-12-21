@@ -595,10 +595,19 @@ class Make
         } else {
             return $this->montaCTeOS();
         }
+        $node = $this->ide->getElementsByTagName("dhCont")->item(0);
         if ($this->toma3 != '') {
-            $this->dom->appChild($this->ide, $this->toma3, 'Falta tag "ide"');
+            if (!empty($node)) {
+                $this->ide->insertBefore($this->toma3, $node);
+            } else {
+                $this->dom->appChild($this->ide, $this->toma3, 'Falta tag "ide"');
+            }
         } else {
-            $this->dom->appChild($this->ide, $this->toma4, 'Falta tag "ide"');
+            if (!empty($node)) {
+                $this->ide->insertBefore($this->toma4, $node);
+            } else {
+                $this->dom->appChild($this->ide, $this->toma4, 'Falta tag "ide"');
+            }
         }
         $this->dom->appChild($this->infCte, $this->ide, 'Falta tag "infCte"');
         if ($this->compl != '') {
