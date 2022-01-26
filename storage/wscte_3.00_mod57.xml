@@ -20,7 +20,7 @@
             <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsulta' version='3.00'>https://hcte.fazenda.mg.gov.br/cte/services/CteConsulta</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CteStatusServico' version='3.00'>https://hcte.fazenda.mg.gov.br/cte/services/CteStatusServico</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CteRecepcaoEvento' version='3.00'>https://hcte.fazenda.mg.gov.br/cte/services/RecepcaoEvento</CteRecepcaoEvento>
-            <QRCode method='QRCode' operation='QRCode' version='3.00'>https://hcte.fazenda.mg.gov.br/portalcte/sistema/qrcode.xhtml</QRCode>
+            <QRCode method='QRCode' operation='QRCode' version='3.00'>https://cte.fazenda.mg.gov.br/portalcte/sistema/qrcode.xhtml</QRCode>
         </homologacao>
         <producao>
             <CteRecepcao method='CTeRecepcao' operation='CteRecepcao' version='3.00'>https://cte.fazenda.mg.gov.br/cte/services/CteRecepcao</CteRecepcao>
