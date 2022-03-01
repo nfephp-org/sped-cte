@@ -723,7 +723,7 @@ class Tools extends ToolsCommon
             true
         );
         //monta a consulta
-        $consulta = "<consChNFe><chNFe>$chave</chNFe></consChNFe>"
+        $consulta = "<distDFeInt xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">" . "<consChNFe><chNFe>$chave</chNFe></consChNFe>"
             . ((strlen($this->config->cnpj)==14) ?
                 "<CNPJ>".$this->config->cnpj."</CNPJ>" :
                 "<CPF>".$this->config->cnpj."</CPF>"
