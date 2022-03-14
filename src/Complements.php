@@ -19,6 +19,14 @@ class Complements
      */
     public static function toAuthorize($request, $response)
     {
+        if (empty($request)) {
+            throw new DocumentsException('Erro ao protocolar !! o xml '
+                . 'a protocolar está vazio.');
+        }
+        if (empty($response)) {
+            throw new DocumentsException('Erro ao protocolar !!'
+                . ' O retorno da sefaz está vazio.');
+        }
         $st = new Standardize();
         $key = ucfirst($st->whichIs($request));
         if ($key != 'CTe' && $key != 'CTeOS' && $key != 'EventoCTe' && $key != 'InutCTe') {
