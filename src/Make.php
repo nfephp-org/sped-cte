@@ -76,7 +76,7 @@ class Make
      * Informações do CT-e
      * @var \DOMNode
      */
-    private $infCte = '';
+    private $infCte = '0';
     /**
      * Identificação do CT-e
      * @var \DOMNode
