@@ -10,6 +10,7 @@ use NFePHP\CTe\Tools;
 // armazenados em uma base de dados, então não é necessário
 // trabalhar com arquivos, este script abaixo serve apenas como
 // exemplo durante a fase de desenvolvimento e testes.
+//testediego
 $arr = [
     "atualizacao" => "2016-11-03 18:01:21",
     "tpAmb" => 2,
