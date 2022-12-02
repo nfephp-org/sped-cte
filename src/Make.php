@@ -956,7 +956,7 @@ class Make
             }
         }
         if ($this->cobr != '') {
-            $this->dom->appChild($this->infCte, $this->cobr, 'Falta tag "infCte"');
+            $this->dom->appChild($this->infCTeNorm, $this->cobr, 'Falta tag "infCte"');
         }
         foreach ($this->autXML as $autXML) {
             $this->dom->appChild($this->infCte, $autXML, 'Falta tag "infCte"');
