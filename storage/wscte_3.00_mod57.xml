@@ -76,6 +76,7 @@
         </homologacao>
         <producao>
             <CteRecepcao method='CTeRecepcao' operation='CteRecepcao' version='3.00'>https://cte.sefaz.mt.gov.br/ctews/services/CteRecepcao</CteRecepcao>
+            <CteRecepcaoOS method='CteRecepcaoOS' operation='CteRecepcaoOS' version='3.00'>https://cte.sefaz.mt.gov.br/ctews/services/CteRecepcaoOS</CteRecepcaoOS>
             <CteRetRecepcao method='CTeRetRecepcao' operation='CteRetRecepcao' version='3.00'>https://cte.sefaz.mt.gov.br/ctews/services/CteRetRecepcao</CteRetRecepcao>
             <CteCancelamento method='CTeCancelamento' operation='CteCancelamento' version='3.00'>https://cte.sefaz.mt.gov.br/ctews/services/CteCancelamento</CteCancelamento>
             <CteInutilizacao method='CTeInutilizacao' operation='CteInutilizacao' version='3.00'>https://cte.sefaz.mt.gov.br/ctews/services/CteInutilizacao</CteInutilizacao>
