@@ -11,12 +11,12 @@ Biblioteca para geração e comunicação das CTe com as SEFAZ autorizadoras.
 
 >**Numa análise preliminar existem poucas alterações no modelo 57**
 
-#### Campos NOVOS ou com alteração na versão 4.00
+#### Mod. 57 - Campos NOVOS ou com alteração na versão 4.00
 - CRT  (em emit)
 - infCteComp 
 - infPAA
 
-#### Campos Removidos na versão 4.00
+#### Mod. 57 - Campos Removidos na versão 4.00
 - refCteAnu
 - tomaICMS
 - infCteAnu
