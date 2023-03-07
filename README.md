@@ -2,7 +2,24 @@
 
 [![Chat][ico-gitter]][link-gitter]
 
-Framework para geração e comunicação das CTe com as SEFAZ autorizadoras.
+Biblioteca para geração e comunicação das CTe com as SEFAZ autorizadoras.
+
+## Nova versão 4.00 (a ser inclusa na biblioteca)
+
+### Homologação a partir de 04/2023
+### Produção a partir de 06/2023
+
+>**Numa análise preliminar existem poucas alterações no modelo 57**
+
+#### Campos NOVOS ou com alteração na versão 4.00
+- CRT  (em emit)
+- infCteComp 
+- infPAA
+
+#### Campos Removidos na versão 4.00
+- refCteAnu
+- tomaICMS
+- infCteAnu
 
 *sped-cte é um framework para geração CTe e eventos na comunicação com as SEFAZ autorizadoras.*
 
