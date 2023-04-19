@@ -19,7 +19,6 @@ namespace NFePHP\CTe;
 use NFePHP\Common\Strings;
 use NFePHP\Common\Signer;
 use NFePHP\Common\UFList;
-use NFePHP\CTe\Factories\Events;
 use NFePHP\CTe\Common\Tools as ToolsCommon;
 use RuntimeException;
 use InvalidArgumentException;
@@ -319,18 +318,15 @@ class Tools extends ToolsCommon
         if (empty($tpAmb)) {
             $tpAmb = $this->tpAmb;
         }
-        $ignoreContingency = true;
         if (empty($uf)) {
             $uf = $this->config->siglaUF;
-            $ignoreContingency = false;
         }
         $servico = 'CteStatusServico';
         $this->checkContingencyForWebServices($servico);
         $this->servico(
             $servico,
             $uf,
-            $tpAmb,
-            $ignoreContingency
+            $tpAmb
         );
         $request = "<consStatServCte xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
             . "<tpAmb>$tpAmb</tpAmb>"
