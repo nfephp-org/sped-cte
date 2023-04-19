@@ -28,7 +28,8 @@
         "SE": "SVRS",
         "SP": "SP",
         "TO": "SVRS",
-        "SVRS": "SVRS"
+        "SVRS": "SVRS",
+        "SVSP": "SVSP"
     },
     "67": {
         "AC": "SVRS",
@@ -58,6 +59,7 @@
         "SE": "SVRS",
         "SP": "SP",
         "TO": "SVRS",
-        "SVRS": "SVRS"
+        "SVRS": "SVRS",
+        "SVSP": "SVSP"
     }
 }
