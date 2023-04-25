@@ -32,13 +32,7 @@ class MakeCTe
      * numero da versão do xml da CTe
      * @var string
      */
-    public $versao = '3.00';
-    /**
-     * mod
-     * modelo da CTe 57
-     * @var integer
-     */
-    public $mod = 57;
+    public $versao = '4.00';
     /**
      * chave da MDFe
      * @var string
@@ -82,11 +76,6 @@ class MakeCTe
      * @var \DOMNode
      */
     private $ide = '';
-    /**
-     * Tipo do Serviço
-     * @var integer
-     */
-    private $tpServ = 0;
     /**
      * Indicador do "papel" do tomador do serviço no CT-e
      * @var \DOMNode
@@ -450,15 +439,6 @@ class MakeCTe
     }
 
     /**
-     * Returns the model of CTe 57 or 67
-     * @return int
-     */
-    public function getModelo()
-    {
-        return $this->mod;
-    }
-
-    /**
      * Set character convertion to ASCII only ou not
      * @param bool $option
      */
@@ -801,7 +781,6 @@ class MakeCTe
             'cCT',
             'CFOP',
             'natOp',
-            'mod',
             'serie',
             'nCT',
             'dhEmi',
@@ -827,14 +806,11 @@ class MakeCTe
             'UFFim',
             'retira',
             'xDetRetira',
-            'indIEToma',
             'dhCont',
             'xJust'
         ];
-
         $std = $this->equilizeParameters($std, $possible);
         $this->tpAmb = $std->tpAmb;
-        $this->mod = $std->mod;
         $identificador = '#4 <ide> - ';
         $this->ide = $this->dom->createElement('ide');
         $this->dom->addChild(
@@ -868,7 +844,7 @@ class MakeCTe
         $this->dom->addChild(
             $this->ide,
             'mod',
-            $std->mod,
+            57,
             true,
             $identificador . 'Modelo do documento fiscal'
         );
@@ -1069,7 +1045,6 @@ class MakeCTe
             false,
             $identificador . 'Justificativa da entrada em contingência'
         );
-        $this->tpServ = $std->tpServ;
         return $this->ide;
     }
 
