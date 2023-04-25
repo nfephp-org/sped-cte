@@ -98,11 +98,6 @@ class MakeCTe
      */
     private $toma4 = '';
     /**
-     * Indicador do "papel" do tomador do serviço no CT-e OS
-     * @var \DOMNode
-     */
-    private $toma = '';
-    /**
      * Dados do endereço
      * @var \DOMNode
      */
@@ -233,11 +228,6 @@ class MakeCTe
      */
     private $imp = '';
     /**
-     * Observações adicionais da CT-e
-     * @var string
-     */
-    private $xObs = '';
-    /**
      * Grupo de informações do CT-e Normal e Substituto
      * @var \DOMNode
      */
@@ -247,11 +237,6 @@ class MakeCTe
      * @var \DOMNode
      */
     private $infCarga = '';
-    /**
-     * Informações da Prestação do Serviço
-     * @var \DOMNode
-     */
-    private $infServico = '';
     /**
      * Informações de quantidades da Carga do CT-e
      * @var \DOMNode
@@ -279,31 +264,6 @@ class MakeCTe
      */
     private $infOutros = array();
     /**
-     * Informações dos demais documentos
-     * @var array
-     */
-    private $infDocRef = array();
-    /**
-     * Informações das Unidades de Transporte (Carreta/Reboque/Vagão)
-     * @var array
-     */
-    private $infUnidTransp = array();
-    /**
-     * Lacres das Unidades de Transporte
-     * @var array
-     */
-    private $lacUnidTransp = array();
-    /**
-     * Informações das Unidades de Carga (Containeres/ULD/Outros)
-     * @var array
-     */
-    private $infUnidCarga = array();
-    /**
-     * Lacres das Unidades de Carga
-     * @var array
-     */
-    private $lacUnidCarga = array();
-    /**
      * Documentos de Transporte Anterior
      * @var \DOMNode
      */
@@ -329,11 +289,6 @@ class MakeCTe
      */
     private $idDocAntEle = array();
     /**
-     * Informações de Seguro da Carga
-     * @var array
-     */
-    private $seg = array();
-    /**
      * Informações do modal
      * @var \DOMNode
      */
@@ -354,16 +309,6 @@ class MakeCTe
      */
     private $cobr = '';
     /**
-     * Dados da fatura
-     * @var \DOMNode
-     */
-    private $fat = '';
-    /**
-     * Dados das duplicatas
-     * @var array
-     */
-    private $dup = array();
-    /**
      * Informações do CT-e de substituição
      * @var \DOMNode
      */
@@ -379,30 +324,10 @@ class MakeCTe
      */
     private $infCTeMultimodal = array();
     /**
-     * Tomador é contribuinte do ICMS
-     * @var \DOMNode
-     */
-    private $tomaICMS = '';
-    /**
-     * Informação da NFe emitida pelo Tomador
-     * @var \DOMNode
-     */
-    private $refNFe = '';
-    /**
-     * Informação da NF ou CT emitido pelo Tomador
-     * @var \DOMNode
-     */
-    private $refNF = '';
-    /**
      * Informação da NF ou CT emitido pelo Tomador
      * @var \DOMNode
      */
     private $infCteComp = '';
-    /**
-     * Detalhamento do CT-e do tipo Anulação
-     * @var \DOMNode
-     */
-    private $infCteAnu = '';
     /**
      * Informações do modal Rodoviário
      * @var \DOMNode
@@ -418,7 +343,6 @@ class MakeCTe
      * @var \DOMNode
      */
     private $ferrov = '';
-
     private $ferroEnv = '';
     /**
      * Informações do modal Aquaviario
@@ -455,7 +379,6 @@ class MakeCTe
      * @var array
      */
     private $infNFeCont = array();
-
     /**
      * Informações do modal Dutoviário
      * @var \DOMNode
@@ -466,25 +389,6 @@ class MakeCTe
      * @var array
      */
     private $occ = array();
-    /**
-     * @var \DOMNode
-     */
-    private $emiOcc = array();
-    /**
-     * Informações de Vale Pedágio
-     * @var array
-     */
-    private $valePed = array();
-    /**
-     * Dados dos Veículos
-     * @var array
-     */
-    private $veic = array();
-    /**
-     * Proprietários do Veículo. Só preenchido quando o veículo não pertencer à empresa emitente do CT-e
-     * @var array
-     */
-    private $prop = array();
     /**
      * Informações do CTe Multimodal
      * @var array
@@ -500,11 +404,6 @@ class MakeCTe
      * @var array
      */
     private $autXML = array();
-    /**
-     * Dados do Fretamento - CTe-OS
-     * @var
-     */
-    private $infFretamento;
     /**
      * @var DOMElement
      */
@@ -632,9 +531,6 @@ class MakeCTe
         if ($this->infCteComp != '') { // Caso seja um CTe tipo complemento de valores
             $this->dom->appChild($this->infCte, $this->infCteComp, 'Falta tag "infCteComp"');
         }
-        if ($this->infCteAnu != '') { // Caso seja um CTe tipo anulação
-            $this->dom->appChild($this->infCte, $this->infCteAnu, 'Falta tag "infCteAnu"');
-        }
         if ($this->infCTeNorm != '') { // Caso seja um CTe tipo normal
             $this->dom->appChild($this->infCte, $this->infCTeNorm, 'Falta tag "infCTeNorm"');
             $this->dom->appChild($this->infCTeNorm, $this->infCarga, 'Falta tag "infCarga"');
@@ -690,9 +586,6 @@ class MakeCTe
                         }
                     }
                 }
-            }
-            foreach ($this->seg as $seg) {
-                $this->dom->appChild($this->infCTeNorm, $seg, 'Falta tag "seg"');
             }
             $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
             if ($this->modal == '01') {
@@ -759,26 +652,12 @@ class MakeCTe
             }
             if ($this->infCteSub != '') {
                 $this->dom->appChild($this->infCTeNorm, $this->infCteSub, 'Falta tag "infCteSub"');
-
-                if ($this->tomaICMS != '') {
-                    $this->dom->appChild($this->infCteSub, $this->tomaICMS, 'Falta tag "infCteSub"');
-                }
-                if (!empty($this->indAlteraToma)) {
-                    $this->dom->addChild(
-                        $this->infCteSub,
-                        'indAlteraToma',
-                        $this->indAlteraToma,
-                        false,
-                        'Indicador de CT-e Alteração de Tomador'
-                    );
-                }
             }
             if ($this->infGlobalizado != '') {
                 $this->dom->appChild($this->infCTeNorm, $this->infGlobalizado, 'Falta tag "infGlobalizado"');
             }
             if ($this->infServVinc != '') {
                 $this->dom->appChild($this->infCTeNorm, $this->infServVinc, 'Falta tag "infServVinc"');
-
                 foreach ($this->infCTeMultimodal as $infCTeMultimodal) {
                     $this->dom->appChild($this->infServVinc, $infCTeMultimodal, 'Falta tag "infCTeMultimodal"');
                 }
@@ -3973,9 +3852,7 @@ class MakeCTe
             'dIni',
             'dFim'
         ];
-
         $std = $this->equilizeParameters($std, $possible);
-
         $identificador = '#1 <duto> - ';
         $this->duto = $this->dom->createElement('duto');
         $this->dom->addChild(
@@ -4232,7 +4109,6 @@ class MakeCTe
      */
     public function tagaereo($std)
     {
-
         $possible = [
             'nMinu',
             'nOCA',
@@ -4623,13 +4499,13 @@ class MakeCTe
 
     /**
      * CT-e de substituição
-     * @return type
+     * @return DOMElement|\DOMNode
      */
     public function taginfCteSub($std)
     {
         $possible = [
             'chCte',
-            'refCteAnu'
+            'indAlteraToma'
         ];
         $std = $this->equilizeParameters($std, $possible);
         $identificador = '#149 <infCteSub> - ';
@@ -4641,12 +4517,42 @@ class MakeCTe
             false,
             "$identificador  Chave de acesso do CTe a ser substituído (original)"
         );
+        $this->dom->addChild(
+            $this->infCteSub,
+            'indAlteraToma',
+            $this->indAlteraToma,
+            false,
+            'Indicador de CT-e Alteração de Tomador'
+        );
         return $this->infCteSub;
     }
 
     /**
+     * Informações do CT-e Globalizado
+     * @param stdClass $std
+     * @return DOMElement|\DOMNode
+     */
+    public function taginfGlobalizado($std)
+    {
+        $possible = [
+            'xObs'
+        ];
+        $std = $this->equilizeParameters($std, $possible);
+        $infGlobalizado = $this->dom->createElement('infGlobalizado');
+        $identificador = '#163 <infGlobalizado> - ';
+        $this->dom->addChild(
+            $infGlobalizado,
+            'xObs',
+            $std->xObs,
+            true,
+            "$identificador - Preencher com informações adicionais, legislação do regime especial, etc"
+        );
+        return $this->infGlobalizado;
+    }
+
+    /**
      * Informações do Serviço Vinculado a Multimodal
-     * @return type
+     * @return DOMElement|\DOMNode
      */
     public function infCTeMultimodal($std)
     {
@@ -4671,332 +4577,6 @@ class MakeCTe
     }
 
     /**
-     * CT-e de substituição - tomaICMS
-     * @param type $std
-     * @return type
-     */
-    public function tagtomaICMS()
-    {
-        $this->tomaICMS = $this->dom->createElement('tomaICMS');
-        return $this->tomaICMS;
-    }
-
-    /**
-     * CT-e de substituição - NF-e
-     * @param type $std
-     * @return type
-     */
-    public function tagrefNFe($std)
-    {
-        $possible = [
-            'refNFe'
-        ];
-        $std = $this->equilizeParameters($std, $possible);
-        if (empty($this->tomICMS)) {
-            $this->tomaICMS = $this->dom->createElement('tomaICMS');
-        }
-        $identificador = '#153 <refNFe> - ';
-        $this->dom->addChild(
-            $this->tomaICMS,
-            'refNFe',
-            $std->refNFe,
-            false,
-            "$identificador  Chave de acesso da NF-e emitida pelo tomador"
-        );
-        return $this->tomaICMS;
-    }
-
-    /**
-     * CT-e de substituição - NF
-     * @param type $std
-     * @return type
-     */
-    public function tagrefNF($std)
-    {
-        $possible = [
-            'CNPJ',
-            'CPF',
-            'mod',
-            'serie',
-            'subserie',
-            'nro',
-            'valor',
-            'dEmi'
-        ];
-        $std = $this->equilizeParameters($std, $possible);
-        $identificador = '#154 <refNFe> - ';
-        if (empty($this->tomICMS)) {
-            $this->tomaICMS = $this->dom->createElement('tomaICMS');
-        }
-        $this->refNF = $this->dom->createElement('refNF');
-        if ($std->CNPJ != '') {
-            $this->dom->addChild(
-                $this->refNF,
-                'CNPJ',
-                $std->CNPJ,
-                true,
-                $identificador . 'CNPJ do emitente'
-            );
-        } elseif ($std->CPF != '') {
-            $this->dom->addChild(
-                $this->refNF,
-                'CPF',
-                $std->CPF,
-                true,
-                $identificador . 'CPF do emitente'
-            );
-        }
-        $this->dom->addChild(
-            $this->refNF,
-            'mod',
-            $std->mod,
-            false,
-            $identificador . 'Modelo'
-        );
-        $this->dom->addChild(
-            $this->refNF,
-            'serie',
-            $std->serie,
-            false,
-            $identificador . 'Série do documento'
-        );
-        $this->dom->addChild(
-            $this->refNF,
-            'subserie',
-            $std->subserie,
-            false,
-            $identificador . 'Subserie do documento'
-        );
-        $this->dom->addChild(
-            $this->refNF,
-            'nro',
-            $std->nro,
-            false,
-            $identificador . 'Número'
-        );
-        $this->dom->addChild(
-            $this->refNF,
-            'valor',
-            $this->conditionalNumberFormatting($std->valor),
-            false,
-            $identificador . 'Valor'
-        );
-        $this->dom->addChild(
-            $this->refNF,
-            'dEmi',
-            $std->dEmi,
-            false,
-            $identificador . 'Emissão'
-        );
-        $this->tomaICMS->appendChild($this->refNF);
-        return $this->tomaICMS;
-    }
-
-    /**
-     * CT-e de substituição - CT-e
-     * @param type $std
-     * @return type
-     */
-    public function tagrefCTe($std)
-    {
-        $possible = [
-            'refCte'
-        ];
-        $std = $this->equilizeParameters($std, $possible);
-        if (empty($this->tomICMS)) {
-            $this->tomaICMS = $this->dom->createElement('tomaICMS');
-        }
-        $identificador = '#163 <refCte> - ';
-        $this->dom->addChild(
-            $this->tomaICMS,
-            'refCte',
-            $std->refCte,
-            false,
-            "$identificador  Chave de acesso do CT-e emitida pelo tomador"
-        );
-        return $this->tomaICMS;
-    }
-
-    /**
-     * CT-e de substituição - CT-e
-     * @param type $std
-     * @return type
-     */
-    public function tagindAlteraToma($std)
-    {
-        $possible = [
-            'indAlteraToma'
-        ];
-        $std = $this->equilizeParameters($std, $possible);
-        $this->indAlteraToma = $std->indAlteraToma;
-        return $this->indAlteraToma;
-    }
-
-    /**
-     * Informações do CT-e Globalizado
-     * @param type $std
-     * @return type
-     */
-    public function taginfGlobalizado($std)
-    {
-        $possible = [
-            'xObs'
-        ];
-        $std = $this->equilizeParameters($std, $possible);
-        $infGlobalizado = $this->dom->createElement('infGlobalizado');
-        $identificador = '#163 <infGlobalizado> - ';
-        $this->dom->addChild(
-            $infGlobalizado,
-            'xObs',
-            $std->xObs,
-            true,
-            "$identificador - Preencher com informações adicionais, legislação do regime especial, etc"
-        );
-        return $this->infGlobalizado;
-    }
-
-    /**
-     * Leiaute - Rodoviário
-     * Gera as tags para o elemento: "veic" (Dados dos Veículos)
-     * #21
-     * Nível: 1
-     * @return mixed
-     */
-    public function tagveicCTeOS($std)
-    {
-        $possible = [
-            'placa',
-            'RENAVAM',
-            'CNPJ',
-            'CPF',
-            'TAF',
-            'NroRegEstadual',
-            'xNome',
-            'IE',
-            'ufProp',
-            'tpProp',
-            'uf'
-        ];
-        $std = $this->equilizeParameters($std, $possible);
-        $identificador = '#21 <veic> - ';
-        $this->veic = $this->dom->createElement('veic');
-        $this->dom->addChild(
-            $this->veic,
-            'placa',
-            $std->placa,
-            false,
-            $identificador . 'Placa do veículo'
-        );
-        $this->dom->addChild(
-            $this->veic,
-            'RENAVAM',
-            $std->RENAVAM,
-            false,
-            $identificador . 'RENAVAM do veículo'
-        );
-        if ($std->xNome != '') { // CASO FOR VEICULO DE TERCEIRO
-            $this->prop = $this->dom->createElement('prop');
-            if ($std->CNPJ != '') {
-                $this->dom->addChild(
-                    $this->prop,
-                    'CNPJ',
-                    $std->CNPJ,
-                    true,
-                    $identificador . 'CNPJ do proprietario'
-                );
-            } elseif ($std->CPF != '') {
-                $this->dom->addChild(
-                    $this->prop,
-                    'CPF',
-                    $std->CPF,
-                    true,
-                    $identificador . 'CPF do proprietario'
-                );
-            }
-            if ($std->taf != '') {
-                $this->dom->addChild(
-                    $this->prop,
-                    'TAF',
-                    $std->taf,
-                    false,
-                    $identificador . 'TAF'
-                );
-            } else {
-                $this->dom->addChild(
-                    $this->prop,
-                    'NroRegEstadual',
-                    $std->NroRegEstadual,
-                    false,
-                    $identificador . 'Número do Registro Estadual'
-                );
-            }
-            $this->dom->addChild(
-                $this->prop,
-                'xNome',
-                $std->xNome,
-                true,
-                $identificador . 'Nome do proprietario'
-            );
-            $this->dom->addChild(
-                $this->prop,
-                'IE',
-                Strings::onlyNumbers($std->IE),
-                false,
-                $identificador . 'IE do proprietario'
-            );
-            $this->dom->addChild(
-                $this->prop,
-                'UF',
-                $std->ufProp,
-                true,
-                $identificador . 'UF do proprietario'
-            );
-            $this->dom->addChild(
-                $this->prop,
-                'tpProp',
-                $std->tpProp,
-                true,
-                $identificador . 'Tipo Proprietário'
-            );
-            $this->dom->appChild($this->veic, $this->prop, 'Falta tag "prop"');
-        }
-        $this->dom->addChild(
-            $this->veic,
-            'UF',
-            $std->uf,
-            false,
-            $identificador . 'UF em que veículo está licenciado'
-        );
-        return $this->veic;
-    }
-
-    public function infFretamento($std)
-    {
-        $possible = [
-            'tpFretamento',
-            'dhViagem'
-        ];
-        $std = $this->equilizeParameters($std, $possible);
-        $identificador = '#21 <infFretamento> - ';
-        $this->infFretamento = $this->dom->createElement('infFretamento');
-        $this->dom->addChild(
-            $this->infFretamento,
-            'tpFretamento',
-            $std->tpFretamento,
-            true,
-            $identificador . 'Tipo do Fretamento de Pessoas'
-        );
-        $this->dom->addChild(
-            $this->infFretamento,
-            'dhViagem',
-            $std->dhViagem,
-            false,
-            $identificador . 'Data e hora da viagem'
-        );
-        return $this->infFretamento;
-    }
-
-    /**
      * Gera as tags para o elemento: "infCteComp" (Detalhamento do CT-e complementado)
      * #410
      * Nível: 1
@@ -5018,38 +4598,6 @@ class MakeCTe
             $identificador . ' Chave do CT-e complementado'
         );
         return $this->infCteComp;
-    }
-
-    /**
-     * Gera as tags para o elemento: "infCteAnu" (Detalhamento do CT-e de Anulação)
-     * #411
-     * Nível: 1
-     * @return DOMElement|\DOMNode
-     */
-    public function taginfCteAnu($std)
-    {
-        $possible = [
-            'chCte',
-            'dEmi'
-        ];
-        $std = $this->equilizeParameters($std, $possible);
-        $identificador = '#411 <infCteAnu> - ';
-        $this->infCteAnu = $this->dom->createElement('infCteAnu');
-        $this->dom->addChild(
-            $this->infCteAnu,
-            'chCte',
-            $std->chCte,
-            true,
-            $identificador . ' Chave do CT-e anulado'
-        );
-        $this->dom->addChild(
-            $this->infCteAnu,
-            'dEmi',
-            $std->dEmi,
-            true,
-            $identificador . ' Data de Emissão do CT-e anulado'
-        );
-        return $this->infCteAnu;
     }
 
     /**
