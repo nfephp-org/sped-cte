@@ -95,12 +95,12 @@ class MakeCTeOS
      * Campo de uso livre do contribuinte
      * @var array
      */
-    private $obsCont = array();
+    private $obsCont = [];
     /**
      * Campo de uso livre do contribuinte
      * @var array
      */
-    private $obsFisco = array();
+    private $obsFisco = [];
     /**
      * Identificação do Emitente do CT-e
      * @var \DOMNode
@@ -120,7 +120,7 @@ class MakeCTeOS
      * Componentes do Valor da Prestação
      * @var array
      */
-    private $comp = array();
+    private $comp = [];
     /**
      * Informações relativas aos Impostos
      * @var \DOMNode
@@ -140,17 +140,17 @@ class MakeCTeOS
      * Informações de quantidades da Carga do CT-e
      * @var \DOMNode
      */
-    private $infQ = array();
+    private $infQ = [];
     /**
      * Informações dos demais documentos
      * @var array
      */
-    private $infDocRef = array();
+    private $infDocRef = [];
     /**
      * Informações de Seguro da Carga
      * @var array
      */
-    private $seg = array();
+    private $seg = [];
     /**
      * Informações do modal
      * @var \DOMNode
@@ -170,7 +170,7 @@ class MakeCTeOS
      * Dados das duplicatas
      * @var array
      */
-    private $dup = array();
+    private $dup = [];
     /**
      * Informações do CT-e de substituição
      * @var \DOMNode
@@ -195,17 +195,27 @@ class MakeCTeOS
      * Dados dos Veículos
      * @var array
      */
-    private $veic = array();
+    private $veic = [];
     /**
      * Proprietários do Veículo. Só preenchido quando o veículo não pertencer à empresa emitente do CT-e
      * @var array
      */
-    private $prop = array();
+    private $prop = [];
+    /**
+     * Informações das GTVe relacionadas ao CTe OS
+     * @var array
+     */
+    private $infGTVe = [];
+    /**
+     * Componentes do Valor da GTVe
+     * @var array
+     */
+    private $compGTVe = [];
     /**
      * Autorizados para download do XML do DF-e
      * @var array
      */
-    private $autXML = array();
+    private $autXML = [];
     /**
      * Dados do Fretamento - CTe-OS
      * @var
@@ -278,18 +288,18 @@ class MakeCTeOS
             return false;
         }
         $this->buildCTe();
-        if ($this->infPercurso != '') {
+        if (!empty($this->infPercurso)) {
             foreach ($this->infPercurso as $perc) {
                 $this->dom->appChild($this->ide, $perc, 'Falta tag "infPercurso"');
             }
         }
         $this->dom->appChild($this->infCte, $this->ide, 'Falta tag "infCte"');
-        if ($this->compl != '') {
+        if (!empty($this->compl)) {
             $this->dom->appChild($this->infCte, $this->compl, 'Falta tag "infCte"');
         }
         $this->dom->appChild($this->emit, $this->enderEmit, 'Falta tag "emit"');
         $this->dom->appChild($this->infCte, $this->emit, 'Falta tag "infCte"');
-        if ($this->toma != '') {
+        if (!empty($this->toma)) {
             $this->dom->appChild($this->infCte, $this->toma, 'Falta tag "infCte"');
         }
         foreach ($this->comp as $comp) {
@@ -297,11 +307,9 @@ class MakeCTeOS
         }
         $this->dom->appChild($this->infCte, $this->vPrest, 'Falta tag "infCte"');
         $this->dom->appChild($this->infCte, $this->imp, 'Falta tag "imp"');
-        if ($this->infCteComp != '') { // Caso seja um CTe tipo complemento de valores
+        if (!empty($this->infCteComp)) { // Caso seja um CTe tipo complemento de valores
             $this->dom->appChild($this->infCte, $this->infCteComp, 'Falta tag "infCteComp"');
-        } elseif ($this->infCteAnu != '') { // Caso seja um CTe tipo anulação
-            $this->dom->appChild($this->infCte, $this->infCteAnu, 'Falta tag "infCteAnu"');
-        } elseif ($this->infCTeNorm != '') { // Caso seja um CTe tipo normal
+        } elseif (!empty($this->infCTeNorm)) { // Caso seja um CTe tipo normal
             $this->dom->appChild($this->infCte, $this->infCTeNorm, 'Falta tag "infCTeNorm"');
             $this->dom->appChild($this->infCTeNorm, $this->infServico, 'Falta tag "infServico"');
             foreach ($this->infDocRef as $infDocRef) {
@@ -310,7 +318,7 @@ class MakeCTeOS
             foreach ($this->seg as $seg) {
                 $this->dom->appChild($this->infCTeNorm, $seg, 'Falta tag "seg"');
             }
-            if ($this->infModal != '') {
+            if (!empty($this->infModal)) {
                 $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
                 if (!empty($this->veic)) {
                     $this->dom->appChild($this->rodo, $this->veic, 'Falta tag "veic"');
@@ -319,8 +327,11 @@ class MakeCTeOS
                 $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
             }
         }
-        if ($this->cobr != '') {
-            $this->dom->appChild($this->infCTeNorm, $this->cobr, 'Falta tag "infCte"');
+        if (!empty($this->cobr)) {
+            $this->dom->appChild($this->infCTeNorm, $this->cobr, 'Falta tag "cobr"');
+        }
+        foreach ($this->infGTVe as $infGTVe) {
+            $this->dom->appChild($this->infCTeNorm, $infGTVe, 'Falta tag "infGTVe"');
         }
         foreach ($this->autXML as $autXML) {
             $this->dom->appChild($this->infCte, $autXML, 'Falta tag "infCte"');
@@ -1104,7 +1115,7 @@ class MakeCTeOS
             'vComp'
         ];
         $std = $this->equilizeParameters($std, $possible);
-        $identificador = '#65 <pass> - ';
+        $identificador = '#65 <Comp> - ';
         $this->comp[] = $this->dom->createElement('Comp');
         $posicao = (int)count($this->comp) - 1;
         $this->dom->addChild(
@@ -2084,6 +2095,79 @@ class MakeCTeOS
         );
         $this->dom->appChild($this->cobr, $dup, 'Inclui duplicata na tag cobr');
         return $dup;
+    }
+
+    /**
+     * Gera as tags para o elemento: "Comp" (Componentes do Valor da GTVe)
+     * #170
+     * Nível: 2
+     * Os parâmetros para esta função são todos os elementos da tag "Comp" do
+     * tipo elemento (Ele = E|CE|A) e nível 3
+     *
+     * @return \DOMElement
+     */
+    public function taginfGTVe($std)
+    {
+        $possible = [
+            'chCTe'
+        ];
+        $std = $this->equilizeParameters($std, $possible);
+        $identificador = '#65 <comp> - ';
+        $this->infGTVe[] = $this->dom->createElement('infGTVe');
+        $posicao = (int)count($this->infGTVe) - 1;
+        $this->dom->addChild(
+            $this->infGTVe[$posicao],
+            'chCTe',
+            $std->chCTe,
+            true,
+            $identificador . 'Tipo do Componente'
+        );
+        return $this->infGTVe[$posicao];
+    }
+
+    /**
+     * Gera as tags para o elemento: "Comp" (Componentes do Valor da GTVe)
+     * #172
+     * Nível: 3
+     * Os parâmetros para esta função são todos os elementos da tag "Comp" do
+     * tipo elemento (Ele = E|CE|A) e nível 3
+     *
+     * @return \DOMElement
+     */
+    public function tagCompGTVe($std)
+    {
+        $possible = [
+            'tpComp',
+            'vComp',
+            'xComp'
+        ];
+        $std = $this->equilizeParameters($std, $possible);
+        $identificador = '#172 <Comp> - ';
+        $comp = $this->dom->createElement('Comp');
+        $this->dom->addChild(
+            $comp,
+            'tpComp',
+            $std->tpComp,
+            true,
+            $identificador . 'Tipo do Componente'
+        );
+        $this->dom->addChild(
+            $comp,
+            'vComp',
+            $this->conditionalNumberFormatting($std->vComp),
+            true,
+            $identificador . 'Valor do componente'
+        );
+        $this->dom->addChild(
+            $comp,
+            'xComp',
+            $std->xComp,
+            false,
+            $identificador . 'Nome do componente (informar apenas para outros)'
+        );
+        $posicao = (int)count($this->infGTVe) - 1;
+        $this->dom->appChild($this->infGTVe[$posicao], $comp, 'Inclui Comp na tag infGTVe');
+        return $comp;
     }
 
     /**
