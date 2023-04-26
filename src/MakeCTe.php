@@ -105,7 +105,7 @@ class MakeCTe
      * Passagem
      * @var array
      */
-    private $pass = array();
+    private $pass = [];
     /**
      * Informações ref. a previsão de entrega
      * @var \DOMNode
@@ -145,12 +145,12 @@ class MakeCTe
      * Campo de uso livre do contribuinte
      * @var array
      */
-    private $obsCont = array();
+    private $obsCont = [];
     /**
      * Campo de uso livre do contribuinte
      * @var array
      */
-    private $obsFisco = array();
+    private $obsFisco = [];
     /**
      * Identificação do Emitente do CT-e
      * @var \DOMNode
@@ -210,7 +210,7 @@ class MakeCTe
      * Componentes do Valor da Prestação
      * @var array
      */
-    private $comp = array();
+    private $comp = [];
     /**
      * Informações relativas aos Impostos
      * @var \DOMNode
@@ -230,53 +230,53 @@ class MakeCTe
      * Informações de quantidades da Carga do CT-e
      * @var \DOMNode
      */
-    private $infQ = array();
+    private $infQ = [];
     /**
      * Informações dos documentos transportados pelo CT-e Opcional para Redespacho Intermediario
      * e Serviço vinculado a multimodal.
      * @var \DOMNode
      */
-    private $infDoc = array();
+    private $infDoc = [];
     /**
      * Informações das NF
      * @var array
      */
-    private $infNF = array();
+    private $infNF = [];
     /**
      * Informações das NF-e
      * @var array
      */
-    private $infNFe = array();
+    private $infNFe = [];
     /**
      * Informações dos demais documentos
      * @var array
      */
-    private $infOutros = array();
+    private $infOutros = [];
     /**
      * Documentos de Transporte Anterior
      * @var \DOMNode
      */
-    private $docAnt = array();
+    private $docAnt = [];
     /**
      * Emissor do documento anterior
      * @var array
      */
-    private $emiDocAnt = array();
+    private $emiDocAnt = [];
     /**
      * Informações de identificação dos documentos de Transporte Anterior
      * @var array
      */
-    private $idDocAnt = array();
+    private $idDocAnt = [];
     /**
      * Documentos de transporte anterior em papel
      * @var array
      */
-    private $idDocAntPap = array();
+    private $idDocAntPap = [];
     /**
      * Documentos de transporte anterior eletrônicos
      * @var array
      */
-    private $idDocAntEle = array();
+    private $idDocAntEle = [];
     /**
      * Informações do modal
      * @var \DOMNode
@@ -286,12 +286,12 @@ class MakeCTe
      * Preenchido quando for transporte de produtos classificados pela ONU como perigosos.
      * @var array
      */
-    private $peri = array();
+    private $peri = [];
     /**
      * informações dos veículos transportados
      * @var array
      */
-    private $veicNovos = array();
+    private $veicNovos = [];
     /**
      * Dados da cobrança do CT-e
      * @var \DOMNode
@@ -311,7 +311,7 @@ class MakeCTe
      * Informações do CT-e multimodal vinculado
      * @var \DOMNode
      */
-    private $infCTeMultimodal = array();
+    private $infCTeMultimodal = [];
     /**
      * Informação da NF ou CT emitido pelo Tomador
      * @var \DOMNode
@@ -342,32 +342,32 @@ class MakeCTe
      * Informações de Lacre para modal Aquaviario
      * @var array
      */
-    private $lacre = array();
+    private $lacre = [];
     /**
      * Informações de Balsa para modal Aquaviario
      * @var array
      */
-    private $balsa = array();
+    private $balsa = [];
     /**
      * Informações de Container para modal Aquaviario
      * @var array
      */
-    private $detCont = array();
+    private $detCont = [];
     /**
      * Informações dos documentos de conteiner para modal Aquaviario
      * @var array
      */
-    private $infDocCont = array();
+    private $infDocCont = [];
     /**
      * Informações de NF de conteiner para modal Aquaviario
      * @var array
      */
-    private $infNFCont = array();
+    private $infNFCont = [];
     /**
      * Informações de NFe de conteiner para modal Aquaviario
      * @var array
      */
-    private $infNFeCont = array();
+    private $infNFeCont = [];
     /**
      * Informações do modal Dutoviário
      * @var \DOMNode
@@ -377,7 +377,7 @@ class MakeCTe
      * Ordens de Coleta associados
      * @var array
      */
-    private $occ = array();
+    private $occ = [];
     /**
      * Informações do CTe Multimodal
      * @var array
@@ -392,7 +392,7 @@ class MakeCTe
      * Autorizados para download do XML do DF-e
      * @var array
      */
-    private $autXML = array();
+    private $autXML = [];
     /**
      * @var DOMElement
      */
