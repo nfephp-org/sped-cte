@@ -466,7 +466,7 @@ class MakeCTe
         $this->errors = $this->dom->errors;
         $this->buildCTe();
         $node = $this->ide->getElementsByTagName("dhCont")->item(0);
-        if ($this->toma3 != '') {
+        if (!empty($this->toma3)) {
             if (!empty($node)) {
                 $this->ide->insertBefore($this->toma3, $node);
             } else {
@@ -480,7 +480,7 @@ class MakeCTe
             }
         }
         $this->dom->appChild($this->infCte, $this->ide, 'Falta tag "infCte"');
-        if ($this->compl != '') {
+        if (!empty($this->compl)) {
             foreach ($this->obsCont as $obsCont) {
                 $this->dom->appChild($this->compl, $obsCont, 'Falta tag "compl"');
             }
@@ -491,16 +491,16 @@ class MakeCTe
         }
         $this->dom->appChild($this->emit, $this->enderEmit, 'Falta tag "emit"');
         $this->dom->appChild($this->infCte, $this->emit, 'Falta tag "infCte"');
-        if ($this->rem != '') {
+        if (!empty($this->rem)) {
             $this->dom->appChild($this->infCte, $this->rem, 'Falta tag "infCte"');
         }
-        if ($this->exped != '') {
+        if (!empty($this->exped)) {
             $this->dom->appChild($this->infCte, $this->exped, 'Falta tag "infCte"');
         }
-        if ($this->receb != '') {
+        if (!empty($this->receb)) {
             $this->dom->appChild($this->infCte, $this->receb, 'Falta tag "infCte"');
         }
-        if ($this->dest != '') {
+        if (!empty($this->dest)) {
             $this->dom->appChild($this->infCte, $this->dest, 'Falta tag "infCte"');
         }
         foreach ($this->comp as $comp) {
@@ -508,10 +508,9 @@ class MakeCTe
         }
         $this->dom->appChild($this->infCte, $this->vPrest, 'Falta tag "infCte"');
         $this->dom->appChild($this->infCte, $this->imp, 'Falta tag "imp"');
-        if ($this->infCteComp != '') { // Caso seja um CTe tipo complemento de valores
+        if (!empty($this->infCteComp)) { // Caso seja um CTe tipo complemento de valores
             $this->dom->appChild($this->infCte, $this->infCteComp, 'Falta tag "infCteComp"');
-        }
-        if ($this->infCTeNorm != '') { // Caso seja um CTe tipo normal
+        } elseif (!empty($this->infCTeNorm)) { // Caso seja um CTe tipo normal
             $this->dom->appChild($this->infCte, $this->infCTeNorm, 'Falta tag "infCTeNorm"');
             $this->dom->appChild($this->infCTeNorm, $this->infCarga, 'Falta tag "infCarga"');
             foreach ($this->infQ as $infQ) {
@@ -620,7 +619,7 @@ class MakeCTe
             } elseif ($this->modal == '05') {
                 $this->dom->appChild($this->infModal, $this->duto, 'Falta tag "duto"');
             } elseif ($this->modal == '06') {
-                if ($this->segMultim != '') {
+                if (!empty($this->segMultim)) {
                     $this->dom->appChild($this->multimodal, $this->segMultim, 'Falta tag "seg"');
                 }
                 $this->dom->appChild($this->infModal, $this->multimodal, 'Falta tag "multimodal"');
@@ -630,20 +629,20 @@ class MakeCTe
             foreach ($this->veicNovos as $veicNovos) {
                 $this->dom->appChild($this->infCTeNorm, $veicNovos, 'Falta tag "infCte"');
             }
-            if ($this->infCteSub != '') {
+            if (!empty($this->infCteSub)) {
                 $this->dom->appChild($this->infCTeNorm, $this->infCteSub, 'Falta tag "infCteSub"');
             }
-            if ($this->infGlobalizado != '') {
+            if (!empty($this->infGlobalizado)) {
                 $this->dom->appChild($this->infCTeNorm, $this->infGlobalizado, 'Falta tag "infGlobalizado"');
             }
-            if ($this->infServVinc != '') {
+            if (!empty($this->infServVinc)) {
                 $this->dom->appChild($this->infCTeNorm, $this->infServVinc, 'Falta tag "infServVinc"');
                 foreach ($this->infCTeMultimodal as $infCTeMultimodal) {
                     $this->dom->appChild($this->infServVinc, $infCTeMultimodal, 'Falta tag "infCTeMultimodal"');
                 }
             }
         }
-        if ($this->cobr != '') {
+        if (!empty($this->cobr)) {
             $this->dom->appChild($this->infCTeNorm, $this->cobr, 'Falta tag "infCte"');
         }
         foreach ($this->autXML as $autXML) {
