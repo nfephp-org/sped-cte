@@ -171,11 +171,6 @@ class MakeCTeOS
      */
     private $infCteComp = '';
     /**
-     * Detalhamento do CT-e do tipo Anulação
-     * @var \DOMNode
-     */
-    private $infCteAnu = '';
-    /**
      * Informações do modal Rodoviário
      * @var \DOMNode
      */

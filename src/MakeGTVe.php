@@ -33,7 +33,7 @@ class MakeGTVe
      */
     public $versao = '4.00';
     /**
-     * chave da MDFe
+     * chave da CTe
      * @var string
      */
     public $chCTe = '';
