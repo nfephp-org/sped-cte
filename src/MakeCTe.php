@@ -6,11 +6,11 @@ namespace NFePHP\CTe;
  *
  * @category  Library
  * @package   nfephp-org/sped-cte
- * @copyright 2009-2016 NFePHP
+ * @copyright 2009-2023 NFePHP
  * @name      Make.php
  * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL v.3
  * @link      http://github.com/nfephp-org/sped-cte for the canonical source repository
- * @author    Roberto L. Machado <linux.rlm at gmail dot com>
+ * @author    Cleiton Perin <cperin20 at gmail dot com>
  */
 
 use DOMElement;
@@ -28,13 +28,12 @@ class MakeCTe
     public $errors = [];
 
     /**
-     * versao
-     * numero da versão do xml da CTe
+     * versao numero da versão do xml da CTe
      * @var string
      */
     public $versao = '4.00';
     /**
-     * chave da MDFe
+     * chave da CTe
      * @var string
      */
     public $chCTe = '';
@@ -843,7 +842,7 @@ class MakeCTe
         $this->dom->addChild(
             $this->ide,
             'mod',
-            57,
+            '57',
             true,
             $identificador . 'Modelo do documento fiscal'
         );
