@@ -137,10 +137,11 @@
     <UF>
         <sigla>SP</sigla>
         <homologacao>
-            <CteRecepcao method='cteRecepcaoLote' operation='CTeRecepcaoSincV4' version='4.00'>https://homologacao.nfe.fazenda.sp.gov.br/CTeWS/WS/CTeRecepcaoSincV4.asmx</CteRecepcao>
+            <CteRecepcao method='cteRecepcao' operation='CTeRecepcaoSincV4' version='4.00'>https://homologacao.nfe.fazenda.sp.gov.br/CTeWS/WS/CTeRecepcaoSincV4.asmx</CteRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://homologacao.nfe.fazenda.sp.gov.br/CTeWS/WS/CTeConsultaV4.asmx</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://homologacao.nfe.fazenda.sp.gov.br/CTeWS/WS/CTeStatusServicoV4.asmx</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://homologacao.nfe.fazenda.sp.gov.br/CTeWS/WS/CTeRecepcaoEventoV4.asmx</CteRecepcaoEvento>
+            <QRCode method='QRCode' operation='QRCode' version='4.00'>https://homologacao.nfe.fazenda.sp.gov.br/CTeConsulta/qrCode</QRCode>
         </homologacao>
         <producao>
             <CteRecepcao method='cteRecepcaoLote' operation='CteRecepcao' version='3.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/cteRecepcao.asmx</CteRecepcao>

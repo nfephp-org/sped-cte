@@ -27,58 +27,29 @@ class Tools extends ToolsCommon
 {
     /**
      * Request authorization to issue CTe in batch with one or more documents
-     * @param array $aXml array of cte's xml
-     * @param string $idLote lote number
-     * @param bool $compactar flag to compress data with gzip
+     * @param string $xml string do xml
      * @return string soap response xml
      */
-    public function sefazEnviaLote(
-        $aXml,
-        $idLote = '',
-        $compactar = false,
-        &$xmls = []
-    ) {
-        if (!is_array($aXml)) {
-            throw new \InvalidArgumentException('Os XML das CTe devem ser passados em um array.');
-        }
+    public function sefazEnviaCTe($xml) {
         $servico = 'CteRecepcao';
         $this->checkContingencyForWebServices($servico);
         if ($this->contingency->type != '') {
             //em modo de contingencia
             //esses xml deverão ser modificados e re-assinados e retornados
-            //no parametro $xmls para serem armazenados pelo aplicativo
-            //pois serão alterados
-            foreach ($aXml as $doc) {
-                //corrigir o xml para o tipo de contigência setado
-                $xmls[] = $this->correctCTeForContingencyMode($doc);
-            }
-            $aXml = $xmls;
+            $xml = $this->correctCTeForContingencyMode($xml);
         }
-
-        $sxml = implode("", $aXml);
-        $sxml = preg_replace("/<\?xml.*?\?>/", "", $sxml);
         $this->servico(
             $servico,
             $this->config->siglaUF,
             $this->tpAmb
         );
-        $request = "<enviCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
-            . "<idLote>$idLote</idLote>"
-            . "$sxml"
-            . "</enviCTe>";
-        $this->isValid($this->urlVersion, $request, 'enviCTe');
+        $request = preg_replace("/<\?xml.*\?>/", "", $xml);
+        $this->isValid($this->urlVersion, $request, 'cte');
         $this->lastRequest = $request;
+        $gzdata = base64_encode(gzencode($request, 9));
         //montagem dos dados da mensagem SOAP
-        $parameters = ['cteDadosMsg' => $request];
-        $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$request</cteDadosMsg>";
-        $method = $this->urlMethod;
-        if ($compactar) {
-            $gzdata = base64_encode(gzencode($request, 9, FORCE_GZIP));
-            $body = "<cteDadosMsgZip xmlns=\"$this->urlNamespace\">$gzdata</cteDadosMsgZip>";
-            $method = $this->urlMethod."Zip";
-            $parameters = ['cteDadosMsgZip' => $gzdata];
-            $body = "<cteDadosMsgZip xmlns=\"$this->urlNamespace\">$gzdata</cteDadosMsgZip>";
-        }
+        $parameters = ['cteDadosMsg' => $gzdata];
+        $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$gzdata</cteDadosMsg>";
         $this->lastResponse = $this->sendRequest($body, $parameters);
         return $this->lastResponse;
     }
@@ -132,55 +103,6 @@ class Tools extends ToolsCommon
             . "<chCTe>$chave</chCTe>"
             . "</consSitCTe>";
         $this->isValid($this->urlVersion, $request, 'consSitCTe');
-        $this->lastRequest = $request;
-        $parameters = ['cteDadosMsg' => $request];
-        $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$request</cteDadosMsg>";
-        $this->lastResponse = $this->sendRequest($body, $parameters);
-        return $this->lastResponse;
-    }
-
-    /**
-     * Search for the registration data of an NFe issuer,
-     * if in contingency mode this service will cause a
-     * Exception and remember not all Sefaz have this service available,
-     * so it will not work in some cases.
-     * @param string $uf  federation unit
-     * @param string $cnpj CNPJ number (optional)
-     * @param string $iest IE number (optional)
-     * @param string $cpf  CPF number (optional)
-     * @return string xml soap response
-     */
-    public function sefazCadastro(
-        $uf,
-        $cnpj = '',
-        $iest = '',
-        $cpf = ''
-    ) {
-        if ($cnpj != '') {
-            $filter = "<CNPJ>$cnpj</CNPJ>";
-            $txtFile = "CNPJ_$cnpj";
-        } elseif ($iest != '') {
-            $filter = "<IE>$iest</IE>";
-            $txtFile = "IE_$iest";
-        } else {
-            $filter = "<CPF>$cpf</CPF>";
-            $txtFile = "CPF_$cpf";
-        }
-        //carrega serviço
-        $servico = 'CteConsultaCadastro';
-        $this->checkContingencyForWebServices($servico);
-        $this->servico(
-            $servico,
-            $uf,
-            $this->tpAmb,
-            true
-        );
-        $request = "<ConsCad xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
-            . "<infCons>"
-            . "<xServ>CONS-CAD</xServ>"
-            . "<UF>$uf</UF>"
-            . "$filter</infCons></ConsCad>";
-        $this->isValid($this->urlVersion, $request, 'consCad');
         $this->lastRequest = $request;
         $parameters = ['cteDadosMsg' => $request];
         $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$request</cteDadosMsg>";
@@ -521,7 +443,7 @@ class Tools extends ToolsCommon
      * @param string $tagAdic
      * @return string
      */
-    public function sefazEvento(
+    private function sefazEvento(
         $uf,
         $chave,
         $tpEvento,
@@ -547,7 +469,6 @@ class Tools extends ToolsCommon
         $sSeqEvento = str_pad($nSeqEvento, 2, "0", STR_PAD_LEFT);
         $eventId = "ID".$tpEvento.$chave.$sSeqEvento;
         $cOrgao = UFList::getCodeByUF($uf);
-
         $request = "<eventoCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
             . "<infEvento Id=\"$eventId\">"
             . "<cOrgao>$cOrgao</cOrgao>"
@@ -566,7 +487,6 @@ class Tools extends ToolsCommon
             . "</detEvento>"
             . "</infEvento>"
             . "</eventoCTe>";
-
         //assinatura dos dados
         $request = Signer::sign(
             $this->certificate,
@@ -576,7 +496,6 @@ class Tools extends ToolsCommon
             $this->algorithm,
             $this->canonical
         );
-
         $request = Strings::clearXmlString($request, true);
         $this->isValid($this->urlVersion, $request, 'eventoCTe');
         $this->lastRequest = $request;

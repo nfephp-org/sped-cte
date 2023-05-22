@@ -488,7 +488,10 @@ class MakeCTe
             }
             $this->dom->appChild($this->infCte, $this->compl, 'Falta tag "infCte"');
         }
-        $this->dom->appChild($this->emit, $this->enderEmit, 'Falta tag "emit"');
+        // inclui o Node enderEmit dentro do emit antes da tag CRT
+        $node = $this->emit->getElementsByTagName("CRT")->item(0);
+        $this->emit->insertBefore($this->enderEmit, $node);
+
         $this->dom->appChild($this->infCte, $this->emit, 'Falta tag "infCte"');
         if (!empty($this->rem)) {
             $this->dom->appChild($this->infCte, $this->rem, 'Falta tag "infCte"');
@@ -795,7 +798,6 @@ class MakeCTe
             'UFEnv',
             'modal',
             'tpServ',
-            'indIEToma',
             'cMunIni',
             'xMunIni',
             'UFIni',
@@ -804,6 +806,7 @@ class MakeCTe
             'UFFim',
             'retira',
             'xDetRetira',
+            'indIEToma',
             'dhCont',
             'xJust'
         ];
@@ -885,8 +888,9 @@ class MakeCTe
             $this->ide,
             'cDV',
             $std->cDV,
-            false,
-            $identificador . 'Digito Verificador da chave de acesso do CT-e'
+            true,
+            $identificador . 'Digito Verificador da chave de acesso do CT-e',
+            true
         );
         $this->dom->addChild(
             $this->ide,
@@ -958,13 +962,6 @@ class MakeCTe
             $std->tpServ,
             true,
             $identificador . 'Tipo do Serviço'
-        );
-        $this->dom->addChild(
-            $this->ide,
-            'indIEToma',
-            $std->indIEToma,
-            true,
-            $identificador . 'Indicador do papel do tomador na prestação do serviço'
         );
         $this->dom->addChild(
             $this->ide,
@@ -1728,7 +1725,8 @@ class MakeCTe
             'IE',
             'IEST',
             'xNome',
-            'xFant'
+            'xFant',
+            'CRT'
         ];
         $std = $this->equilizeParameters($std, $possible);
         $identificador = '#97 <emit> - ';
@@ -1777,6 +1775,13 @@ class MakeCTe
             $std->xFant,
             false,
             $identificador . 'Nome fantasia'
+        );
+        $this->dom->addChild(
+            $this->emit,
+            'CRT',
+            $std->CRT,
+            true,
+            $identificador . 'Código do Regime Tributário'
         );
         return $this->emit;
     }
