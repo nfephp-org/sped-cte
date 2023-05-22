@@ -25,6 +25,11 @@ use InvalidArgumentException;
 
 class Tools extends ToolsCommon
 {
+    const EVT_CONFIRMACAO = 210200;
+    const EVT_CIENCIA = 210210;
+    const EVT_DESCONHECIMENTO = 210220;
+    const EVT_NAO_REALIZADA = 210240;
+
     /**
      * Request authorization to issue CTe in batch with one or more documents
      * @param array $aXml array of cte's xml
@@ -107,6 +112,41 @@ class Tools extends ToolsCommon
     }
 
     /**
+     * Check status of Batch of CTe sent by receipt of this shipment
+     * @param string $recibo
+     * @param int $tpAmb
+     * @return string
+     */
+    public function sefazConsultaRecibo($recibo, $tpAmb = null)
+    {
+        if (empty($tpAmb)) {
+            $tpAmb = $this->tpAmb;
+        }
+        //carrega serviço
+        $servico = 'CteRetRecepcao';
+        $this->checkContingencyForWebServices($servico);
+        $this->servico(
+            $servico,
+            $this->config->siglaUF,
+            $tpAmb
+        );
+        if ($this->urlService == '') {
+            $msg = "A consulta de CTe não está disponível na SEFAZ {$this->config->siglaUF}!!!";
+            throw new RuntimeException($msg);
+        }
+        $request = "<consReciCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
+            . "<tpAmb>$tpAmb</tpAmb>"
+            . "<nRec>$recibo</nRec>"
+            . "</consReciCTe>";
+        $this->isValid($this->urlVersion, $request, 'consReciCTe');
+        $this->lastRequest = $request;
+        $parameters = ['cteDadosMsg' => $request];
+        $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$request</cteDadosMsg>";
+        $this->lastResponse = $this->sendRequest($body, $parameters);
+        return $this->lastResponse;
+    }
+
+    /**
      * Check the CTe status for the 44-digit key and retrieve the protocol
      * @param string $chave
      * @param int $tpAmb
@@ -140,9 +180,86 @@ class Tools extends ToolsCommon
     }
 
     /**
+     * Request to disable one or an NFe sequence of a given series
+     * @param int $nSerie
+     * @param int $nIni
+     * @param int $nFin
+     * @param string $xJust
+     * @param int $tpAmb
+     * @return string
+     */
+    public function sefazInutiliza(
+        $nSerie,
+        $nIni,
+        $nFin,
+        $xJust,
+        $tpAmb = null
+    ) {
+        if (empty($tpAmb)) {
+            $tpAmb = $this->tpAmb;
+        }
+        $xJust = Strings::replaceSpecialsChars($xJust);
+        $nSerie = (integer) $nSerie;
+        $nIni = (integer) $nIni;
+        $nFin = (integer) $nFin;
+        $servico = 'CteInutilizacao';
+        $this->checkContingencyForWebServices($servico);
+        //carrega serviço
+        $this->servico(
+            $servico,
+            $this->config->siglaUF,
+            $tpAmb
+        );
+        $cnpj = $this->config->cnpj;
+        $strAno = (string) date('y');
+        $strSerie = str_pad($nSerie, 3, '0', STR_PAD_LEFT);
+        $strInicio = str_pad($nIni, 9, '0', STR_PAD_LEFT);
+        $strFinal = str_pad($nFin, 9, '0', STR_PAD_LEFT);
+        $idInut = "ID"
+            . $this->urlcUF
+            . $cnpj
+            . $this->modelo
+            . $strSerie
+            . $strInicio
+            . $strFinal;
+        //limpa os caracteres indesejados da justificativa
+        $xJust = Strings::replaceSpecialsChars($xJust);
+        //montagem do corpo da mensagem
+        $msg = "<inutCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">" .
+            "<infInut Id=\"$idInut\">" .
+            "<tpAmb>$tpAmb</tpAmb>" .
+            "<xServ>INUTILIZAR</xServ>" .
+            "<cUF>$this->urlcUF</cUF>" .
+            "<ano>$strAno</ano>" .
+            "<CNPJ>$cnpj</CNPJ>" .
+            "<mod>$this->modelo</mod>" .
+            "<serie>$nSerie</serie>" .
+            "<nCTIni>$nIni</nCTIni>" .
+            "<nCTFin>$nFin</nCTFin>" .
+            "<xJust>$xJust</xJust>" .
+            "</infInut></inutCTe>";
+        //assina a solicitação
+        $request = Signer::sign(
+            $this->certificate,
+            $msg,
+            'infInut',
+            'Id',
+            $this->algorithm,
+            $this->canonical
+        );
+        $request = Strings::clearXmlString($request, true);
+        $this->isValid($this->urlVersion, $request, 'inutCTe');
+        $this->lastRequest = $request;
+        $parameters = ['cteDadosMsg' => $request];
+        $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$request</cteDadosMsg>";
+        $this->lastResponse = $this->sendRequest($body, $parameters);
+        return $this->lastResponse;
+    }
+
+    /**
      * Search for the registration data of an NFe issuer,
      * if in contingency mode this service will cause a
-     * Exception and remember not all Sefaz have this service available,
+     * Exception and remember not all Sefaz have this service available,
      * so it will not work in some cases.
      * @param string $uf  federation unit
      * @param string $cnpj CNPJ number (optional)

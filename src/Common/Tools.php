@@ -107,7 +107,7 @@ class Tools
      * Version of layout
      * @var string
      */
-    protected $versao = '4.00';
+    protected $versao = '3.00';
     /**
      * urlPortal
      * Instância do WebService
@@ -166,7 +166,7 @@ class Tools
      * @var array
      */
     protected $availableVersions = [
-        '400' => 'PL_CTe_400'
+        '3.00' => 'PL_CTe_300a'
     ];
     /**
      * @var string
@@ -200,13 +200,16 @@ class Tools
     /**
      * set version in http
      *
+     * @param string $sigla Sigla da uf
      * @return void
      */
-    private function setEnvironmentHttpVersion()
+    private function setEnvironmentHttpVersion($sigla)
     {
-        $soap = new SoapCurl();
-        $soap->httpVersion('1.1');
-        $this->loadSoapClass($soap);
+        if (in_array($sigla, ['SP'])) {
+            $soap = new SoapCurl();
+            $soap->httpVersion('1.1');
+            $this->loadSoapClass($soap);
+        }
     }
 
     /**
@@ -614,7 +617,7 @@ class Tools
     {
         $file = $this->pathwsfiles
             . DIRECTORY_SEPARATOR
-            . "wscte_{$this->versao}_mod{$this->modelo}.xml";
+            . "wscte_" . $this->versao . "_mod57.xml";
         if (!file_exists($file)) {
             return '';
         }
@@ -630,14 +633,17 @@ class Tools
     {
         $tpAmb = $this->config->tpAmb == 1 ? 'producao' : 'homologacao';
         $sigla = $this->config->siglaUF;
+
         $webs = new Webservices($this->getXmlUrlPath());
         $std = $webs->get($sigla, $tpAmb, $this->modelo);
+
         if ($std === false) {
             throw new \RuntimeException(
                 "Nenhum serviço foi localizado para esta unidade "
                 . "da federação [$sigla], com o modelo [$this->modelo]."
             );
         }
+
         if (empty($std->QRCode->url)) {
             throw new \RuntimeException(
                 "Este serviço [QRCode] não está disponivel para esta "
@@ -646,10 +652,12 @@ class Tools
                 . "]."
             );
         }
+
         $signed = QRCode::putQRTag(
             $dom,
             $std->QRCode->url
         );
+
         return Strings::clearXmlString($signed);
     }
 
