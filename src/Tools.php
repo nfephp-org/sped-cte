@@ -462,11 +462,11 @@ class Tools extends ToolsCommon
             $this->tpAmb,
             $ignore
         );
-        $cnpj = $this->config->cnpj;
-        $cpf = $this->config->cpf;
+        $cnpj = $this->config->cnpj ?? null;
+        $cpf = $this->config->cpf ?? null;
         $dt = new \DateTime('now', new \DateTimeZone($this->timezone));
         $dhEvento = $dt->format('Y-m-d\TH:i:sP');
-        $sSeqEvento = str_pad($nSeqEvento, 2, "0", STR_PAD_LEFT);
+        $sSeqEvento = str_pad($nSeqEvento, 3, "0", STR_PAD_LEFT);
         $eventId = "ID".$tpEvento.$chave.$sSeqEvento;
         $cOrgao = UFList::getCodeByUF($uf);
         $request = "<eventoCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
@@ -481,7 +481,7 @@ class Tools extends ToolsCommon
         $request .= "<chCTe>$chave</chCTe>"
             . "<dhEvento>$dhEvento</dhEvento>"
             . "<tpEvento>$tpEvento</tpEvento>"
-            . "<nSeqEvento>$nSeqEvento</nSeqEvento>"
+            . "<nSeqEvento>$sSeqEvento</nSeqEvento>"
             . "<detEvento versaoEvento=\"$this->urlVersion\">"
             . "$tagAdic"
             . "</detEvento>"
