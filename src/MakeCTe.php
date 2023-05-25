@@ -3543,16 +3543,16 @@ class MakeCTe
             "Identificação da Unidade de Carga "
         );
         if ($std->lacUnidCarga != null) {
-            $possible = [
-                'nLacre'
-            ];
-            $stdlacUnidCarga = $this->equilizeParameters($std->lacUnidCarga, $possible);
-            foreach ($stdlacUnidCarga->nLacre as $nLacre) {
+            foreach ($std->lacUnidCarga as $nLacre) {
+                $possible = [
+                    'nLacre'
+                ];
+                $stdlacUnidCarga = $this->equilizeParameters($nLacre, $possible);
                 $lacUnidCarga = $this->dom->createElement("lacUnidCarga");
                 $this->dom->addChild(
                     $lacUnidCarga,
                     "nLacre",
-                    $nLacre,
+                    $stdlacUnidCarga->nLacre,
                     true,
                     "Número do lacre"
                 );
@@ -3581,9 +3581,9 @@ class MakeCTe
         $possible = [
             'tpUnidTransp',
             'idUnidTransp',
-            'qtdRat',
             'lacUnidTransp',
-            'infUnidCarga'
+            'infUnidCarga',
+            'qtdRat',
         ];
         $std = $this->equilizeParameters($std, $possible);
         $infUnidTransp = $this->dom->createElement("infUnidTransp");
@@ -3601,17 +3601,17 @@ class MakeCTe
             false,
             "Identificação da Unidade de Transporte"
         );
-        if ($std->lacUnidTransp != null) {
-            $possible = [
-                'nLacre'
-            ];
-            $stdlacUnidTransp = $this->equilizeParameters($std->lacUnidTransp, $possible);
-            foreach ($stdlacUnidTransp->nLacre as $nLacre) {
+        if (!empty($std->lacUnidTransp)) {
+            foreach ($std->lacUnidTransp as $nLacre) {
+                $possible = [
+                    'nLacre'
+                ];
+                $stdlacUnidTransp = $this->equilizeParameters($nLacre, $possible);
                 $lacUnidTransp = $this->dom->createElement("lacUnidTransp");
                 $this->dom->addChild(
                     $lacUnidTransp,
                     "nLacre",
-                    $nLacre,
+                    $stdlacUnidTransp->nLacre,
                     true,
                     "Número do lacre"
                 );
@@ -4516,10 +4516,10 @@ class MakeCTe
             'xObs'
         ];
         $std = $this->equilizeParameters($std, $possible);
-        $infGlobalizado = $this->dom->createElement('infGlobalizado');
+        $this->infGlobalizado = $this->dom->createElement('infGlobalizado');
         $identificador = '#163 <infGlobalizado> - ';
         $this->dom->addChild(
-            $infGlobalizado,
+            $this->infGlobalizado,
             'xObs',
             $std->xObs,
             true,
