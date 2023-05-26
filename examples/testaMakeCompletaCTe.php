@@ -6,8 +6,8 @@ require_once '../bootstrap.php';
 
 use NFePHP\Common\Certificate;
 use NFePHP\CTe\Common\Standardize;
-use NFePHP\CTe\Tools;
 use NFePHP\CTe\MakeCTe;
+use NFePHP\CTe\Tools;
 
 //tanto o config.json como o certificado.pfx podem estar
 //armazenados em uma base de dados, então não é necessário
@@ -57,14 +57,14 @@ $ide->tpImp = '1'; // Formato de impressao do DACTE: 1-Retrato; 2-Paisagem.
 $ide->tpEmis = '1'; // Forma de emissao do CTe: 1-Normal; 4-EPEC pela SVC; 5-Contingência
 $ide->cDV = null; // Codigo verificador
 $ide->tpAmb = '2'; // 1- Producao; 2-homologacao
-$ide->tpCTe = '0'; // 0- CT-e Normal; 1 - CT-e de Complemento de Valores; 3 - CTe de Substituição
+$ide->tpCTe = '3'; // 0- CT-e Normal; 1 - CT-e de Complemento de Valores; 3 - CTe de Substituição
 $ide->procEmi = '0'; // Descricao no comentario acima
 $ide->verProc = '3.0'; // versao do aplicativo emissor
 $ide->indGlobalizado = '';
 $ide->cMunEnv = '4302105'; // Utilizar a tabela do IBGE. Informar 9999999 para as operações com o exterior.
 $ide->xMunEnv = 'FOZ DO IGUACU'; // Informar PAIS/Municipio para as operações com o exterior.
 $ide->UFEnv = 'RS'; // Informar 'EX' para operações com o exterior.
-$ide->modal = '01'; // Preencher com:01-Rodoviário; 02-Aéreo; 03-Aquaviário;04-
+$ide->modal = '06'; // Preencher com:01-Rodoviário; 02-Aéreo; 03-Aquaviário;04-
 $ide->tpServ = '0'; // 0- Normal; 1- Subcontratação; 2- Redespacho; 3- Redespacho Intermediário; 4- Serviço Vinculado a Multimodal
 $ide->indIEToma = '9';
 $ide->cMunIni = '4302105'; // Utilizar a tabela do IBGE. Informar 9999999 para as operações com o exterior.
@@ -278,216 +278,312 @@ $icms->vICMSUFFim = 0;
 $icms->infAdFisco = 'Informações ao fisco';
 $cte->tagicms($icms);
 
-if ($ide->tpCTe <= 1) {
+$cte->taginfCTeNorm();              // Grupo de informações do CT-e Normal e Substituto
 
-    $cte->taginfCTeNorm();              // Grupo de informações do CT-e Normal e Substituto
+$infCarga = new stdClass();
+$infCarga->vCarga = 130333.31; // Valor total da carga
+$infCarga->proPred = 'TUBOS PLASTICOS'; // Produto predominante
+$infCarga->xOutCat = 6.00; // Outras caracteristicas da carga
+$infCarga->vCargaAverb = 1.99;
+$cte->taginfCarga($infCarga);
 
-    $infCarga = new stdClass();
-    $infCarga->vCarga = 130333.31; // Valor total da carga
-    $infCarga->proPred = 'TUBOS PLASTICOS'; // Produto predominante
-    $infCarga->xOutCat = 6.00; // Outras caracteristicas da carga
-    $infCarga->vCargaAverb = 1.99;
-    $cte->taginfCarga($infCarga);
-
-    $infQ = new stdClass();
-    $infQ->cUnid = '01'; // Código da Unidade de Medida: ( 00-M3; 01-KG; 02-TON; 03-UNIDADE; 04-LITROS; 05-MMBTU
-    $infQ->tpMed = 'ESTRADO'; // Tipo de Medida
+$infQ = new stdClass();
+$infQ->cUnid = '01'; // Código da Unidade de Medida: ( 00-M3; 01-KG; 02-TON; 03-UNIDADE; 04-LITROS; 05-MMBTU
+$infQ->tpMed = 'ESTRADO'; // Tipo de Medida
 // ( PESO BRUTO; PESO DECLARADO; PESO CUBADO; PESO AFORADO; PESO AFERIDO; LITRAGEM; CAIXAS e etc)
-    $infQ->qCarga = 18145.0000;  // Quantidade (15 posições; sendo 11 inteiras e 4 decimais.)
-    $cte->taginfQ($infQ);
-    $infQ->cUnid = '02'; // Código da Unidade de Medida: ( 00-M3; 01-KG; 02-TON; 03-UNIDADE; 04-LITROS; 05-MMBTU
-    $infQ->tpMed = 'OUTROS'; // Tipo de Medida
+$infQ->qCarga = 18145.0000;  // Quantidade (15 posições; sendo 11 inteiras e 4 decimais.)
+$cte->taginfQ($infQ);
+$infQ->cUnid = '02'; // Código da Unidade de Medida: ( 00-M3; 01-KG; 02-TON; 03-UNIDADE; 04-LITROS; 05-MMBTU
+$infQ->tpMed = 'OUTROS'; // Tipo de Medida
 // ( PESO BRUTO; PESO DECLARADO; PESO CUBADO; PESO AFORADO; PESO AFERIDO; LITRAGEM; CAIXAS e etc)
-    $infQ->qCarga = 31145.0000;  // Quantidade (15 posições; sendo 11 inteiras e 4 decimais.)
-    $cte->taginfQ($infQ);
+$infQ->qCarga = 31145.0000;  // Quantidade (15 posições; sendo 11 inteiras e 4 decimais.)
+$cte->taginfQ($infQ);
 
-    $infNF = new stdClass();
-    $infNF->nRoma = '1';
-    $infNF->nPed = '2';
-    $infNF->mod = '01';
-    $infNF->serie = '4';
-    $infNF->nDoc = '5';
-    $infNF->dEmi = '2023-05-25';
-    $infNF->vBC = '7';
-    $infNF->vICMS = '8';
-    $infNF->vBCST = '9';
-    $infNF->vST = '0';
-    $infNF->vProd = '1';
-    $infNF->vNF = '2';
-    $infNF->nCFOP = '1110';
-    $infNF->nPeso = '4';
-    $infNF->PIN = '51';
-    $infNF->dPrev = '2023-05-25';
+$infNF = new stdClass();
+$infNF->nRoma = '1';
+$infNF->nPed = '2';
+$infNF->mod = '01';
+$infNF->serie = '4';
+$infNF->nDoc = '5';
+$infNF->dEmi = '2023-05-25';
+$infNF->vBC = '7';
+$infNF->vICMS = '8';
+$infNF->vBCST = '9';
+$infNF->vST = '0';
+$infNF->vProd = '1';
+$infNF->vNF = '2';
+$infNF->nCFOP = '1110';
+$infNF->nPeso = '4';
+$infNF->PIN = '51';
+$infNF->dPrev = '2023-05-25';
 
-    $lacUnidCarga = new stdClass();
-    $lacUnidCarga->nLacre = '1';
+$lacUnidCarga = new stdClass();
+$lacUnidCarga->nLacre = '1';
 
-    $infUnidCarga = new stdClass();
-    $infUnidCarga->tpUnidCarga = 1;
-    $infUnidCarga->idUnidCarga = '11111';
-    $infUnidCarga->lacUnidCarga[] = $lacUnidCarga;
-    $infUnidCarga->lacUnidCarga[] = $lacUnidCarga;
-    $infUnidCarga->qtdRat = '111';
+$infUnidCarga = new stdClass();
+$infUnidCarga->tpUnidCarga = 1;
+$infUnidCarga->idUnidCarga = '11111';
+$infUnidCarga->lacUnidCarga[] = $lacUnidCarga;
+$infUnidCarga->lacUnidCarga[] = $lacUnidCarga;
+$infUnidCarga->qtdRat = '111';
 
-    $lacUnidTransp = new stdClass();
-    $lacUnidTransp->nLacre = '1';
+$lacUnidTransp = new stdClass();
+$lacUnidTransp->nLacre = '1';
 
-    $infUnidTransp = new stdClass();
-    $infUnidTransp->tpUnidTransp = 1;
-    $infUnidTransp->idUnidTransp = '11111';
-    $infUnidTransp->lacUnidTransp[] = $lacUnidTransp;
-    $infUnidTransp->infUnidCarga[] = $infUnidCarga;
-    $infUnidTransp->qtdRat = '111';
+$infUnidTransp = new stdClass();
+$infUnidTransp->tpUnidTransp = 1;
+$infUnidTransp->idUnidTransp = '11111';
+$infUnidTransp->lacUnidTransp[] = $lacUnidTransp;
+$infUnidTransp->infUnidCarga[] = $infUnidCarga;
+$infUnidTransp->qtdRat = '111';
 
 // um dos dois
 //$infNF->infUnidCarga[] = $infUnidCarga;
-    $infNF->infUnidTransp[] = $infUnidTransp;
+$infNF->infUnidTransp[] = $infUnidTransp;
 
 //$cte->taginfNF($infNF);
 
-    $infNFe = new stdClass();
-    $infNFe->chave = '43160472202112000136550000000010571048440722'; // Chave de acesso da NF-e
-    $infNFe->PIN = ''; // PIN SUFRAMA
-    $infNFe->dPrev = '2016-10-30';      // Data prevista de entrega
+$infNFe = new stdClass();
+$infNFe->chave = '43160472202112000136550000000010571048440722'; // Chave de acesso da NF-e
+$infNFe->PIN = ''; // PIN SUFRAMA
+$infNFe->dPrev = '2016-10-30';      // Data prevista de entrega
 
 // um dos dois
-    $infNF->infUnidCarga[] = $infUnidCarga;
+$infNF->infUnidCarga[] = $infUnidCarga;
 //$infNF->infUnidTransp[] = $infUnidTransp;
 
 //$cte->taginfNFe($infNFe);
 
-    $infOutros = new stdClass();
-    $infOutros->tpDoc = '00';
-    $infOutros->descOutros = 'teste';
-    $infOutros->nDoc = '1';
-    $infOutros->dEmi = '2016-10-30';
-    $infOutros->vDocFisc = '10';
-    $infOutros->dPrev = '2016-10-30';
+$infOutros = new stdClass();
+$infOutros->tpDoc = '00';
+$infOutros->descOutros = 'teste';
+$infOutros->nDoc = '1';
+$infOutros->dEmi = '2016-10-30';
+$infOutros->vDocFisc = '10';
+$infOutros->dPrev = '2016-10-30';
 
 // um dos dois
-    $infNF->infUnidCarga[] = $infUnidCarga;
+$infNF->infUnidCarga[] = $infUnidCarga;
 //$infNF->infUnidTransp[] = $infUnidTransp;
 
-    $cte->taginfOutros($infOutros);
+$cte->taginfOutros($infOutros);
 
-    $cte->tagdocAnt();
+$cte->tagdocAnt();
 
-    $emiDocAnt = new stdClass();
-    $emiDocAnt->CNPJ = '07654824000396';
-    $emiDocAnt->IE = '12346587';
-    $emiDocAnt->UF = 'PR';
-    $emiDocAnt->CPF = '85602400';
-    $emiDocAnt->xNome = 'JOAO';
-    $cte->tagemiDocAnt($emiDocAnt);
+$emiDocAnt = new stdClass();
+$emiDocAnt->CNPJ = '07654824000396';
+$emiDocAnt->IE = '12346587';
+$emiDocAnt->UF = 'PR';
+$emiDocAnt->CPF = '85602400';
+$emiDocAnt->xNome = 'JOAO';
+$cte->tagemiDocAnt($emiDocAnt);
 
-    $cte->tagidDocAnt();
+$cte->tagidDocAnt();
 
 // um dos dois
 
-    $idDocAntPap = new stdClass();
-    $idDocAntPap->tpDoc = '07';
-    $idDocAntPap->serie = '00';
-    $idDocAntPap->subser = '00';
-    $idDocAntPap->nDoc = '1';
-    $idDocAntPap->dEmi = '2016-10-30';
+$idDocAntPap = new stdClass();
+$idDocAntPap->tpDoc = '07';
+$idDocAntPap->serie = '00';
+$idDocAntPap->subser = '00';
+$idDocAntPap->nDoc = '1';
+$idDocAntPap->dEmi = '2016-10-30';
 //$cte->tagidDocAntPap($idDocAntPap);
 
-    $idDocAntEle = new stdClass();
-    $idDocAntEle->chCTe = '43160472202112000136550000000010571048440722';
-    $cte->tagidDocAntEle($idDocAntEle);
+$idDocAntEle = new stdClass();
+$idDocAntEle->chCTe = '43160472202112000136550000000010571048440722';
+$cte->tagidDocAntEle($idDocAntEle);
 
-    $infModal = new stdClass();
-    $infModal->versaoModal = '4.00';
-    $cte->taginfModal($infModal);
+$infModal = new stdClass();
+$infModal->versaoModal = '4.00';
+$cte->taginfModal($infModal);
 
-    $rodo = new stdClass();
-    $rodo->RNTRC = '00739357';
-    $cte->tagrodo($rodo);
+// modal = 01
+$rodo = new stdClass();
+$rodo->RNTRC = '00739357';
+$cte->tagrodo($rodo);
 
-    $aereo = new stdClass();
-    $aereo->nMinu = '123'; // Número Minuta
-    $aereo->nOCA = ''; // Número Operacional do Conhecimento Aéreo
-    $aereo->dPrevAereo = date('Y-m-d');
-    $aereo->natCarga_xDime = ''; // Dimensões 1234x1234x1234 em cm
-    $aereo->natCarga_cInfManu = []; // Informação de manuseio, com dois dígitos, pode ter mais de uma ocorrência.
-    $aereo->tarifa_CL = 'G'; // M - Tarifa Mínima / G - Tarifa Geral / E - Tarifa Específica
-    $aereo->tarifa_cTar = ''; // código da tarifa, deverão ser incluídos os códigos de três digítos correspondentes à tarifa
-    $aereo->tarifa_vTar = 100.00; // valor da tarifa. 15 posições, sendo 13 inteiras e 2 decimais. Valor da tarifa por kg quando for o caso
-    $cte->tagaereo($aereo);
+$occ = new stdClass();
+$occ->serie = '1';
+$occ->nOcc = '2';
+$occ->dEmi = '2016-10-30';
+$occ->CNPJ = '07654824000396';
+$occ->cInt = '3';
+$occ->IE = '00739357';
+$occ->UF = 'PR';
+$occ->fone = '00739357';
+$cte->tagocc($occ);
 
-    $veicNovos = new stdClass();
-    $veicNovos->chassi = '00739357007393570';
-    $veicNovos->cCor = '00';
-    $veicNovos->xCor = 'teste';
-    $veicNovos->cMod = '10';
-    $veicNovos->vUnit = '10';
-    $veicNovos->vFrete = '10';
-    $cte->tagveicNovos($veicNovos);
+$cte->tagocc($occ);
 
-    if ($ide->tpCTe == 0) {
-        $fat = new stdClass();
-        $fat->nFat = '1';
-        $fat->vOrig = '10';
-        $fat->vDesc = '';
-        $fat->vLiq = '10';
-        $cte->tagfat($fat);
+// modal = 02
+$aereo = new stdClass();
+$aereo->nMinu = '123123123'; // Número Minuta
+$aereo->nOCA = ''; // Número Operacional do Conhecimento Aéreo
+$aereo->dPrevAereo = date('Y-m-d');
+$aereo->natCarga_xDime = ''; // Dimensões 1234x1234x1234 em cm
+$aereo->natCarga_cInfManu = [
+    '01',
+    '02'
+]; // Informação de manuseio, com dois dígitos, pode ter mais de uma ocorrência.
+$aereo->tarifa_CL = 'G'; // M - Tarifa Mínima / G - Tarifa Geral / E - Tarifa Específica
+$aereo->tarifa_cTar = ''; // código da tarifa, deverão ser incluídos os códigos de três digítos correspondentes à tarifa
+$aereo->tarifa_vTar = 100.00; // valor da tarifa. 15 posições, sendo 13 inteiras e 2 decimais. Valor da tarifa por kg quando for o caso
+$cte->tagaereo($aereo);
 
-        $dup = new stdClass();
-        $dup->nDup = '1';
-        $dup->dVenc = '2016-10-30';
-        $dup->vDup = '10';
-        $cte->tagdup($dup);
+$peri = new stdClass();
+$peri->nONU = '1231';
+$peri->qTotEmb = '100';
+$peri->qTotProd = '105';
+$peri->uniAP = '1';
+$cte->tagperi($peri);
 
-        $dup = new stdClass();
-        $dup->nDup = '2';
-        $dup->dVenc = '2016-10-30';
-        $dup->vDup = '10';
-        $cte->tagdup($dup);
-    }
+$cte->tagperi($peri);
 
-    if ($ide->tpCTe == 1) {
-        $infCteSub = new stdClass();
-        $infCteSub->chCte = '43160472202112000136550000000010571048440722';
-        $infCteSub->indAlteraToma = '0';
-        $cte->taginfCteSub($infCteSub);
-    }
+// modal = 03
+$aquav = new stdClass();
+$aquav->vPrest = '1';
+$aquav->vAFRMM = '1';
+$aquav->xNavio = '1';
+$aquav->nViag = '1';
+$aquav->direc = '1';
+$aquav->irin = '1';
+$aquav->tpNav = '1';
+$cte->tagaquav($aquav);
 
-    $autXML = new stdClass();
-    $autXML->CPF = '59195248471'; // CPF ou CNPJ dos autorizados para download do XML
-    $cte->tagautXML($autXML);
-} else if ($ide->tpCTe == 3) {
-    $infCteSub = new stdClass();
-    $infCteSub->chCTe = '43160472202112000136550000000010571048440722';
-    $cte->taginfCTeComp($infCteSub);
-}
+$balsa = new stdClass();
+$balsa->xBalsa = 'teste de balsa';
+$cte->tagbalsa($balsa);
+$cte->tagbalsa($balsa);
+
+$detCont = new stdClass();
+$detCont->nCont = '1';
+$cte->tagdetCont($detCont);
+
+$lacre = new stdClass();
+$lacre->nLacre = '1';
+$cte->taglacre($lacre);
+$cte->taglacre($lacre);
+
+$cte->taginfDocCont();
+
+$infNF = new stdClass();
+$infNF->chave = '1';
+$infNF->unidRat = '1';
+$cte->taginfNFeCont($infNF);
+
+$infNF = new stdClass();
+$infNF->serie = '1';
+$infNF->nDoc = '1';
+$infNF->unidRat = '1';
+$cte->taginfNFCont($infNF);
+
+// modal = 04
+$ferrov = new stdClass();
+$ferrov->tpTraf = '1';
+$ferrov->respFat = '1';
+$ferrov->ferrEmi = '1';
+$ferrov->vFrete = '1';
+$ferrov->chCTeFerroOrigem = '43160472202112000136550000000010571048440722';
+$ferrov->fluxo = 'teste';
+$cte->tagferrov($ferrov);
+
+$ferroEnv = new stdClass();
+$ferroEnv->CNPJ = '07654824000396';
+$ferroEnv->cInt = '1';
+$ferroEnv->IE = '1234648';
+$ferroEnv->xNome = 'teste';
+$ferroEnv->xLgr = 'teste';
+$ferroEnv->nro = '1';
+$ferroEnv->xCpl = 'teste';
+$ferroEnv->xBairro = 'teste';
+$ferroEnv->cMun = '4308607';
+$ferroEnv->xMun = 'teste';
+$ferroEnv->CEP = '85602500';
+$ferroEnv->UF = 'PR';
+$cte->tagferroEnv($ferroEnv);
+
+// modal = 05
+$duto = new stdClass();
+$duto->vTar = '100';
+$duto->dIni = '2016-10-30';
+$duto->dFim = '2016-10-30';
+$cte->tagduto($duto);
+
+// modal = 06
+$multimodal = new stdClass();
+$multimodal->COTM = '100';
+$multimodal->indNegociavel = '1';
+$cte->tagmultimodal($multimodal);
+
+$segMultimodal = new stdClass();
+$segMultimodal->xSeg = 'teste';
+$segMultimodal->CNPJ = '07654824000396';
+$segMultimodal->nApol = '100';
+$segMultimodal->nAver = '2';
+$cte->tagSegMultimodal($segMultimodal);
+
+$veicNovos = new stdClass();
+$veicNovos->chassi = '00739357007393570';
+$veicNovos->cCor = '00';
+$veicNovos->xCor = 'teste';
+$veicNovos->cMod = '10';
+$veicNovos->vUnit = '10';
+$veicNovos->vFrete = '10';
+$cte->tagveicNovos($veicNovos);
+
+$fat = new stdClass();
+$fat->nFat = '1';
+$fat->vOrig = '10';
+$fat->vDesc = '';
+$fat->vLiq = '10';
+$cte->tagfat($fat);
+
+$dup = new stdClass();
+$dup->nDup = '1';
+$dup->dVenc = '2016-10-30';
+$dup->vDup = '10';
+$cte->tagdup($dup);
+
+$dup = new stdClass();
+$dup->nDup = '2';
+$dup->dVenc = '2016-10-30';
+$dup->vDup = '10';
+$cte->tagdup($dup);
+
+$infCteSub = new stdClass();
+$infCteSub->chCte = '43160472202112000136550000000010571048440722';
+$infCteSub->indAlteraToma = '0';
+$cte->taginfCteSub($infCteSub);
+
+$infCteSub = new stdClass();
+$infCteSub->chCTe = '43160472202112000136550000000010571048440722';
+$cte->taginfCTeComp($infCteSub);
 
 $infGlobalizado = new stdClass();
 $infGlobalizado->xObs = 'teste teste teste teste ';
 $cte->taginfGlobalizado($infGlobalizado);
 
+$infServVinc = new stdClass();
+$infServVinc->chCTeMultimodal = '43160472202112000136550000000010571048440722';
+$cte->taginfCTeMultimodal($infServVinc);
+
+$autXML = new stdClass();
+$autXML->CPF = '59195248471'; // CPF ou CNPJ dos autorizados para download do XML
+$cte->tagautXML($autXML);
+
 //Monta CT-e
 $cte->montaCTe();
 $chave = $cte->chCTe;
 $xml = $cte->getXML();
-header('Content-type: text/xml2; charset=UTF-8');
 
-//Assina
-$xml = $tools->signCTe($xml);
-die($xml);
-
-//Envia lote e autoriza
-$res = $tools->sefazEnviaCTe($xml);
-
-//Converte resposta
-$stdCl = new Standardize($res);
-//Output array
-$arr = $stdCl->toArray();
-//print_r($arr);
-//Output object
-$std = $stdCl->toStd();
-
-if ($std->protCTe->infProt->cStat == 100) {//Autorizado o uso do CT-e
-  //adicionar protocolo
+try {
+    //Assina
+    $xml = $tools->signCTe($xml);
+    header('Content-type: text/xml; charset=UTF-8');
+    echo $xml;
+} catch (Exception $e) {
+    header('Content-type: text/plain; charset=UTF-8');
+    echo $xml;
+    throw $e;
 }
-echo '<pre>';
-print_r($arr);

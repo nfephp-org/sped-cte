@@ -60,6 +60,12 @@ class MakeCTe
      * @var integer
      */
     private $modal = 0;
+
+    /**
+     * Tipo do CTe
+     * @var int
+     */
+    private $tpCTe = 0;
     /**
      * Tag CTe
      * @var \DOMNode
@@ -331,7 +337,11 @@ class MakeCTe
      * @var \DOMNode
      */
     private $ferrov = '';
-    private $ferroEnv = '';
+    /**
+     * Informações das Ferrovias Envolvidas
+     * @var array
+     */
+    private $ferroEnv = [];
     /**
      * Informações do modal Aquaviario
      * @var \DOMNode
@@ -510,9 +520,9 @@ class MakeCTe
         }
         $this->dom->appChild($this->infCte, $this->vPrest, 'Falta tag "infCte"');
         $this->dom->appChild($this->infCte, $this->imp, 'Falta tag "imp"');
-        if (!empty($this->infCteComp)) { // Caso seja um CTe tipo complemento de valores
+        if ($this->tpCTe == 3 and !empty($this->infCteComp)) { // Caso seja um CTe tipo complemento de valores
             $this->dom->appChild($this->infCte, $this->infCteComp, 'Falta tag "infCteComp"');
-        } elseif (!empty($this->infCTeNorm)) { // Caso seja um CTe tipo normal
+        } elseif (in_array($this->tpCTe, [0, 1]) and !empty($this->infCTeNorm)) { // Caso seja um CTe tipo normal
             $this->dom->appChild($this->infCte, $this->infCTeNorm, 'Falta tag "infCTeNorm"');
             $this->dom->appChild($this->infCTeNorm, $this->infCarga, 'Falta tag "infCarga"');
             foreach ($this->infQ as $infQ) {
@@ -581,11 +591,6 @@ class MakeCTe
                     $this->dom->appChild($this->aereo, $peri, 'Falta tag "aereo"');
                 }
                 $this->dom->appChild($this->infModal, $this->aereo, 'Falta tag "aereo"');
-            } elseif ($this->modal == '04') {
-                foreach ($this->ferroEnv as $ferroEnv) {
-                    $this->ferrov->insertBefore($ferroEnv, $this->ferrov->getElementsByTagName('fluxo')->item(0));
-                }
-                $this->dom->appChild($this->infModal, $this->ferrov, 'Falta tag "ferrov"');
             } elseif ($this->modal == '03') {
                 $this->dom->appChild($this->infModal, $this->aquav, 'Falta tag "aquav"');
                 if ($this->detCont != []) { //Caso tenha informações de conteiner
@@ -618,6 +623,12 @@ class MakeCTe
                 foreach ($this->balsa as $balsa) {
                     $this->aquav->insertBefore($balsa, $this->aquav->getElementsByTagName('nViag')->item(0));
                 }
+            } elseif ($this->modal == '04') {
+                foreach ($this->ferroEnv as $ferroEnv) {
+                    $node = $this->ferrov->getElementsByTagName('trafMut')->item(0);
+                    $this->dom->appChild($node, $ferroEnv, 'Falta tag "multimodal"');
+                }
+                $this->dom->appChild($this->infModal, $this->ferrov, 'Falta tag "ferrov"');
             } elseif ($this->modal == '05') {
                 $this->dom->appChild($this->infModal, $this->duto, 'Falta tag "duto"');
             } elseif ($this->modal == '06') {
@@ -631,7 +642,10 @@ class MakeCTe
             foreach ($this->veicNovos as $veicNovos) {
                 $this->dom->appChild($this->infCTeNorm, $veicNovos, 'Falta tag "infCte"');
             }
-            if (!empty($this->infCteSub)) {
+            if (!empty($this->cobr)) {
+                $this->dom->appChild($this->infCTeNorm, $this->cobr, 'Falta tag "infCte"');
+            }
+            if ($this->tpCTe == 1 and !empty($this->infCteSub)) {
                 $this->dom->appChild($this->infCTeNorm, $this->infCteSub, 'Falta tag "infCteSub"');
             }
             if (!empty($this->infGlobalizado)) {
@@ -643,9 +657,6 @@ class MakeCTe
                     $this->dom->appChild($this->infServVinc, $infCTeMultimodal, 'Falta tag "infCTeMultimodal"');
                 }
             }
-        }
-        if (!empty($this->cobr)) {
-            $this->dom->appChild($this->infCTeNorm, $this->cobr, 'Falta tag "infCte"');
         }
         foreach ($this->autXML as $autXML) {
             $this->dom->appChild($this->infCte, $autXML, 'Falta tag "infCte"');
@@ -812,6 +823,7 @@ class MakeCTe
         ];
         $std = $this->equilizeParameters($std, $possible);
         $this->tpAmb = $std->tpAmb;
+        $this->tpCTe = $std->tpCTe;
         $identificador = '#4 <ide> - ';
         $this->ide = $this->dom->createElement('ide');
         $this->dom->addChild(
@@ -4134,9 +4146,7 @@ class MakeCTe
             if (isset($std->natCarga_cInfManu) && !is_array($std->natCarga_cInfManu)) {
                 $std->natCarga_cInfManu = [$std->natCarga_cInfManu];
             }
-            $cInfManuX = 0;
             foreach ($std->natCarga_cInfManu as $cInfManu) {
-                $cInfManuX++;
                 $this->dom->addChild(
                     $natCarga,
                     'cInfManu',
@@ -4302,10 +4312,9 @@ class MakeCTe
             'xMun',
             'CEP',
             'UF',
-            'fluxo'
         ];
         $std = $this->equilizeParameters($std, $possible);
-        $identificador = '#1 <trafMut> - <ferroEnv> - ';
+        $identificador = '#1 <ferroEnv> - ';
         $ferroEnv = $this->dom->createElement('ferroEnv');
         $this->dom->addChild(
             $ferroEnv,
@@ -4532,7 +4541,7 @@ class MakeCTe
      * Informações do Serviço Vinculado a Multimodal
      * @return DOMElement|\DOMNode
      */
-    public function infCTeMultimodal($std)
+    public function taginfCTeMultimodal($std)
     {
         $possible = [
             'chCTeMultimodal',
