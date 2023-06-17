@@ -59,6 +59,7 @@ class Standardize
         'CTeOS',
         'eventoCTe',
         'evCancCTe',
+        'cteRecepcaoLoteResult',
         'protCTe'
     ];
 
