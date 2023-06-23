@@ -41,6 +41,7 @@ class Standardize
         'enviCTe',
         'retEnviCte',
         'retCTeOS',
+        'retCTe',
         'retConsReciCTe',
         'consSitCTe',
         'retConsSitCTe',
@@ -56,7 +57,8 @@ class Standardize
         'CTeOS',
         'eventoCTe',
         'evCancCTe',
-        'protCTe'
+        'protCTe',
+        'retConsStatServCTe'
     ];
 
     /**
