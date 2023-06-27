@@ -136,11 +136,6 @@ class MakeCTeOS
      */
     private $infServico = '';
     /**
-     * Informações de quantidades da Carga do CT-e
-     * @var \DOMNode
-     */
-    private $infQ = [];
-    /**
      * Informações dos demais documentos
      * @var array
      */
@@ -276,7 +271,10 @@ class MakeCTeOS
         if (!empty($this->compl)) {
             $this->dom->appChild($this->infCte, $this->compl, 'Falta tag "infCte"');
         }
-        $this->dom->appChild($this->emit, $this->enderEmit, 'Falta tag "emit"');
+        // inclui o Node enderEmit dentro do emit antes da tag CRT
+        $node = $this->emit->getElementsByTagName("CRT")->item(0);
+        $this->emit->insertBefore($this->enderEmit, $node);
+
         $this->dom->appChild($this->infCte, $this->emit, 'Falta tag "infCte"');
         if (!empty($this->toma)) {
             $this->dom->appChild($this->infCte, $this->toma, 'Falta tag "infCte"');
@@ -457,8 +455,9 @@ class MakeCTeOS
             $this->ide,
             'cDV',
             $std->cDV,
-            false,
-            $identificador . 'Digito Verificador da chave de acesso do CT-e'
+            true,
+            $identificador . 'Digito Verificador da chave de acesso do CT-e',
+            true
         );
         $this->dom->addChild(
             $this->ide,
@@ -749,7 +748,8 @@ class MakeCTeOS
             'IE',
             'IEST',
             'xNome',
-            'xFant'
+            'xFant',
+            'CRT'
         ];
         $std = $this->equilizeParameters($std, $possible);
         $identificador = '#97 <emit> - ';
@@ -788,6 +788,13 @@ class MakeCTeOS
             $std->xFant,
             false,
             $identificador . 'Nome fantasia'
+        );
+        $this->dom->addChild(
+            $this->emit,
+            'CRT',
+            $std->CRT,
+            true,
+            $identificador . 'Código do Regime Tributário'
         );
         return $this->emit;
     }
@@ -1527,7 +1534,7 @@ class MakeCTeOS
     }
 
     /**
-     * Gera as tags para o elemento: "infCTeNorm" (Informações da Carga do CT-e OS)
+     * Gera as tags para o elemento: "taginfServico" (Informações da Carga do CT-e OS)
      * #253
      * Nível: 2
      * Os parâmetros para esta função são todos os elementos da tag "infServico"
@@ -1537,7 +1544,8 @@ class MakeCTeOS
     public function taginfServico($std)
     {
         $possible = [
-            'xDescServ'
+            'xDescServ',
+            'qCarga'
         ];
         $std = $this->equilizeParameters($std, $possible);
         $identificador = '#253 <infServico> - ';
@@ -1549,37 +1557,18 @@ class MakeCTeOS
             true,
             $identificador . 'Descrição do Serviço Prestado'
         );
-        $infQ = $this->dom->createElement('infQ');
-        $this->dom->addChild($infQ, 'qCarga', $std->qCarga, false, $identificador . 'Quantidade');
-        $this->infServico->appendChild($infQ);
+        if (isset($std->qCarga)) {
+            $infQ = $this->dom->createElement('infQ');
+            $this->dom->addChild(
+                $infQ,
+                'qCarga',
+                $std->qCarga,
+                false,
+                $identificador . 'Quantidade'
+            );
+            $this->infServico->appendChild($infQ);
+        }
         return $this->infServico;
-    }
-
-    /**
-     * Gera as tags para o elemento: "infQ" (Informações de quantidades da Carga do CT-e)
-     * #246
-     * Nível: 3
-     * Os parâmetros para esta função são todos os elementos da tag "infQ"
-     *
-     * @return mixed
-     */
-    public function taginfQ($std)
-    {
-        $possible = [
-            'qCarga',
-        ];
-        $std = $this->equilizeParameters($std, $possible);
-        $identificador = '#257 <infQ> - ';
-        $this->infQ[] = $this->dom->createElement('infQ');
-        $posicao = (int)count($this->infQ) - 1;
-        $this->dom->addChild(
-            $this->infQ[$posicao],
-            'qCarga',
-            $this->conditionalNumberFormatting($std->qCarga, 4),
-            true,
-            $identificador . 'Quantidade'
-        );
-        return $this->infQ[$posicao];
     }
 
     /**
@@ -1721,20 +1710,23 @@ class MakeCTeOS
         $std = $this->equilizeParameters($std, $possible);
         $identificador = '#1 <rodoOS> - ';
         $this->rodo = $this->dom->createElement('rodoOS');
-        $this->dom->addChild(
-            $this->rodo,
-            'TAF',
-            $std->TAF,
-            false,
-            $identificador . 'Termo de Autorização de Fretamento - TAF'
-        );
-        $this->dom->addChild(
-            $this->rodo,
-            'NroRegEstadual',
-            $std->NroRegEstadual,
-            false,
-            $identificador . 'Número do Registro Estadual'
-        );
+        if (!empty($std->TAF)) {
+            $this->dom->addChild(
+                $this->rodo,
+                'TAF',
+                $std->TAF,
+                true,
+                $identificador . 'Termo de Autorização de Fretamento - TAF'
+            );
+        } else {
+            $this->dom->addChild(
+                $this->rodo,
+                'NroRegEstadual',
+                $std->NroRegEstadual,
+                true,
+                $identificador . 'Número do Registro Estadual'
+            );
+        }
         return $this->rodo;
     }
 
@@ -1826,12 +1818,12 @@ class MakeCTeOS
                     $identificador . 'CPF do proprietario'
                 );
             }
-            if ($std->taf != '') {
+            if (!empty($std->TAF)) {
                 $this->dom->addChild(
                     $this->prop,
                     'TAF',
-                    $std->taf,
-                    false,
+                    $std->TAF,
+                    true,
                     $identificador . 'TAF'
                 );
             } else {
@@ -1839,7 +1831,7 @@ class MakeCTeOS
                     $this->prop,
                     'NroRegEstadual',
                     $std->NroRegEstadual,
-                    false,
+                    true,
                     $identificador . 'Número do Registro Estadual'
                 );
             }

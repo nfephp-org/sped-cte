@@ -362,44 +362,50 @@ class Tools
                     //Rodoviário
                     $rodo = $this->getModalXML($dom, 'rodo');
                     if ($rodo) {
-                        $this->isValid($this->versao, $rodo, $method . 'ModalRodoviario');
+                        $this->isValid($this->versao, $rodo, 'cteModalRodoviario');
                     }
                     break;
                 case 2:
                     //Aéreo
                     $aereo = $this->getModalXML($dom, 'aereo');
                     if ($aereo) {
-                        $this->isValid($this->versao, $aereo, $method . 'ModalAereo');
+                        $this->isValid($this->versao, $aereo, 'cteModalAereo');
                     }
                     break;
                 case 3:
                     //Aquaviário
                     $aquav = $this->getModalXML($dom, 'aquav');
                     if ($aquav) {
-                        $this->isValid($this->versao, $aquav, $method . 'ModalAquaviario');
+                        $this->isValid($this->versao, $aquav, 'cteModalAquaviario');
                     }
                     break;
                 case 4:
                     //Ferroviário
                     $ferrov = $this->getModalXML($dom, 'ferrov');
                     if ($ferrov) {
-                        $this->isValid($this->versao, $ferrov, $method . 'ModalFerroviario');
+                        $this->isValid($this->versao, $ferrov, 'cteModalFerroviario');
                     }
                     break;
                 case 5:
                     //Dutoviário
                     $duto = $this->getModalXML($dom, 'duto');
                     if ($duto) {
-                        $this->isValid($this->versao, $duto, $method . 'ModalDutoviario');
+                        $this->isValid($this->versao, $duto, 'cteModalDutoviario');
                     }
                     break;
                 case 6:
                     //Multimodal
                     $multimodal = $this->getModalXML($dom, 'multimodal');
                     if ($multimodal) {
-                        $this->isValid($this->versao, $multimodal, $method . 'MultiModal');
+                        $this->isValid($this->versao, $multimodal, 'cteMultiModal');
                     }
                     break;
+            }
+        } else {
+            //Rodoviário
+            $rodoOS = $this->getModalXML($dom, 'rodoOS');
+            if ($rodoOS) {
+                $this->isValid($this->versao, $rodoOS, 'cteModalRodoviarioOS');
             }
         }
         return $signed;
@@ -423,10 +429,10 @@ class Tools
     }
 
     /**
-     * @todo
-     * Corret NFe fields when in contingency mode is set
      * @param string $xml CTe xml content
      * @return string
+     * @todo
+     * Corret NFe fields when in contingency mode is set
      */
     protected function correctCTeForContingencyMode($xml)
     {
@@ -521,7 +527,8 @@ class Tools
         $uf,
         $tpAmb,
         $ignoreContingency = false
-    ) {
+    )
+    {
         $ambiente = $tpAmb == 1 ? "producao" : "homologacao";
         $webs = new Webservices($this->getXmlUrlPath());
         $sigla = $uf;
