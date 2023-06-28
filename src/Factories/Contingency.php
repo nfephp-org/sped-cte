@@ -159,6 +159,12 @@ class Contingency
             case 'SVSP':
                 $tpEmis = 8;
                 break;
+            case 'EPEC':
+                $tpEmis = 4;
+                break;
+            case 'FA-DA':
+                $tpEmis = 5;
+                break;
             default:
                 if ($type == '') {
                     $tpEmis = 1;

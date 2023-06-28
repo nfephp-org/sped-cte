@@ -655,6 +655,7 @@ class Tools
         }
         $signed = QRCode::putQRTag(
             $dom,
+            $this->certificate,
             $std->QRCode->url
         );
         return Strings::clearXmlString($signed);

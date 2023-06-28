@@ -16,20 +16,23 @@ namespace NFePHP\CTe\Factories;
  */
 
 use DOMDocument;
-use NFePHP\CTe\Exception\DocumentsException;
+use NFePHP\Common\Certificate;
 
 class QRCode
 {
     /**
      * putQRTag
      * @param DOMDocument $dom CTe
+     * @param Certificate $certificate
      * @param string $url
      * @return string
      */
     public static function putQRTag(
         \DOMDocument $dom,
-        $url = ''
-    ) {
+         $certificate,
+         $url = ''
+    )
+    {
         $mod = $dom->getElementsByTagName('mod')->item(0)->nodeValue;
         # se for CTe-OS, pega a tag raiz correspondente
         if ($mod == 67) {
@@ -37,12 +40,16 @@ class QRCode
         } else {
             $cte = $dom->getElementsByTagName('CTe')->item(0);
         }
-
         $infCte = $dom->getElementsByTagName('infCte')->item(0);
         $ide = $dom->getElementsByTagName('ide')->item(0);
         $chCTe = preg_replace('/[^0-9]/', '', $infCte->getAttribute("Id"));
         $tpAmb = $ide->getElementsByTagName('tpAmb')->item(0)->nodeValue;
-        $urlQRCode = "$url?chCTe=$chCTe&tpAmb=$tpAmb";
+        $tpEmis = $ide->getElementsByTagName('tpEmis')->item(0)->nodeValue;
+        $sign = '';
+        if (in_array($tpEmis, [4, 5])) {
+            $sign = "&sign=" . base64_encode($certificate->sign($chCTe));
+        }
+        $urlQRCode = "$url?chCTe=$chCTe&tpAmb=$tpAmb{$sign}";
         $infCTeSupl = $dom->createElement("infCTeSupl");
         $qrCode = $infCTeSupl->appendChild($dom->createElement('qrCodCTe'));
         $qrCode->appendChild($dom->createCDATASection($urlQRCode));
