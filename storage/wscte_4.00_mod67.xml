@@ -46,10 +46,10 @@
     <UF>
         <sigla>MT</sigla>
         <homologacao>
-            <CteRecepcao method='cteRecepcaoOS' operation='CTeRecepcaoOSV4' version='4.00'>https://cte.sefaz.mt.gov.br/ctews/services/CTeRecepcaoOSV4</CteRecepcao>
-            <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://cte.sefaz.mt.gov.br/ctews2/services/CTeConsultaV4</CteConsultaProtocolo>
-            <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://cte.sefaz.mt.gov.br/ctews2/services/CTeStatusServicoV4</CteStatusServico>
-            <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://cte.sefaz.mt.gov.br/ctews2/services/CTeRecepcaoEventoV4</CteRecepcaoEvento>
+            <CteRecepcao method='cteRecepcaoOS' operation='CTeRecepcaoOSV4' version='4.00'>https://homologacao.sefaz.mt.gov.br/ctews/services/CTeRecepcaoOSV4</CteRecepcao>
+            <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://homologacao.sefaz.mt.gov.br/ctews2/services/CTeConsultaV4</CteConsultaProtocolo>
+            <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://homologacao.sefaz.mt.gov.br/ctews2/services/CTeStatusServicoV4</CteStatusServico>
+            <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://homologacao.sefaz.mt.gov.br/ctews2/services/CTeRecepcaoEventoV4</CteRecepcaoEvento>
             <QRCode method='QRCode' operation='QRCode' version='3.00'>https://homologacao.sefaz.mt.gov.br/cte/qrcode</QRCode>
         </homologacao>
         <producao>

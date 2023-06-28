@@ -356,7 +356,7 @@ class Tools
         }
         $this->isValid($this->versao, $signed, $method);
         $modal = (int)$dom->getElementsByTagName('modal')->item(0)->nodeValue;
-        if ($modelo != 67) {
+        if ($modelo == 57) {
             switch ($modal) {
                 case 1:
                     //Rodoviário
@@ -401,7 +401,7 @@ class Tools
                     }
                     break;
             }
-        } else {
+        } else if ($modelo == 67) {
             //Rodoviário
             $rodoOS = $this->getModalXML($dom, 'rodoOS');
             if ($rodoOS) {
@@ -432,7 +432,7 @@ class Tools
      * @param string $xml CTe xml content
      * @return string
      * @todo
-     * Corret NFe fields when in contingency mode is set
+     * Corret CTe fields when in contingency mode is set
      */
     protected function correctCTeForContingencyMode($xml)
     {

@@ -224,7 +224,7 @@ class MakeCTeOS
     }
 
     /**
-     * Retorns the key number of NFe (44 digits)
+     * Retorns the key number of CTe (44 digits)
      * @return string
      */
     public function getChave()

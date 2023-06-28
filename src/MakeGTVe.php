@@ -189,7 +189,7 @@ class MakeGTVe
     }
 
     /**
-     * Retorns the key number of NFe (44 digits)
+     * Retorns the key number of GTVe (44 digits)
      * @return string
      */
     public function getChave()
