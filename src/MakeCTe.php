@@ -2967,7 +2967,7 @@ class MakeCTe
                     'CST',
                     90,
                     true,
-                    "$identificador Tributação do ICMS = 01"
+                    "$identificador Tributação do ICMS = 90"
                 );
                 $this->dom->addChild(
                     $icms,
