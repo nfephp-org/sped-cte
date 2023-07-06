@@ -12,14 +12,14 @@
     <UF>
         <sigla>MG</sigla>
         <homologacao>
-            <CteRecepcao method='cteRecepcaoOS' operation='CTeRecepcaoOSV4' version='4.00'>https://hcte.fazenda.mg.gov.br/cte/services/CTeRecepcaoOSV4</CteRecepcao>
+            <CteRecepcao method='cteRecepcao' operation='cteRecepcaoV4' version='4.00'>https://hcte.fazenda.mg.gov.br/cte/services/cteRecepcaoV4</CteRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://hcte.fazenda.mg.gov.br/cte/services/CTeConsultaV4</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://hcte.fazenda.mg.gov.br/cte/services/CTeStatusServicoV4</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://hcte.fazenda.mg.gov.br/cte/services/CTeRecepcaoEventoV4</CteRecepcaoEvento>
             <QRCode method='QRCode' operation='QRCode' version='4.00'>https://cte.fazenda.mg.gov.br/portalcte/sistema/qrcode.xhtml</QRCode>
         </homologacao>
         <producao>
-            <CteRecepcao method='cteRecepcaoOS' operation='CTeRecepcaoOSV4' version='4.00'>https://cte.fazenda.mg.gov.br/cte/services/CTeRecepcaoOSV4</CteRecepcao>
+            <CteRecepcao method='cteRecepcao' operation='cteRecepcaoV4' version='4.00'>https://cte.fazenda.mg.gov.br/cte/services/cteRecepcaoV4</CteRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://cte.fazenda.mg.gov.br/cte/services/CTeConsultaV4</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://cte.fazenda.mg.gov.br/cte/services/CTeStatusServicoV4</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://cte.fazenda.mg.gov.br/cte/services/CTeRecepcaoEventoV4</CteRecepcaoEvento>
@@ -29,14 +29,14 @@
     <UF>
         <sigla>MS</sigla>
         <homologacao>
-            <CteRecepcao method='cteRecepcaoOS' operation='CTeRecepcaoOSV4' version='4.00'>https://producao.cte.ms.gov.br/ws/CTeRecepcaoOSV4</CteRecepcao>
+            <CteRecepcao method='cteRecepcao' operation='cteRecepcaoV4' version='4.00'>https://producao.cte.ms.gov.br/ws/cteRecepcaoV4</CteRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://homologacao.cte.ms.gov.br/ws/CTeConsultaV4</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://homologacao.cte.ms.gov.br/ws/CTeStatusServicoV4</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://homologacao.cte.ms.gov.br/ws/CTeRecepcaoEventoV4</CteRecepcaoEvento>
             <QRCode method='QRCode' operation='QRCode' version='4.00'>http://www.dfe.ms.gov.br/cte/qrcode</QRCode>
         </homologacao>
         <producao>
-            <CteRecepcao method='cteRecepcaoOS' operation='CTeRecepcaoOSV4' version='4.00'></CteRecepcao>
+            <CteRecepcao method='cteRecepcao' operation='cteRecepcaoV4' version='4.00'></CteRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://producao.cte.ms.gov.br/ws/CTeConsultaV4</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://producao.cte.ms.gov.br/ws/CTeStatusServicoV4</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://producao.cte.ms.gov.br/ws/CTeRecepcaoEventoV4</CteRecepcaoEvento>
@@ -46,14 +46,14 @@
     <UF>
         <sigla>MT</sigla>
         <homologacao>
-            <CteRecepcao method='cteRecepcaoOS' operation='CTeRecepcaoOSV4' version='4.00'>https://homologacao.sefaz.mt.gov.br/ctews/services/CTeRecepcaoOSV4</CteRecepcao>
+            <CteRecepcao method='cteRecepcao' operation='cteRecepcaoV4' version='4.00'>https://homologacao.sefaz.mt.gov.br/ctews/services/cteRecepcaoV4</CteRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://homologacao.sefaz.mt.gov.br/ctews2/services/CTeConsultaV4</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://homologacao.sefaz.mt.gov.br/ctews2/services/CTeStatusServicoV4</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://homologacao.sefaz.mt.gov.br/ctews2/services/CTeRecepcaoEventoV4</CteRecepcaoEvento>
             <QRCode method='QRCode' operation='QRCode' version='4.00'>https://homologacao.sefaz.mt.gov.br/cte/qrcode</QRCode>
         </homologacao>
         <producao>
-            <CteRecepcao method='cteRecepcaoOS' operation='CTeRecepcaoOSV4' version='4.00'>https://cte.sefaz.mt.gov.br/ctews/services/CTeRecepcaoOSV4</CteRecepcao>
+            <CteRecepcao method='cteRecepcao' operation='cteRecepcaoV4' version='4.00'>https://cte.sefaz.mt.gov.br/ctews/services/cteRecepcaoV4</CteRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://cte.sefaz.mt.gov.br/ctews2/services/CTeConsultaV4</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://cte.sefaz.mt.gov.br/ctews2/services/CTeStatusServicoV4</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://cte.sefaz.mt.gov.br/ctews2/services/CTeRecepcaoEventoV4</CteRecepcaoEvento>
@@ -63,14 +63,14 @@
     <UF>
         <sigla>PR</sigla>
         <homologacao>
-            <CteRecepcao method='cteRecepcaoOS' operation='CTeRecepcaoOSV4' version='4.00'>https://homologacao.cte.fazenda.pr.gov.br/cte4/CTeRecepcaoOSV4</CteRecepcao>
+            <CteRecepcao method='cteRecepcao' operation='cteRecepcaoV4' version='4.00'>https://homologacao.cte.fazenda.pr.gov.br/cte4/cteRecepcaoV4</CteRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://homologacao.cte.fazenda.pr.gov.br/cte4/CTeConsultaV4</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://homologacao.cte.fazenda.pr.gov.br/cte4/CTeStatusServicoV4</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://homologacao.cte.fazenda.pr.gov.br/cte4/CTeRecepcaoEventoV4</CteRecepcaoEvento>
             <QRCode method='QRCode' operation='QRCode' version='4.00'>http://www.fazenda.pr.gov.br/cte/qrcode</QRCode>
         </homologacao>
         <producao>
-            <CteRecepcao method='cteRecepcaoOS' operation='CTeRecepcaoOSV4' version='4.00'>https://nfe.fazenda.sp.gov.br/CTeWS/WS/CTeRecepcaoOSV4.asmx</CteRecepcao>
+            <CteRecepcao method='cteRecepcao' operation='cteRecepcaoV4' version='4.00'>https://nfe.fazenda.sp.gov.br/CTeWS/WS/cteRecepcaoV4.asmx</CteRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://cte.fazenda.pr.gov.br/cte4/CTeConsultaV4</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://cte.fazenda.pr.gov.br/cte4/CTeStatusServicoV4</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://cte.fazenda.pr.gov.br/cte4/CTeRecepcaoEventoV4</CteRecepcaoEvento>
@@ -80,14 +80,14 @@
     <UF>
         <sigla>RS</sigla>
         <homologacao>
-            <CteRecepcao method='cteRecepcaoOS' operation='CTeRecepcaoOSV4' version='4.00'>https://cte-homologacao.svrs.rs.gov.br/ws/CTeRecepcaoOSV4/CTeRecepcaoOSV4.asmx</CteRecepcao>
+            <CteRecepcao method='cteRecepcao' operation='cteRecepcaoV4' version='4.00'>https://cte-homologacao.svrs.rs.gov.br/ws/cteRecepcaoV4/cteRecepcaoV4.asmx</CteRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://cte-homologacao.svrs.rs.gov.br/ws/CTeConsultaV4/CTeConsultaV4.asmx</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://cte-homologacao.svrs.rs.gov.br/ws/CTeStatusServicoV4/CTeStatusServicoV4.asmx</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://cte-homologacao.svrs.rs.gov.br/ws/CTeRecepcaoEventoV4/CTeRecepcaoEventoV4.asmx</CteRecepcaoEvento>
             <QRCode method='QRCode' operation='QRCode' version='4.00'>https://dfe-portal.svrs.rs.gov.br/cte/qrCode</QRCode>
         </homologacao>
         <producao>
-            <CteRecepcao method='cteRecepcaoOS' operation='CTeRecepcaoOSV4' version='4.00'>https://cte.svrs.rs.gov.br/ws/CTeRecepcaoOSV4/CTeRecepcaoOSV4.asmx</CteRecepcao>
+            <CteRecepcao method='cteRecepcao' operation='cteRecepcaoV4' version='4.00'>https://cte.svrs.rs.gov.br/ws/cteRecepcaoV4/cteRecepcaoV4.asmx</CteRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>	https://cte.svrs.rs.gov.br/ws/CTeConsultaV4/CTeConsultaV4.asmx</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://cte.svrs.rs.gov.br/ws/CTeStatusServicoV4/CTeStatusServicoV4.asmx</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>	https://cte.svrs.rs.gov.br/ws/CTeRecepcaoEventoV4/CTeRecepcaoEventoV4.asmx</CteRecepcaoEvento>
@@ -97,14 +97,14 @@
     <UF>
         <sigla>SP</sigla>
         <homologacao>
-            <CteRecepcao method='cteRecepcaoOS' operation='CTeRecepcaoOSV4' version='4.00'>https://homologacao.nfe.fazenda.sp.gov.br/CTeWS/WS/CTeRecepcaoOSV4.asmx</CteRecepcao>
+            <CteRecepcao method='cteRecepcao' operation='cteRecepcaoV4' version='4.00'>https://homologacao.nfe.fazenda.sp.gov.br/CTeWS/WS/cteRecepcaoV4.asmx</CteRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://homologacao.nfe.fazenda.sp.gov.br/CTeWS/WS/CTeConsultaV4.asmx</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://homologacao.nfe.fazenda.sp.gov.br/CTeWS/WS/CTeStatusServicoV4.asmx</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://homologacao.nfe.fazenda.sp.gov.br/CTeWS/WS/CTeRecepcaoEventoV4.asmx</CteRecepcaoEvento>
             <QRCode method='QRCode' operation='QRCode' version='4.00'>https://homologacao.nfe.fazenda.sp.gov.br/CTeConsulta/qrCode</QRCode>
         </homologacao>
         <producao>
-            <CteRecepcao method='cteRecepcaoOS' operation='CTeRecepcaoOSV4' version='4.00'>https://nfe.fazenda.sp.gov.br/CTeWS/WS/CTeRecepcaoOSV4.asmx</CteRecepcao>
+            <CteRecepcao method='cteRecepcao' operation='cteRecepcaoV4' version='4.00'>https://nfe.fazenda.sp.gov.br/CTeWS/WS/cteRecepcaoV4.asmx</CteRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://nfe.fazenda.sp.gov.br/CTeWS/WS/CTeConsultaV4.asmx</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://nfe.fazenda.sp.gov.br/CTeWS/WS/CTeStatusServicoV4.asmx</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://nfe.fazenda.sp.gov.br/CTeWS/WS/CTeRecepcaoEventoV4.asmx</CteRecepcaoEvento>
@@ -114,14 +114,14 @@
     <UF>
         <sigla>SVRS</sigla>
         <homologacao>
-            <CteRecepcao method='cteRecepcaoOS' operation='CTeRecepcaoOSV4' version='4.00'>https://cte-homologacao.svrs.rs.gov.br/ws/CTeRecepcaoOSV4/CTeRecepcaoOSV4.asmx</CteRecepcao>
+            <CteRecepcao method='cteRecepcao' operation='cteRecepcaoV4' version='4.00'>https://cte-homologacao.svrs.rs.gov.br/ws/cteRecepcaoV4/cteRecepcaoV4.asmx</CteRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://cte-homologacao.svrs.rs.gov.br/ws/CTeConsultaV4/CTeConsultaV4.asmx</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://cte-homologacao.svrs.rs.gov.br/ws/CTeStatusServicoV4/CTeStatusServicoV4.asmx</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://cte-homologacao.svrs.rs.gov.br/ws/CTeRecepcaoEventoV4/CTeRecepcaoEventoV4.asmx</CteRecepcaoEvento>
             <QRCode method='QRCode' operation='QRCode' version='4.00'>https://dfe-portal.svrs.rs.gov.br/cte/qrCode</QRCode>
         </homologacao>
         <producao>
-            <CteRecepcao method='cteRecepcaoOS' operation='CTeRecepcaoOSV4' version='4.00'>https://cte.svrs.rs.gov.br/ws/CTeRecepcaoOSV4/CTeRecepcaoOSV4.asmx</CteRecepcao>
+            <CteRecepcao method='cteRecepcao' operation='cteRecepcaoV4' version='4.00'>https://cte.svrs.rs.gov.br/ws/cteRecepcaoV4/cteRecepcaoV4.asmx</CteRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>	https://cte.svrs.rs.gov.br/ws/CTeConsultaV4/CTeConsultaV4.asmx</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://cte.svrs.rs.gov.br/ws/CTeStatusServicoV4/CTeStatusServicoV4.asmx</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>	https://cte.svrs.rs.gov.br/ws/CTeRecepcaoEventoV4/CTeRecepcaoEventoV4.asmx</CteRecepcaoEvento>
@@ -131,14 +131,14 @@
     <UF>
         <sigla>SVSP</sigla>
         <homologacao>
-            <CteRecepcao method='cteRecepcaoOS' operation='CTeRecepcaoOSV4' version='4.00'>https://homologacao.nfe.fazenda.sp.gov.br/CTeWS/WS/CTeRecepcaoOSV4.asmx</CteRecepcao>
+            <CteRecepcao method='cteRecepcao' operation='cteRecepcaoV4' version='4.00'>https://homologacao.nfe.fazenda.sp.gov.br/CTeWS/WS/cteRecepcaoV4.asmx</CteRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://homologacao.nfe.fazenda.sp.gov.br/CTeWS/WS/CTeConsultaV4.asmx</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://homologacao.nfe.fazenda.sp.gov.br/CTeWS/WS/CTeStatusServicoV4.asmx</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://homologacao.nfe.fazenda.sp.gov.br/CTeWS/WS/CTeRecepcaoEventoV4.asmx</CteRecepcaoEvento>
             <QRCode method='QRCode' operation='QRCode' version='4.00'>https://homologacao.nfe.fazenda.sp.gov.br/CTeConsulta/qrCode</QRCode>
         </homologacao>
         <producao>
-            <CteRecepcao method='cteRecepcaoOS' operation='CTeRecepcaoOSV4' version='4.00'>https://nfe.fazenda.sp.gov.br/CTeWS/WS/CTeRecepcaoOSV4.asmx</CteRecepcao>
+            <CteRecepcao method='cteRecepcao' operation='cteRecepcaoV4' version='4.00'>https://nfe.fazenda.sp.gov.br/CTeWS/WS/cteRecepcaoV4.asmx</CteRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://nfe.fazenda.sp.gov.br/CTeWS/WS/CTeConsultaV4.asmx</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://nfe.fazenda.sp.gov.br/CTeWS/WS/CTeStatusServicoV4.asmx</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://nfe.fazenda.sp.gov.br/CTeWS/WS/CTeRecepcaoEventoV4.asmx</CteRecepcaoEvento>
