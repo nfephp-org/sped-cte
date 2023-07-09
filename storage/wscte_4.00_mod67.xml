@@ -29,14 +29,14 @@
     <UF>
         <sigla>MS</sigla>
         <homologacao>
-            <CteRecepcao method='cteRecepcao' operation='cteRecepcaoV4' version='4.00'>https://producao.cte.ms.gov.br/ws/cteRecepcaoV4</CteRecepcao>
+            <CteRecepcao method='cteRecepcaoOS' operation='CteRecepcaoOS' version='4.00'></CteRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://homologacao.cte.ms.gov.br/ws/CTeConsultaV4</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://homologacao.cte.ms.gov.br/ws/CTeStatusServicoV4</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://homologacao.cte.ms.gov.br/ws/CTeRecepcaoEventoV4</CteRecepcaoEvento>
             <QRCode method='QRCode' operation='QRCode' version='4.00'>http://www.dfe.ms.gov.br/cte/qrcode</QRCode>
         </homologacao>
         <producao>
-            <CteRecepcao method='cteRecepcao' operation='cteRecepcaoV4' version='4.00'></CteRecepcao>
+            <CteRecepcao method='cteRecepcao' operation='cteRecepcaoV4' version='4.00'>https://producao.cte.ms.gov.br/ws/cteRecepcaoV4</CteRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://producao.cte.ms.gov.br/ws/CTeConsultaV4</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://producao.cte.ms.gov.br/ws/CTeStatusServicoV4</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://producao.cte.ms.gov.br/ws/CTeRecepcaoEventoV4</CteRecepcaoEvento>
@@ -46,10 +46,10 @@
     <UF>
         <sigla>MT</sigla>
         <homologacao>
-            <CteRecepcao method='cteRecepcao' operation='cteRecepcaoV4' version='4.00'>https://homologacao.sefaz.mt.gov.br/ctews/services/cteRecepcaoV4</CteRecepcao>
-            <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://homologacao.sefaz.mt.gov.br/ctews2/services/CTeConsultaV4</CteConsultaProtocolo>
-            <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://homologacao.sefaz.mt.gov.br/ctews2/services/CTeStatusServicoV4</CteStatusServico>
-            <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://homologacao.sefaz.mt.gov.br/ctews2/services/CTeRecepcaoEventoV4</CteRecepcaoEvento>
+            <CteRecepcao method='cteRecepcaoOS' operation='CTeRecepcaoOS' action="" version='4.00'>https://homologacao.sefaz.mt.gov.br/ctews/services/cteRecepcaoV4</CteRecepcao>
+            <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' action="" version='4.00'>https://homologacao.sefaz.mt.gov.br/ctews2/services/CTeConsultaV4</CteConsultaProtocolo>
+            <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' action="" version='4.00'>https://homologacao.sefaz.mt.gov.br/ctews2/services/CTeStatusServicoV4</CteStatusServico>
+            <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' action="" version='4.00'>https://homologacao.sefaz.mt.gov.br/ctews2/services/CTeRecepcaoEventoV4</CteRecepcaoEvento>
             <QRCode method='QRCode' operation='QRCode' version='4.00'>https://homologacao.sefaz.mt.gov.br/cte/qrcode</QRCode>
         </homologacao>
         <producao>
