@@ -520,9 +520,9 @@ class MakeCTe
         }
         $this->dom->appChild($this->infCte, $this->vPrest, 'Falta tag "infCte"');
         $this->dom->appChild($this->infCte, $this->imp, 'Falta tag "imp"');
-        if ($this->tpCTe == 3 and !empty($this->infCteComp)) { // Caso seja um CTe tipo complemento de valores
+        if ($this->tpCTe == 1 and !empty($this->infCteComp)) { // Caso seja um CTe tipo complemento de valores
             $this->dom->appChild($this->infCte, $this->infCteComp, 'Falta tag "infCteComp"');
-        } elseif (in_array($this->tpCTe, [0, 1]) and !empty($this->infCTeNorm)) { // Caso seja um CTe tipo normal
+        } elseif (in_array($this->tpCTe, [0, 3]) and !empty($this->infCTeNorm)) { // Caso seja um CTe tipo normal
             $this->dom->appChild($this->infCte, $this->infCTeNorm, 'Falta tag "infCTeNorm"');
             $this->dom->appChild($this->infCTeNorm, $this->infCarga, 'Falta tag "infCarga"');
             foreach ($this->infQ as $infQ) {
@@ -645,7 +645,7 @@ class MakeCTe
             if (!empty($this->cobr)) {
                 $this->dom->appChild($this->infCTeNorm, $this->cobr, 'Falta tag "infCte"');
             }
-            if ($this->tpCTe == 1 and !empty($this->infCteSub)) {
+            if ($this->tpCTe == 3 and !empty($this->infCteSub)) {
                 $this->dom->appChild($this->infCTeNorm, $this->infCteSub, 'Falta tag "infCteSub"');
             }
             if (!empty($this->infGlobalizado)) {

@@ -12,7 +12,7 @@
     <UF>
         <sigla>MG</sigla>
         <homologacao>
-            <CteRecepcao method='cteRecepcao' operation='CTeRecepcaoSincV4' version='4.00'>	https://hcte.fazenda.mg.gov.br/cte/services/CTeRecepcaoSincV4</CteRecepcao>
+            <CteRecepcao method='cteRecepcao' operation='CTeRecepcaoSincV4' version='4.00'>https://hcte.fazenda.mg.gov.br/cte/services/CTeRecepcaoSincV4</CteRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://hcte.fazenda.mg.gov.br/cte/services/CTeConsultaV4</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://hcte.fazenda.mg.gov.br/cte/services/CTeStatusServicoV4</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://hcte.fazenda.mg.gov.br/cte/services/CTeRecepcaoEventoV4</CteRecepcaoEvento>
