@@ -415,6 +415,10 @@ class MakeCTe
      */
     protected $infGlobalizado;
     /**
+     *
+     */
+    protected $cteHomologacao = 'CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL';
+    /**
      * @var boolean
      */
     protected $replaceAccentedChars = false;
@@ -1879,6 +1883,9 @@ class MakeCTe
             true,
             $identificador . 'Sigla da UF'
         );
+        if (in_array($std->UF, ['AC', 'AL', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'PA', 'PB', 'PI', 'RJ', 'RN', 'RO', 'SC', 'SE', 'TO'])) {
+            $this->cteHomologacao = 'CTE EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL';
+        }
         $this->dom->addChild(
             $this->enderEmit,
             'fone',
@@ -1939,7 +1946,7 @@ class MakeCTe
         );
         $xNome = $std->xNome;
         if ($this->tpAmb == '2') {
-            $xNome = 'CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL';
+            $xNome = $this->cteHomologacao;
         }
         $this->dom->addChild(
             $this->rem,
@@ -2125,7 +2132,7 @@ class MakeCTe
         );
         $xNome = $std->xNome;
         if ($this->tpAmb == '2') {
-            $xNome = 'CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL';
+            $xNome = $this->cteHomologacao;
         }
         $this->dom->addChild(
             $this->exped,
@@ -2304,7 +2311,7 @@ class MakeCTe
         );
         $xNome = $std->xNome;
         if ($this->tpAmb == '2') {
-            $xNome = 'CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL';
+            $xNome = $this->cteHomologacao;
         }
         $this->dom->addChild(
             $this->receb,
@@ -2484,7 +2491,7 @@ class MakeCTe
         );
         $xNome = $std->xNome;
         if ($this->tpAmb == '2') {
-            $xNome = 'CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL';
+            $xNome = $this->cteHomologacao;
         }
         $this->dom->addChild(
             $this->dest,
