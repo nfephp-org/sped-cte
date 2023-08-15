@@ -409,10 +409,6 @@ class MakeCTe
     /**
      * @var DOMElement
      */
-    protected $indAlteraToma;
-    /**
-     * @var DOMElement
-     */
     protected $infGlobalizado;
     /**
      *
@@ -1883,7 +1879,7 @@ class MakeCTe
             true,
             $identificador . 'Sigla da UF'
         );
-        if (in_array($std->UF, ['AC', 'AL', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'PA', 'PB', 'PI', 'RJ', 'RN', 'RO', 'SC', 'SE', 'TO'])) {
+        if (in_array($std->UF, ['AC', 'AL', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'PA', 'PB', 'PI', 'RJ', 'RN', 'RO', 'RS', 'SC', 'SE', 'TO'])) {
             $this->cteHomologacao = 'CTE EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL';
         }
         $this->dom->addChild(
@@ -4514,7 +4510,7 @@ class MakeCTe
         $this->dom->addChild(
             $this->infCteSub,
             'indAlteraToma',
-            $this->indAlteraToma,
+            $std->indAlteraToma,
             false,
             'Indicador de CT-e Alteração de Tomador'
         );
