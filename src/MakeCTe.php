@@ -409,10 +409,6 @@ class MakeCTe
     /**
      * @var DOMElement
      */
-    protected $indAlteraToma;
-    /**
-     * @var DOMElement
-     */
     protected $infGlobalizado;
     /**
      *
@@ -4511,7 +4507,7 @@ class MakeCTe
         $this->dom->addChild(
             $this->infCteSub,
             'indAlteraToma',
-            $this->indAlteraToma,
+            $std->indAlteraToma,
             false,
             'Indicador de CT-e Alteração de Tomador'
         );
