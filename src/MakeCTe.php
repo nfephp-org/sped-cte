@@ -3125,7 +3125,8 @@ class MakeCTe
         $possible = [
             'vCarga',
             'proPred',
-            'xOutCat'
+            'xOutCat',
+            'vCargaAverb'
         ];
         $std = $this->equilizeParameters($std, $possible);
         $identificador = '#242 <infCarga> - ';
@@ -3151,6 +3152,13 @@ class MakeCTe
             false,
             $identificador . 'Outras Caract. da Carga'
         );
+        $this->dom->addChild(
+            $this->infCarga,
+            'vCargaAverb',
+            $this->conditionalNumberFormatting($std->vCargaAverb, 2),
+            false,
+            $identificador . 'Valor da Carga para efeito de averbação'
+        );
         return $this->infCarga;
     }
 
@@ -3167,8 +3175,7 @@ class MakeCTe
         $possible = [
             'cUnid',
             'tpMed',
-            'qCarga',
-            'vCargaAverb'
+            'qCarga'
         ];
         $std = $this->equilizeParameters($std, $possible);
         $identificador = '#257 <infQ> - ';
@@ -3194,14 +3201,7 @@ class MakeCTe
             $this->conditionalNumberFormatting($std->qCarga, 4),
             true,
             $identificador . 'Quantidade'
-        );
-        $this->dom->addChild(
-            $this->infQ[$posicao],
-            'vCargaAverb',
-            $this->conditionalNumberFormatting($std->vCargaAverb, 2),
-            false,
-            $identificador . 'Valor da Carga para efeito de averbação'
-        );
+        );       
         return $this->infQ[$posicao];
     }
 
