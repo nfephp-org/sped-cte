@@ -3,7 +3,7 @@
 namespace NFePHP\CTe\Common;
 
 /**
- * Validation for TXT representation of NFe
+ * Validation for TXT representation of CTe
  *
  * @category  NFePHP
  * @package   NFePHP\CTe\Common\ValidTXT
@@ -21,7 +21,7 @@ class ValidTXT
 {
     public static $errors = [];
     public static $entities = [];
-    
+
     /**
      * Loads structure of txt from json file in storage folder
      * @param float $version
@@ -34,7 +34,7 @@ class ValidTXT
         );
         self::$entities = json_decode($json, true);
     }
-    
+
     /**
      * Verifies the validity of txt according to the rules of the code
      * Important: The structures are in the storage folder and must be

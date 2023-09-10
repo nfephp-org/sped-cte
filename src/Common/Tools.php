@@ -107,7 +107,7 @@ class Tools
      * Version of layout
      * @var string
      */
-    protected $versao = '3.00';
+    protected $versao = '4.00';
     /**
      * urlPortal
      * Instância do WebService
@@ -166,7 +166,7 @@ class Tools
      * @var array
      */
     protected $availableVersions = [
-        '3.00' => 'PL_CTe_300a'
+        '4.00' => 'PL_CTe_400'
     ];
     /**
      * @var string
@@ -187,8 +187,8 @@ class Tools
     {
         $this->config = json_decode($configJson);
         $this->pathwsfiles = realpath(
-            __DIR__ . '/../../storage'
-        ) . '/';
+                __DIR__ . '/../../storage'
+            ) . '/';
         $this->version($this->config->versao);
         $this->setEnvironmentTimeZone($this->config->siglaUF);
         $this->certificate = $certificate;
@@ -200,16 +200,13 @@ class Tools
     /**
      * set version in http
      *
-     * @param string $sigla Sigla da uf
      * @return void
      */
-    private function setEnvironmentHttpVersion($sigla)
+    private function setEnvironmentHttpVersion()
     {
-        if (in_array($sigla, ['SP'])) {
-            $soap = new SoapCurl();
-            $soap->httpVersion('1.1');
-            $this->loadSoapClass($soap);
-        }
+        $soap = new SoapCurl();
+        $soap->httpVersion('1.1');
+        $this->loadSoapClass($soap);
     }
 
     /**
@@ -282,8 +279,8 @@ class Tools
             $this->versao = $version;
             $this->config->schemes = $this->availableVersions[$version];
             $this->pathschemes = realpath(
-                __DIR__ . '/../../schemes/' . $this->config->schemes
-            ) . '/';
+                    __DIR__ . '/../../schemes/' . $this->config->schemes
+                ) . '/';
         }
         return $this->versao;
     }
@@ -359,50 +356,56 @@ class Tools
         }
         $this->isValid($this->versao, $signed, $method);
         $modal = (int)$dom->getElementsByTagName('modal')->item(0)->nodeValue;
-        if ($modelo != 67) {
+        if ($modelo == 57) {
             switch ($modal) {
                 case 1:
                     //Rodoviário
                     $rodo = $this->getModalXML($dom, 'rodo');
                     if ($rodo) {
-                        $this->isValid($this->versao, $rodo, $method . 'ModalRodoviario');
+                        $this->isValid($this->versao, $rodo, 'cteModalRodoviario');
                     }
                     break;
                 case 2:
                     //Aéreo
                     $aereo = $this->getModalXML($dom, 'aereo');
                     if ($aereo) {
-                        $this->isValid($this->versao, $aereo, $method . 'ModalAereo');
+                        $this->isValid($this->versao, $aereo, 'cteModalAereo');
                     }
                     break;
                 case 3:
                     //Aquaviário
                     $aquav = $this->getModalXML($dom, 'aquav');
                     if ($aquav) {
-                        $this->isValid($this->versao, $aquav, $method . 'ModalAquaviario');
+                        $this->isValid($this->versao, $aquav, 'cteModalAquaviario');
                     }
                     break;
                 case 4:
                     //Ferroviário
                     $ferrov = $this->getModalXML($dom, 'ferrov');
                     if ($ferrov) {
-                        $this->isValid($this->versao, $ferrov, $method . 'ModalFerroviario');
+                        $this->isValid($this->versao, $ferrov, 'cteModalFerroviario');
                     }
                     break;
                 case 5:
                     //Dutoviário
                     $duto = $this->getModalXML($dom, 'duto');
                     if ($duto) {
-                        $this->isValid($this->versao, $duto, $method . 'ModalDutoviario');
+                        $this->isValid($this->versao, $duto, 'cteModalDutoviario');
                     }
                     break;
                 case 6:
                     //Multimodal
                     $multimodal = $this->getModalXML($dom, 'multimodal');
                     if ($multimodal) {
-                        $this->isValid($this->versao, $multimodal, $method . 'MultiModal');
+                        $this->isValid($this->versao, $multimodal, 'cteMultiModal');
                     }
                     break;
+            }
+        } else if ($modelo == 67) {
+            //Rodoviário
+            $rodoOS = $this->getModalXML($dom, 'rodoOS');
+            if ($rodoOS) {
+                $this->isValid($this->versao, $rodoOS, 'cteModalRodoviarioOS');
             }
         }
         return $signed;
@@ -426,10 +429,10 @@ class Tools
     }
 
     /**
-     * @todo
-     * Corret NFe fields when in contingency mode is set
      * @param string $xml CTe xml content
      * @return string
+     * @todo
+     * Corret CTe fields when in contingency mode is set
      */
     protected function correctCTeForContingencyMode($xml)
     {
@@ -524,7 +527,8 @@ class Tools
         $uf,
         $tpAmb,
         $ignoreContingency = false
-    ) {
+    )
+    {
         $ambiente = $tpAmb == 1 ? "producao" : "homologacao";
         $webs = new Webservices($this->getXmlUrlPath());
         $sigla = $uf;
@@ -617,7 +621,7 @@ class Tools
     {
         $file = $this->pathwsfiles
             . DIRECTORY_SEPARATOR
-            . "wscte_" . $this->versao . "_mod57.xml";
+            . "wscte_{$this->versao}_mod{$this->modelo}.xml";
         if (!file_exists($file)) {
             return '';
         }
@@ -633,17 +637,14 @@ class Tools
     {
         $tpAmb = $this->config->tpAmb == 1 ? 'producao' : 'homologacao';
         $sigla = $this->config->siglaUF;
-
         $webs = new Webservices($this->getXmlUrlPath());
         $std = $webs->get($sigla, $tpAmb, $this->modelo);
-
         if ($std === false) {
             throw new \RuntimeException(
                 "Nenhum serviço foi localizado para esta unidade "
                 . "da federação [$sigla], com o modelo [$this->modelo]."
             );
         }
-
         if (empty($std->QRCode->url)) {
             throw new \RuntimeException(
                 "Este serviço [QRCode] não está disponivel para esta "
@@ -652,13 +653,11 @@ class Tools
                 . "]."
             );
         }
-
         $signed = QRCode::putQRTag(
             $dom,
             $this->certificate,
             $std->QRCode->url
         );
-
         return Strings::clearXmlString($signed);
     }
 

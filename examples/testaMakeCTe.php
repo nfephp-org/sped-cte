@@ -4,12 +4,10 @@ ini_set('display_errors', 'On');
 
 require_once '../bootstrap.php';
 
-use NFePHP\CTe\Make;
-use NFePHP\CTe\Tools;
-use NFePHP\CTe\Complements;
-use NFePHP\CTe\Common\Standardize;
 use NFePHP\Common\Certificate;
-use NFePHP\Common\Soap\SoapCurl;
+use NFePHP\CTe\Common\Standardize;
+use NFePHP\CTe\MakeCTe;
+use NFePHP\CTe\Tools;
 
 //tanto o config.json como o certificado.pfx podem estar
 //armazenados em uma base de dados, então não é necessário
@@ -42,7 +40,7 @@ $tools = new Tools($configJson, Certificate::readPfx($content, '123456'));
 
 $tools->model('57');
 
-$cte = new Make();
+$cte = new MakeCTe();
 
 //$dhEmi = date("Y-m-d\TH:i:s-03:00"); Para obter a data com diferença de fuso usar 'P'
 $dhEmi = date("Y-m-d\TH:i:sP");
@@ -275,7 +273,7 @@ $aereo->nMinu = '123'; // Número Minuta
 $aereo->nOCA = ''; // Número Operacional do Conhecimento Aéreo
 $aereo->dPrevAereo = date('Y-m-d');
 $aereo->natCarga_xDime = ''; // Dimensões 1234x1234x1234 em cm
-$aereo->natCarga_cInfManu = [  ]; // Informação de manuseio, com dois dígitos, pode ter mais de uma ocorrência.
+$aereo->natCarga_cInfManu = []; // Informação de manuseio, com dois dígitos, pode ter mais de uma ocorrência.
 $aereo->tarifa_CL = 'G'; // M - Tarifa Mínima / G - Tarifa Geral / E - Tarifa Específica
 $aereo->tarifa_cTar = ''; // código da tarifa, deverão ser incluídos os códigos de três digítos correspondentes à tarifa
 $aereo->tarifa_vTar = 100.00; // valor da tarifa. 15 posições, sendo 13 inteiras e 2 decimais. Valor da tarifa por kg quando for o caso
@@ -301,8 +299,6 @@ print_r($xml);
 exit();
 
 
-
-
 //Envia lote e autoriza
 $axmls[] = $xml;
 $lote = substr(str_replace(',', '', number_format(microtime(true) * 1000000, 0)), 0, 15);
@@ -317,8 +313,8 @@ $arr = $stdCl->toArray();
 $std = $stdCl->toStd();
 
 if ($std->cStat != 103) {//103 - Lote recebido com Sucesso
-  //processa erros
-  print_r($arr);
+    //processa erros
+    print_r($arr);
 }
 
 //Consulta Recibo
@@ -327,7 +323,7 @@ $stdCl = new Standardize($res);
 $arr = $stdCl->toArray();
 $std = $stdCl->toStd();
 if ($std->protCTe->infProt->cStat == 100) {//Autorizado o uso do CT-e
-  //adicionar protocolo
+    //adicionar protocolo
 }
 echo '<pre>';
 print_r($arr);
@@ -337,34 +333,34 @@ exit();
 
 function montaChave($cUF, $ano, $mes, $cnpj, $mod, $serie, $numero, $tpEmis, $codigo = '')
 {
-  if ($codigo == '') {
-    $codigo = $numero;
-  }
-  $forma = "%02d%02d%02d%s%02d%03d%09d%01d%08d";
-  $chave = sprintf(
-      $forma, $cUF, $ano, $mes, $cnpj, $mod, $serie, $numero, $tpEmis, $codigo
-  );
-  return $chave . calculaDV($chave);
+    if ($codigo == '') {
+        $codigo = $numero;
+    }
+    $forma = "%02d%02d%02d%s%02d%03d%09d%01d%08d";
+    $chave = sprintf(
+        $forma, $cUF, $ano, $mes, $cnpj, $mod, $serie, $numero, $tpEmis, $codigo
+    );
+    return $chave . calculaDV($chave);
 }
 
 function calculaDV($chave43)
 {
-  $multiplicadores = array(2, 3, 4, 5, 6, 7, 8, 9);
-  $iCount = 42;
-  $somaPonderada = 0;
-  while ($iCount >= 0) {
-    for ($mCount = 0; $mCount < count($multiplicadores) && $iCount >= 0; $mCount++) {
-      $num = (int) substr($chave43, $iCount, 1);
-      $peso = (int) $multiplicadores[$mCount];
-      $somaPonderada += $num * $peso;
-      $iCount--;
+    $multiplicadores = array(2, 3, 4, 5, 6, 7, 8, 9);
+    $iCount = 42;
+    $somaPonderada = 0;
+    while ($iCount >= 0) {
+        for ($mCount = 0; $mCount < count($multiplicadores) && $iCount >= 0; $mCount++) {
+            $num = (int)substr($chave43, $iCount, 1);
+            $peso = (int)$multiplicadores[$mCount];
+            $somaPonderada += $num * $peso;
+            $iCount--;
+        }
     }
-  }
-  $resto = $somaPonderada % 11;
-  if ($resto == '0' || $resto == '1') {
-    $cDV = 0;
-  } else {
-    $cDV = 11 - $resto;
-  }
-  return (string) $cDV;
+    $resto = $somaPonderada % 11;
+    if ($resto == '0' || $resto == '1') {
+        $cDV = 0;
+    } else {
+        $cDV = 11 - $resto;
+    }
+    return (string)$cDV;
 }
