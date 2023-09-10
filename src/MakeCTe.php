@@ -1884,6 +1884,9 @@ class MakeCTe
             true,
             $identificador . 'Sigla da UF'
         );
+        if (in_array($std->UF, ['MT'])) {
+            $this->cteHomologacao = 'CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL';
+        }
         $this->dom->addChild(
             $this->enderEmit,
             'fone',
