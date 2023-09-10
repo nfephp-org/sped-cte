@@ -4,7 +4,7 @@ ini_set('display_errors', 'On');
 
 require_once '../bootstrap.php';
 
-use NFePHP\CTe\Make;
+use NFePHP\CTe\MakeCTeOS;
 use NFePHP\CTe\Tools;
 use NFePHP\CTe\Complements;
 use NFePHP\CTe\Common\Standardize;
@@ -41,7 +41,7 @@ $content = file_get_contents('fixtures/certificado.pfx');
 $tools = new Tools($configJson, Certificate::readPfx($content, '123456'));
 
 $tools->model('67');
-$cte = new Make();
+$cte = new MakeCTeOS();
 $dhEmi = date("Y-m-d\TH:i:s-03:00");
 $numeroCTE = '1';
 $chave = montaChave(

@@ -526,7 +526,12 @@ class MakeCTe
             $this->dom->appChild($this->infCte, $this->infCTeNorm, 'Falta tag "infCTeNorm"');
             $this->dom->appChild($this->infCTeNorm, $this->infCarga, 'Falta tag "infCarga"');
             foreach ($this->infQ as $infQ) {
-                $this->dom->appChild($this->infCarga, $infQ, 'Falta tag "infQ"');
+                $node = $this->infCarga->getElementsByTagName("vCargaAverb")->item(0);
+                if (!empty($node)) {
+                    $this->infCarga->insertBefore($infQ, $node);
+                } else {
+                    $this->dom->appChild($this->infCarga, $infQ, 'Falta tag "infQ"');
+                }
             }
             foreach ($this->infNF as $infNF) {
                 $this->dom->appChild($this->infDoc, $infNF, 'Falta tag "infNF"');
@@ -3201,7 +3206,7 @@ class MakeCTe
             $this->conditionalNumberFormatting($std->qCarga, 4),
             true,
             $identificador . 'Quantidade'
-        );       
+        );
         return $this->infQ[$posicao];
     }
 
