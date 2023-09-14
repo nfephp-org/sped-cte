@@ -660,8 +660,8 @@ class Tools extends ToolsCommon
      * @param string $xNome Nome de quem recebeu a entrega
      * @param string $nDoc Documento de quem recebeu a entrega
      * @param string $hash Hash da Chave de acesso do CT-e + Imagem da assinatura no formato Base64
-     * @param int $latitude Latitude do ponto da entrega
-     * @param int $longitude Longitude do ponto da entrega
+     * @param string|null $latitude Latitude do ponto da entrega
+     * @param string|null $longitude Longitude do ponto da entrega
      * @param int $nSeqEvento No. sequencial do evento
      * @param string $dhEventoEntrega Data e hora da geração do hash da entrega
      * @param array $aNFes Chave das NFes entregues
@@ -691,14 +691,24 @@ class Tools extends ToolsCommon
                 . "</infEntrega>";
         }
 
+        $infLatitude = '';
+        if ($latitude) {
+            $infLatitude = "<latitude>$latitude</latitude>";
+        }
+
+        $infLongitude = '';
+        if ($longitude) {
+            $infLongitude = "<longitude>$longitude</longitude>";
+        }
+
         $tagAdic = "<evCECTe>"
             . "<descEvento>Comprovante de Entrega do CT-e</descEvento>"
             . "<nProt>$nProt</nProt>"
             . "<dhEntrega>$dhEventoEntrega</dhEntrega>"
             . "<nDoc>$nDoc</nDoc>"
             . "<xNome>$xNome</xNome>"
-            . "<latitude>$latitude</latitude>"
-            . "<longitude>$longitude</longitude>"
+            . $infLatitude
+            . $infLongitude
             . "<hashEntrega>$hash</hashEntrega>"
             . "<dhHashEntrega>$dhEventoEntrega</dhHashEntrega>"
             . $infEntrega
