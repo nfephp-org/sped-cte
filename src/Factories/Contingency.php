@@ -82,37 +82,38 @@ class Contingency
     public function activate($acronym, $motive, $type = '')
     {
         $dt = new \DateTime('now');
+//        Estados que utilizam a SVSP - Sefaz Virtual de São Paulo: AP, PE, RR
+//        Estados que utilizam a SVRS - Sefaz Virtual do RS: AC, AL, AM, BA, CE, DF, ES, GO, MA, PA, PB, PI, RJ, RN, RO, SC, SE, TO
         $list = array(
-            'AC' => 'SVRS',
-            'AL' => 'SVRS',
-            'AM' => 'SVRS',
-            'AP' => 'SVSP',
-            'BA' => 'SVRS',
-            'CE' => 'SVRS',
-            'DF' => 'SVRS',
-            'ES' => 'SVRS',
-            'GO' => 'SVRS',
-            'MA' => 'SVRS',
+            'AC' => 'SVSP',
+            'AL' => 'SVSP',
+            'AM' => 'SVSP',
+            'AP' => 'SVRS',
+            'BA' => 'SVSP',
+            'CE' => 'SVSP',
+            'DF' => 'SVSP',
+            'ES' => 'SVSP',
+            'GO' => 'SVSP',
+            'MA' => 'SVSP',
             'MG' => 'SVSP',
-            'MS' => 'SVRS',
-            'MT' => 'SVRS',
-            'PA' => 'SVRS',
-            'PB' => 'SVRS',
-            'PE' => 'SVSP',
-            'PI' => 'SVRS',
+            'MS' => 'SVSP',
+            'MT' => 'SVSP',
+            'PA' => 'SVSP',
+            'PB' => 'SVSP',
+            'PE' => 'SVRS',
+            'PI' => 'SVSP',
             'PR' => 'SVSP',
-            'RJ' => 'SVRS',
-            'RN' => 'SVRS',
-            'RO' => 'SVRS',
-            'RR' => 'SVSP',
+            'RJ' => 'SVSP',
+            'RN' => 'SVSP',
+            'RO' => 'SVSP',
+            'RR' => 'SVRS',
             'RS' => 'SVSP',
-            'SC' => 'SVRS',
-            'SE' => 'SVRS',
+            'SC' => 'SVSP',
+            'SE' => 'SVSP',
             'SP' => 'SVRS',
-            'TO' => 'SVRS'
+            'TO' => 'SVSP'
         );
         $type = strtoupper(str_replace('-', '', $type));
-
         if (empty($type)) {
             $type = (string)$list[$acronym];
         }
