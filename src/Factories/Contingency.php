@@ -84,6 +84,7 @@ class Contingency
         $dt = new \DateTime('now');
 //        Estados que utilizam a SVSP - Sefaz Virtual de São Paulo: AP, PE, RR
 //        Estados que utilizam a SVRS - Sefaz Virtual do RS: AC, AL, AM, BA, CE, DF, ES, GO, MA, PA, PB, PI, RJ, RN, RO, SC, SE, TO
+//        Autorizadores: MT MS MG PR RS SP SVRS SVSP AN
         $list = array(
             'AC' => 'SVSP',
             'AL' => 'SVSP',
@@ -96,15 +97,15 @@ class Contingency
             'GO' => 'SVSP',
             'MA' => 'SVSP',
             'MG' => 'SVSP',
-            'MS' => 'SVSP',
-            'MT' => 'SVSP',
+            'MS' => 'SVRS',
+            'MT' => 'SVRS',
             'PA' => 'SVSP',
             'PB' => 'SVSP',
             'PE' => 'SVRS',
             'PI' => 'SVSP',
             'PR' => 'SVSP',
             'RJ' => 'SVSP',
-            'RN' => 'SVSP',
+            'RN' => 'SVRS',
             'RO' => 'SVSP',
             'RR' => 'SVRS',
             'RS' => 'SVSP',
