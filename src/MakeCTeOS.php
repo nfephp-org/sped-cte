@@ -303,6 +303,9 @@ class MakeCTeOS
                 $this->dom->appChild($this->rodo, $this->infFretamento, 'Falta tag "infFretamento"');
                 $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
             }
+            if(!empty($this->infCteSub)){ // Caso seja um CT-e OS tipo substituição
+                $this->dom->appChild($this->infCTeNorm, $this->infCteSub, 'Falta tag "infCteSub"');
+            }
         }
         if (!empty($this->cobr)) {
             $this->dom->appChild($this->infCTeNorm, $this->cobr, 'Falta tag "cobr"');
