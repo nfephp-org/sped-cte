@@ -184,8 +184,8 @@ class Tools extends ToolsCommon
             . "<tpAmb>" . $this->tpAmb . "</tpAmb>"
             . "<cUFAutor>$cUF</cUFAutor>"
             . ((strlen($this->config->cnpj) == 14) ?
-                "<CNPJ>" . $this->config->cnpj . "</CNPJ>" :
-                "<CPF>" . $this->config->cnpj . "</CPF>"
+                "<CNPJ>{$this->config->cnpj}</CNPJ>" :
+                "<CPF>{$this->config->cnpj}</CPF>"
             )
             . $tagNSU . "</distDFeInt>";
         //valida o xml da requisição
@@ -470,8 +470,6 @@ class Tools extends ToolsCommon
             $this->tpAmb,
             $ignore
         );
-        $cnpj = $this->config->cnpj ?? null;
-        $cpf = $this->config->cpf ?? null;
         $dt = new \DateTime('now', new \DateTimeZone($this->timezone));
         $dhEvento = $dt->format('Y-m-d\TH:i:sP');
         $sSeqEvento = str_pad($nSeqEvento, 3, "0", STR_PAD_LEFT);
@@ -481,10 +479,10 @@ class Tools extends ToolsCommon
             . "<infEvento Id=\"$eventId\">"
             . "<cOrgao>$cOrgao</cOrgao>"
             . "<tpAmb>$this->tpAmb</tpAmb>";
-        if (!empty($cnpj)) {
-            $request .= "<CNPJ>$cnpj</CNPJ>";
+        if (strlen($this->config->cnpj) == 14) {
+            $request .= "<CNPJ>{$this->config->cnpj}</CNPJ>";
         } else {
-            $request .= "<CPF>$cpf</CPF>";
+            $request .= "<CPF>{$this->config->cnpj}</CPF>";
         }
         $request .= "<chCTe>$chave</chCTe>"
             . "<dhEvento>$dhEvento</dhEvento>"
@@ -533,8 +531,8 @@ class Tools extends ToolsCommon
         //monta a consulta
         $consulta = "<consChNFe><chNFe>$chave</chNFe></consChNFe>"
             . ((strlen($this->config->cnpj) == 14) ?
-                "<CNPJ>" . $this->config->cnpj . "</CNPJ>" :
-                "<CPF>" . $this->config->cnpj . "</CPF>"
+                "<CNPJ>{$this->config->cnpj}</CNPJ>" :
+                "<CPF>{$this->config->cnpj}</CPF>"
             )
             . "</distDFeInt>";
         //valida o xml da requisição
