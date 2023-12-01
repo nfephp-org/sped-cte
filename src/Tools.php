@@ -79,6 +79,41 @@ class Tools extends ToolsCommon
         $this->lastResponse = $this->sendRequest($body, $parameters);
         return $this->lastResponse;
     }
+    
+    /**
+     * Check status of Batch of CTe sent by receipt of this shipment
+     * @param string $recibo
+     * @param int $tpAmb
+     * @return string
+     */
+    public function sefazConsultaRecibo($recibo, $tpAmb = null)
+    {
+        if (empty($tpAmb)) {
+            $tpAmb = $this->tpAmb;
+        }
+        //carrega serviço
+        $servico = 'CteRetRecepcao';
+        $this->checkContingencyForWebServices($servico);
+        $this->servico(
+            $servico,
+            $this->config->siglaUF,
+            $tpAmb
+        );
+        if ($this->urlService == '') {
+            $msg = "A consulta de CTe não está disponível na SEFAZ {$this->config->siglaUF}!!!";
+            throw new RuntimeException($msg);
+        }
+        $request = "<consReciCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
+            . "<tpAmb>$tpAmb</tpAmb>"
+            . "<nRec>$recibo</nRec>"
+            . "</consReciCTe>";
+        $this->isValid($this->urlVersion, $request, 'consReciCTe');
+        $this->lastRequest = $request;
+        $parameters = ['cteDadosMsg' => $request];
+        $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$request</cteDadosMsg>";
+        $this->lastResponse = $this->sendRequest($body, $parameters);
+        return $this->lastResponse;
+    }
 
     /**
      * Check the CTe status for the 44-digit key and retrieve the protocol
