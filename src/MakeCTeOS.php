@@ -2064,7 +2064,7 @@ class MakeCTeOS
             $dup,
             "vDup",
             $this->conditionalNumberFormatting($std->vDup),
-            true,
+            false,
             "Valor da duplicata"
         );
         $this->dom->appChild($this->cobr, $dup, 'Inclui duplicata na tag cobr');
