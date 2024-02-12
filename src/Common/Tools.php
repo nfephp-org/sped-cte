@@ -193,7 +193,7 @@ class Tools
         $this->setEnvironmentTimeZone($this->config->siglaUF);
         $this->certificate = $certificate;
         $this->setEnvironment($this->config->tpAmb);
-        $this->setEnvironmentHttpVersion($this->config->siglaUF);
+        $this->setEnvironmentHttpVersion();
         $this->contingency = new Contingency();
     }
 

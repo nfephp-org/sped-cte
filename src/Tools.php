@@ -372,7 +372,6 @@ class Tools extends ToolsCommon
      */
     public function sefazEPEC(&$xml)
     {
-        $tagAdic = '';
         $tpEvento = 110140;
         $nSeqEvento = 1;
         if ($this->contingency->type !== 'EPEC') {
@@ -431,7 +430,6 @@ class Tools extends ToolsCommon
             . "<vICMS>$vICMS</vICMS>"
             . "<vST>$vST</vST>"
             . "</dest>";
-
         return $this->sefazEvento(
             'AN',
             $chNFe,

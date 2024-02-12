@@ -258,9 +258,6 @@ class MakeCTeOS
     public function monta()
     {
         $this->errors = $this->dom->errors;
-        if (count($this->errors) > 0) {
-            return false;
-        }
         $this->buildCTe();
         if (!empty($this->infPercurso)) {
             foreach ($this->infPercurso as $perc) {
@@ -322,6 +319,9 @@ class MakeCTeOS
         // testa da chave
         $this->checkCTeKey($this->dom);
         $this->xml = $this->dom->saveXML();
+        if (count($this->errors) > 0) {
+            throw new RuntimeException('Existem erros nas tags. Obtenha os erros com getErrors().');
+        }
         return true;
     }
 
