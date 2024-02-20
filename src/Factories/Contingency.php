@@ -105,7 +105,7 @@ class Contingency
             'PI' => 'SVSP',
             'PR' => 'SVSP',
             'RJ' => 'SVSP',
-            'RN' => 'SVRS',
+            'RN' => 'SVSP',
             'RO' => 'SVSP',
             'RR' => 'SVRS',
             'RS' => 'SVSP',
