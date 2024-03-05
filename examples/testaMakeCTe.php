@@ -300,9 +300,7 @@ exit();
 
 
 //Envia lote e autoriza
-$axmls[] = $xml;
-$lote = substr(str_replace(',', '', number_format(microtime(true) * 1000000, 0)), 0, 15);
-$res = $tools->sefazEnviaLote($axmls, $lote);
+$res = $tools->sefazEnviaCTe($xml);
 
 //Converte resposta
 $stdCl = new Standardize($res);
@@ -312,18 +310,9 @@ $arr = $stdCl->toArray();
 //Output object
 $std = $stdCl->toStd();
 
-if ($std->cStat != 103) {//103 - Lote recebido com Sucesso
+if ($std->cStat != 100) {//103 - Lote recebido com Sucesso
     //processa erros
     print_r($arr);
-}
-
-//Consulta Recibo
-$res = $tools->sefazConsultaRecibo($std->infRec->nRec);
-$stdCl = new Standardize($res);
-$arr = $stdCl->toArray();
-$std = $stdCl->toStd();
-if ($std->protCTe->infProt->cStat == 100) {//Autorizado o uso do CT-e
-    //adicionar protocolo
 }
 echo '<pre>';
 print_r($arr);
