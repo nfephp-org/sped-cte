@@ -1228,7 +1228,7 @@ class MakeCTeOS
                     true,
                     "$identificador  Valor do ICMS"
                 );
-                if($std->vICMSDeson > 0) {
+                if($std->vICMSDeson > 0 && $std->cBenef) {
                     $this->dom->addChild(
                         $icms,
                         'vICMSDeson',
@@ -1236,8 +1236,6 @@ class MakeCTeOS
                         true,
                         "$identificador  Valor do ICMS Desonerado"
                     );
-                }
-                if($std->cBenef) {
                     $this->dom->addChild(
                         $icms,
                         'cBenef',
@@ -1256,7 +1254,7 @@ class MakeCTeOS
                     true,
                     "$identificador  Tributação do ICMS = 40"
                 );
-                if($std->vICMSDeson > 0) {
+                if($std->vICMSDeson > 0 && $std->cBenef) {
                     $this->dom->addChild(
                         $icms,
                         'vICMSDeson',
@@ -1264,8 +1262,6 @@ class MakeCTeOS
                         true,
                         "$identificador  Valor do ICMS Desonerado"
                     );
-                }
-                if($std->cBenef) {
                     $this->dom->addChild(
                         $icms,
                         'cBenef',
@@ -1284,7 +1280,7 @@ class MakeCTeOS
                     true,
                     "$identificador  Tributação do ICMS = 41"
                 );
-                if($std->vICMSDeson > 0) {
+                if($std->vICMSDeson > 0 && $std->cBenef) {
                     $this->dom->addChild(
                         $icms,
                         'vICMSDeson',
@@ -1292,8 +1288,6 @@ class MakeCTeOS
                         true,
                         "$identificador  Valor do ICMS Desonerado"
                     );
-                }
-                if($std->cBenef) {
                     $this->dom->addChild(
                         $icms,
                         'cBenef',
@@ -1312,7 +1306,7 @@ class MakeCTeOS
                     true,
                     "$identificador  Tributação do ICMS = 51"
                 );
-                if($std->vICMSDeson > 0) {
+                if($std->vICMSDeson > 0 && $std->cBenef) {
                     $this->dom->addChild(
                         $icms,
                         'vICMSDeson',
@@ -1320,8 +1314,6 @@ class MakeCTeOS
                         true,
                         "$identificador  Valor do ICMS Desonerado"
                     );
-                }
-                if($std->cBenef) {
                     $this->dom->addChild(
                         $icms,
                         'cBenef',
@@ -1372,7 +1364,7 @@ class MakeCTeOS
                         true,
                         "$identificador Valor ICMS Outra UF"
                     );
-                    if($std->vICMSDeson > 0) {
+                    if($std->vICMSDeson > 0 && $std->cBenef) {
                         $this->dom->addChild(
                             $icms,
                             'vICMSDeson',
@@ -1380,8 +1372,6 @@ class MakeCTeOS
                             true,
                             "$identificador  Valor do ICMS Desonerado"
                         );
-                    }
-                    if($std->cBenef) {
                         $this->dom->addChild(
                             $icms,
                             'cBenef',
@@ -1438,7 +1428,7 @@ class MakeCTeOS
                             "$identificador  Valor do Crédido"
                         );
                     }
-                    if($std->vICMSDeson > 0) {
+                    if($std->vICMSDeson > 0 && $std->cBenef) {
                         $this->dom->addChild(
                             $icms,
                             'vICMSDeson',
@@ -1446,8 +1436,6 @@ class MakeCTeOS
                             true,
                             "$identificador  Valor do ICMS Desonerado"
                         );
-                    }
-                    if($std->cBenef) {
                         $this->dom->addChild(
                             $icms,
                             'cBenef',
