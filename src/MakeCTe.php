@@ -2808,7 +2808,7 @@ class MakeCTe
                     true,
                     "$identificador  Valor do ICMS"
                 );
-                if($std->vICMSDeson > 0 && $std->cBenef) {
+                if ($std->vICMSDeson > 0 && $std->cBenef) {
                     $this->dom->addChild(
                         $icms,
                         'vICMSDeson',
@@ -2834,7 +2834,7 @@ class MakeCTe
                     true,
                     "$identificador  Tributação do ICMS = 40"
                 );
-                if($std->vICMSDeson > 0 && $std->cBenef) {
+                if ($std->vICMSDeson > 0 && $std->cBenef) {
                     $this->dom->addChild(
                         $icms,
                         'vICMSDeson',
@@ -2860,7 +2860,7 @@ class MakeCTe
                     true,
                     "$identificador  Tributação do ICMS = 41"
                 );
-                if($std->vICMSDeson > 0 && $std->cBenef) {
+                if ($std->vICMSDeson > 0 && $std->cBenef) {
                     $this->dom->addChild(
                         $icms,
                         'vICMSDeson',
@@ -2886,7 +2886,7 @@ class MakeCTe
                     true,
                     "$identificador  Tributação do ICMS = 51"
                 );
-                if($std->vICMSDeson > 0 && $std->cBenef) {
+                if ($std->vICMSDeson > 0 && $std->cBenef) {
                     $this->dom->addChild(
                         $icms,
                         'vICMSDeson',
@@ -2942,7 +2942,7 @@ class MakeCTe
                         "$identificador  Valor do Crédito"
                     );
                 }
-                if($std->vICMSDeson > 0 && $std->cBenef) {
+                if ($std->vICMSDeson > 0 && $std->cBenef) {
                     $this->dom->addChild(
                         $icms,
                         'vICMSDeson',
@@ -3000,7 +3000,7 @@ class MakeCTe
                         true,
                         "$identificador Valor ICMS Outra UF"
                     );
-                    if($std->vICMSDeson > 0) {
+                    if ($std->vICMSDeson > 0) {
                         $this->dom->addChild(
                             $icms,
                             'vICMSDeson',
@@ -3009,7 +3009,7 @@ class MakeCTe
                             "$identificador  Valor do ICMS Desonerado"
                         );
                     }
-                    if($std->cBenef) {
+                    if ($std->cBenef) {
                         $this->dom->addChild(
                             $icms,
                             'cBenef',
@@ -3066,7 +3066,7 @@ class MakeCTe
                             "$identificador  Valor do Crédido"
                         );
                     }
-                    if($std->vICMSDeson > 0) {
+                    if ($std->vICMSDeson > 0) {
                         $this->dom->addChild(
                             $icms,
                             'vICMSDeson',
@@ -3075,7 +3075,7 @@ class MakeCTe
                             "$identificador  Valor do ICMS Desonerado"
                         );
                     }
-                    if($std->cBenef) {
+                    if ($std->cBenef) {
                         $this->dom->addChild(
                             $icms,
                             'cBenef',

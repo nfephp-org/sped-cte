@@ -300,7 +300,7 @@ class MakeCTeOS
                 $this->dom->appChild($this->rodo, $this->infFretamento, 'Falta tag "infFretamento"');
                 $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
             }
-            if(!empty($this->infCteSub)) { // Caso seja um CT-e OS tipo substituição
+            if (!empty($this->infCteSub)) { // Caso seja um CT-e OS tipo substituição
                 $this->dom->appChild($this->infCTeNorm, $this->infCteSub, 'Falta tag "infCteSub"');
             }
         }
@@ -1228,7 +1228,7 @@ class MakeCTeOS
                     true,
                     "$identificador  Valor do ICMS"
                 );
-                if($std->vICMSDeson > 0 && $std->cBenef) {
+                if ($std->vICMSDeson > 0 && $std->cBenef) {
                     $this->dom->addChild(
                         $icms,
                         'vICMSDeson',
@@ -1254,7 +1254,7 @@ class MakeCTeOS
                     true,
                     "$identificador  Tributação do ICMS = 40"
                 );
-                if($std->vICMSDeson > 0 && $std->cBenef) {
+                if ($std->vICMSDeson > 0 && $std->cBenef) {
                     $this->dom->addChild(
                         $icms,
                         'vICMSDeson',
@@ -1280,7 +1280,7 @@ class MakeCTeOS
                     true,
                     "$identificador  Tributação do ICMS = 41"
                 );
-                if($std->vICMSDeson > 0 && $std->cBenef) {
+                if ($std->vICMSDeson > 0 && $std->cBenef) {
                     $this->dom->addChild(
                         $icms,
                         'vICMSDeson',
@@ -1306,7 +1306,7 @@ class MakeCTeOS
                     true,
                     "$identificador  Tributação do ICMS = 51"
                 );
-                if($std->vICMSDeson > 0 && $std->cBenef) {
+                if ($std->vICMSDeson > 0 && $std->cBenef) {
                     $this->dom->addChild(
                         $icms,
                         'vICMSDeson',
@@ -1364,7 +1364,7 @@ class MakeCTeOS
                         true,
                         "$identificador Valor ICMS Outra UF"
                     );
-                    if($std->vICMSDeson > 0 && $std->cBenef) {
+                    if ($std->vICMSDeson > 0 && $std->cBenef) {
                         $this->dom->addChild(
                             $icms,
                             'vICMSDeson',
@@ -1428,7 +1428,7 @@ class MakeCTeOS
                             "$identificador  Valor do Crédido"
                         );
                     }
-                    if($std->vICMSDeson > 0 && $std->cBenef) {
+                    if ($std->vICMSDeson > 0 && $std->cBenef) {
                         $this->dom->addChild(
                             $icms,
                             'vICMSDeson',
