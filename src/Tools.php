@@ -356,6 +356,12 @@ class Tools extends ToolsCommon
                 . "<xObs>$xJust</xObs>"
                 . "</evPrestDesacordo>";
         }
+        if ($tpEvento == 610111) {
+            $tagAdic = "<evCancPrestDesacordo>"
+                . "<descEvento>Cancelamento Prestacao do Servico em Desacordo</descEvento>"
+                . "<nProtEvPrestDes>$xJust</nProtEvPrestDes>"
+                . "</evCancPrestDesacordo>";
+        }
         return $this->sefazEvento(
             $ufEvento,
             $chNFe,
