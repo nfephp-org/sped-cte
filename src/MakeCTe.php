@@ -3123,7 +3123,7 @@ class MakeCTe
             $this->dom->addChild(
                 $this->imp,
                 'infAdFisco',
-                $std->infAdFisco,
+                Strings::replaceUnacceptableCharacters($std->infAdFisco),
                 false,
                 "$identificador Informações adicionais de interesse do Fisco"
             );
