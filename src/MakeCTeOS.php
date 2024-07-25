@@ -266,6 +266,12 @@ class MakeCTeOS
         }
         $this->dom->appChild($this->infCte, $this->ide, 'Falta tag "infCte"');
         if (!empty($this->compl)) {
+            foreach ($this->obsCont as $obsCont) {
+                $this->dom->appChild($this->compl, $obsCont, 'Falta tag "compl"');
+            }
+            foreach ($this->obsFisco as $obsFisco) {
+                $this->dom->appChild($this->compl, $obsFisco, 'Falta tag "compl"');
+            }
             $this->dom->appChild($this->infCte, $this->compl, 'Falta tag "infCte"');
         }
         // inclui o Node enderEmit dentro do emit antes da tag CRT
