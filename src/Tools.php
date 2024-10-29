@@ -56,6 +56,36 @@ class Tools extends ToolsCommon
     }
 
     /**
+     * Envia CTe Simplificado
+     * @param string $xml string do xml
+     * @return string soap response xml
+     */
+    public function sefazEnviaCTeSimp($xml)
+    {
+        $servico = 'CteRecepcaoSimp';
+        $this->checkContingencyForWebServices($servico);
+        if ($this->contingency->type != '') {
+            //em modo de contingencia
+            //esses xml deverão ser modificados e re-assinados e retornados
+            $xml = $this->correctCTeForContingencyMode($xml);
+        }
+        $this->servico(
+            $servico,
+            $this->config->siglaUF,
+            $this->tpAmb
+        );
+        $request = preg_replace("/<\?xml.*\?>/", "", $xml);
+        $this->isValid($this->urlVersion, $request, 'cteSimp');
+        $this->lastRequest = $request;
+        $gzdata = base64_encode(gzencode($request, 9));
+        //montagem dos dados da mensagem SOAP
+        $parameters = ['cteDadosMsg' => $gzdata];
+        $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$gzdata</cteDadosMsg>";
+        $this->lastResponse = $this->sendRequest($body, $parameters);
+        return $this->lastResponse;
+    }
+
+    /**
      * Request authorization to issue CTe OS with one document only
      * @param string $xml
      * @return string
@@ -161,8 +191,7 @@ class Tools extends ToolsCommon
         $ultNSU = 0,
         $numNSU = 0,
         $fonte = 'AN'
-    )
-    {
+    ) {
         //carrega serviço
         $servico = 'CTeDistribuicaoDFe';
         $this->checkContingencyForWebServices($servico);
@@ -241,8 +270,7 @@ class Tools extends ToolsCommon
         $itens = array(),
         $tipo = 1,
         $nSeqEvento = 1
-    )
-    {
+    ) {
         $uf = UFList::getUFByCode(substr($chNFe, 0, 2));
         $tpEvento = 111500;
         if ($tipo == 2) {
@@ -278,8 +306,7 @@ class Tools extends ToolsCommon
         $chNFe,
         $nProt,
         $nSeqEvento = 1
-    )
-    {
+    ) {
         $uf = UFList::getUFByCode(substr($chNFe, 0, 2));
         $tpEvento = 111502;
         $origEvent = 111500;
@@ -345,8 +372,7 @@ class Tools extends ToolsCommon
         $xJust = '',
         $nSeqEvento = 1,
         $ufEvento = 'RS'
-    )
-    {
+    ) {
         $tagAdic = '';
         if ($tpEvento == 610110) {
             $xJust = Strings::replaceSpecialsChars(substr(trim($xJust), 0, 255));
@@ -378,6 +404,7 @@ class Tools extends ToolsCommon
      */
     public function sefazEPEC(&$xml)
     {
+        $tagAdic = '';
         $tpEvento = 110140;
         $nSeqEvento = 1;
         if ($this->contingency->type !== 'EPEC') {
@@ -460,8 +487,7 @@ class Tools extends ToolsCommon
         $tpEvento,
         $nSeqEvento = 1,
         $tagAdic = ''
-    )
-    {
+    ) {
         $ignore = false;
         if ($tpEvento == 110140) {
             $ignore = true;
@@ -567,7 +593,7 @@ class Tools extends ToolsCommon
         if ($this->modelo != 65) {
             throw new RuntimeException(
                 "Esta operação é exclusiva de NFCe modelo [65], "
-                . "você está usando modelo [55]."
+                    . "você está usando modelo [55]."
             );
         }
         $raizCNPJ = substr($this->config->cnpj, 0, -6);
@@ -680,8 +706,7 @@ class Tools extends ToolsCommon
         $nSeqEvento,
         $dhEventoEntrega,
         $aNFes = []
-    )
-    {
+    ) {
         $uf = $this->validKeyByUF($chave);
         $tpEvento = 110180;
 

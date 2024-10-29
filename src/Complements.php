@@ -29,7 +29,7 @@ class Complements
         }
         $st = new Standardize();
         $key = ucfirst($st->whichIs($request));
-        if ($key != 'CTe' && $key != 'CTeOS' && $key != 'EventoCTe' && $key != 'InutCTe') {
+        if ($key != 'CTe' && $key != 'CTeSimp' && $key != 'CTeOS' && $key != 'EventoCTe' && $key != 'InutCTe') {
             //wrong document, this document is not able to recieve a protocol
             throw DocumentsException::wrongDocument(0, $key);
         }
@@ -120,6 +120,64 @@ class Complements
         $req->loadXML($request);
 
         $cte = $req->getElementsByTagName('CTe')->item(0);
+        $infCTe = $req->getElementsByTagName('infCte')->item(0);
+        $versao = $infCTe->getAttribute("versao");
+        $chave = preg_replace('/[^0-9]/', '', $infCTe->getAttribute("Id"));
+        $digCTe = $req->getElementsByTagName('DigestValue')
+            ->item(0)
+            ->nodeValue;
+
+        $ret = new DOMDocument('1.0', 'UTF-8');
+        $ret->preserveWhiteSpace = false;
+        $ret->formatOutput = false;
+        $ret->loadXML($response);
+        $retProt = $ret->getElementsByTagName('protCTe')->item(0);
+        if (!isset($retProt)) {
+            throw DocumentsException::wrongDocument(3, "&lt;protCTe&gt;");
+        }
+        $infProt = $ret->getElementsByTagName('infProt')->item(0);
+        $cStat  = $infProt->getElementsByTagName('cStat')->item(0)->nodeValue;
+        $xMotivo = $infProt->getElementsByTagName('xMotivo')->item(0)->nodeValue;
+        $dig = $infProt->getElementsByTagName("digVal")->item(0);
+        $digProt = '000';
+        if (isset($dig)) {
+            $digProt = $dig->nodeValue;
+        }
+        //100 Autorizado
+        //150 Autorizado fora do prazo
+        //110 Uso Denegado
+        //205 CTe Denegada
+        //301 Uso Denegado: Irregularidade fiscal do Emitente..
+        $cstatpermit = ['100', '150', '110', '205', '301'];
+        if (!in_array($cStat, $cstatpermit)) {
+            throw DocumentsException::wrongDocument(4, "[$cStat] $xMotivo");
+        }
+        if ($digCTe !== $digProt) {
+            throw DocumentsException::wrongDocument(5, "O digest é diferente");
+        }
+        return self::join(
+            $req->saveXML($cte),
+            $ret->saveXML($retProt),
+            'cteProc',
+            $versao
+        );
+    }
+
+    /**
+     * Authorize CTeSimp
+     * @param string $request
+     * @param string $response
+     * @return string
+     * @throws InvalidArgumentException
+     */
+    protected static function addCTeSimpProtocol($request, $response)
+    {
+        $req = new DOMDocument('1.0', 'UTF-8');
+        $req->preserveWhiteSpace = false;
+        $req->formatOutput = false;
+        $req->loadXML($request);
+
+        $cte = $req->getElementsByTagName('CTeSimp')->item(0);
         $infCTe = $req->getElementsByTagName('infCte')->item(0);
         $versao = $infCTe->getAttribute("versao");
         $chave = preg_replace('/[^0-9]/', '', $infCTe->getAttribute("Id"));
