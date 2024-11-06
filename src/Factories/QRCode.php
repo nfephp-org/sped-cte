@@ -38,7 +38,13 @@ class QRCode
         if ($mod == 67) {
             $cte = $dom->getElementsByTagName('CTeOS')->item(0);
         } else {
-            $cte = $dom->getElementsByTagName('CTe')->item(0);
+            $tpCTe = (int)$dom->getElementsByTagName('tpCTe')->item(0)->nodeValue;
+            if (($tpCTe == 5) || ($tpCTe == 6)) {
+                // CTe simplificado
+                $cte = $dom->getElementsByTagName('CTeSimp')->item(0);
+            }else{
+                $cte = $dom->getElementsByTagName('CTe')->item(0);
+            }
         }
         $infCte = $dom->getElementsByTagName('infCte')->item(0);
         $ide = $dom->getElementsByTagName('ide')->item(0);

@@ -187,8 +187,8 @@ class Tools
     {
         $this->config = json_decode($configJson);
         $this->pathwsfiles = realpath(
-                __DIR__ . '/../../storage'
-            ) . '/';
+            __DIR__ . '/../../storage'
+        ) . '/';
         $this->version($this->config->versao);
         $this->setEnvironmentTimeZone($this->config->siglaUF);
         $this->certificate = $certificate;
@@ -279,8 +279,8 @@ class Tools
             $this->versao = $version;
             $this->config->schemes = $this->availableVersions[$version];
             $this->pathschemes = realpath(
-                    __DIR__ . '/../../schemes/' . $this->config->schemes
-                ) . '/';
+                __DIR__ . '/../../schemes/' . $this->config->schemes
+            ) . '/';
         }
         return $this->versao;
     }
@@ -346,7 +346,14 @@ class Tools
         $dom->loadXML($signed);
         //exception will be throw if CTe is not valid
         $modelo = $dom->getElementsByTagName('mod')->item(0)->nodeValue;
-        $method = 'cte';
+
+        $tpCTe = (int)$dom->getElementsByTagName('tpCTe')->item(0)->nodeValue;
+        if (($tpCTe == 5) || ($tpCTe == 6)) {
+            $method = 'cteSimp';
+        } else {
+            $method = 'cte';
+        }
+
         if ($modelo == 67) {
             $method = 'cteOS';
         }
@@ -482,7 +489,7 @@ class Tools
             if (array_search($type, $permit[$mod]) === false) {
                 throw new RuntimeException(
                     "Esse modo de contingência [$type] não é aceito "
-                    . "para o modelo [$mod]"
+                        . "para o modelo [$mod]"
                 );
             }
         }
@@ -527,8 +534,7 @@ class Tools
         $uf,
         $tpAmb,
         $ignoreContingency = false
-    )
-    {
+    ) {
         $ambiente = $tpAmb == 1 ? "producao" : "homologacao";
         $webs = new Webservices($this->getXmlUrlPath());
         $sigla = $uf;
@@ -542,15 +548,15 @@ class Tools
         if ($stdServ === false) {
             throw new \RuntimeException(
                 "Nenhum serviço foi localizado para esta unidade "
-                . "da federação [$sigla], com o modelo [$this->modelo]."
+                    . "da federação [$sigla], com o modelo [$this->modelo]."
             );
         }
         if (empty($stdServ->$service->url)) {
             throw new \RuntimeException(
                 "Este serviço [$service] não está disponivel para esta "
-                . "unidade da federação [$uf] ou para este modelo de Nota ["
-                . $this->modelo
-                . "]."
+                    . "unidade da federação [$uf] ou para este modelo de Nota ["
+                    . $this->modelo
+                    . "]."
             );
         }
         //recuperação do cUF
@@ -642,15 +648,15 @@ class Tools
         if ($std === false) {
             throw new \RuntimeException(
                 "Nenhum serviço foi localizado para esta unidade "
-                . "da federação [$sigla], com o modelo [$this->modelo]."
+                    . "da federação [$sigla], com o modelo [$this->modelo]."
             );
         }
         if (empty($std->QRCode->url)) {
             throw new \RuntimeException(
                 "Este serviço [QRCode] não está disponivel para esta "
-                . "unidade da federação [$sigla] ou para este modelo de Nota ["
-                . $this->modelo
-                . "]."
+                    . "unidade da federação [$sigla] ou para este modelo de Nota ["
+                    . $this->modelo
+                    . "]."
             );
         }
         $signed = QRCode::putQRTag(
