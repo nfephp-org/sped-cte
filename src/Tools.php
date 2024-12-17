@@ -826,7 +826,7 @@ class Tools extends ToolsCommon
 
         $infJustMotivo = '';
         if ($xJustMotivo) {
-            $infJustMotivo = "<xJustMotivo>$xJustMotivo</longitude>";
+            $infJustMotivo = "<xJustMotivo>$xJustMotivo</xJustMotivo>";
         }
 
         $tagAdic = "<evIECTe>"
