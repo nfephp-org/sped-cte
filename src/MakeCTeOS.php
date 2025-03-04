@@ -2379,6 +2379,15 @@ class MakeCTeOS
         return Strings::equilizeParameters($std, $possible, $this->replaceAccentedChars);
     }
 
+     /**
+     * Calcula hash sha1 retornando Base64Binary
+     */
+    protected function hashCSRT(string $CSRT): string
+    {
+        $comb = $CSRT . $this->chCTe;
+        return base64_encode(sha1($comb, true));
+    }
+
     /**
      * Formatação numerica condicional
      * @param string|float|int|null $value
