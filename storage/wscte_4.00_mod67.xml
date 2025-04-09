@@ -16,14 +16,14 @@
             <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://hcte.fazenda.mg.gov.br/cte/services/CTeConsultaV4</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://hcte.fazenda.mg.gov.br/cte/services/CTeStatusServicoV4</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://hcte.fazenda.mg.gov.br/cte/services/CTeRecepcaoEventoV4</CteRecepcaoEvento>
-            <QRCode method='QRCode' operation='QRCode' version='4.00'>https://cte.fazenda.mg.gov.br/portalcte/sistema/qrcode.xhtml</QRCode>
+            <QRCode method='QRCode' operation='QRCode' version='4.00'>https://portalcte.fazenda.mg.gov.br/portalcte/sistema/qrcode.xhtml</QRCode>
         </homologacao>
         <producao>
             <CteRecepcao method='cteRecepcaoOS' operation='CTeRecepcaoOSV4' version='4.00'>https://cte.fazenda.mg.gov.br/cte/services/CTeRecepcaoOSV4</CteRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://cte.fazenda.mg.gov.br/cte/services/CTeConsultaV4</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://cte.fazenda.mg.gov.br/cte/services/CTeStatusServicoV4</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://cte.fazenda.mg.gov.br/cte/services/CTeRecepcaoEventoV4</CteRecepcaoEvento>
-            <QRCode method='QRCode' operation='QRCode' version='4.00'>https://cte.fazenda.mg.gov.br/portalcte/sistema/qrcode.xhtml</QRCode>
+            <QRCode method='QRCode' operation='QRCode' version='4.00'>https://portalcte.fazenda.mg.gov.br/portalcte/sistema/qrcode.xhtml</QRCode>
         </producao>
     </UF>
     <UF>
