@@ -16,14 +16,14 @@
             <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://hcte.fazenda.mg.gov.br/cte/services/CTeConsultaV4</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://hcte.fazenda.mg.gov.br/cte/services/CTeStatusServicoV4</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://hcte.fazenda.mg.gov.br/cte/services/CTeRecepcaoEventoV4</CteRecepcaoEvento>
-            <QRCode method='QRCode' operation='QRCode' version='4.00'>https://cte.fazenda.mg.gov.br/portalcte/sistema/qrcode.xhtml</QRCode>
+            <QRCode method='QRCode' operation='QRCode' version='4.00'>https://portalcte.fazenda.mg.gov.br/portalcte/sistema/qrcode.xhtml</QRCode>
         </homologacao>
         <producao>
             <CteRecepcao method='cteRecepcao' operation='CTeRecepcaoGTVeV4' version='4.00'>https://cte.fazenda.mg.gov.br/cte/services/CTeRecepcaoGTVeV4</CteRecepcao>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://cte.fazenda.mg.gov.br/cte/services/CTeConsultaV4</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://cte.fazenda.mg.gov.br/cte/services/CTeStatusServicoV4</CteStatusServico>
             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://cte.fazenda.mg.gov.br/cte/services/CTeRecepcaoEventoV4</CteRecepcaoEvento>
-            <QRCode method='QRCode' operation='QRCode' version='4.00'>https://cte.fazenda.mg.gov.br/portalcte/sistema/qrcode.xhtml</QRCode>
+            <QRCode method='QRCode' operation='QRCode' version='4.00'>https://portalcte.fazenda.mg.gov.br/portalcte/sistema/qrcode.xhtml</QRCode>
         </producao>
     </UF>
     <UF>
@@ -88,9 +88,9 @@
         </homologacao>
         <producao>
             <CteRecepcao method='cteRecepcao' operation='CTeRecepcaoGTVeV4' version='4.00'>https://cte.svrs.rs.gov.br/ws/CTeRecepcaoGTVeV4/CTeRecepcaoGTVeV4.asmx</CteRecepcao>
-            <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>	https://cte.svrs.rs.gov.br/ws/CTeConsultaV4/CTeConsultaV4.asmx</CteConsultaProtocolo>
+            <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://cte.svrs.rs.gov.br/ws/CTeConsultaV4/CTeConsultaV4.asmx</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://cte.svrs.rs.gov.br/ws/CTeStatusServicoV4/CTeStatusServicoV4.asmx</CteStatusServico>
-            <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>	https://cte.svrs.rs.gov.br/ws/CTeRecepcaoEventoV4/CTeRecepcaoEventoV4.asmx</CteRecepcaoEvento>
+            <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://cte.svrs.rs.gov.br/ws/CTeRecepcaoEventoV4/CTeRecepcaoEventoV4.asmx</CteRecepcaoEvento>
             <QRCode method='QRCode' operation='QRCode' version='4.00'>https://dfe-portal.svrs.rs.gov.br/cte/qrCode</QRCode>
         </producao>
     </UF>
@@ -122,9 +122,9 @@
         </homologacao>
         <producao>
             <CteRecepcao method='cteRecepcao' operation='CTeRecepcaoGTVeV4' version='4.00'>https://cte.svrs.rs.gov.br/ws/CTeRecepcaoGTVeV4/CTeRecepcaoGTVeV4.asmx</CteRecepcao>
-            <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>	https://cte.svrs.rs.gov.br/ws/CTeConsultaV4/CTeConsultaV4.asmx</CteConsultaProtocolo>
+            <CteConsultaProtocolo method='cteConsultaCT' operation='CTeConsultaV4' version='4.00'>https://cte.svrs.rs.gov.br/ws/CTeConsultaV4/CTeConsultaV4.asmx</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CTeStatusServicoV4' version='4.00'>https://cte.svrs.rs.gov.br/ws/CTeStatusServicoV4/CTeStatusServicoV4.asmx</CteStatusServico>
-            <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>	https://cte.svrs.rs.gov.br/ws/CTeRecepcaoEventoV4/CTeRecepcaoEventoV4.asmx</CteRecepcaoEvento>
+            <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CTeRecepcaoEventoV4' version='4.00'>https://cte.svrs.rs.gov.br/ws/CTeRecepcaoEventoV4/CTeRecepcaoEventoV4.asmx</CteRecepcaoEvento>
             <QRCode method='QRCode' operation='QRCode' version='4.00'>https://dfe-portal.svrs.rs.gov.br/cte/qrCode</QRCode>
         </producao>
     </UF>
