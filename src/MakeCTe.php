@@ -3972,7 +3972,7 @@ class MakeCTe
         $this->dom->addChild(
             $this->duto,
             'vTar',
-            $this->conditionalNumberFormatting($std->vTar),
+            $this->conditionalNumberFormatting($std->vTar, 6),
             false,
             $identificador . 'Valor da tarifa '
         );
