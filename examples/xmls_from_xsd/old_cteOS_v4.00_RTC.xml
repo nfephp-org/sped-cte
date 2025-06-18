@@ -83,11 +83,11 @@
         <xMun>string</xMun>
         <!--Optional:-->
         <CEP>string</CEP>
-        <UF>PI</UF>
+        <UF>MA</UF>
         <!--Optional:-->
         <fone>string</fone>
       </enderEmit>
-      <CRT>4</CRT>
+      <CRT>3</CRT>
     </emit>
     <!--Optional:-->
     <toma>
@@ -111,7 +111,7 @@
         <xMun>string</xMun>
         <!--Optional:-->
         <CEP>string</CEP>
-        <UF>PB</UF>
+        <UF>AC</UF>
         <!--Optional:-->
         <cPais>string</cPais>
         <!--Optional:-->
@@ -294,15 +294,6 @@
             <vCredPres>string</vCredPres>
             <vCredPresCondSus>string</vCredPresCondSus>
           </gCBSCredPres>
-          <!--Optional:-->
-          <gTribCompraGov>
-            <pAliqIBSUF>string</pAliqIBSUF>
-            <vTribIBSUF>string</vTribIBSUF>
-            <pAliqIBSMun>string</pAliqIBSMun>
-            <vTribIBSMun>string</vTribIBSMun>
-            <pAliqCBS>string</pAliqCBS>
-            <vTribCBS>string</vTribCBS>
-          </gTribCompraGov>
         </gIBSCBS>
       </IBSCBS>
       <!--Optional:-->
@@ -377,7 +368,7 @@
         <chCTe>string</chCTe>
         <!--1 or more repetitions:-->
         <Comp>
-          <tpComp>5</tpComp>
+          <tpComp>6</tpComp>
           <vComp>string</vComp>
           <!--Optional:-->
           <xComp>string</xComp>
@@ -401,35 +392,35 @@
       <email>string</email>
       <fone>string</fone>
       <idCSRT>string</idCSRT>
-      <hashCSRT>ZmxhbW1hc2ZsYW1tYXNmbGFtbWE=</hashCSRT>
+      <hashCSRT>bnViaWJ1c251YmlidXNudWJpYnU=</hashCSRT>
     </infRespTec>
   </infCte>
   <!--Optional:-->
   <infCTeSupl>
     <qrCodCTe>stringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstring</qrCodCTe>
   </infCTeSupl>
-  <xd:Signature Id="string">
-    <xd:SignedInfo Id="string">
-      <xd:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
-      <xd:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
-      <xd:Reference Id="string" URI="http://www.test.edu/rapidum/ac" Type="http://www.my.org/circum/aris">
-        <xd:Transforms>
-          <xd:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature">
-            <xd:XPath>string</xd:XPath>
-          </xd:Transform>
-          <xd:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315">
-            <xd:XPath>string</xd:XPath>
-          </xd:Transform>
-        </xd:Transforms>
-        <xd:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
-        <xd:DigestValue>YXJjZQ==</xd:DigestValue>
-      </xd:Reference>
-    </xd:SignedInfo>
-    <xd:SignatureValue Id="string">Y2xhdXN0cmE=</xd:SignatureValue>
-    <xd:KeyInfo Id="string">
-      <xd:X509Data>
-        <xd:X509Certificate>Y2lyY3Vt</xd:X509Certificate>
-      </xd:X509Data>
-    </xd:KeyInfo>
-  </xd:Signature>
+  <Signature Id="string">
+    <SignedInfo Id="string">
+      <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+      <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+      <Reference Id="string" URI="http://www.corp.gov/hoc/rapidum" Type="http://www.any.gov/speluncis/circum">
+        <Transforms>
+          <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature">
+            <XPath>string</XPath>
+          </Transform>
+          <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315">
+            <XPath>string</XPath>
+          </Transform>
+        </Transforms>
+        <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+        <DigestValue>cHJhZXRlcmVh</DigestValue>
+      </Reference>
+    </SignedInfo>
+    <SignatureValue Id="string">YXJjZQ==</SignatureValue>
+    <KeyInfo Id="string">
+      <X509Data>
+        <X509Certificate>Y2xhdXN0cmE=</X509Certificate>
+      </X509Data>
+    </KeyInfo>
+  </Signature>
 </CTeOS>
