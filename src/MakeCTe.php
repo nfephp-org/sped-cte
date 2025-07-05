@@ -4763,7 +4763,7 @@ class MakeCTe
         $this->dom->addChild(
             $veicNovos,
             'vUnit',
-            $std->vUnit,
+            $this->conditionalNumberFormatting($std->vUnit),
             true,
             $identificador . 'Valor Unitário do Veículo '
         );
