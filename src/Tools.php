@@ -369,9 +369,9 @@ class Tools extends ToolsCommon
     public function sefazManifesta(
         $chNFe,
         $tpEvento,
-        $xJust = '',
-        $nSeqEvento = 1,
-        $ufEvento = 'RS'
+        $xJust,
+        $nSeqEvento,
+        $ufEvento
     ) {
         $tagAdic = '';
         if ($tpEvento == 610110) {
