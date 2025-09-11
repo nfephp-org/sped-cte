@@ -230,6 +230,10 @@ class MakeCTeOS
     /**
      * @var DOMElement
      */
+    protected $infTribFed;
+    /**
+     * @var DOMElement
+     */
     protected $IBSCBS;
     /**
      * @var DOMElement
@@ -351,6 +355,9 @@ class MakeCTeOS
         }
         if (isset($this->ICMSUFFim)) {
             $this->dom->appChild($this->imp, $this->ICMSUFFim, 'Falta tag "imp"');
+        }
+        if (isset($this->infTribFed)) {
+            $this->dom->appChild($this->imp, $this->infTribFed, 'Falta tag "imp"');
         }
         if ($this->schema == 'PL_CTe_400_RTC') {
             if (isset($this->IBSCBS)) {
@@ -1683,7 +1690,7 @@ class MakeCTeOS
             false,
             "$identificador  Valor de CSLL"
         );
-        $this->imp->appendChild($tagInfTribFed);
+        $this->infTribFed = $tagInfTribFed;
     }
 
     /**

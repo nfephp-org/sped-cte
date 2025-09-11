@@ -1499,7 +1499,8 @@ class MakeCTeSimp
     {
         $possible = [
             'vTPrest',
-            'vTRec'
+            'vTRec',
+            'vTotDFe'
         ];
         $std = $this->equilizeParameters($std, $possible);
         $identificador = '#216 <total> - ';
@@ -1517,6 +1518,13 @@ class MakeCTeSimp
             $this->conditionalNumberFormatting($std->vTRec),
             true,
             $identificador . 'Valor a Receber'
+        );
+        $this->dom->addChild(
+            $this->total,
+            'vTotDFe',
+            $this->conditionalNumberFormatting($std->vTotDFe),
+            true,
+            $identificador . 'Valor total a Receber'
         );
         return $this->total;
     }
