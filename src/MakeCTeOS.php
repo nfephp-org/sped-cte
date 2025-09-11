@@ -2450,6 +2450,7 @@ class MakeCTeOS
             'gIBSMun_pAliqEfet', //opcional Alíquota Efetiva do IBS de competência do Município
             // que será aplicada a BC 3v2-4
             'gIBSMun_vIBSMun', //opcional Valor do IBS de competência do Município 13v2
+            // Valor do IBS (soma de vIBSUF e vIBSMun) 13v2
             'vIBS',
             // dados CBS (imposto federal)
             'gCBS_pCBS', //opcional Alíquota da CBS 3v2-4
@@ -2628,9 +2629,6 @@ class MakeCTeOS
                 "$identificador Valor do IBS de competência do Município (vIBSMun)"
             );
             $gIBSCBS->appendChild($gIBSMun);
-
-
-
             $identificador = "UB12 <IBSCBS/gIBSCBS> -";
             $this->dom->addChild(
                 $gIBSCBS,
@@ -2639,9 +2637,6 @@ class MakeCTeOS
                 true,
                 "$identificador Valor do Total do IBS"
             );
-
-
-
             //gripo de Informações da CBS
             $identificador = "UB12 <IBSCBS/gIBSCBS/gCBS> -";
             $gCBS = $this->dom->createElement("gCBS");
