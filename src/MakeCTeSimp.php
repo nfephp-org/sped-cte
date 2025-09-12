@@ -338,10 +338,6 @@ class MakeCTeSimp
      * @var DOMElement
      */
     protected $gTribCompraGov;
-    /**
-     * @var DOMElement
-     */
-    protected $vTotDFe;
 
     public function __construct(string $schema = 'PL_CTe_400')
     {
@@ -556,9 +552,6 @@ class MakeCTeSimp
                     $this->dom->appChild($node, $this->gCBSCredPres, 'Falta tag "gIBSCBS"');
                 }
                 $this->dom->appChild($this->imp, $this->IBSCBS, 'Falta tag "imp"');
-            }
-            if (isset($this->vTotDFe)) {
-                $this->dom->appChild($this->imp, $this->vTotDFe, 'Falta tag "imp"');
             }
         }
 
@@ -3648,8 +3641,6 @@ class MakeCTeSimp
             'gCBS_pRedAliq', //opcional Percentual da redução de alíquota 3v2-4
             'gCBS_pAliqEfet', //opcional Alíquota Efetiva da CBS que será aplicada a Base de Cálculo 3v2-4
             'gCBS_vCBS', //opcional Valor da CBS 13v2
-            // total
-            'vTotDFe'
         ];
         $std = $this->equilizeParameters($std, $possible);
         $identificador = "UB12 <IBSCBS> -";
@@ -3895,10 +3886,6 @@ class MakeCTeSimp
             $ibscbs->appendChild($gIBSCBS);
         }
         $this->IBSCBS = $ibscbs;
-        if (!empty($std->vTotDFe)) {
-            $this->vTotDFe = $this->dom->createElement("vTotDFe", $this->conditionalNumberFormatting($std->vTotDFe));
-        }
-
         return $ibscbs;
     }
 
