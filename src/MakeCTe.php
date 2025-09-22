@@ -587,8 +587,8 @@ class MakeCTe
         if (isset($this->infAdFisco)) {
             $this->dom->appChild($this->imp, $this->infAdFisco, 'Falta tag "imp"');
         }
-        if (isset($this->vICMSUFFim)) {
-            $this->dom->appChild($this->imp, $this->vICMSUFFim, 'Falta tag "imp"');
+        if (isset($this->ICMSUFFim)) {
+            $this->dom->appChild($this->imp, $this->ICMSUFFim, 'Falta tag "imp"');
         }
         if ($this->schema == 'PL_CTe_400_RTC') {
             if (isset($this->IBSCBS)) {
@@ -5145,6 +5145,8 @@ class MakeCTe
             'gIBSMun_pAliqEfet', //opcional Alíquota Efetiva do IBS de competência do Município
             // que será aplicada a BC 3v2-4
             'gIBSMun_vIBSMun', //opcional Valor do IBS de competência do Município 13v2
+            // Valor do IBS (soma de vIBSUF e vIBSMun) 13v2
+            'vIBS',
             // dados CBS (imposto federal)
             'gCBS_pCBS', //opcional Alíquota da CBS 3v2-4
             // OBRIGATÓRIO se vBC for informado
@@ -5322,6 +5324,14 @@ class MakeCTe
                 "$identificador Valor do IBS de competência do Município (vIBSMun)"
             );
             $gIBSCBS->appendChild($gIBSMun);
+            $identificador = "UB12 <IBSCBS/gIBSCBS> -";
+            $this->dom->addChild(
+                $gIBSCBS,
+                "vIBS",
+                $this->conditionalNumberFormatting($std->vIBS),
+                true,
+                "$identificador Valor do Total do IBS"
+            );
             //gripo de Informações da CBS
             $identificador = "UB12 <IBSCBS/gIBSCBS/gCBS> -";
             $gCBS = $this->dom->createElement("gCBS");
@@ -5393,7 +5403,9 @@ class MakeCTe
             $ibscbs->appendChild($gIBSCBS);
         }
         $this->IBSCBS = $ibscbs;
-        $this->vTotDFe = $this->dom->createElement("vTotDFe", $this->conditionalNumberFormatting($std->vTotDFe));
+        if (!empty($std->vTotDFe)) {
+            $this->vTotDFe = $this->dom->createElement("vTotDFe", $this->conditionalNumberFormatting($std->vTotDFe));
+        }
         return $ibscbs;
     }
 
