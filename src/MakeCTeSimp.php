@@ -1512,13 +1512,15 @@ class MakeCTeSimp
             true,
             $identificador . 'Valor a Receber'
         );
-        $this->dom->addChild(
-            $this->total,
-            'vTotDFe',
-            $this->conditionalNumberFormatting($std->vTotDFe),
-            true,
-            $identificador . 'Valor total a Receber'
-        );
+        if ($std->vTotDFe > 0) {
+            $this->dom->addChild(
+                $this->total,
+                'vTotDFe',
+                $this->conditionalNumberFormatting($std->vTotDFe),
+                true,
+                $identificador . 'Valor total a Receber'
+            );
+        }
         return $this->total;
     }
 
