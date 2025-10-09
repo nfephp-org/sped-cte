@@ -5146,7 +5146,7 @@ class MakeCTe
             // que será aplicada a BC 3v2-4
             'gIBSMun_vIBSMun', //opcional Valor do IBS de competência do Município 13v2
             // Valor do IBS (soma de vIBSUF e vIBSMun) 13v2
-            'vIBS',
+            //'vIBS',
             // dados CBS (imposto federal)
             'gCBS_pCBS', //opcional Alíquota da CBS 3v2-4
             // OBRIGATÓRIO se vBC for informado
@@ -5178,7 +5178,7 @@ class MakeCTe
             "$identificador Código de Classificação Tributária do IBS e CBS (cClassTrib)"
         );
         //gIBSCBS é opcional e também é um choice com IBSCBSMono
-        if (!empty($std->vBC)) {
+        if (!is_null($std->vBC) && is_numeric($std->vBC)) {
             $identificador = "UB12 <IBSCBS/gIBSCBS> -";
             $gIBSCBS = $this->dom->createElement("gIBSCBS");
             $this->dom->addChild(
@@ -5324,14 +5324,14 @@ class MakeCTe
                 "$identificador Valor do IBS de competência do Município (vIBSMun)"
             );
             $gIBSCBS->appendChild($gIBSMun);
-            $identificador = "UB12 <IBSCBS/gIBSCBS> -";
-            $this->dom->addChild(
-                $gIBSCBS,
-                "vIBS",
-                $this->conditionalNumberFormatting($std->vIBS),
-                true,
-                "$identificador Valor do Total do IBS"
-            );
+//            $identificador = "UB12 <IBSCBS/gIBSCBS> -";
+//            $this->dom->addChild(
+//                $gIBSCBS,
+//                "vIBS",
+//                $this->conditionalNumberFormatting($std->vIBS),
+//                true,
+//                "$identificador Valor do Total do IBS"
+//            );
             //gripo de Informações da CBS
             $identificador = "UB12 <IBSCBS/gIBSCBS/gCBS> -";
             $gCBS = $this->dom->createElement("gCBS");
@@ -5526,20 +5526,23 @@ class MakeCTe
             true,
             "$identificador Percentual do Crédito Presumido (pCredPres)"
         );
-        $this->dom->addChild(
-            $gIBSCredPres,
-            "vCredPres",
-            $this->conditionalNumberFormatting($std->vCredPres),
-            true,
-            "$identificador Valor do Crédito Presumido (vCredPres)"
-        );
-        $this->dom->addChild(
-            $gIBSCredPres,
-            "vCredPresCondSus",
-            $this->conditionalNumberFormatting($std->vCredPresCondSus),
-            true,
-            "$identificador Valor do Crédito Presumido em condição suspensiva. (vCredPres)"
-        );
+        if (isset($std->vCredPres)) {
+            $this->dom->addChild(
+                $gIBSCredPres,
+                "vCredPres",
+                $this->conditionalNumberFormatting($std->vCredPres),
+                true,
+                "$identificador Valor do Crédito Presumido (vCredPres)"
+            );
+        } else {
+            $this->dom->addChild(
+                $gIBSCredPres,
+                "vCredPresCondSus",
+                $this->conditionalNumberFormatting($std->vCredPresCondSus),
+                true,
+                "$identificador Valor do Crédito Presumido em condição suspensiva. (vCredPres)"
+            );
+        }
         $this->gIBSCredPres = $gIBSCredPres;
         return $gIBSCredPres;
     }
@@ -5577,20 +5580,23 @@ class MakeCTe
             true,
             "$identificador Percentual do Crédito Presumido (pCredPres)"
         );
-        $this->dom->addChild(
-            $gCBSCredPres,
-            "vCredPres",
-            $this->conditionalNumberFormatting($std->vCredPres),
-            true,
-            "$identificador Valor do Crédito Presumido (vCredPres)"
-        );
-        $this->dom->addChild(
-            $gCBSCredPres,
-            "vCredPresCondSus",
-            $this->conditionalNumberFormatting($std->vCredPresCondSus),
-            true,
-            "$identificador Valor do Crédito Presumido em condição suspensiva. (vCredPres)"
-        );
+        if (isset($std->vCredPres)) {
+            $this->dom->addChild(
+                $gCBSCredPres,
+                "vCredPres",
+                $this->conditionalNumberFormatting($std->vCredPres),
+                true,
+                "$identificador Valor do Crédito Presumido (vCredPres)"
+            );
+        } else {
+            $this->dom->addChild(
+                $gCBSCredPres,
+                "vCredPresCondSus",
+                $this->conditionalNumberFormatting($std->vCredPresCondSus),
+                true,
+                "$identificador Valor do Crédito Presumido em condição suspensiva. (vCredPres)"
+            );
+        }
         $this->gCBSCredPres = $gCBSCredPres;
         return $gCBSCredPres;
     }
