@@ -1512,13 +1512,15 @@ class MakeCTeSimp
             true,
             $identificador . 'Valor a Receber'
         );
-        $this->dom->addChild(
-            $this->total,
-            'vTotDFe',
-            $this->conditionalNumberFormatting($std->vTotDFe),
-            true,
-            $identificador . 'Valor total a Receber'
-        );
+        if ($std->vTotDFe > 0) {
+            $this->dom->addChild(
+                $this->total,
+                'vTotDFe',
+                $this->conditionalNumberFormatting($std->vTotDFe),
+                true,
+                $identificador . 'Valor total a Receber'
+            );
+        }
         return $this->total;
     }
 
@@ -4095,45 +4097,45 @@ class MakeCTeSimp
         $gTrib = $this->dom->createElement("gTribCompraGov");
         $this->dom->addChild(
             $gTrib,
-            "pIBSUF",
-            $this->conditionalNumberFormatting($std->pIBSUF, 4),
+            "pAliqIBSUF",
+            $this->conditionalNumberFormatting($std->pAliqIBSUF, 4),
             true,
-            "$identificador Alíquota do IBS de competência do Estado. (pIBSUF)"
+            "$identificador Alíquota do IBS de competência do Estado. (pAliqIBSUF)"
         );
         $this->dom->addChild(
             $gTrib,
-            "vIBSUF",
-            $this->conditionalNumberFormatting($std->pIBSUF),
+            "vTribIBSUF",
+            $this->conditionalNumberFormatting($std->vTribIBSUF),
             true,
-            "$identificador Valor do Tributo do IBS da UF calculado. (vIBSUF)"
+            "$identificador Valor do Tributo do IBS da UF calculado. (vTribIBSUF)"
         );
         $this->dom->addChild(
             $gTrib,
-            "pIBSMun",
-            $this->conditionalNumberFormatting($std->pIBSMun, 4),
+            "pAliqIBSMun",
+            $this->conditionalNumberFormatting($std->pAliqIBSMun, 4),
             true,
-            "$identificador Alíquota do IBS de competência do Município. (pIBSMun)"
+            "$identificador Alíquota do IBS de competência do Município. (pAliqIBSMun)"
         );
         $this->dom->addChild(
             $gTrib,
-            "vIBSMun",
-            $this->conditionalNumberFormatting($std->vIBSMun),
+            "vTribIBSMun",
+            $this->conditionalNumberFormatting($std->vTribIBSMun),
             true,
-            "$identificador Valor do Tributo do IBS do Município calculado. (vIBSMun)"
+            "$identificador Valor do Tributo do IBS do Município calculado. (vTribIBSMun)"
         );
         $this->dom->addChild(
             $gTrib,
-            "pCBS",
-            $this->conditionalNumberFormatting($std->pCBS, 4),
+            "pAliqCBS",
+            $this->conditionalNumberFormatting($std->pAliqCBS, 4),
             true,
-            "$identificador Alíquota da CBS. (pCBS)"
+            "$identificador Alíquota da CBS. (pAliqCBS)"
         );
         $this->dom->addChild(
             $gTrib,
-            "vCBS",
-            $this->conditionalNumberFormatting($std->vCBS),
+            "vTribCBS",
+            $this->conditionalNumberFormatting($std->vTribCBS),
             true,
-            "$identificador Valor do Tributo da CBS calculado. (vCBS)"
+            "$identificador Valor do Tributo da CBS calculado. (vTribCBS)"
         );
         $this->gTribCompraGov = $gTrib;
         return $gTrib;
