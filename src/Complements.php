@@ -216,7 +216,7 @@ class Complements
         return self::join(
             $req->saveXML($cte),
             $ret->saveXML($retProt),
-            'cteProc',
+            'cteSimpProc',
             $versao
         );
     }
