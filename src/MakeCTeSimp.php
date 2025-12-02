@@ -329,11 +329,7 @@ class MakeCTeSimp
     /**
      * @var DOMElement
      */
-    protected $gIBSCredPres;
-    /**
-     * @var DOMElement
-     */
-    protected $gCBSCredPres;
+    protected $gEstornoCred;
     /**
      * @var DOMElement
      */
@@ -545,11 +541,8 @@ class MakeCTeSimp
                 if (isset($this->gTribRegular)) {
                     $this->dom->appChild($node, $this->gTribRegular, 'Falta tag "gIBSCBS"');
                 }
-                if (isset($this->gIBSCredPres)) {
-                    $this->dom->appChild($node, $this->gIBSCredPres, 'Falta tag "gIBSCBS"');
-                }
-                if (isset($this->gCBSCredPres)) {
-                    $this->dom->appChild($node, $this->gCBSCredPres, 'Falta tag "gIBSCBS"');
+                if (isset($this->gEstornoCred)) {
+                    $this->dom->appChild($this->IBSCBS, $this->gEstornoCred, 'Falta tag "IBSCBS"');
                 }
                 $this->dom->appChild($this->imp, $this->IBSCBS, 'Falta tag "imp"');
             }
@@ -3976,105 +3969,37 @@ class MakeCTeSimp
     }
 
     /**
-     * Grupo de Informações do Crédito Presumido referente ao IBS UB73 pai UB15
-     * $this->aIBSCredPres[$item]/gIBSCredPres
-     * IBSCBS/gIBSCBS/gIBSCredPres
+     * Tipo Estorno de Crédito UB116 pai UB12
      * @param stdClass $std
      * @return DOMElement
      * @throws DOMException
      */
-    public function tagIBSCredPres(stdClass $std): DOMElement
+    public function taggEstornoCred(stdClass $std): DOMElement
     {
         $possible = [
-            'cCredPres',
-            'pCredPres',
-            'vCredPres',
-            'vCredPresCondSus',
+            'vIBSEstCred',
+            'vCBSEstCred',
         ];
         $std = $this->equilizeParameters($std, $possible);
-        $identificador = "UB73 <gIBSCredPres> -";
-        $gIBSCredPres = $this->dom->createElement("gIBSCredPres");
-        $this->dom->addChild(
-            $gIBSCredPres,
-            "cCredPres",
-            $std->cCredPres,
-            true,
-            "$identificador Código de Classificação do Crédito Presumido (cCredPres)"
-        );
-        $this->dom->addChild(
-            $gIBSCredPres,
-            "pCredPres",
-            $this->conditionalNumberFormatting($std->pCredPres, 4),
-            true,
-            "$identificador Percentual do Crédito Presumido (pCredPres)"
-        );
-        $this->dom->addChild(
-            $gIBSCredPres,
-            "vCredPres",
-            $this->conditionalNumberFormatting($std->vCredPres),
-            true,
-            "$identificador Valor do Crédito Presumido (vCredPres)"
-        );
-        $this->dom->addChild(
-            $gIBSCredPres,
-            "vCredPresCondSus",
-            $this->conditionalNumberFormatting($std->vCredPresCondSus),
-            true,
-            "$identificador Valor do Crédito Presumido em condição suspensiva. (vCredPres)"
-        );
-        $this->gIBSCredPres = $gIBSCredPres;
-        return $gIBSCredPres;
-    }
+        $identificador = "UB116 gEstornoCred";
 
-    /**
-     * Grupo de Informações do Crédito Presumido referente ao CBS UB78 pai UB15
-     * $this->aCBSCredPres[$item]/gCBSCredPres
-     * IBSCBS/gCBSCBS/gCBSCredPres
-     * @param stdClass $std
-     * @return DOMElement
-     * @throws DOMException
-     */
-    public function tagCBSCredPres(stdClass $std): DOMElement
-    {
-        $possible = [
-            'cCredPres',
-            'pCredPres',
-            'vCredPres',
-            'vCredPresCondSus',
-        ];
-        $std = $this->equilizeParameters($std, $possible);
-        $identificador = "UB78 <gCBSCredPres> -";
-        $gCBSCredPres = $this->dom->createElement("gCBSCredPres");
+        $estorno = $this->dom->createElement("gEstornoCred");
         $this->dom->addChild(
-            $gCBSCredPres,
-            "cCredPres",
-            $std->cCredPres,
+            $estorno,
+            "vIBSEstCred",
+            $this->conditionalNumberFormatting($std->vIBSEstCred),
             true,
-            "$identificador Código de Classificação do Crédito Presumido (cCredPres)"
+            "$identificador Valor do IBS a ser estornado (vIBSEstCred)"
         );
         $this->dom->addChild(
-            $gCBSCredPres,
-            "pCredPres",
-            $this->conditionalNumberFormatting($std->pCredPres, 4),
+            $estorno,
+            "vCBSEstCred",
+            $this->conditionalNumberFormatting($std->vCBSEstCred),
             true,
-            "$identificador Percentual do Crédito Presumido (pCredPres)"
+            "$identificador Valor do CBS a ser estornado (vCBSEstCred)"
         );
-        $this->dom->addChild(
-            $gCBSCredPres,
-            "vCredPres",
-            $this->conditionalNumberFormatting($std->vCredPres),
-            true,
-            "$identificador Valor do Crédito Presumido (vCredPres)"
-        );
-        $this->dom->addChild(
-            $gCBSCredPres,
-            "vCredPresCondSus",
-            $this->conditionalNumberFormatting($std->vCredPresCondSus),
-            true,
-            "$identificador Valor do Crédito Presumido em condição suspensiva. (vCredPres)"
-        );
-        $this->gCBSCredPres = $gCBSCredPres;
-        return $gCBSCredPres;
+        $this->gEstornoCred = $estorno;
+        return $estorno;
     }
 
     /**
