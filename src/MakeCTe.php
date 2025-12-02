@@ -5119,6 +5119,7 @@ class MakeCTe
         $possible = [
             'CST',
             'cClassTrib',
+            'indDoacao', // opcional Indicador de Doação
             'vBC',
             //dados IBS Estadual
             'gIBSUF_pIBSUF', //opcional Alíquota do IBS de competência das UF 3v2-4, OBRIGATÓRIO se vBC for informado
@@ -5169,6 +5170,13 @@ class MakeCTe
             $std->cClassTrib,
             true,
             "$identificador Código de Classificação Tributária do IBS e CBS (cClassTrib)"
+        );
+        $this->dom->addChild(
+            $ibscbs,
+            'indDoacao',
+            $std->indDoacao,
+            false,
+            "$identificador Indicador de Doação (indDoacao)"
         );
         //gIBSCBS é opcional e também é um choice com IBSCBSMono
         if (!is_null($std->vBC) && is_numeric($std->vBC)) {
@@ -5487,7 +5495,7 @@ class MakeCTe
     }
 
     /**
-     * Tipo Estorno de Crédito UB116 pai UB12
+     * Estorno de Crédito UB116 pai UB12
      * @param stdClass $std
      * @return DOMElement
      * @throws DOMException
