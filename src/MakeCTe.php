@@ -2820,7 +2820,8 @@ class MakeCTe
             'vICMSUFFim',
             'vICMSUFIni',
             'vICMSDeson',
-            'cBenef'
+            'cBenef',
+            'vTotDFe',
         ];
         $std = $this->equilizeParameters($std, $possible);
         $identificador = 'N01 <ICMSxx> - ';
@@ -3258,6 +3259,11 @@ class MakeCTe
             );
             $this->ICMSUFFim = $icmsDifal;
         }
+
+        if (!empty($std->vTotDFe)) {
+            $this->vTotDFe = $this->dom->createElement("vTotDFe", $this->conditionalNumberFormatting($std->vTotDFe));
+        }
+
         return $this->ICMS;
     }
 
@@ -5150,8 +5156,6 @@ class MakeCTe
             'gCBS_pRedAliq', //opcional Percentual da redução de alíquota 3v2-4
             'gCBS_pAliqEfet', //opcional Alíquota Efetiva da CBS que será aplicada a Base de Cálculo 3v2-4
             'gCBS_vCBS', //opcional Valor da CBS 13v2
-            // total
-            'vTotDFe'
         ];
         $std = $this->equilizeParameters($std, $possible);
         $identificador = "UB12 <IBSCBS> -";
@@ -5404,9 +5408,6 @@ class MakeCTe
             $ibscbs->appendChild($gIBSCBS);
         }
         $this->IBSCBS = $ibscbs;
-        if (!empty($std->vTotDFe)) {
-            $this->vTotDFe = $this->dom->createElement("vTotDFe", $this->conditionalNumberFormatting($std->vTotDFe));
-        }
         return $ibscbs;
     }
 
