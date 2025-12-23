@@ -2821,7 +2821,6 @@ class MakeCTe
             'vICMSUFIni',
             'vICMSDeson',
             'cBenef',
-            'vTotDFe',
         ];
         $std = $this->equilizeParameters($std, $possible);
         $identificador = 'N01 <ICMSxx> - ';
@@ -3259,12 +3258,25 @@ class MakeCTe
             );
             $this->ICMSUFFim = $icmsDifal;
         }
-
-        if (!empty($std->vTotDFe)) {
-            $this->vTotDFe = $this->dom->createElement("vTotDFe", $this->conditionalNumberFormatting($std->vTotDFe));
-        }
-
         return $this->ICMS;
+    }
+
+    /**
+     * tagVTotDFe
+     * Valor total do documento fiscal (vTPrest + total do IBS + total da CBS) 
+     *
+     * @return DOMElement
+     */
+    public function tagVTotDFe($std)
+    {
+        $possible = [
+            'vTotDFe',
+        ];
+        $std = $this->equilizeParameters($std, $possible);
+
+        $this->vTotDFe = $this->dom->createElement("vTotDFe", $this->conditionalNumberFormatting($std->vTotDFe));
+
+        return $this->vTotDFe;
     }
 
     /**
