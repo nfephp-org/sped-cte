@@ -3263,7 +3263,7 @@ class MakeCTe
 
     /**
      * tagVTotDFe
-     * Valor total do documento fiscal (vTPrest + total do IBS + total da CBS) 
+     * Valor total do documento fiscal (vTPrest + total do IBS + total da CBS)
      *
      * @return DOMElement
      */
@@ -3273,9 +3273,7 @@ class MakeCTe
             'vTotDFe',
         ];
         $std = $this->equilizeParameters($std, $possible);
-
         $this->vTotDFe = $this->dom->createElement("vTotDFe", $this->conditionalNumberFormatting($std->vTotDFe));
-
         return $this->vTotDFe;
     }
 

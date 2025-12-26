@@ -1632,6 +1632,22 @@ class MakeCTeOS
     }
 
     /**
+     * tagVTotDFe
+     * Valor total do documento fiscal (vTPrest + total do IBS + total da CBS)
+     *
+     * @return DOMElement
+     */
+    public function tagVTotDFe($std)
+    {
+        $possible = [
+            'vTotDFe',
+        ];
+        $std = $this->equilizeParameters($std, $possible);
+        $this->vTotDFe = $this->dom->createElement("vTotDFe", $this->conditionalNumberFormatting($std->vTotDFe));
+        return $this->vTotDFe;
+    }
+
+    /**
      * tagInfTribFed
      * Informações do Impostos Federais
      * CTe OS
@@ -2455,8 +2471,6 @@ class MakeCTeOS
             'gCBS_pRedAliq', //opcional Percentual da redução de alíquota 3v2-4
             'gCBS_pAliqEfet', //opcional Alíquota Efetiva da CBS que será aplicada a Base de Cálculo 3v2-4
             'gCBS_vCBS', //opcional Valor da CBS 13v2
-            // total
-            'vTotDFe'
         ];
         $std = $this->equilizeParameters($std, $possible);
         $identificador = "UB12 <IBSCBS> -";
@@ -2709,10 +2723,6 @@ class MakeCTeOS
             $ibscbs->appendChild($gIBSCBS);
         }
         $this->IBSCBS = $ibscbs;
-        if (!empty($std->vTotDFe)) {
-            $this->vTotDFe = $this->dom->createElement("vTotDFe", $this->conditionalNumberFormatting($std->vTotDFe));
-        }
-
         return $ibscbs;
     }
 
