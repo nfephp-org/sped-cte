@@ -362,7 +362,7 @@ class MakeCTeOS
                     $this->dom->appChild($node, $this->gTribRegular, 'Falta tag "gIBSCBS"');
                 }
                 if (isset($this->gEstornoCred)) {
-                    $this->dom->appChild($node, $this->gEstornoCred, 'Falta tag "gIBSCBS"');
+                    $this->dom->appChild($this->IBSCBS, $this->gEstornoCred, 'Falta tag "IBSCBS"');
                 }
                 $this->dom->appChild($this->imp, $this->IBSCBS, 'Falta tag "imp"');
             }
@@ -2424,6 +2424,7 @@ class MakeCTeOS
         $possible = [
             'CST',
             'cClassTrib',
+            'indDoacao', // opcional Indicador de Doação
             'vBC',
             //dados IBS Estadual
             'gIBSUF_pIBSUF', //opcional Alíquota do IBS de competência das UF 3v2-4, OBRIGATÓRIO se vBC for informado
@@ -2474,6 +2475,13 @@ class MakeCTeOS
             $std->cClassTrib,
             true,
             "$identificador Código de Classificação Tributária do IBS e CBS (cClassTrib)"
+        );
+        $this->dom->addChild(
+            $ibscbs,
+            'indDoacao',
+            $std->indDoacao,
+            false,
+            "$identificador Indicador de Doação (indDoacao)"
         );
         //gIBSCBS é opcional e também é um choice com IBSCBSMono
         if (!empty($std->vBC)) {
