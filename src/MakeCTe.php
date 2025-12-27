@@ -5170,6 +5170,11 @@ class MakeCTe
         $std = $this->equilizeParameters($std, $possible);
         $identificador = "UB12 <IBSCBS> -";
 
+        if (empty($std->vIBS)) {
+            //vIBS = vIBSUF + vIBSMun
+            $std->vIBS = ($std->gIBSUF_vIBSUF ?? 0) + ($std->gIBSMun_vIBSMun ?? 0);
+        }
+
         $ibscbs = $this->dom->createElement("IBSCBS");
         $this->dom->addChild(
             $ibscbs,
