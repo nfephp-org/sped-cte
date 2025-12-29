@@ -541,6 +541,9 @@ class MakeCTeSimp
                 if (isset($this->gTribRegular)) {
                     $this->dom->appChild($node, $this->gTribRegular, 'Falta tag "gIBSCBS"');
                 }
+                if (isset($this->gTribCompraGov)) {
+                    $this->dom->appChild($node, $this->gTribCompraGov, 'Falta tag "gIBSCBS"');
+                }
                 if (isset($this->gEstornoCred)) {
                     $this->dom->appChild($this->IBSCBS, $this->gEstornoCred, 'Falta tag "IBSCBS"');
                 }
