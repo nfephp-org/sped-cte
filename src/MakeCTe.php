@@ -596,9 +596,9 @@ class MakeCTe
                     $this->dom->appChild($this->IBSCBS, $this->gEstornoCred, 'Falta tag "IBSCBS"');
                 }
                 $this->dom->appChild($this->imp, $this->IBSCBS, 'Falta tag "imp"');
-            }
-            if (isset($this->vTotDFe)) {
-                $this->dom->appChild($this->imp, $this->vTotDFe, 'Falta tag "imp"');
+                if (isset($this->vTotDFe)) {
+                    $this->dom->appChild($this->imp, $this->vTotDFe, 'Falta tag "imp"');
+                }
             }
         }
         $this->dom->appChild($this->infCte, $this->imp, 'Falta tag "imp"');
