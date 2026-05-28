@@ -53,7 +53,7 @@ class Standardize
         'cteRetRecepcaoResult',
         'cteRecepcaoSimpResult',
         'cteRecepcaoOSResult',
-        'retConsStatServCte',
+        'retConsStatServCTe',
         'cteDistDFeInteresseResponse',
         'CTe',
         'CTeSimp',

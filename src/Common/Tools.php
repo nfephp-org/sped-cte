@@ -281,7 +281,7 @@ class Tools
                 $this->config->schemes = $this->availableVersions[$version];
             }
             $this->pathschemes = realpath(
-                __DIR__ . '/../../schemes/' . $this->config->schemes
+                __DIR__ . '/../../storage/schemes/' . $this->config->schemes
             ) . '/';
         }
         return $this->versao;

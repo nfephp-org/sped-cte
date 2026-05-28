@@ -171,7 +171,7 @@ class Tools extends ToolsCommon
             . "<tpAmb>$tpAmb</tpAmb>"
             . "<cUF>$cUF</cUF>"
             . "<xServ>STATUS</xServ></consStatServCTe>";
-        $this->isValid($this->urlVersion, $request, 'consStatServCte');
+        $this->isValid($this->urlVersion, $request, 'consStatServCTe');
         $this->lastRequest = $request;
         $parameters = ['cteDadosMsg' => $request];
         $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$request</cteDadosMsg>";
