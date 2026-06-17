@@ -133,6 +133,11 @@ class MakeCTeSimp
      */
     private $enderEmit = '';
     /**
+     * Inscricao Suframa do emitente (NT 2026.002 §4) - inserido antes do CRT no monta().
+     * @var \DOMElement|null
+     */
+    private $ISUFEmit = null;
+    /**
      * Informações do Remetente das mercadorias transportadas pelo CT-e
      * @var \DOMNode
      */
@@ -303,6 +308,16 @@ class MakeCTeSimp
      */
     protected $gCompraGov;
     /**
+     * Tipo de antecipacao de pagamento (NT 2026.002 §7) - 1=Pagamento Antecipado; 3=Fornecimento.
+     * @var string|null
+     */
+    protected $tpPagAnt;
+    /**
+     * Grupo de antecipacao de pagamento (NT 2026.002 §7) - acumula chDFePagAnt (1-99).
+     * @var DOMElement|null
+     */
+    protected $gPagAntecipado;
+    /**
      * @var DOMElement
      */
     protected $ICMS;
@@ -334,6 +349,11 @@ class MakeCTeSimp
      * @var DOMElement
      */
     protected $gTribCompraGov;
+    /**
+     * NT 2026.002
+     * @var array
+     */
+    protected $pgtoVinc = [];
 
     public function __construct(string $schema = 'PL_CTe_400')
     {
@@ -396,7 +416,19 @@ class MakeCTeSimp
         if ($this->schema == 'PL_CTe_400_RTC') {
             $this->dom->appChild($this->ide, $this->gCompraGov, 'Falta tag "ide"');
         }
-
+        // NT 2026.002 §7 - Antecipacao de pagamento (apos gCompraGov, na ordem do XSD).
+        if (!empty($this->tpPagAnt)) {
+            $this->dom->addChild(
+                $this->ide,
+                'tpPagAnt',
+                $this->tpPagAnt,
+                false,
+                '#4 <ide> - Tipo de Antecipacao de Pagamento'
+            );
+        }
+        if (!empty($this->gPagAntecipado)) {
+            $this->dom->appChild($this->ide, $this->gPagAntecipado, 'Falta tag "ide"');
+        }
         $this->dom->appChild($this->infCte, $this->ide, 'Falta tag "infCte"');
         if (!empty($this->compl)) {
             foreach ($this->obsCont as $obsCont) {
@@ -411,7 +443,10 @@ class MakeCTeSimp
         // inclui o Node enderEmit dentro do emit antes da tag CRT
         $node = $this->emit->getElementsByTagName("CRT")->item(0);
         $this->emit->insertBefore($this->enderEmit, $node);
-
+        // NT 2026.002 §4: ISUFEmit entre enderEmit e CRT (ordem do XSD)
+        if (!empty($this->ISUFEmit)) {
+            $this->emit->insertBefore($this->ISUFEmit, $node);
+        }
         $this->dom->appChild($this->infCte, $this->emit, 'Falta tag "infCte"');
 
         $this->dom->appChild($this->infCte, $this->toma, 'Falta tag "toma"');
@@ -534,6 +569,13 @@ class MakeCTeSimp
         }
         if (isset($this->ICMSUFFim)) {
             $this->dom->appChild($this->imp, $this->ICMSUFFim, 'Falta tag "imp"');
+        }
+        if (!empty($this->pgtoVinc)) {
+            $pgtoVinc = $this->dom->createElement('pgtoVinc');
+            foreach ($this->pgtoVinc as $pgto) {
+                $this->dom->appChild($pgtoVinc, $pgto, 'Falta tag "pgtoVinc"');
+            }
+            $this->dom->appChild($this->infCte, $pgtoVinc, 'Falta tag "pgtoVinc"');
         }
         if ($this->schema == 'PL_CTe_400_RTC') {
             if (isset($this->IBSCBS)) {
@@ -713,11 +755,13 @@ class MakeCTeSimp
             'retira',
             'xDetRetira',
             'dhCont',
-            'xJust'
+            'xJust',
+            'tpPagAnt'
         ];
         $std = $this->equilizeParameters($std, $possible);
         $this->tpAmb = $std->tpAmb;
         $this->tpCTe = $std->tpCTe;
+        $this->tpPagAnt = $std->tpPagAnt;
         $identificador = '#4 <ide> - ';
         $this->ide = $this->dom->createElement('ide');
         $this->dom->addChild(
@@ -1326,11 +1370,16 @@ class MakeCTeSimp
             'IEST',
             'xNome',
             'xFant',
-            'CRT'
+            'CRT',
+            'ISUFEmit'
         ];
         $std = $this->equilizeParameters($std, $possible);
         $identificador = '#97 <emit> - ';
         $this->emit = $this->dom->createElement('emit');
+        // NT 2026.002 §4: criado aqui e inserido antes do CRT no monta() (ordem do XSD).
+        $this->ISUFEmit = !empty($std->ISUFEmit)
+            ? $this->dom->createElement('ISUFEmit', $std->ISUFEmit)
+            : null;
         if (!empty($std->CNPJ)) {
             $this->dom->addChild(
                 $this->emit,
@@ -3604,6 +3653,29 @@ class MakeCTeSimp
         return $gc;
     }
 
+    /**
+     * Grupo gPagAntecipado / chDFePagAnt (NT 2026.002 §7). Chamar uma vez por chave
+     * (1-99): acumula cada chDFePagAnt no mesmo grupo, anexado ao ide no monta().
+     * @param stdClass $std
+     * @return DOMElement
+     */
+    public function taggPagAntecipado($std)
+    {
+        $possible = ['chDFePagAnt'];
+        $std = $this->equilizeParameters($std, $possible);
+        if (empty($this->gPagAntecipado)) {
+            $this->gPagAntecipado = $this->dom->createElement("gPagAntecipado");
+        }
+        $this->dom->addChild(
+            $this->gPagAntecipado,
+            "chDFePagAnt",
+            $std->chDFePagAnt,
+            true,
+            "# <gPagAntecipado> - Chave de acesso do DFe de antecipacao de pagamento"
+        );
+        return $this->gPagAntecipado;
+    }
+
     public function tagIBSCBS(stdClass $std): DOMElement
     {
         $possible = [
@@ -3616,6 +3688,7 @@ class MakeCTeSimp
             'gIBSUF_pDif', //opcional Percentual do diferimento 3v2-4
             'gIBSUF_vDif', //opcional Valor do Diferimento 13v2
             'gIBSUF_vDevTrib', //opcional Valor do tributo devolvido 13v2
+            'gIBSUF_pDevTrib', //opcional Percentual de devolucao de tributo (NT 2026.002)
             'gIBSUF_pRedAliq', //opcional Percentual da redução de alíquota 3v2-4
             'gIBSUF_pAliqEfet', //opcional Alíquota Efetiva do IBS de competência das UF que será aplicada a BC 3v2-4
             'gIBSUF_vIBSUF', //OBRIGATÓRIO Valor do IBS de competência da UF 13v2
@@ -3625,6 +3698,7 @@ class MakeCTeSimp
             'gIBSMun_pDif', //opcional Percentual do diferimento 3v2-4
             'gIBSMun_vDif', //opcional Valor do Diferimento 13v2
             'gIBSMun_vDevTrib', //opcional Valor do tributo devolvido 13v2
+            'gIBSMun_pDevTrib', //opcional Percentual de devolucao de tributo (NT 2026.002)
             'gIBSMun_pRedAliq', //opcional Percentual da redução de alíquota 3v2-4
             'gIBSMun_pAliqEfet', //opcional Alíquota Efetiva do IBS de competência do Município
             // que será aplicada a BC 3v2-4
@@ -3637,12 +3711,18 @@ class MakeCTeSimp
             'gCBS_pDif', //opcional Percentual do diferimento 3v2-4
             'gCBS_vDif', //opcional Valor do Diferimento 13v2
             'gCBS_vDevTrib', //opcional Valor do tributo devolvido 13v2
+            'gCBS_pDevTrib', //opcional Percentual de devolucao de tributo (NT 2026.002)
             'gCBS_pRedAliq', //opcional Percentual da redução de alíquota 3v2-4
             'gCBS_pAliqEfet', //opcional Alíquota Efetiva da CBS que será aplicada a Base de Cálculo 3v2-4
             'gCBS_vCBS', //opcional Valor da CBS 13v2
         ];
         $std = $this->equilizeParameters($std, $possible);
         $identificador = "UB12 <IBSCBS> -";
+
+        if (empty($std->vIBS)) {
+            //vIBS = vIBSUF + vIBSMun
+            $std->vIBS = ($std->gIBSUF_vIBSUF ?? 0) + ($std->gIBSMun_vIBSMun ?? 0);
+        }
 
         $ibscbs = $this->dom->createElement("IBSCBS");
         $this->dom->addChild(
@@ -3667,7 +3747,7 @@ class MakeCTeSimp
             "$identificador Indicador de Doação (indDoacao)"
         );
         //gIBSCBS é opcional e também é um choice com IBSCBSMono
-        if (!empty($std->vBC)) {
+        if (!is_null($std->vBC) && is_numeric($std->vBC)) {
             $identificador = "UB12 <IBSCBS/gIBSCBS> -";
             $gIBSCBS = $this->dom->createElement("gIBSCBS");
             $this->dom->addChild(
@@ -3707,6 +3787,15 @@ class MakeCTeSimp
             if (!empty($std->gIBSUF_vDevTrib)) {
                 //Grupo de Informações da devolução de tributos IBSUF
                 $gDevTrib = $this->dom->createElement("gDevTrib");
+                if (!empty($std->gIBSUF_pDevTrib)) {
+                    $this->dom->addChild(
+                        $gDevTrib,
+                        "pDevTrib",
+                        $this->conditionalNumberFormatting($std->gIBSUF_pDevTrib, 4),
+                        false,
+                        "$identificador Percentual de devolucao de tributo (pDevTrib)"
+                    );
+                }
                 $this->dom->addChild(
                     $gDevTrib,
                     "vDevTrib",
@@ -3776,6 +3865,15 @@ class MakeCTeSimp
             if (!empty($std->gIBSMun_vDevTrib)) {
                 //Grupo de Informações da devolução de tributos
                 $gDevTrib = $this->dom->createElement("gDevTrib");
+                if (!empty($std->gIBSMun_pDevTrib)) {
+                    $this->dom->addChild(
+                        $gDevTrib,
+                        "pDevTrib",
+                        $this->conditionalNumberFormatting($std->gIBSMun_pDevTrib, 4),
+                        false,
+                        "$identificador Percentual de devolucao de tributo (pDevTrib)"
+                    );
+                }
                 $this->dom->addChild(
                     $gDevTrib,
                     "vDevTrib",
@@ -3852,6 +3950,15 @@ class MakeCTeSimp
             if (!empty($std->gCBS_vDevTrib)) {
                 //Grupo de Informações da devolução de tributos
                 $gDevTrib = $this->dom->createElement("gDevTrib");
+                if (!empty($std->gCBS_pDevTrib)) {
+                    $this->dom->addChild(
+                        $gDevTrib,
+                        "pDevTrib",
+                        $this->conditionalNumberFormatting($std->gCBS_pDevTrib, 4),
+                        false,
+                        "$identificador Percentual de devolucao de tributo (pDevTrib)"
+                    );
+                }
                 $this->dom->addChild(
                     $gDevTrib,
                     "vDevTrib",
@@ -4075,6 +4182,63 @@ class MakeCTeSimp
         );
         $this->gTribCompraGov = $gTrib;
         return $gTrib;
+    }
+
+    /**
+     * Tipo dados do pagamento para o sistema de arrecadação
+     * NT 2026.002
+     *
+     * @return \DOMElement
+     */
+    public function tagpgtoVinc($std)
+    {
+        $possible = [
+            'tpMeioPgto',
+            'CNPJReceb',
+            'CNPJBasePSP',
+            'nPag',
+            'idTransacao',
+        ];
+        $std = $this->equilizeParameters($std, $possible);
+        $identificador = '#3 <pgto> - ';
+        $pgto = $this->dom->createElement('pgto');
+        $this->dom->addChild(
+            $pgto,
+            'tpMeioPgto',
+            $std->tpMeioPgto,
+            true,
+            $identificador . 'Meio de pagamento utilizado'
+        );
+        $this->dom->addChild(
+            $pgto,
+            'CNPJReceb',
+            $std->CNPJReceb,
+            true,
+            $identificador . 'CNPJ do recebedor do pagamento'
+        );
+        $this->dom->addChild(
+            $pgto,
+            'CNPJBasePSP',
+            $std->CNPJBasePSP,
+            true,
+            $identificador . 'CNPJ base da instituição financeira'
+        );
+        $this->dom->addChild(
+            $pgto,
+            'nPag',
+            $std->nPag,
+            true,
+            $identificador . 'Número sequencial do pagamento'
+        );
+        $this->dom->addChild(
+            $pgto,
+            'idTransacao',
+            $std->idTransacao,
+            true,
+            $identificador . 'ID específico da transação financeira conforme o meio de pagamento'
+        );
+        $this->pgtoVinc[] = $pgto;
+        return $pgto;
     }
 
     protected function checkCTeKey(Dom $dom)
