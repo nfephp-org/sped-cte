@@ -5426,6 +5426,33 @@ para tpEmis diferente de 1</xs:documentation>
 											<xs:documentation>Grupo de Compras Governamentais</xs:documentation>
 										</xs:annotation>
 									</xs:element>
+									<xs:element name="tpPagAnt" type="TPagAnt" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tipo Pagamento ou Pagamento Antecipado</xs:documentation>
+											<xs:documentation>Informar:
+1 - Pagamento Antecipado 
+3 - Fornecimento com pagamento realizado anteriormente
+
+Este campo é opcional e apenas deve ser informado quando pagamento que ocorre antes da prestação do serviço e na DFe de fornecimento associada a esses pagamentos, demais hipóteses de prestação de serviço sem antecipação não devem preencher.</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="gPagAntecipado" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Grupo de antecipação de pagamento</xs:documentation>
+											<xs:documentation>Informado para abater as parcelas de antecipação de
+pagamento, conforme Art. 10. § 4º </xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:sequence maxOccurs="99">
+												<xs:element name="chCTePagAnt" type="TChDFe">
+													<xs:annotation>
+														<xs:documentation>Chave de acesso do CTe de antecipação de pagamento</xs:documentation>
+														<xs:documentation>Referência a CTe emitido anteriormente, referente a pagamento antecipado</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
 								</xs:sequence>
 							</xs:complexType>
 						</xs:element>
@@ -6300,33 +6327,6 @@ Somente para Transporte de Valores</xs:documentation>
 							<xs:annotation>
 								<xs:documentation>Informações do Responsável Técnico pela emissão do DF-e</xs:documentation>
 							</xs:annotation>
-						</xs:element>
-						<xs:element name="tpPagAnt" type="TPagAnt" minOccurs="0">
-							<xs:annotation>
-								<xs:documentation>Tipo Pagamento ou Pagamento Antecipado</xs:documentation>
-								<xs:documentation>Informar:
-1 - Pagamento Antecipado 
-3 - Fornecimento com pagamento realizado anteriormente
-
-Este campo é opcional e apenas deve ser informado quando pagamento que ocorre antes da prestação do serviço e na DFe de fornecimento associada a esses pagamentos, demais hipóteses de prestação de serviço sem antecipação não devem preencher.</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-						<xs:element name="gPagAntecipado" minOccurs="0">
-							<xs:annotation>
-								<xs:documentation>Grupo de antecipação de pagamento</xs:documentation>
-								<xs:documentation>Informado para abater as parcelas de antecipação de
-pagamento, conforme Art. 10. § 4º </xs:documentation>
-							</xs:annotation>
-							<xs:complexType>
-								<xs:sequence maxOccurs="99">
-									<xs:element name="chCTePagAnt" type="TChDFe">
-										<xs:annotation>
-											<xs:documentation>Chave de acesso do CTe de antecipação de pagamento</xs:documentation>
-											<xs:documentation>Referência a CTe emitido anteriormente, referente a pagamento antecipado</xs:documentation>
-										</xs:annotation>
-									</xs:element>
-								</xs:sequence>
-							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
 					<xs:attribute name="versao" use="required">
