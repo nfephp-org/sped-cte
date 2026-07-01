@@ -222,7 +222,7 @@ class MakeCTeOS
      */
     protected $tpPagAnt;
     /**
-     * Grupo de antecipacao de pagamento (NT 2026.002 §7) - acumula chDFePagAnt (1-99).
+     * Grupo de antecipacao de pagamento (NT 2026.002 §7) - acumula chCTePagAnt (1-99).
      * @var DOMElement|null
      */
     protected $gPagAntecipado;
@@ -2491,24 +2491,24 @@ class MakeCTeOS
     }
 
     /**
-     * Grupo gPagAntecipado / chDFePagAnt (NT 2026.002 §7). Chamar uma vez por chave
-     * (1-99): acumula cada chDFePagAnt no mesmo grupo, anexado ao ide no monta().
+     * Grupo gPagAntecipado / chCTePagAnt (NT 2026.002 §7). Chamar uma vez por chave
+     * (1-99): acumula cada chCTePagAnt no mesmo grupo, anexado ao ide no monta().
      * @param stdClass $std
      * @return DOMElement
      */
     public function taggPagAntecipado($std)
     {
-        $possible = ['chDFePagAnt'];
+        $possible = ['chCTePagAnt'];
         $std = $this->equilizeParameters($std, $possible);
         if (empty($this->gPagAntecipado)) {
             $this->gPagAntecipado = $this->dom->createElement("gPagAntecipado");
         }
         $this->dom->addChild(
             $this->gPagAntecipado,
-            "chDFePagAnt",
-            $std->chDFePagAnt,
+            "chCTePagAnt",
+            $std->chCTePagAnt,
             true,
-            "# <gPagAntecipado> - Chave de acesso do DFe de antecipacao de pagamento"
+            "# <gPagAntecipado> - Chave de acesso do CT-e de antecipacao de pagamento"
         );
         return $this->gPagAntecipado;
     }
