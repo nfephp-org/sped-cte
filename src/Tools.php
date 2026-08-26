@@ -879,6 +879,60 @@ class Tools extends ToolsCommon
     }
 
     /**
+     * Requires the linking of payment transactions to an authorized CT-e
+     * NT 2026.001
+     * @param string $chave key of CTe
+     * @param string $nProt protocolo de autorização do CT-e
+     * @param array $pagamentos each item with nPag, idTransacao, tpMeioPgto, CNPJReceb and CNPJBasePSP
+     * @param int $nSeqEvento No. sequencial do evento
+     * @return string
+     */
+    public function sefazVincPgto($chave, $nProt, array $pagamentos = [], $nSeqEvento = 1)
+    {
+        $uf = $this->validKeyByUF($chave);
+        $tpEvento = 110300;
+        $tagAdic = "<evVincPgto>"
+            . "<descEvento>Vinculacao Pagamento</descEvento>"
+            . "<nProt>$nProt</nProt>"
+            . self::serializerVincPgto($pagamentos)
+            . "</evVincPgto>";
+        return $this->sefazEvento(
+            $uf,
+            $chave,
+            $tpEvento,
+            $nSeqEvento,
+            $tagAdic
+        );
+    }
+
+    /**
+     * Requires the cancellation of a payment linking event
+     * NT 2026.001
+     * @param string $chave key of CTe
+     * @param string $nProt protocolo de autorização do CT-e
+     * @param string $nProtVincPgto protocolo do evento de vinculação de pagamento a ser cancelado
+     * @param int $nSeqEvento No. sequencial do evento
+     * @return string
+     */
+    public function sefazCancelaVincPgto($chave, $nProt, $nProtVincPgto, $nSeqEvento = 1)
+    {
+        $uf = $this->validKeyByUF($chave);
+        $tpEvento = 110301;
+        $tagAdic = "<evCancVincPgto>"
+            . "<descEvento>Cancelamento da Vinculacao do Pagamento</descEvento>"
+            . "<nProt>$nProt</nProt>"
+            . "<nProtVincPgto>$nProtVincPgto</nProtVincPgto>"
+            . "</evCancVincPgto>";
+        return $this->sefazEvento(
+            $uf,
+            $chave,
+            $tpEvento,
+            $nSeqEvento,
+            $tagAdic
+        );
+    }
+
+    /**
      *
      * @param int $tpEvento
      * @return \stdClass
@@ -921,6 +975,16 @@ class Tools extends ToolsCommon
                 $std->alias = 'evIECTe';
                 $std->desc = 'Insucesso na Entrega';
                 break;
+            case 110300:
+                //vinculação de pagamento
+                $std->alias = 'evVincPgto';
+                $std->desc = 'Vinculacao Pagamento';
+                break;
+            case 110301:
+                //cancelamento da vinculação de pagamento
+                $std->alias = 'evCancVincPgto';
+                $std->desc = 'Cancelamento da Vinculacao do Pagamento';
+                break;
             case 610110:
                 //Serviço em desacordo
                 $std->alias = 'EvPrestDesacordo';
@@ -932,6 +996,26 @@ class Tools extends ToolsCommon
                 throw new RuntimeException($msg);
         }
         return $std;
+    }
+
+    /**
+     * Serializes the payment group of the payment linking event
+     * NT 2026.001
+     * @param array $pagamentos
+     * @return string
+     */
+    private static function serializerVincPgto(array $pagamentos)
+    {
+        // Grupo de dados de cada pagamento previsto para o DFe
+        $pgtos = '';
+        foreach ($pagamentos as $pgto) {
+            $pgtos .= "<pgto nPag=\"{$pgto['nPag']}\" idTransacao=\"{$pgto['idTransacao']}\">" .
+                "<tpMeioPgto>{$pgto['tpMeioPgto']}</tpMeioPgto>" .
+                "<CNPJReceb>{$pgto['CNPJReceb']}</CNPJReceb>" .
+                "<CNPJBasePSP>{$pgto['CNPJBasePSP']}</CNPJBasePSP>" .
+                "</pgto>";
+        }
+        return $pgtos;
     }
 
     private static function serializerCCe(array $infCorrecoes)
