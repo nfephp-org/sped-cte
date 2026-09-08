@@ -33,14 +33,14 @@ class PessoaResolverTest extends TestCase
         return new PessoaResolver($lookup);
     }
 
-    public function testRemetenteDelegaParaOLookup()
+    public function testRemetenteDelegaParaOLookup(): void
     {
         $pessoa = $this->resolverCpf()->remetente('111.444.777-35');
         $this->assertSame('Test Token', $pessoa->xNome);
         $this->assertSame('11144477735', $pessoa->CPF);
     }
 
-    public function testAtalhosPorPapelDevolvemOMesmoFormato()
+    public function testAtalhosPorPapelDevolvemOMesmoFormato(): void
     {
         $resolver = $this->resolverCpf();
         $papeis = [
@@ -57,7 +57,7 @@ class PessoaResolverTest extends TestCase
         }
     }
 
-    public function testPorDocumentoNaFachada()
+    public function testPorDocumentoNaFachada(): void
     {
         $pessoa = $this->resolverCpf()->porDocumento('11144477735');
         $this->assertSame('Test Token', $pessoa->xNome);

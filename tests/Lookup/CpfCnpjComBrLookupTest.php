@@ -62,7 +62,7 @@ class CpfCnpjComBrLookupTest extends TestCase
         ]);
     }
 
-    public function testPorCpfMapeiaPessoaEEndereco()
+    public function testPorCpfMapeiaPessoaEEndereco(): void
     {
         $http = new FakeHttpGet($this->respostaCpf());
         $lookup = new CpfCnpjComBrLookup('token123', [], $http);
@@ -81,7 +81,7 @@ class CpfCnpjComBrLookupTest extends TestCase
         $this->assertSame('SP', $pessoa->UF);
     }
 
-    public function testPorCpfMontaUrlComPacotePadrao3()
+    public function testPorCpfMontaUrlComPacotePadrao3(): void
     {
         $http = new FakeHttpGet($this->respostaCpf());
         $lookup = new CpfCnpjComBrLookup('token123', [], $http);
@@ -93,7 +93,7 @@ class CpfCnpjComBrLookupTest extends TestCase
         );
     }
 
-    public function testPorCnpjMapeiaPessoaEEndereco()
+    public function testPorCnpjMapeiaPessoaEEndereco(): void
     {
         $http = new FakeHttpGet($this->respostaCnpj());
         $lookup = new CpfCnpjComBrLookup('token123', [], $http);
@@ -113,7 +113,7 @@ class CpfCnpjComBrLookupTest extends TestCase
         $this->assertSame('SP', $pessoa->UF);
     }
 
-    public function testPorCnpjMontaUrlComPacotePadrao5()
+    public function testPorCnpjMontaUrlComPacotePadrao5(): void
     {
         $http = new FakeHttpGet($this->respostaCnpj());
         $lookup = new CpfCnpjComBrLookup('token123', [], $http);
@@ -125,7 +125,7 @@ class CpfCnpjComBrLookupTest extends TestCase
         );
     }
 
-    public function testPacotePodeSerSobrescrito()
+    public function testPacotePodeSerSobrescrito(): void
     {
         $http = new FakeHttpGet($this->respostaCnpj());
         $lookup = new CpfCnpjComBrLookup('token123', ['cnpj' => 6], $http);
@@ -137,7 +137,7 @@ class CpfCnpjComBrLookupTest extends TestCase
         );
     }
 
-    public function testNuncaPreencheInscricaoEstadual()
+    public function testNuncaPreencheInscricaoEstadual(): void
     {
         $http = new FakeHttpGet($this->respostaCnpj());
         $lookup = new CpfCnpjComBrLookup('token123', [], $http);
@@ -146,7 +146,7 @@ class CpfCnpjComBrLookupTest extends TestCase
         $this->assertFalse(property_exists($pessoa, 'IE'));
     }
 
-    public function testPorDocumentoDetectaCpfPeloTamanho()
+    public function testPorDocumentoDetectaCpfPeloTamanho(): void
     {
         $http = new FakeHttpGet($this->respostaCpf());
         $lookup = new CpfCnpjComBrLookup('token123', [], $http);
@@ -158,7 +158,7 @@ class CpfCnpjComBrLookupTest extends TestCase
         );
     }
 
-    public function testPorDocumentoDetectaCnpjPeloTamanho()
+    public function testPorDocumentoDetectaCnpjPeloTamanho(): void
     {
         $http = new FakeHttpGet($this->respostaCnpj());
         $lookup = new CpfCnpjComBrLookup('token123', [], $http);
@@ -170,13 +170,13 @@ class CpfCnpjComBrLookupTest extends TestCase
         );
     }
 
-    public function testTokenVazioLancaExcecao()
+    public function testTokenVazioLancaExcecao(): void
     {
         $this->expectException(InvalidArgumentException::class);
         new CpfCnpjComBrLookup('   ');
     }
 
-    public function testDocumentoComTamanhoInvalidoLancaExcecao()
+    public function testDocumentoComTamanhoInvalidoLancaExcecao(): void
     {
         $http = new FakeHttpGet($this->respostaCpf());
         $lookup = new CpfCnpjComBrLookup('token123', [], $http);
@@ -184,7 +184,7 @@ class CpfCnpjComBrLookupTest extends TestCase
         $lookup->porDocumento('123');
     }
 
-    public function testStatusZeroLancaRuntimeException()
+    public function testStatusZeroLancaRuntimeException(): void
     {
         $corpo = json_encode([
             'status' => 0,
@@ -197,9 +197,22 @@ class CpfCnpjComBrLookupTest extends TestCase
         $lookup->porCpf('11144477735');
     }
 
-    public function testRespostaNaoJsonLancaRuntimeException()
+    public function testRespostaNaoJsonLancaRuntimeException(): void
     {
         $http = new FakeHttpGet('<html>indisponivel</html>');
+        $lookup = new CpfCnpjComBrLookup('token123', [], $http);
+        $this->expectException(RuntimeException::class);
+        $lookup->porCpf('11144477735');
+    }
+
+    public function testStatusZeroComErroEstruturadoLancaRuntimeException(): void
+    {
+        $corpo = json_encode([
+            'status' => 0,
+            'erro' => ['campo' => 'documento', 'msg' => 'invalido'],
+            'erroCodigo' => ['id' => 100],
+        ]);
+        $http = new FakeHttpGet($corpo);
         $lookup = new CpfCnpjComBrLookup('token123', [], $http);
         $this->expectException(RuntimeException::class);
         $lookup->porCpf('11144477735');

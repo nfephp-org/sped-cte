@@ -170,8 +170,12 @@ class CpfCnpjComBrLookup implements PessoaLookup
             throw new RuntimeException('A resposta da consulta não é um JSON válido.');
         }
         if (!isset($dados->status) || (int) $dados->status !== 1) {
-            $mensagem = isset($dados->erro) ? $dados->erro : 'consulta sem sucesso';
-            $codigo = isset($dados->erroCodigo) ? $dados->erroCodigo : 0;
+            $mensagem = (isset($dados->erro) && is_scalar($dados->erro))
+                ? (string) $dados->erro
+                : 'consulta sem sucesso';
+            $codigo = (isset($dados->erroCodigo) && is_scalar($dados->erroCodigo))
+                ? (string) $dados->erroCodigo
+                : '0';
             throw new RuntimeException(
                 'Falha na consulta CpfCnpj.com.br: ' . $mensagem . ' (código ' . $codigo . ').'
             );
