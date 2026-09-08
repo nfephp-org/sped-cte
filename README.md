@@ -45,6 +45,72 @@ Este pacote faz parte da API NFePHP e atende aos parâmetros das PSR2 e PSR4, be
 composer require nfephp-org/sped-cte:dev-master
 ```
 
+## Consulta de pessoas (recurso opcional)
+
+O namespace `NFePHP\CTe\Lookup` oferece um recurso **opcional e aditivo** para
+preencher os grupos de pessoa e endereço do CT-e (remetente, destinatário,
+tomador, expedidor e recebedor) a partir de um CPF ou CNPJ, consultando a API da
+[CpfCnpj.com.br](https://www.cpfcnpj.com.br/dev/). O núcleo da biblioteca
+continua **offline por design**: nada em `src` faz requisições de terceiros, e
+todo o acesso de rede fica isolado atrás do contrato `HttpGet`. Quem não usa a
+consulta não carrega nenhuma dependência nova.
+
+O resolvedor devolve um `stdClass` com as propriedades homônimas dos campos do
+layout, pronto para ser passado tanto ao método de pessoa quanto ao de endereço:
+
+```php
+use NFePHP\CTe\Lookup\CpfCnpjComBrLookup;
+use NFePHP\CTe\Lookup\PessoaResolver;
+
+$resolver = new PessoaResolver(new CpfCnpjComBrLookup('SEU_TOKEN'));
+
+$rem = $resolver->remetente('11144477735');
+$make->tagrem($rem);
+$make->tagenderReme($rem);
+
+$dest = $resolver->destinatario('11222333000181');
+$make->tagdest($dest);
+$make->tagenderDest($dest);
+```
+
+Cada `stdClass` traz `xNome`, `xFant` (quando PJ), `CNPJ` ou `CPF`, `xLgr`,
+`nro`, `xCpl`, `xBairro`, `cMun` (código IBGE de 7 dígitos), `xMun`, `CEP` e
+`UF`. Os métodos `tag*` consomem apenas as propriedades que reconhecem, por isso
+o mesmo objeto serve para o grupo de pessoa e para o grupo de endereço.
+
+### Token
+
+O token é o primeiro segmento da URL de cada requisição (não é cabeçalho HTTP) e
+é gerado no Painel de Controle, em **API > Tokens**. Para experimentar sem
+consumir créditos, use o token público de testes
+`5ae973d7a997af13f0aaf2bf60e65803`, que devolve respostas simuladas.
+
+### Cobertura e pacotes
+
+Os dados são atualizados em tempo real (D+0) com cobertura integral dos
+documentos consultados. Por padrão a consulta usa o pacote 3 (CPF com nome e
+endereço) e o pacote 5 (CNPJ com razão social, nome fantasia e endereço da
+matriz). É possível apontar outro pacote de CNPJ, por exemplo o pacote 6, quando
+o integrador quiser dados adicionais:
+
+```php
+$lookup = new CpfCnpjComBrLookup('SEU_TOKEN', ['cnpj' => 6]);
+```
+
+### Inscrição Estadual
+
+O resolvedor **nunca** preenche a Inscrição Estadual: a consulta não fornece esse
+dado. O encaixe é completo para pessoa física e para não contribuintes (onde a
+IE não se aplica) e para preencher o endereço de pessoa jurídica, inclusive o
+`cMun`. Para pessoa jurídica contribuinte, o integrador deve suprir a IE a partir
+de sua própria fonte (cadastro interno, SINTEGRA ou SEFAZ) antes de gerar o XML.
+
+### Cliente HTTP próprio
+
+A implementação padrão usa cURL. Para injetar outro cliente (Guzzle, PSR-18 ou um
+dublê de teste), basta implementar `NFePHP\CTe\Lookup\HttpGet` e passá-lo ao
+construtor de `CpfCnpjComBrLookup`.
+
 ## Change log
 
 Acompanhe o [CHANGELOG](CHANGELOG.md) para maiores informações sobre as alterações recentes.
