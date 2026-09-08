@@ -22,14 +22,19 @@ use NFePHP\CTe\Exception\RuntimeException;
  * falha (acompanhado de erro e erroCodigo). A partir dos dados retornados esta
  * classe monta um \stdClass com as propriedades homônimas dos campos do CT-e.
  *
- * A Inscrição Estadual nunca é preenchida: a consulta não fornece esse dado.
+ * Os métodos porCpf, porCnpj e porDocumento nunca preenchem a Inscrição
+ * Estadual. Para o cenário B2B em que a pessoa é contribuinte do ICMS, a classe
+ * também implementa InscricaoEstadualLookup: o método inscricoesEstaduaisPorCnpj
+ * consulta o pacote H (ID 16) e devolve as Inscrições Estaduais do CNPJ. O
+ * casamento da IE com a UF do endereço fica a cargo do PessoaResolver, e o
+ * recurso é totalmente opcional.
  *
  * @category  Library
  * @package   NFePHP\CTe\Lookup
  * @license   http://www.gnu.org/licenses/lgpl.txt LGPLv3+
  * @link      https://github.com/nfephp-org/sped-cte
  */
-class CpfCnpjComBrLookup implements PessoaLookup
+class CpfCnpjComBrLookup implements PessoaLookup, InscricaoEstadualLookup
 {
     /**
      * Token de integração (primeiro segmento da URL).
@@ -60,11 +65,12 @@ class CpfCnpjComBrLookup implements PessoaLookup
     private $pacotes = [
         'cpf' => 3,
         'cnpj' => 5,
+        'ie' => 16,
     ];
 
     /**
      * @param string            $token   token de integração do Painel de Controle
-     * @param array<string,int> $pacotes sobrescreve os pacotes padrão: ['cpf' => 3, 'cnpj' => 5]
+     * @param array<string,int> $pacotes sobrescreve os pacotes padrão: ['cpf' => 3, 'cnpj' => 5, 'ie' => 16]
      * @param HttpGet|null      $http    cliente HTTP; usa CurlHttpGet quando ausente
      * @param string            $baseUrl URL base da API
      *
@@ -90,6 +96,9 @@ class CpfCnpjComBrLookup implements PessoaLookup
         }
         if (!empty($pacotes['cnpj'])) {
             $this->pacotes['cnpj'] = (int) $pacotes['cnpj'];
+        }
+        if (!empty($pacotes['ie'])) {
+            $this->pacotes['ie'] = (int) $pacotes['ie'];
         }
     }
 
@@ -134,6 +143,49 @@ class CpfCnpjComBrLookup implements PessoaLookup
         throw new InvalidArgumentException(
             'O documento deve ter 11 dígitos (CPF) ou 14 caracteres (CNPJ).'
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function inscricoesEstaduaisPorCnpj($cnpj)
+    {
+        $documento = $this->normaliza($cnpj);
+        if (strlen($documento) !== 14) {
+            throw new InvalidArgumentException('Informe um CNPJ com 14 caracteres.');
+        }
+        $resposta = $this->consulta($this->pacotes['ie'], $documento);
+        return $this->montaInscricoes($resposta);
+    }
+
+    /**
+     * Converte o bloco inscricoesEstaduais da resposta em uma lista normalizada.
+     *
+     * @param \stdClass $resposta
+     * @return array<int,\stdClass> lista de {inscricao, ativo, uf}
+     */
+    private function montaInscricoes($resposta)
+    {
+        $lista = [];
+        if (!isset($resposta->inscricoesEstaduais) || !is_array($resposta->inscricoesEstaduais)) {
+            return $lista;
+        }
+        foreach ($resposta->inscricoesEstaduais as $item) {
+            if (!$item instanceof \stdClass) {
+                continue;
+            }
+            $entrada = new \stdClass();
+            $entrada->inscricao = $this->texto($item, 'inscricao_estadual');
+            $entrada->ativo = isset($item->ativo)
+                && filter_var($item->ativo, FILTER_VALIDATE_BOOLEAN);
+            $uf = '';
+            if (isset($item->estado) && $item->estado instanceof \stdClass) {
+                $uf = strtoupper($this->texto($item->estado, 'sigla'));
+            }
+            $entrada->uf = $uf;
+            $lista[] = $entrada;
+        }
+        return $lista;
     }
 
     /**

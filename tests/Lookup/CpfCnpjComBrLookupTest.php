@@ -217,4 +217,121 @@ class CpfCnpjComBrLookupTest extends TestCase
         $this->expectException(RuntimeException::class);
         $lookup->porCpf('11144477735');
     }
+
+    /**
+     * @return string
+     */
+    private function respostaPacote16()
+    {
+        return json_encode([
+            'status' => 1,
+            'cnpj' => '11.222.333/0001-81',
+            'razao' => 'Empresa Exemplo LTDA',
+            'inscricoesEstaduais' => [
+                [
+                    'inscricao_estadual' => '11.111.111-1',
+                    'ativo' => true,
+                    'estado' => ['sigla' => 'GO', 'ibge_id' => 52],
+                ],
+                [
+                    'inscricao_estadual' => '222222222',
+                    'ativo' => false,
+                    'estado' => ['sigla' => 'SP', 'ibge_id' => 35],
+                ],
+            ],
+        ]);
+    }
+
+    public function testInscricoesEstaduaisMapeiaLista(): void
+    {
+        $http = new FakeHttpGet($this->respostaPacote16());
+        $lookup = new CpfCnpjComBrLookup('token123', [], $http);
+        $lista = $lookup->inscricoesEstaduaisPorCnpj('11.222.333/0001-81');
+
+        $this->assertCount(2, $lista);
+        $this->assertSame('11.111.111-1', $lista[0]->inscricao);
+        $this->assertTrue($lista[0]->ativo);
+        $this->assertSame('GO', $lista[0]->uf);
+        $this->assertSame('222222222', $lista[1]->inscricao);
+        $this->assertFalse($lista[1]->ativo);
+        $this->assertSame('SP', $lista[1]->uf);
+    }
+
+    public function testInscricoesEstaduaisMontaUrlComPacotePadrao16(): void
+    {
+        $http = new FakeHttpGet($this->respostaPacote16());
+        $lookup = new CpfCnpjComBrLookup('token123', [], $http);
+        $lookup->inscricoesEstaduaisPorCnpj('11.222.333/0001-81');
+
+        $this->assertSame(
+            'https://api.cpfcnpj.com.br/token123/16/11222333000181',
+            $http->ultimaUrl
+        );
+    }
+
+    public function testPacoteIePodeSerSobrescrito(): void
+    {
+        $http = new FakeHttpGet($this->respostaPacote16());
+        $lookup = new CpfCnpjComBrLookup('token123', ['ie' => 17], $http);
+        $lookup->inscricoesEstaduaisPorCnpj('11.222.333/0001-81');
+
+        $this->assertSame(
+            'https://api.cpfcnpj.com.br/token123/17/11222333000181',
+            $http->ultimaUrl
+        );
+    }
+
+    public function testInscricoesEstaduaisNormalizaAtivoDeFormasVariadas(): void
+    {
+        $corpo = json_encode([
+            'status' => 1,
+            'cnpj' => '11.222.333/0001-81',
+            'inscricoesEstaduais' => [
+                ['inscricao_estadual' => '1', 'ativo' => 'false', 'estado' => ['sigla' => 'GO']],
+                ['inscricao_estadual' => '2', 'ativo' => 'N', 'estado' => ['sigla' => 'SP']],
+                ['inscricao_estadual' => '3', 'ativo' => 'true', 'estado' => ['sigla' => 'MG']],
+            ],
+        ]);
+        $http = new FakeHttpGet($corpo);
+        $lookup = new CpfCnpjComBrLookup('token123', [], $http);
+        $lista = $lookup->inscricoesEstaduaisPorCnpj('11.222.333/0001-81');
+
+        $this->assertFalse($lista[0]->ativo);
+        $this->assertFalse($lista[1]->ativo);
+        $this->assertTrue($lista[2]->ativo);
+    }
+
+    public function testInscricoesEstaduaisSemBlocoRetornaListaVazia(): void
+    {
+        $corpo = json_encode([
+            'status' => 1,
+            'cnpj' => '11.222.333/0001-81',
+            'razao' => 'Empresa Sem IE LTDA',
+        ]);
+        $http = new FakeHttpGet($corpo);
+        $lookup = new CpfCnpjComBrLookup('token123', [], $http);
+
+        $this->assertSame([], $lookup->inscricoesEstaduaisPorCnpj('11.222.333/0001-81'));
+    }
+
+    public function testInscricoesEstaduaisCnpjInvalidoLancaExcecao(): void
+    {
+        $http = new FakeHttpGet($this->respostaPacote16());
+        $lookup = new CpfCnpjComBrLookup('token123', [], $http);
+        $this->expectException(InvalidArgumentException::class);
+        $lookup->inscricoesEstaduaisPorCnpj('11144477735');
+    }
+
+    public function testInscricoesEstaduaisStatusZeroLancaRuntimeException(): void
+    {
+        $corpo = json_encode([
+            'status' => 0,
+            'erro' => 'CNPJ inválido!',
+            'erroCodigo' => 100,
+        ]);
+        $http = new FakeHttpGet($corpo);
+        $lookup = new CpfCnpjComBrLookup('token123', [], $http);
+        $this->expectException(RuntimeException::class);
+        $lookup->inscricoesEstaduaisPorCnpj('11.222.333/0001-81');
+    }
 }

@@ -97,13 +97,54 @@ o integrador quiser dados adicionais:
 $lookup = new CpfCnpjComBrLookup('SEU_TOKEN', ['cnpj' => 6]);
 ```
 
-### Inscrição Estadual
+### Inscrição Estadual (opcional, pacote H ID 16)
 
-O resolvedor **nunca** preenche a Inscrição Estadual: a consulta não fornece esse
-dado. O encaixe é completo para pessoa física e para não contribuintes (onde a
-IE não se aplica) e para preencher o endereço de pessoa jurídica, inclusive o
-`cMun`. Para pessoa jurídica contribuinte, o integrador deve suprir a IE a partir
-de sua própria fonte (cadastro interno, SINTEGRA ou SEFAZ) antes de gerar o XML.
+Por padrão o resolvedor **não** preenche a Inscrição Estadual: os métodos de
+pessoa (`porCpf`, `porCnpj`, `porDocumento` e os atalhos por papel) devolvem o
+grupo sem a propriedade `IE`. Esse é o comportamento histórico e continua sendo
+o padrão.
+
+Para o cenário B2B, em que remetente, destinatário, tomador, expedidor ou
+recebedor é pessoa jurídica contribuinte do ICMS, é possível ligar o
+preenchimento **opcional** da IE. Nesse modo o resolvedor consulta o pacote H
+(ID 16), que devolve todas as Inscrições Estaduais do CNPJ, e seleciona a IE cuja
+UF coincide com a UF do endereço retornado (obtida do pacote 5 ou 6), preferindo
+inscrições ativas:
+
+```php
+$resolver = new PessoaResolver(new CpfCnpjComBrLookup('SEU_TOKEN'), true);
+// ou, de forma encadeável:
+$resolver = (new PessoaResolver(new CpfCnpjComBrLookup('SEU_TOKEN')))
+    ->comInscricaoEstadual();
+
+$dest = $resolver->destinatario('11222333000181');
+$make->tagdest($dest);
+$make->tagenderDest($dest); // $dest->IE preenchido quando há IE ativa na UF
+```
+
+A IE **nunca é adivinhada**: se o CNPJ não tiver inscrição ativa para aquela UF,
+a propriedade `IE` simplesmente não é preenchida (o integrador nunca recebe um
+valor chutado nem "ISENTO"). Pessoa física não é afetada, pois a IE não se aplica.
+O pacote de IE também pode ser sobrescrito via `['ie' => 16]` no construtor de
+`CpfCnpjComBrLookup`. Quando a opção não é ligada, nenhuma consulta extra é feita.
+
+Como o preenchimento da IE é aditivo, uma falha na sua consulta (indisponível,
+CNPJ sem inscrição ou limite de uso) não derruba a resolução: a pessoa é
+devolvida com todos os demais dados e sem a `IE`. Já a consulta direta por
+`inscricoesEstaduaisPorCnpj` propaga o erro, para quem quiser tratá-lo.
+
+As Inscrições Estaduais também podem ser consultadas diretamente pela fonte de
+dados, sem passar pelo resolvedor:
+
+```php
+$lookup = new CpfCnpjComBrLookup('SEU_TOKEN');
+$inscricoes = $lookup->inscricoesEstaduaisPorCnpj('11222333000181');
+// cada item: { inscricao, ativo (bool), uf }
+```
+
+Alternativas de fonte (cadastro interno, SINTEGRA ou SEFAZ) continuam válidas:
+basta implementar `NFePHP\CTe\Lookup\InscricaoEstadualLookup` além de
+`PessoaLookup`.
 
 ### Cliente HTTP próprio
 

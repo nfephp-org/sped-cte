@@ -20,9 +20,11 @@ namespace NFePHP\CTe\Lookup;
  * Propriedades preenchidas: xNome, xFant, CNPJ, CPF, xLgr, nro, xCpl, xBairro,
  * cMun, xMun, CEP, UF.
  *
- * A Inscrição Estadual (IE) nunca é preenchida: a consulta não fornece esse
- * dado e o integrador deve supri-lo a partir de sua própria fonte quando a
- * pessoa for contribuinte.
+ * Os métodos deste contrato nunca preenchem a Inscrição Estadual (IE). O
+ * preenchimento da IE é um recurso separado e opcional, exposto pelo contrato
+ * InscricaoEstadualLookup e aplicado pelo PessoaResolver no cenário B2B; uma
+ * fonte que não implemente aquele contrato deixa a IE inteiramente a cargo do
+ * integrador quando a pessoa for contribuinte.
  *
  * @category  Library
  * @package   NFePHP\CTe\Lookup
