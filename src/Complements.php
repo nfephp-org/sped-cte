@@ -2,6 +2,7 @@
 
 namespace NFePHP\CTe;
 
+use NFePHP\Common\Keys;
 use NFePHP\Common\Strings;
 use NFePHP\CTe\Common\Standardize;
 use NFePHP\CTe\Exception\DocumentsException;
@@ -122,7 +123,7 @@ class Complements
         $cte = $req->getElementsByTagName('CTe')->item(0);
         $infCTe = $req->getElementsByTagName('infCte')->item(0);
         $versao = $infCTe->getAttribute("versao");
-        $chave = preg_replace('/[^0-9]/', '', $infCTe->getAttribute("Id"));
+        $chave = Keys::extractAccessKey($infCTe->getAttribute("Id"));
         $digCTe = $req->getElementsByTagName('DigestValue')
             ->item(0)
             ->nodeValue;
@@ -180,7 +181,7 @@ class Complements
         $cte = $req->getElementsByTagName('CTeSimp')->item(0);
         $infCTe = $req->getElementsByTagName('infCte')->item(0);
         $versao = $infCTe->getAttribute("versao");
-        $chave = preg_replace('/[^0-9]/', '', $infCTe->getAttribute("Id"));
+        $chave = Keys::extractAccessKey($infCTe->getAttribute("Id"));
         $digCTe = $req->getElementsByTagName('DigestValue')
             ->item(0)
             ->nodeValue;
@@ -238,7 +239,7 @@ class Complements
         $cte = $req->getElementsByTagName('CTeOS')->item(0);
         $infCTe = $req->getElementsByTagName('infCte')->item(0);
         $versao = $infCTe->getAttribute("versao");
-        $chave = preg_replace('/[^0-9]/', '', $infCTe->getAttribute("Id"));
+        $chave = Keys::extractAccessKey($infCTe->getAttribute("Id"));
         $digCTe = $req->getElementsByTagName('DigestValue')
             ->item(0)
             ->nodeValue;

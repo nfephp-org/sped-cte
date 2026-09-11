@@ -17,6 +17,7 @@ namespace NFePHP\CTe\Factories;
 
 use DOMDocument;
 use NFePHP\Common\Certificate;
+use NFePHP\Common\Keys;
 
 class QRCode
 {
@@ -48,7 +49,7 @@ class QRCode
         }
         $infCte = $dom->getElementsByTagName('infCte')->item(0);
         $ide = $dom->getElementsByTagName('ide')->item(0);
-        $chCTe = preg_replace('/[^0-9]/', '', $infCte->getAttribute("Id"));
+        $chCTe = Keys::extractAccessKey($infCte->getAttribute("Id"));
         $tpAmb = $ide->getElementsByTagName('tpAmb')->item(0)->nodeValue;
         $tpEmis = $ide->getElementsByTagName('tpEmis')->item(0)->nodeValue;
         $sign = '';
