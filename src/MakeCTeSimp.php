@@ -713,7 +713,7 @@ class MakeCTeSimp
      */
     public function taginfCTe($std)
     {
-        $chave = preg_replace('/[^0-9]/', '', $std->Id);
+        $chave = Keys::extractAccessKey($std->Id);
         $this->infCte = $this->dom->createElement('infCte');
         $this->infCte->setAttribute('Id', 'CTe' . $chave);
         $this->infCte->setAttribute('versao', $std->versao);
@@ -4252,7 +4252,7 @@ class MakeCTeSimp
         $nNF = $ide->getElementsByTagName('nCT')->item(0)->nodeValue;
         $tpEmis = $ide->getElementsByTagName('tpEmis')->item(0)->nodeValue;
         $cCT = $ide->getElementsByTagName('cCT')->item(0)->nodeValue;
-        $chave = str_replace('CTe', '', $infCTe->getAttribute("Id"));
+        $chave = Keys::extractAccessKey($infCTe->getAttribute("Id"));
 
         $dt = new \DateTime($dhEmi);
 

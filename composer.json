@@ -19,7 +19,7 @@
     ],
     "require": {
         "php" : ">=7.0",
-        "nfephp-org/sped-common" : "^5.0",
+        "nfephp-org/sped-common" : "^5.1.17",
         "justinrainbow/json-schema": "^5.2",
         "ext-zlib": "*",
         "ext-dom": "*",

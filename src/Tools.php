@@ -17,6 +17,7 @@ namespace NFePHP\CTe;
  */
 
 use InvalidArgumentException;
+use NFePHP\Common\Keys;
 use NFePHP\Common\Signer;
 use NFePHP\Common\Strings;
 use NFePHP\Common\UFList;
@@ -649,7 +650,7 @@ class Tools extends ToolsCommon
         //verifica a validade no webservice da SEFAZ
         $tpAmb = $dom->getElementsByTagName('tpAmb')->item(0)->nodeValue;
         $infCTe = $dom->getElementsByTagName('infCte')->item(0);
-        $chCTe = preg_replace('/[^0-9]/', '', $infCTe->getAttribute("Id"));
+        $chCTe = Keys::extractAccessKey($infCTe->getAttribute("Id"));
         $protocol = $dom->getElementsByTagName('nProt')->item(0)->nodeValue;
         $digval = $dom->getElementsByTagName('DigestValue')->item(0)->nodeValue;
         //consulta o CTe
