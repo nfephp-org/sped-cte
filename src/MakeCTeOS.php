@@ -392,13 +392,6 @@ class MakeCTeOS
         if (isset($this->infTribFed)) {
             $this->dom->appChild($this->imp, $this->infTribFed, 'Falta tag "imp"');
         }
-        if (!empty($this->pgtoVinc)) {
-            $pgtoVinc = $this->dom->createElement('pgtoVinc');
-            foreach ($this->pgtoVinc as $pgto) {
-                $this->dom->appChild($pgtoVinc, $pgto, 'Falta tag "pgtoVinc"');
-            }
-            $this->dom->appChild($this->infCte, $pgtoVinc, 'Falta tag "pgtoVinc"');
-        }
         if ($this->schema == 'PL_CTe_400_RTC') {
             if (isset($this->IBSCBS)) {
                 $node = $this->IBSCBS->getElementsByTagName("gIBSCBS")->item(0);
@@ -419,6 +412,16 @@ class MakeCTeOS
         }
 
         $this->dom->appChild($this->infCte, $this->imp, 'Falta tag "imp"');
+
+        /* pgtoVinc deve ser anexado depois do imp e antes do infCTeNorm (ordem do XSD) */
+        if (!empty($this->pgtoVinc)) {
+            $pgtoVinc = $this->dom->createElement('pgtoVinc');
+            foreach ($this->pgtoVinc as $pgto) {
+                $this->dom->appChild($pgtoVinc, $pgto, 'Falta tag "pgtoVinc"');
+            }
+            $this->dom->appChild($this->infCte, $pgtoVinc, 'Falta tag "pgtoVinc"');
+        }
+
         if (!empty($this->infCteComp)) { // Caso seja um CTe tipo complemento de valores
             $this->dom->appChild($this->infCte, $this->infCteComp, 'Falta tag "infCteComp"');
         } elseif (!empty($this->infCTeNorm)) { // Caso seja um CTe tipo normal
@@ -3039,6 +3042,19 @@ class MakeCTeOS
         $std = $this->equilizeParameters($std, $possible);
         $identificador = '#3 <pgto> - ';
         $pgto = $this->dom->createElement('pgto');
+        /* nPag e idTransacao sao atributos do elemento pgto (TPagamentoRTC), nao elementos filhos */
+        $nPag = trim((string) $std->nPag);
+        if ($nPag === '') {
+            $this->dom->errors[] = "Preenchimento Obrigatório! [nPag] "
+                . $identificador . 'Número sequencial do pagamento';
+        }
+        $pgto->setAttribute('nPag', $nPag);
+        $idTransacao = trim((string) $std->idTransacao);
+        if ($idTransacao === '') {
+            $this->dom->errors[] = "Preenchimento Obrigatório! [idTransacao] "
+                . $identificador . 'ID específico da transação financeira conforme o meio de pagamento';
+        }
+        $pgto->setAttribute('idTransacao', $idTransacao);
         $this->dom->addChild(
             $pgto,
             'tpMeioPgto',
@@ -3059,20 +3075,6 @@ class MakeCTeOS
             $std->CNPJBasePSP,
             true,
             $identificador . 'CNPJ base da instituição financeira'
-        );
-        $this->dom->addChild(
-            $pgto,
-            'nPag',
-            $std->nPag,
-            true,
-            $identificador . 'Número sequencial do pagamento'
-        );
-        $this->dom->addChild(
-            $pgto,
-            'idTransacao',
-            $std->idTransacao,
-            true,
-            $identificador . 'ID específico da transação financeira conforme o meio de pagamento'
         );
         $this->pgtoVinc[] = $pgto;
         return $pgto;

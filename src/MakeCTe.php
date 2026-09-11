@@ -5734,6 +5734,19 @@ class MakeCTe
         $std = $this->equilizeParameters($std, $possible);
         $identificador = '#3 <pgto> - ';
         $pgto = $this->dom->createElement('pgto');
+        /* nPag e idTransacao sao atributos do elemento pgto (TPagamentoRTC), nao elementos filhos */
+        $nPag = trim((string) $std->nPag);
+        if ($nPag === '') {
+            $this->dom->errors[] = "Preenchimento Obrigatório! [nPag] "
+                . $identificador . 'Número sequencial do pagamento';
+        }
+        $pgto->setAttribute('nPag', $nPag);
+        $idTransacao = trim((string) $std->idTransacao);
+        if ($idTransacao === '') {
+            $this->dom->errors[] = "Preenchimento Obrigatório! [idTransacao] "
+                . $identificador . 'ID específico da transação financeira conforme o meio de pagamento';
+        }
+        $pgto->setAttribute('idTransacao', $idTransacao);
         $this->dom->addChild(
             $pgto,
             'tpMeioPgto',
@@ -5754,20 +5767,6 @@ class MakeCTe
             $std->CNPJBasePSP,
             true,
             $identificador . 'CNPJ base da instituição financeira'
-        );
-        $this->dom->addChild(
-            $pgto,
-            'nPag',
-            $std->nPag,
-            true,
-            $identificador . 'Número sequencial do pagamento'
-        );
-        $this->dom->addChild(
-            $pgto,
-            'idTransacao',
-            $std->idTransacao,
-            true,
-            $identificador . 'ID específico da transação financeira conforme o meio de pagamento'
         );
         $this->pgtoVinc[] = $pgto;
         return $pgto;
