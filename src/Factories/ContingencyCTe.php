@@ -46,20 +46,26 @@ class ContingencyCTe
         $ide->getElementsByTagName('tpEmis')
             ->item(0)
             ->nodeValue = $contingency->tpEmis;
-        if ($tpEmis == 5) {
-            if (!empty($ide->getElementsByTagName('dhCont')->item(0)->nodeValue)) {
-                $ide->getElementsByTagName('dhCont')
-                    ->item(0)
-                    ->nodeValue = $dt->format('Y-m-d\TH:i:sP');
+        // dhCont e xJust sao obrigatorios com tpEmis 2 (contingencia off-line, NT CT-e 2026.004
+        // regras G009/H005) e com tpEmis 5 (FS-DA, extinto pela mesma NT)
+        if (in_array($tpEmis, ['2', '5'], true)) {
+            $nodeDhCont = $ide->getElementsByTagName('dhCont')->item(0);
+            if (!empty($nodeDhCont)) {
+                $nodeDhCont->nodeValue = $dt->format('Y-m-d\TH:i:sP');
             } else {
-                $dhCont = $dom->createElement('dhCont', $dt->format('Y-m-d\TH:i:sP'));
-                $ide->appendChild($dhCont);
+                $nodeDhCont = $dom->createElement('dhCont', $dt->format('Y-m-d\TH:i:sP'));
+                self::insertInIde($ide, $nodeDhCont);
             }
-            if (!empty($ide->getElementsByTagName('xJust')->item(0)->nodeValue)) {
-                $ide->getElementsByTagName('xJust')->item(0)->nodeValue = $motivo;
+            $nodeXJust = $ide->getElementsByTagName('xJust')->item(0);
+            if (!empty($nodeXJust)) {
+                $nodeXJust->nodeValue = $motivo;
             } else {
-                $xJust = $dom->createElement('xJust', $motivo);
-                $ide->appendChild($xJust);
+                $nodeXJust = $dom->createElement('xJust', $motivo);
+                if (!empty($nodeDhCont->nextSibling)) {
+                    $ide->insertBefore($nodeXJust, $nodeDhCont->nextSibling);
+                } else {
+                    $ide->appendChild($nodeXJust);
+                }
             }
         }
         //corrigir a chave
@@ -78,5 +84,23 @@ class ContingencyCTe
         $ide->getElementsByTagName('cDV')->item(0)->nodeValue = substr($chave, -1);
         $infCte->setAttribute('Id', 'CTe' . $chave);
         return Strings::clearXmlString($dom->saveXML(), true);
+    }
+
+    /**
+     * Insere dhCont no ide respeitando a ordem do XSD: dhCont/xJust vem antes de
+     * gCompraGov, tpPagAnt e gPagAntecipado (PL_CTe_400_RTC); sem eles, fica no fim do ide
+     * @param \DOMElement $ide
+     * @param \DOMElement $node
+     * @return void
+     */
+    private static function insertInIde(\DOMElement $ide, \DOMElement $node)
+    {
+        foreach ($ide->childNodes as $child) {
+            if (in_array($child->nodeName, ['gCompraGov', 'tpPagAnt', 'gPagAntecipado'], true)) {
+                $ide->insertBefore($node, $child);
+                return;
+            }
+        }
+        $ide->appendChild($node);
     }
 }

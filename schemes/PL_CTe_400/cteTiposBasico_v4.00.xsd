@@ -1449,6 +1449,7 @@ REENTREGA; DEVOLUÇÃO; REFATURAMENTO; etc</xs:documentation>
 											<xs:documentation>Forma de emissão do CT-e </xs:documentation>
 											<xs:documentation>Preencher com:
 1 - Normal;
+2 - Contingencia offline;
 3 - Regime Especial NFF;  
 4 - EPEC pela SVC; 
 7 - Autorização pela SVC-RS;
@@ -1458,6 +1459,7 @@ REENTREGA; DEVOLUÇÃO; REFATURAMENTO; etc</xs:documentation>
 											<xs:restriction base="xs:string">
 												<xs:whiteSpace value="preserve"/>
 												<xs:enumeration value="1"/>
+												<xs:enumeration value="2"/>
 												<xs:enumeration value="3"/>
 												<xs:enumeration value="4"/>
 												<xs:enumeration value="7"/>
@@ -2784,6 +2786,7 @@ Onde v9.99 é a a designação genérica para a versão do arquivo. Por exemplo,
 											<xs:documentation>Forma de emissão do CT-e </xs:documentation>
 											<xs:documentation>Preencher com:
 1 - Normal;
+2 - Contingencia offline;
  3-Regime Especial NFF;  4-EPEC pela SVC; 5 - Contingência FSDA;
 	7 - Autorização pela SVC-RS;
   8 - Autorização pela SVC-SP</xs:documentation>
@@ -2792,6 +2795,7 @@ Onde v9.99 é a a designação genérica para a versão do arquivo. Por exemplo,
 											<xs:restriction base="xs:string">
 												<xs:whiteSpace value="preserve"/>
 												<xs:enumeration value="1"/>
+												<xs:enumeration value="2"/>
 												<xs:enumeration value="3"/>
 												<xs:enumeration value="4"/>
 												<xs:enumeration value="5"/>
@@ -5043,6 +5047,7 @@ Onde v9.99 é a a designação genérica para a versão do arquivo. Por exemplo,
 											<xs:documentation>Forma de emissão do CT-e</xs:documentation>
 											<xs:documentation>Preencher com:
 1 - Normal;
+2 - Contingencia offline;
  5 - Contingência FSDA;
 7 - Autorização pela SVC-RS;
  8 - Autorização pela SVC-SP</xs:documentation>
@@ -5051,6 +5056,7 @@ Onde v9.99 é a a designação genérica para a versão do arquivo. Por exemplo,
 											<xs:restriction base="xs:string">
 												<xs:whiteSpace value="preserve"/>
 												<xs:enumeration value="1"/>
+												<xs:enumeration value="2"/>
 												<xs:enumeration value="5"/>
 												<xs:enumeration value="7"/>
 												<xs:enumeration value="8"/>

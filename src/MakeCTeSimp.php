@@ -1539,6 +1539,7 @@ class MakeCTeSimp
     {
         $possible = [
             'vTPrest',
+            'vTPrestLiq',
             'vTRec',
             'vTotDFe'
         ];
@@ -1552,6 +1553,17 @@ class MakeCTeSimp
             true,
             $identificador . 'Valor Total da Prestação do Serviço'
         );
+        // NT CT-e 2026.004 §3: total liquido sem tributos (0-1, so no PL_CTe_400_RTC);
+        // a SEFAZ confere contra a soma de det/vPrestLiq (RV 1054)
+        if ($this->schema == 'PL_CTe_400_RTC') {
+            $this->dom->addChild(
+                $this->total,
+                'vTPrestLiq',
+                $this->conditionalNumberFormatting($std->vTPrestLiq),
+                false,
+                $identificador . 'Valor Total Líquido da Prestação do Serviço sem tributos'
+            );
+        }
         $this->dom->addChild(
             $this->total,
             'vTRec',
@@ -1569,6 +1581,33 @@ class MakeCTeSimp
         return $this->total;
     }
 
+
+    /**
+     * Grupo gICMSPrevistoPagtoAntecip (NT CT-e 2026.004 §3, só no PL_CTe_400_RTC)
+     * Informado em tagicms() pela chave vICMSPrevisto (aceita 0). É uma alternativa do
+     * xs:choice de ICMS (TImp): quando informado, substitui o grupo do CST.
+     * Hipóteses: tpPagAnt = 1 ou tpOperGov = 4 (RVs 1051 a 1053).
+     * @param stdClass $std
+     * @return DOMElement|null
+     */
+    protected function tagICMSPrevistoPagtoAntecip(stdClass $std)
+    {
+        if ($this->schema != 'PL_CTe_400_RTC'
+            || !isset($std->vICMSPrevisto)
+            || !is_numeric($std->vICMSPrevisto)
+        ) {
+            return null;
+        }
+        $grupo = $this->dom->createElement("gICMSPrevistoPagtoAntecip");
+        $this->dom->addChild(
+            $grupo,
+            'vICMSPrevisto',
+            $this->conditionalNumberFormatting($std->vICMSPrevisto),
+            true,
+            "N01 <gICMSPrevistoPagtoAntecip> - Valor do ICMS a incidir no momento do fornecimento futuro"
+        );
+        return $grupo;
+    }
 
     /**
      * tagICMS
@@ -1604,11 +1643,19 @@ class MakeCTeSimp
             'vICMSUFFim',
             'vICMSUFIni',
             'vICMSDeson',
-            'cBenef'
+            'cBenef',
+            'vICMSPrevisto',
         ];
         $std = $this->equilizeParameters($std, $possible);
         $identificador = 'N01 <ICMSxx> - ';
-        switch ($std->cst) {
+        $cst = $std->cst;
+        $icmsPrevisto = $this->tagICMSPrevistoPagtoAntecip($std);
+        if (!empty($icmsPrevisto)) {
+            // o grupo e uma alternativa do xs:choice de ICMS: substitui o grupo do CST
+            $icms = $icmsPrevisto;
+            $cst = null;
+        }
+        switch ($cst) {
             case '00':
                 $icms = $this->dom->createElement("ICMS00");
                 $this->dom->addChild(
@@ -2128,6 +2175,7 @@ class MakeCTeSimp
             'cMunFim',
             'xMunFim',
             'vPrest',
+            'vPrestLiq',
             'vRec',
         ];
 
@@ -2171,6 +2219,16 @@ class MakeCTeSimp
             true,
             $identificador . 'Valor da Prestação do Serviço'
         );
+        // NT CT-e 2026.004 §3: valor liquido da prestacao sem tributos (0-1, so no PL_CTe_400_RTC)
+        if ($this->schema == 'PL_CTe_400_RTC') {
+            $this->dom->addChild(
+                $this->det[$posicao],
+                'vPrestLiq',
+                $this->conditionalNumberFormatting($std->vPrestLiq),
+                false,
+                $identificador . 'Valor Líquido da Prestação SEM tributos'
+            );
+        }
         $this->dom->addChild(
             $this->det[$posicao],
             'vRec',

@@ -167,6 +167,10 @@ class Contingency
             case 'FA-DA':
                 $tpEmis = 5;
                 break;
+            case 'OFFLINE':
+                // NT CT-e 2026.004: contingencia off-line (tpEmis=2)
+                $tpEmis = 2;
+                break;
             default:
                 if ($type == '') {
                     $tpEmis = 1;

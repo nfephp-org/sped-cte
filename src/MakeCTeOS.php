@@ -222,7 +222,7 @@ class MakeCTeOS
      */
     protected $tpPagAnt;
     /**
-     * Grupo de antecipacao de pagamento (NT 2026.002 §7) - acumula chCTePagAnt (1-99).
+     * Grupo de antecipacao de pagamento (NT 2026.002 §7) - acumula chDFePagAnt/chCTePagAnt (1-99).
      * @var DOMElement|null
      */
     protected $gPagAntecipado;
@@ -1215,6 +1215,7 @@ class MakeCTeOS
     {
         $possible = [
             'vTPrest',
+            'vTPrestLiq',
             'vRec'
         ];
         $std = $this->equilizeParameters($std, $possible);
@@ -1227,6 +1228,16 @@ class MakeCTeOS
             true,
             $identificador . 'Valor Total da Prestação do Serviço'
         );
+        // NT CT-e 2026.004 §3: valor liquido da prestacao sem tributos (0-1, so no PL_CTe_400_RTC)
+        if ($this->schema == 'PL_CTe_400_RTC') {
+            $this->dom->addChild(
+                $this->vPrest,
+                'vTPrestLiq',
+                $this->conditionalNumberFormatting($std->vTPrestLiq),
+                false,
+                $identificador . 'Valor Líquido total da Prestação SEM tributos'
+            );
+        }
         $this->dom->addChild(
             $this->vPrest,
             'vRec',
@@ -1274,6 +1285,33 @@ class MakeCTeOS
     }
 
     /**
+     * Grupo gICMSPrevistoPagtoAntecip (NT CT-e 2026.004 §3, só no PL_CTe_400_RTC)
+     * Informado em tagicms() pela chave vICMSPrevisto (aceita 0). É uma alternativa do
+     * xs:choice de ICMS (TImpOS): quando informado, substitui o grupo do CST.
+     * Hipóteses: tpPagAnt = 1 ou tpOperGov = 4 (RVs 1051 a 1053).
+     * @param stdClass $std
+     * @return DOMElement|null
+     */
+    protected function tagICMSPrevistoPagtoAntecip(stdClass $std)
+    {
+        if ($this->schema != 'PL_CTe_400_RTC'
+            || !isset($std->vICMSPrevisto)
+            || !is_numeric($std->vICMSPrevisto)
+        ) {
+            return null;
+        }
+        $grupo = $this->dom->createElement("gICMSPrevistoPagtoAntecip");
+        $this->dom->addChild(
+            $grupo,
+            'vICMSPrevisto',
+            $this->conditionalNumberFormatting($std->vICMSPrevisto),
+            true,
+            "N01 <gICMSPrevistoPagtoAntecip> - Valor do ICMS a incidir no momento do fornecimento futuro"
+        );
+        return $grupo;
+    }
+
+    /**
      * tagICMS
      * Informações relativas ao ICMS
      * #194
@@ -1304,11 +1342,19 @@ class MakeCTeOS
             'vICMSUFFim',
             'vICMSUFIni',
             'vICMSDeson',
-            'cBenef'
+            'cBenef',
+            'vICMSPrevisto',
         ];
         $std = $this->equilizeParameters($std, $possible);
         $identificador = 'N01 <ICMSxx> - ';
-        switch ($std->cst) {
+        $cst = $std->cst;
+        $icmsPrevisto = $this->tagICMSPrevistoPagtoAntecip($std);
+        if (!empty($icmsPrevisto)) {
+            // o grupo e uma alternativa do xs:choice de ICMS: substitui o grupo do CST
+            $icms = $icmsPrevisto;
+            $cst = null;
+        }
+        switch ($cst) {
             case '00':
                 $icms = $this->dom->createElement("ICMS00");
                 $this->dom->addChild(
@@ -1691,7 +1737,7 @@ class MakeCTeOS
 
     /**
      * tagVTotDFe
-     * Valor total do documento fiscal (vTPrest + total do IBS + total da CBS)
+     * Valor total do documento fiscal (NT CT-e 2026.004, RV 365: repete o valor de vTPrest)
      *
      * @return DOMElement
      */
@@ -2494,22 +2540,26 @@ class MakeCTeOS
     }
 
     /**
-     * Grupo gPagAntecipado / chCTePagAnt (NT 2026.002 §7). Chamar uma vez por chave
-     * (1-99): acumula cada chCTePagAnt no mesmo grupo, anexado ao ide no monta().
+     * Grupo gPagAntecipado (NT 2026.002 §7). Chamar uma vez por chave (1-99): acumula
+     * cada chave no mesmo grupo, anexado ao ide no monta().
+     * O schema da NT CT-e 2026.004 (PL_CTe_400_RTC) renomeou chCTePagAnt para chDFePagAnt.
+     * Aceita as duas chaves no stdClass (chDFePagAnt tem precedência) e emite a tag do PL
+     * configurado no construtor: chDFePagAnt no PL_CTe_400_RTC, chCTePagAnt nos demais.
      * @param stdClass $std
      * @return DOMElement
      */
     public function taggPagAntecipado($std)
     {
-        $possible = ['chCTePagAnt'];
+        $possible = ['chDFePagAnt', 'chCTePagAnt'];
         $std = $this->equilizeParameters($std, $possible);
         if (empty($this->gPagAntecipado)) {
             $this->gPagAntecipado = $this->dom->createElement("gPagAntecipado");
         }
+        $chave = !empty($std->chDFePagAnt) ? $std->chDFePagAnt : $std->chCTePagAnt;
         $this->dom->addChild(
             $this->gPagAntecipado,
-            "chCTePagAnt",
-            $std->chCTePagAnt,
+            $this->schema == 'PL_CTe_400_RTC' ? 'chDFePagAnt' : 'chCTePagAnt',
+            $chave,
             true,
             "# <gPagAntecipado> - Chave de acesso do CT-e de antecipacao de pagamento"
         );
