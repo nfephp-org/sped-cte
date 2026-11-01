@@ -692,7 +692,7 @@ class Tools extends ToolsCommon
      * @param string|null $latitude Latitude do ponto da entrega
      * @param string|null $longitude Longitude do ponto da entrega
      * @param int $nSeqEvento No. sequencial do evento
-     * @param string $dhEventoEntrega Data e hora da geração do hash da entrega
+     * @param string $dhEventoEntrega Data e hora da conclusão da entrega
      * @param array $aNFes Chave das NFes entregues
      * @return string
      */
@@ -729,16 +729,21 @@ class Tools extends ToolsCommon
             $infLongitude = "<longitude>$longitude</longitude>";
         }
 
+        //a geração do hash ocorre em instante distinto da conclusão da
+        //entrega, o dhHashEntrega não pode repetir o dhEntrega
+        $dt = new \DateTime('now', new \DateTimeZone($this->timezone));
+        $datahash = $dt->format('Y-m-d\TH:i:sP');
+
         $tagAdic = "<evCECTe>"
             . "<descEvento>Comprovante de Entrega do CT-e</descEvento>"
             . "<nProt>$nProt</nProt>"
             . "<dhEntrega>$dhEventoEntrega</dhEntrega>"
-            . "<nDoc>$nDoc</nDoc>"
-            . "<xNome>$xNome</xNome>"
+            . "<nDoc>" . Strings::replaceUnacceptableCharacters($nDoc) . "</nDoc>"
+            . "<xNome>" . Strings::replaceUnacceptableCharacters($xNome) . "</xNome>"
             . $infLatitude
             . $infLongitude
             . "<hashEntrega>$hash</hashEntrega>"
-            . "<dhHashEntrega>$dhEventoEntrega</dhHashEntrega>"
+            . "<dhHashEntrega>$datahash</dhHashEntrega>"
             . $infEntrega
             . "</evCECTe>";
         return $this->sefazEvento(
@@ -787,7 +792,7 @@ class Tools extends ToolsCommon
      * @param string|null $latitude Latitude do ponto da entrega
      * @param string|null $longitude Longitude do ponto da entrega
      * @param int $nSeqEvento No. sequencial do evento
-     * @param string $dhTentativaEntrega Data e hora da geração do hash da tentativa de entrega
+     * @param string $dhTentativaEntrega Data e hora da tentativa de entrega
      * @param array $aNFes Chave das NFes entregues
      * @return string
      */
@@ -827,20 +832,38 @@ class Tools extends ToolsCommon
 
         $infJustMotivo = '';
         if ($xJustMotivo) {
-            $infJustMotivo = "<xJustMotivo>$xJustMotivo</xJustMotivo>";
+            $infJustMotivo = "<xJustMotivo>"
+                . Strings::replaceUnacceptableCharacters($xJustMotivo)
+                . "</xJustMotivo>";
+        }
+
+        //nTentativa, hashTentativaEntrega e dhHashTentativaEntrega são
+        //minOccurs="0" no evIECTe_v4.00.xsd e não podem ser emitidos vazios
+        $infNTentativa = '';
+        if (!empty($nTentativa)) {
+            $infNTentativa = "<nTentativa>$nTentativa</nTentativa>";
+        }
+
+        //a geração do hash ocorre em instante distinto da tentativa de
+        //entrega, o dhHashTentativaEntrega não pode repetir a tentativa
+        $infHashTentativa = '';
+        if (!empty($hash)) {
+            $dt = new \DateTime('now', new \DateTimeZone($this->timezone));
+            $datahash = $dt->format('Y-m-d\TH:i:sP');
+            $infHashTentativa = "<hashTentativaEntrega>$hash</hashTentativaEntrega>"
+                . "<dhHashTentativaEntrega>$datahash</dhHashTentativaEntrega>";
         }
 
         $tagAdic = "<evIECTe>"
             . "<descEvento>Insucesso na Entrega do CT-e</descEvento>"
             . "<nProt>$nProt</nProt>"
             . "<dhTentativaEntrega>$dhTentativaEntrega</dhTentativaEntrega>"
-            . "<nTentativa>$nTentativa</nTentativa>"
+            . $infNTentativa
             . "<tpMotivo>$tpMotivo</tpMotivo>"
             . $infJustMotivo
             . $infLatitude
             . $infLongitude
-            . "<hashTentativaEntrega>$hash</hashTentativaEntrega>"
-            . "<dhHashTentativaEntrega>$dhTentativaEntrega</dhHashTentativaEntrega>"
+            . $infHashTentativa
             . $infEntrega
             . "</evIECTe>";
 
