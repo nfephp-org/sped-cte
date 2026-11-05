@@ -46,7 +46,7 @@ class ContingencyCTe
         $ide->getElementsByTagName('tpEmis')
             ->item(0)
             ->nodeValue = $contingency->tpEmis;
-        if ($tpEmis == 5) {
+        if (in_array($tpEmis, ['2', '5'])) {
             if (!empty($ide->getElementsByTagName('dhCont')->item(0)->nodeValue)) {
                 $ide->getElementsByTagName('dhCont')
                     ->item(0)

@@ -53,7 +53,7 @@ class QRCode
         $tpAmb = $ide->getElementsByTagName('tpAmb')->item(0)->nodeValue;
         $tpEmis = $ide->getElementsByTagName('tpEmis')->item(0)->nodeValue;
         $sign = '';
-        if (in_array($tpEmis, [4, 5])) {
+        if (in_array($tpEmis, [2, 4, 5])) {
             $sign = "&sign=" . base64_encode($certificate->sign($chCTe));
         }
         $urlQRCode = "$url?chCTe=$chCTe&tpAmb=$tpAmb{$sign}";

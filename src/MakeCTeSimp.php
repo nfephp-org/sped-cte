@@ -1539,6 +1539,7 @@ class MakeCTeSimp
     {
         $possible = [
             'vTPrest',
+            'vTPrestLiq',
             'vTRec',
             'vTotDFe'
         ];
@@ -1551,6 +1552,13 @@ class MakeCTeSimp
             $this->conditionalNumberFormatting($std->vTPrest),
             true,
             $identificador . 'Valor Total da Prestação do Serviço'
+        );
+        $this->dom->addChild(
+            $this->total,
+            'vTPrestLiq',
+            $this->conditionalNumberFormatting($std->vTPrestLiq),
+            false,
+            $identificador . 'Valor Total Líquido da Prestação do Serviço sem tributos'
         );
         $this->dom->addChild(
             $this->total,
@@ -1604,7 +1612,8 @@ class MakeCTeSimp
             'vICMSUFFim',
             'vICMSUFIni',
             'vICMSDeson',
-            'cBenef'
+            'cBenef',
+            'vICMSPrevisto',
         ];
         $std = $this->equilizeParameters($std, $possible);
         $identificador = 'N01 <ICMSxx> - ';
@@ -1955,6 +1964,16 @@ class MakeCTeSimp
                     }
                 }
                 break;
+            case 'PrevistoPagtoAntecip':
+                $icms = $this->dom->createElement("gICMSPrevistoPagtoAntecip");
+                $this->dom->addChild(
+                    $icms,
+                    'vICMSPrevisto',
+                    $this->conditionalNumberFormatting($std->vICMSPrevisto),
+                    true,
+                    "$identificador Valor do ICMS a incidir no momento do fornecimento futuro"
+                );
+                break;
             case 'SN':
                 $icms = $this->dom->createElement("ICMSSN");
                 $this->dom->addChild(
@@ -2128,6 +2147,7 @@ class MakeCTeSimp
             'cMunFim',
             'xMunFim',
             'vPrest',
+            'vPrestLiq',
             'vRec',
         ];
 
@@ -2170,6 +2190,13 @@ class MakeCTeSimp
             $this->conditionalNumberFormatting($std->vPrest),
             true,
             $identificador . 'Valor da Prestação do Serviço'
+        );
+        $this->dom->addChild(
+            $this->det[$posicao],
+            'vPrestLiq',
+            $this->conditionalNumberFormatting($std->vPrestLiq),
+            false,
+            $identificador . 'Valor Líquido da Prestação SEM tributos'
         );
         $this->dom->addChild(
             $this->det[$posicao],

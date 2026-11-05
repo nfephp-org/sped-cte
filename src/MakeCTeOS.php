@@ -222,7 +222,7 @@ class MakeCTeOS
      */
     protected $tpPagAnt;
     /**
-     * Grupo de antecipacao de pagamento (NT 2026.002 §7) - acumula chCTePagAnt (1-99).
+     * Grupo de antecipacao de pagamento (NT 2026.002 §7) - acumula chDFePagAnt (1-99).
      * @var DOMElement|null
      */
     protected $gPagAntecipado;
@@ -1215,6 +1215,7 @@ class MakeCTeOS
     {
         $possible = [
             'vTPrest',
+            'vTPrestLiq',
             'vRec'
         ];
         $std = $this->equilizeParameters($std, $possible);
@@ -1226,6 +1227,13 @@ class MakeCTeOS
             $this->conditionalNumberFormatting($std->vTPrest),
             true,
             $identificador . 'Valor Total da Prestação do Serviço'
+        );
+        $this->dom->addChild(
+            $this->vPrest,
+            'vTPrestLiq',
+            $this->conditionalNumberFormatting($std->vTPrestLiq),
+            false,
+            $identificador . 'Valor Líquido total da Prestação SEM tributos'
         );
         $this->dom->addChild(
             $this->vPrest,
@@ -1304,7 +1312,8 @@ class MakeCTeOS
             'vICMSUFFim',
             'vICMSUFIni',
             'vICMSDeson',
-            'cBenef'
+            'cBenef',
+            'vICMSPrevisto',
         ];
         $std = $this->equilizeParameters($std, $possible);
         $identificador = 'N01 <ICMSxx> - ';
@@ -1594,6 +1603,16 @@ class MakeCTeOS
                         );
                     }
                 }
+                break;
+            case 'PrevistoPagtoAntecip':
+                $icms = $this->dom->createElement("gICMSPrevistoPagtoAntecip");
+                $this->dom->addChild(
+                    $icms,
+                    'vICMSPrevisto',
+                    $this->conditionalNumberFormatting($std->vICMSPrevisto),
+                    true,
+                    "$identificador Valor do ICMS a incidir no momento do fornecimento futuro"
+                );
                 break;
             case 'SN':
                 $icms = $this->dom->createElement("ICMSSN");
@@ -2494,22 +2513,22 @@ class MakeCTeOS
     }
 
     /**
-     * Grupo gPagAntecipado / chCTePagAnt (NT 2026.002 §7). Chamar uma vez por chave
-     * (1-99): acumula cada chCTePagAnt no mesmo grupo, anexado ao ide no monta().
+     * Grupo gPagAntecipado / chDFePagAnt (NT 2026.002 §7). Chamar uma vez por chave
+     * (1-99): acumula cada chDFePagAnt no mesmo grupo, anexado ao ide no monta().
      * @param stdClass $std
      * @return DOMElement
      */
     public function taggPagAntecipado($std)
     {
-        $possible = ['chCTePagAnt'];
+        $possible = ['chDFePagAnt'];
         $std = $this->equilizeParameters($std, $possible);
         if (empty($this->gPagAntecipado)) {
             $this->gPagAntecipado = $this->dom->createElement("gPagAntecipado");
         }
         $this->dom->addChild(
             $this->gPagAntecipado,
-            "chCTePagAnt",
-            $std->chCTePagAnt,
+            "chDFePagAnt",
+            $std->chDFePagAnt,
             true,
             "# <gPagAntecipado> - Chave de acesso do CT-e de antecipacao de pagamento"
         );

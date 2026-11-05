@@ -167,6 +167,9 @@ class Contingency
             case 'FA-DA':
                 $tpEmis = 5;
                 break;
+            case 'OFFLINE':
+                $tpEmis = 2;
+                break;
             default:
                 if ($type == '') {
                     $tpEmis = 1;
