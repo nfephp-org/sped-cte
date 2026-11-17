@@ -133,7 +133,7 @@ class MakeCTeSimp
      */
     private $enderEmit = '';
     /**
-     * Inscricao Suframa do emitente (NT 2026.002 §4) - inserido antes do CRT no monta().
+     * Inscricao Suframa do emitente (NT 2026.002 §4) - anexado depois do CRT no monta().
      * @var \DOMElement|null
      */
     private $ISUFEmit = null;
@@ -453,9 +453,9 @@ class MakeCTeSimp
         // inclui o Node enderEmit dentro do emit antes da tag CRT
         $node = $this->emit->getElementsByTagName("CRT")->item(0);
         $this->emit->insertBefore($this->enderEmit, $node);
-        // NT 2026.002 §4: ISUFEmit entre enderEmit e CRT (ordem do XSD)
+        // NT 2026.002 §4: ISUFEmit depois do CRT, ultima tag criada no tagemit (ordem do XSD)
         if (!empty($this->ISUFEmit)) {
-            $this->emit->insertBefore($this->ISUFEmit, $node);
+            $this->dom->appChild($this->emit, $this->ISUFEmit, 'Falta tag "emit"');
         }
         $this->dom->appChild($this->infCte, $this->emit, 'Falta tag "infCte"');
 
@@ -1382,7 +1382,7 @@ class MakeCTeSimp
         $std = $this->equilizeParameters($std, $possible);
         $identificador = '#97 <emit> - ';
         $this->emit = $this->dom->createElement('emit');
-        // NT 2026.002 §4: criado aqui e inserido antes do CRT no monta() (ordem do XSD).
+        // NT 2026.002 §4: criado aqui e anexado depois do CRT no monta() (ordem do XSD).
         $this->ISUFEmit = !empty($std->ISUFEmit)
             ? $this->dom->createElement('ISUFEmit', $std->ISUFEmit)
             : null;
