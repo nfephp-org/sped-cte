@@ -133,10 +133,15 @@ class MakeCTeSimp
      */
     private $enderEmit = '';
     /**
-     * Inscricao Suframa do emitente (NT 2026.002 §4) - inserido antes do CRT no monta().
+     * Inscricao Suframa do emitente (NT 2026.002 §4) - anexado depois do CRT no monta().
      * @var \DOMElement|null
      */
     private $ISUFEmit = null;
+    /**
+     * Tipo de regime de apuracao do IBS/CBS (NT 2026.005) - anexado depois do ISUFEmit no monta().
+     * @var \DOMElement|null
+     */
+    private $tpRegimeIBSCBS = null;
     /**
      * Informações do Remetente das mercadorias transportadas pelo CT-e
      * @var \DOMNode
@@ -318,6 +323,11 @@ class MakeCTeSimp
      */
     protected $gPagAntecipado;
     /**
+     * Grupo de multa e juros (NT 2026.004 v1.01) - chave do CT-e referenciado.
+     * @var DOMElement|null
+     */
+    protected $gMultaJuros;
+    /**
      * @var DOMElement
      */
     protected $ICMS;
@@ -334,21 +344,27 @@ class MakeCTeSimp
      */
     protected $ICMSUFFim;
     /**
-     * @var DOMElement
+     * IBSCBS por item, indexado como $this->det (NT 2026.004: o grupo fica em det, nao em imp).
+     * @var DOMElement[]
      */
-    protected $IBSCBS;
+    protected $IBSCBS = [];
     /**
-     * @var DOMElement
+     * @var DOMElement[]
      */
-    protected $gTribRegular;
+    protected $gTribRegular = [];
     /**
-     * @var DOMElement
+     * @var DOMElement[]
      */
-    protected $gEstornoCred;
+    protected $gEstornoCred = [];
     /**
-     * @var DOMElement
+     * NT 2026.005
+     * @var DOMElement[]
      */
-    protected $gTribCompraGov;
+    protected $gTribSN = [];
+    /**
+     * @var DOMElement[]
+     */
+    protected $gTribCompraGov = [];
     /**
      * NT 2026.002
      * @var array
@@ -429,6 +445,10 @@ class MakeCTeSimp
         if (!empty($this->gPagAntecipado)) {
             $this->dom->appChild($this->ide, $this->gPagAntecipado, 'Falta tag "ide"');
         }
+        // NT 2026.004 v1.01 - Multa e juros (ultimo grupo do ide, na ordem do XSD).
+        if (!empty($this->gMultaJuros)) {
+            $this->dom->appChild($this->ide, $this->gMultaJuros, 'Falta tag "ide"');
+        }
         $this->dom->appChild($this->infCte, $this->ide, 'Falta tag "infCte"');
         if (!empty($this->compl)) {
             foreach ($this->obsCont as $obsCont) {
@@ -443,9 +463,13 @@ class MakeCTeSimp
         // inclui o Node enderEmit dentro do emit antes da tag CRT
         $node = $this->emit->getElementsByTagName("CRT")->item(0);
         $this->emit->insertBefore($this->enderEmit, $node);
-        // NT 2026.002 §4: ISUFEmit entre enderEmit e CRT (ordem do XSD)
+        // NT 2026.002 §4: ISUFEmit depois do CRT, ultima tag criada no tagemit (ordem do XSD)
         if (!empty($this->ISUFEmit)) {
-            $this->emit->insertBefore($this->ISUFEmit, $node);
+            $this->dom->appChild($this->emit, $this->ISUFEmit, 'Falta tag "emit"');
+        }
+        // NT 2026.005: tpRegimeIBSCBS e a ultima tag do emit
+        if (!empty($this->tpRegimeIBSCBS)) {
+            $this->dom->appChild($this->emit, $this->tpRegimeIBSCBS, 'Falta tag "emit"');
         }
         $this->dom->appChild($this->infCte, $this->emit, 'Falta tag "infCte"');
 
@@ -470,6 +494,10 @@ class MakeCTeSimp
                 foreach ($this->comp[$indiceDet] as $comp) {
                     $this->dom->appChild($this->det[$indiceDet], $comp, 'Falta tag "Comp"');
                 }
+            }
+            // NT 2026.004 - IBS/CBS do item (depois de Comp e antes de infNFe/infDocAnt)
+            if ($this->schema == 'PL_CTe_400_RTC' && isset($this->IBSCBS[$indiceDet])) {
+                $this->dom->appChild($this->det[$indiceDet], $this->montaIBSCBS($indiceDet), 'Falta tag "det"');
             }
             // Monta as "Informações das NF-e"
             if (array_key_exists($indiceDet, $this->infNFe)) {
@@ -570,21 +598,6 @@ class MakeCTeSimp
         if (isset($this->ICMSUFFim)) {
             $this->dom->appChild($this->imp, $this->ICMSUFFim, 'Falta tag "imp"');
         }
-        if ($this->schema == 'PL_CTe_400_RTC') {
-            if (isset($this->IBSCBS)) {
-                $node = $this->IBSCBS->getElementsByTagName("gIBSCBS")->item(0);
-                if (isset($this->gTribRegular)) {
-                    $this->dom->appChild($node, $this->gTribRegular, 'Falta tag "gIBSCBS"');
-                }
-                if (isset($this->gTribCompraGov)) {
-                    $this->dom->appChild($node, $this->gTribCompraGov, 'Falta tag "gIBSCBS"');
-                }
-                if (isset($this->gEstornoCred)) {
-                    $this->dom->appChild($this->IBSCBS, $this->gEstornoCred, 'Falta tag "IBSCBS"');
-                }
-                $this->dom->appChild($this->imp, $this->IBSCBS, 'Falta tag "imp"');
-            }
-        }
 
         $this->dom->appChild($this->infCte, $this->imp, 'Falta tag "imp"');
 
@@ -597,6 +610,11 @@ class MakeCTeSimp
             $this->dom->appChild($this->infCte, $pgtoVinc, 'Falta tag "pgtoVinc"');
         }
 
+        // NT 2026.004 - Totais do IBS/CBS declarado nos itens (depois de vTRec, antes de vTotDFe)
+        if ($this->schema == 'PL_CTe_400_RTC' && !empty($this->IBSCBS)) {
+            $vTotDFe = $this->total->getElementsByTagName('vTotDFe')->item(0);
+            $this->total->insertBefore($this->montaIBSCBSTot(), $vTotDFe);
+        }
         $this->dom->appChild($this->infCte, $this->total, 'Falta tag "total"');
 
         foreach ($this->autXML as $autXML) {
@@ -1373,14 +1391,19 @@ class MakeCTeSimp
             'xNome',
             'xFant',
             'CRT',
-            'ISUFEmit'
+            'ISUFEmit',
+            'tpRegimeIBSCBS'
         ];
         $std = $this->equilizeParameters($std, $possible);
         $identificador = '#97 <emit> - ';
         $this->emit = $this->dom->createElement('emit');
-        // NT 2026.002 §4: criado aqui e inserido antes do CRT no monta() (ordem do XSD).
+        // NT 2026.002 §4: criado aqui e anexado depois do CRT no monta() (ordem do XSD).
         $this->ISUFEmit = !empty($std->ISUFEmit)
             ? $this->dom->createElement('ISUFEmit', $std->ISUFEmit)
+            : null;
+        // NT 2026.005: anexado depois do ISUFEmit no monta() (ordem do XSD).
+        $this->tpRegimeIBSCBS = !empty($std->tpRegimeIBSCBS)
+            ? $this->dom->createElement('tpRegimeIBSCBS', $std->tpRegimeIBSCBS)
             : null;
         if (!empty($std->CNPJ)) {
             $this->dom->addChild(
@@ -3703,6 +3726,34 @@ class MakeCTeSimp
         return $this->gPagAntecipado;
     }
 
+    /**
+     * Grupo gMultaJuros (NT 2026.004 v1.01): CT-e de multa e juros referente a um CT-e
+     * emitido anteriormente. Anexado ao ide no monta(), depois do gPagAntecipado.
+     * @param stdClass $std
+     * @return DOMElement
+     */
+    public function taggMultaJuros($std)
+    {
+        $possible = ['chCTeRef'];
+        $std = $this->equilizeParameters($std, $possible);
+        $this->gMultaJuros = $this->dom->createElement("gMultaJuros");
+        $this->dom->addChild(
+            $this->gMultaJuros,
+            "chCTeRef",
+            $std->chCTeRef,
+            true,
+            "# <gMultaJuros> - Chave de acesso do CT-e referenciado para cobrar multa e juros"
+        );
+        return $this->gMultaJuros;
+    }
+
+    /**
+     * IBS/CBS do item (NT 2026.004): chamar depois do tagdet de cada item, assim como
+     * tagIBSCBSTribRegular, taggTribCompraGov e taggEstornoCred. O IBSCBSTot do total
+     * e calculado no montaCTe() a partir dos itens.
+     * @param stdClass $std
+     * @return DOMElement
+     */
     public function tagIBSCBS(stdClass $std): DOMElement
     {
         $possible = [
@@ -4025,7 +4076,7 @@ class MakeCTeSimp
             $gIBSCBS->appendChild($gCBS);
             $ibscbs->appendChild($gIBSCBS);
         }
-        $this->IBSCBS = $ibscbs;
+        $this->IBSCBS[$this->currentDetIndex('tagIBSCBS')] = $ibscbs;
         return $ibscbs;
     }
 
@@ -4109,7 +4160,7 @@ class MakeCTeSimp
             true,
             "$identificador Valor da CBS (vTribRegCB)"
         );
-        $this->gTribRegular = $gTribRegular;
+        $this->gTribRegular[$this->currentDetIndex('tagIBSCBSTribRegular')] = $gTribRegular;
         return $gTribRegular;
     }
 
@@ -4143,8 +4194,66 @@ class MakeCTeSimp
             true,
             "$identificador Valor do CBS a ser estornado (vCBSEstCred)"
         );
-        $this->gEstornoCred = $estorno;
+        $this->gEstornoCred[$this->currentDetIndex('taggEstornoCred')] = $estorno;
         return $estorno;
+    }
+
+    /**
+     * Grupo gTribSN do IBSCBS (NT 2026.005): IBS e CBS do Simples Nacional. gIBSSN e gCBSSN
+     * entram quando informados; quais sao exigidos depende do CRT e do tpRegimeIBSCBS (NT, item 2.2).
+     * @param stdClass $std
+     * @return DOMElement
+     * @throws DOMException
+     */
+    public function taggTribSN(stdClass $std): DOMElement
+    {
+        $possible = [
+            'pIBSSN',
+            'vIBSSN',
+            'pCBSSN',
+            'vCBSSN',
+        ];
+        $std = $this->equilizeParameters($std, $possible);
+        $identificador = "# <gTribSN> -";
+        $gTribSN = $this->dom->createElement("gTribSN");
+        if (isset($std->pIBSSN) || isset($std->vIBSSN)) {
+            $gIBSSN = $this->dom->createElement("gIBSSN");
+            $this->dom->addChild(
+                $gIBSSN,
+                "pIBSSN",
+                $this->conditionalNumberFormatting($std->pIBSSN, 4),
+                true,
+                "$identificador Aliquota efetiva do IBS para os optantes do Simples (pIBSSN)"
+            );
+            $this->dom->addChild(
+                $gIBSSN,
+                "vIBSSN",
+                $this->conditionalNumberFormatting($std->vIBSSN),
+                true,
+                "$identificador Valor do IBS para os optantes do Simples (vIBSSN)"
+            );
+            $gTribSN->appendChild($gIBSSN);
+        }
+        if (isset($std->pCBSSN) || isset($std->vCBSSN)) {
+            $gCBSSN = $this->dom->createElement("gCBSSN");
+            $this->dom->addChild(
+                $gCBSSN,
+                "pCBSSN",
+                $this->conditionalNumberFormatting($std->pCBSSN, 4),
+                true,
+                "$identificador Aliquota efetiva da CBS para os optantes do Simples (pCBSSN)"
+            );
+            $this->dom->addChild(
+                $gCBSSN,
+                "vCBSSN",
+                $this->conditionalNumberFormatting($std->vCBSSN),
+                true,
+                "$identificador Valor da CBS para os optantes do Simples (vCBSSN)"
+            );
+            $gTribSN->appendChild($gCBSSN);
+        }
+        $this->gTribSN[$this->currentDetIndex('taggTribSN')] = $gTribSN;
+        return $gTribSN;
     }
 
     /**
@@ -4207,7 +4316,7 @@ class MakeCTeSimp
             true,
             "$identificador Valor do Tributo da CBS calculado. (vTribCBS)"
         );
-        $this->gTribCompraGov = $gTrib;
+        $this->gTribCompraGov[$this->currentDetIndex('taggTribCompraGov')] = $gTrib;
         return $gTrib;
     }
 
@@ -4348,5 +4457,229 @@ class MakeCTeSimp
             return number_format($value, $decimal, '.', '');
         }
         return null;
+    }
+
+    /**
+     * Indice do det corrente. No CT-e Simplificado o IBS/CBS pertence ao item (NT 2026.004),
+     * entao os grupos sao informados depois do tagdet de cada item, como Comp e infNFe.
+     * @param string $method
+     * @return int
+     * @throws RuntimeException
+     */
+    private function currentDetIndex(string $method): int
+    {
+        if (empty($this->det)) {
+            throw new RuntimeException(
+                "$method deve ser chamado depois do tagdet do item: no CT-e Simplificado "
+                . "o IBS/CBS e informado por item (NT 2026.004)."
+            );
+        }
+        return count($this->det) - 1;
+    }
+
+    /**
+     * IBSCBS do item com os subgrupos opcionais, na ordem do XSD.
+     * @param int $indiceDet
+     * @return DOMElement
+     * @throws RuntimeException
+     */
+    private function montaIBSCBS(int $indiceDet): DOMElement
+    {
+        $ibscbs = $this->IBSCBS[$indiceDet];
+        $gIBSCBS = $ibscbs->getElementsByTagName('gIBSCBS')->item(0);
+        foreach ([$this->gTribRegular, $this->gTribCompraGov] as $grupos) {
+            if (!isset($grupos[$indiceDet])) {
+                continue;
+            }
+            if (!$gIBSCBS instanceof DOMElement) {
+                throw new RuntimeException(
+                    "Item {$this->det[$indiceDet]->getAttribute('nItem')}: gTribRegular e gTribCompraGov "
+                    . "exigem o grupo gIBSCBS (informe vBC no tagIBSCBS)."
+                );
+            }
+            $this->dom->appChild($gIBSCBS, $grupos[$indiceDet], 'Falta tag "gIBSCBS"');
+        }
+        if (isset($this->gTribSN[$indiceDet])) {
+            $this->dom->appChild($ibscbs, $this->gTribSN[$indiceDet], 'Falta tag "IBSCBS"');
+        }
+        if (isset($this->gEstornoCred[$indiceDet])) {
+            $this->dom->appChild($ibscbs, $this->gEstornoCred[$indiceDet], 'Falta tag "IBSCBS"');
+        }
+        return $ibscbs;
+    }
+
+    /**
+     * IBSCBSTot (NT 2026.004 e 2026.005): soma dos grupos IBSCBS dos itens. A SEFAZ rejeita total
+     * diferente da soma dos itens (cStat 350 a 359, 305, 306, 1111 e 1112), por isso a soma e feita
+     * em centavos.
+     * @return DOMElement
+     */
+    private function montaIBSCBSTot(): DOMElement
+    {
+        $campos = [
+            'vBC', 'vDifUF', 'vDevTribUF', 'vIBSUF', 'vDifMun', 'vDevTribMun', 'vIBSMun',
+            'vDifCBS', 'vDevTribCBS', 'vCBS', 'vIBSSN', 'vCBSSN', 'vIBSEstCred', 'vCBSEstCred',
+        ];
+        $soma = array_fill_keys($campos, 0);
+        $temTribSN = false;
+        $temEstorno = false;
+        foreach ($this->IBSCBS as $ibscbs) {
+            $gIBSCBS = $ibscbs->getElementsByTagName('gIBSCBS')->item(0);
+            if ($gIBSCBS instanceof DOMElement) {
+                $gIBSUF = $gIBSCBS->getElementsByTagName('gIBSUF')->item(0);
+                $gIBSMun = $gIBSCBS->getElementsByTagName('gIBSMun')->item(0);
+                $gCBS = $gIBSCBS->getElementsByTagName('gCBS')->item(0);
+                $soma['vBC'] += $this->centavos($gIBSCBS, 'vBC');
+                $soma['vDifUF'] += $this->centavos($gIBSUF, 'vDif');
+                $soma['vDevTribUF'] += $this->centavos($gIBSUF, 'vDevTrib');
+                $soma['vIBSUF'] += $this->centavos($gIBSUF, 'vIBSUF');
+                $soma['vDifMun'] += $this->centavos($gIBSMun, 'vDif');
+                $soma['vDevTribMun'] += $this->centavos($gIBSMun, 'vDevTrib');
+                $soma['vIBSMun'] += $this->centavos($gIBSMun, 'vIBSMun');
+                $soma['vDifCBS'] += $this->centavos($gCBS, 'vDif');
+                $soma['vDevTribCBS'] += $this->centavos($gCBS, 'vDevTrib');
+                $soma['vCBS'] += $this->centavos($gCBS, 'vCBS');
+            }
+            $tribSN = $ibscbs->getElementsByTagName('gTribSN')->item(0);
+            if ($tribSN instanceof DOMElement) {
+                $temTribSN = true;
+                $soma['vIBSSN'] += $this->centavos($tribSN, 'vIBSSN');
+                $soma['vCBSSN'] += $this->centavos($tribSN, 'vCBSSN');
+            }
+            $estorno = $ibscbs->getElementsByTagName('gEstornoCred')->item(0);
+            if ($estorno instanceof DOMElement) {
+                $temEstorno = true;
+                $soma['vIBSEstCred'] += $this->centavos($estorno, 'vIBSEstCred');
+                $soma['vCBSEstCred'] += $this->centavos($estorno, 'vCBSEstCred');
+            }
+        }
+        $identificador = '# <IBSCBSTot> - ';
+        $tot = $this->dom->createElement('IBSCBSTot');
+        $this->dom->addChild(
+            $tot,
+            'vBCIBSCBS',
+            $this->formataCentavos($soma['vBC']),
+            true,
+            $identificador . 'Total da Base de calculo do IBS/CBS'
+        );
+        $gIBS = $this->dom->createElement('gIBS');
+        foreach (['gIBSUF' => 'UF', 'gIBSMun' => 'Mun'] as $grupo => $sufixo) {
+            $node = $this->dom->createElement($grupo);
+            $this->dom->addChild(
+                $node,
+                'vDif',
+                $this->formataCentavos($soma["vDif$sufixo"]),
+                true,
+                $identificador . "Total do Diferimento ($grupo)"
+            );
+            $this->dom->addChild(
+                $node,
+                'vDevTrib',
+                $this->formataCentavos($soma["vDevTrib$sufixo"]),
+                true,
+                $identificador . "Total de Devolucao de Tributo ($grupo)"
+            );
+            $this->dom->addChild(
+                $node,
+                "vIBS$sufixo",
+                $this->formataCentavos($soma["vIBS$sufixo"]),
+                true,
+                $identificador . "Total do IBS ($grupo)"
+            );
+            $gIBS->appendChild($node);
+        }
+        $this->dom->addChild(
+            $gIBS,
+            'vIBS',
+            $this->formataCentavos($soma['vIBSUF'] + $soma['vIBSMun']),
+            true,
+            $identificador . 'Total do IBS (IBS UF + IBS Mun)'
+        );
+        $tot->appendChild($gIBS);
+        $gCBS = $this->dom->createElement('gCBS');
+        $this->dom->addChild(
+            $gCBS,
+            'vDif',
+            $this->formataCentavos($soma['vDifCBS']),
+            true,
+            $identificador . 'Total do Diferimento (gCBS)'
+        );
+        $this->dom->addChild(
+            $gCBS,
+            'vDevTrib',
+            $this->formataCentavos($soma['vDevTribCBS']),
+            true,
+            $identificador . 'Total de Devolucao do tributo (gCBS)'
+        );
+        $this->dom->addChild(
+            $gCBS,
+            'vCBS',
+            $this->formataCentavos($soma['vCBS']),
+            true,
+            $identificador . 'Total da CBS'
+        );
+        $tot->appendChild($gCBS);
+        // NT 2026.005: obrigatorio se algum item tiver gTribSN (cStat 1110 a 1112)
+        if ($temTribSN) {
+            $gTribSNTot = $this->dom->createElement('gTribSN');
+            $this->dom->addChild(
+                $gTribSNTot,
+                'vIBSSN',
+                $this->formataCentavos($soma['vIBSSN']),
+                true,
+                $identificador . 'Total do IBS para os optantes do Simples Nacional'
+            );
+            $this->dom->addChild(
+                $gTribSNTot,
+                'vCBSSN',
+                $this->formataCentavos($soma['vCBSSN']),
+                true,
+                $identificador . 'Total da CBS para os optantes do Simples Nacional'
+            );
+            $tot->appendChild($gTribSNTot);
+        }
+        if ($temEstorno) {
+            $gEstornoCred = $this->dom->createElement('gEstornoCred');
+            $this->dom->addChild(
+                $gEstornoCred,
+                'vIBSEstCred',
+                $this->formataCentavos($soma['vIBSEstCred']),
+                true,
+                $identificador . 'Total do Estorno de credito IBS'
+            );
+            $this->dom->addChild(
+                $gEstornoCred,
+                'vCBSEstCred',
+                $this->formataCentavos($soma['vCBSEstCred']),
+                true,
+                $identificador . 'Total do Estorno de credito CBS'
+            );
+            $tot->appendChild($gEstornoCred);
+        }
+        return $tot;
+    }
+
+    /**
+     * Valor da primeira tag $tag dentro de $parent, em centavos (0 se ausente).
+     * @param DOMElement|null $parent
+     * @param string $tag
+     * @return int
+     */
+    private function centavos($parent, string $tag): int
+    {
+        if (!$parent instanceof DOMElement) {
+            return 0;
+        }
+        $node = $parent->getElementsByTagName($tag)->item(0);
+        return $node === null ? 0 : (int) round((float) $node->nodeValue * 100);
+    }
+
+    /**
+     * @param int $centavos
+     * @return string
+     */
+    private function formataCentavos(int $centavos): string
+    {
+        return sprintf('%d.%02d', intdiv($centavos, 100), $centavos % 100);
     }
 }

@@ -171,10 +171,15 @@ class MakeCTe
      */
     private $enderEmit = '';
     /**
-     * Inscricao Suframa do emitente (NT 2026.002 §4) - inserido antes do CRT no monta().
+     * Inscricao Suframa do emitente (NT 2026.002 §4) - anexado depois do CRT no monta().
      * @var \DOMElement|null
      */
     private $ISUFEmit = null;
+    /**
+     * Tipo de regime de apuracao do IBS/CBS (NT 2026.005) - anexado depois do ISUFEmit no monta().
+     * @var \DOMElement|null
+     */
+    private $tpRegimeIBSCBS = null;
     /**
      * Informações do Remetente das mercadorias transportadas pelo CT-e
      * @var \DOMNode
@@ -447,6 +452,11 @@ class MakeCTe
      */
     protected $gPagAntecipado;
     /**
+     * Grupo de multa e juros (NT 2026.004 v1.01) - chave do CT-e referenciado.
+     * @var DOMElement|null
+     */
+    protected $gMultaJuros;
+    /**
      * @var DOMElement
      */
     protected $ICMS;
@@ -474,6 +484,11 @@ class MakeCTe
      * @var DOMElement
      */
     protected $gEstornoCred;
+    /**
+     * NT 2026.005
+     * @var DOMElement|null
+     */
+    protected $gTribSN;
     /**
      * @var DOMElement
      */
@@ -574,6 +589,10 @@ class MakeCTe
         if (!empty($this->gPagAntecipado)) {
             $this->dom->appChild($this->ide, $this->gPagAntecipado, 'Falta tag "ide"');
         }
+        // NT 2026.004 v1.01 - Multa e juros (ultimo grupo do ide, na ordem do XSD).
+        if (!empty($this->gMultaJuros)) {
+            $this->dom->appChild($this->ide, $this->gMultaJuros, 'Falta tag "ide"');
+        }
         $this->dom->appChild($this->infCte, $this->ide, 'Falta tag "infCte"');
         if (!empty($this->compl)) {
             foreach ($this->obsCont as $obsCont) {
@@ -587,9 +606,13 @@ class MakeCTe
         // inclui o Node enderEmit dentro do emit antes da tag CRT
         $node = $this->emit->getElementsByTagName("CRT")->item(0);
         $this->emit->insertBefore($this->enderEmit, $node);
-        // NT 2026.002 §4: ISUFEmit entre enderEmit e CRT (ordem do XSD)
+        // NT 2026.002 §4: ISUFEmit depois do CRT, ultima tag criada no tagemit (ordem do XSD)
         if (!empty($this->ISUFEmit)) {
-            $this->emit->insertBefore($this->ISUFEmit, $node);
+            $this->dom->appChild($this->emit, $this->ISUFEmit, 'Falta tag "emit"');
+        }
+        // NT 2026.005: tpRegimeIBSCBS e a ultima tag do emit
+        if (!empty($this->tpRegimeIBSCBS)) {
+            $this->dom->appChild($this->emit, $this->tpRegimeIBSCBS, 'Falta tag "emit"');
         }
 
         $this->dom->appChild($this->infCte, $this->emit, 'Falta tag "infCte"');
@@ -631,6 +654,9 @@ class MakeCTe
                 }
                 if (isset($this->gTribCompraGov)) {
                     $this->dom->appChild($node, $this->gTribCompraGov, 'Falta tag "gIBSCBS"');
+                }
+                if (isset($this->gTribSN)) {
+                    $this->dom->appChild($this->IBSCBS, $this->gTribSN, 'Falta tag "IBSCBS"');
                 }
                 if (isset($this->gEstornoCred)) {
                     $this->dom->appChild($this->IBSCBS, $this->gEstornoCred, 'Falta tag "IBSCBS"');
@@ -1881,14 +1907,19 @@ class MakeCTe
             'xNome',
             'xFant',
             'CRT',
-            'ISUFEmit'
+            'ISUFEmit',
+            'tpRegimeIBSCBS'
         ];
         $std = $this->equilizeParameters($std, $possible);
         $identificador = '#97 <emit> - ';
         $this->emit = $this->dom->createElement('emit');
-        // NT 2026.002 §4: criado aqui e inserido antes do CRT no monta() (ordem do XSD).
+        // NT 2026.002 §4: criado aqui e anexado depois do CRT no monta() (ordem do XSD).
         $this->ISUFEmit = !empty($std->ISUFEmit)
             ? $this->dom->createElement('ISUFEmit', $std->ISUFEmit)
+            : null;
+        // NT 2026.005: anexado depois do ISUFEmit no monta() (ordem do XSD).
+        $this->tpRegimeIBSCBS = !empty($std->tpRegimeIBSCBS)
+            ? $this->dom->createElement('tpRegimeIBSCBS', $std->tpRegimeIBSCBS)
             : null;
         if (!empty($std->CNPJ)) {
             $this->dom->addChild(
@@ -5227,6 +5258,27 @@ class MakeCTe
         return $this->gPagAntecipado;
     }
 
+    /**
+     * Grupo gMultaJuros (NT 2026.004 v1.01): CT-e de multa e juros referente a um CT-e
+     * emitido anteriormente. Anexado ao ide no monta(), depois do gPagAntecipado.
+     * @param stdClass $std
+     * @return DOMElement
+     */
+    public function taggMultaJuros($std)
+    {
+        $possible = ['chCTeRef'];
+        $std = $this->equilizeParameters($std, $possible);
+        $this->gMultaJuros = $this->dom->createElement("gMultaJuros");
+        $this->dom->addChild(
+            $this->gMultaJuros,
+            "chCTeRef",
+            $std->chCTeRef,
+            true,
+            "# <gMultaJuros> - Chave de acesso do CT-e referenciado para cobrar multa e juros"
+        );
+        return $this->gMultaJuros;
+    }
+
     public function tagIBSCBS(stdClass $std): DOMElement
     {
         $possible = [
@@ -5669,6 +5721,64 @@ class MakeCTe
         );
         $this->gEstornoCred = $estorno;
         return $estorno;
+    }
+
+    /**
+     * Grupo gTribSN do IBSCBS (NT 2026.005): IBS e CBS do Simples Nacional. gIBSSN e gCBSSN
+     * entram quando informados; quais sao exigidos depende do CRT e do tpRegimeIBSCBS (NT, item 2.2).
+     * @param stdClass $std
+     * @return DOMElement
+     * @throws DOMException
+     */
+    public function taggTribSN(stdClass $std): DOMElement
+    {
+        $possible = [
+            'pIBSSN',
+            'vIBSSN',
+            'pCBSSN',
+            'vCBSSN',
+        ];
+        $std = $this->equilizeParameters($std, $possible);
+        $identificador = "# <gTribSN> -";
+        $gTribSN = $this->dom->createElement("gTribSN");
+        if (isset($std->pIBSSN) || isset($std->vIBSSN)) {
+            $gIBSSN = $this->dom->createElement("gIBSSN");
+            $this->dom->addChild(
+                $gIBSSN,
+                "pIBSSN",
+                $this->conditionalNumberFormatting($std->pIBSSN, 4),
+                true,
+                "$identificador Aliquota efetiva do IBS para os optantes do Simples (pIBSSN)"
+            );
+            $this->dom->addChild(
+                $gIBSSN,
+                "vIBSSN",
+                $this->conditionalNumberFormatting($std->vIBSSN),
+                true,
+                "$identificador Valor do IBS para os optantes do Simples (vIBSSN)"
+            );
+            $gTribSN->appendChild($gIBSSN);
+        }
+        if (isset($std->pCBSSN) || isset($std->vCBSSN)) {
+            $gCBSSN = $this->dom->createElement("gCBSSN");
+            $this->dom->addChild(
+                $gCBSSN,
+                "pCBSSN",
+                $this->conditionalNumberFormatting($std->pCBSSN, 4),
+                true,
+                "$identificador Aliquota efetiva da CBS para os optantes do Simples (pCBSSN)"
+            );
+            $this->dom->addChild(
+                $gCBSSN,
+                "vCBSSN",
+                $this->conditionalNumberFormatting($std->vCBSSN),
+                true,
+                "$identificador Valor da CBS para os optantes do Simples (vCBSSN)"
+            );
+            $gTribSN->appendChild($gCBSSN);
+        }
+        $this->gTribSN = $gTribSN;
+        return $gTribSN;
     }
 
     /**

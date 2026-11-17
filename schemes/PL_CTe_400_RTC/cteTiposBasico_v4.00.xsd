@@ -1443,6 +1443,7 @@ REENTREGA; DEVOLUÇÃO; REFATURAMENTO; etc</xs:documentation>
 1 - Normal;
 2 - Contingência Offline
 3 - Regime Especial NFF
+4 - EPEC - Em desativação
 7 - Autorização pela SVC-RS
 8 - Autorização pela SVC-SP</xs:documentation>
 										</xs:annotation>
@@ -1452,6 +1453,7 @@ REENTREGA; DEVOLUÇÃO; REFATURAMENTO; etc</xs:documentation>
 												<xs:enumeration value="1"/>
 												<xs:enumeration value="2"/>
 												<xs:enumeration value="3"/>
+												<xs:enumeration value="4"/>
 												<xs:enumeration value="7"/>
 												<xs:enumeration value="8"/>
 											</xs:restriction>
@@ -1642,6 +1644,20 @@ pagamento, conforme Art. 10. § 4º </xs:documentation>
 													<xs:annotation>
 														<xs:documentation>Chave de acesso do DFe de antecipação de pagamento (com tpPagAnt=1)</xs:documentation>
 														<xs:documentation>Referência a CTe emitido anteriormente, referente a pagamento antecipado</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="gMultaJuros" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Grupo de informações de multa e juros</xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="chCTeRef" type="TChDFe">
+													<xs:annotation>
+														<xs:documentation>Chave de acesso do CTe Referenciado para cobrar multa e juros</xs:documentation>
 													</xs:annotation>
 												</xs:element>
 											</xs:sequence>
@@ -1916,6 +1932,18 @@ Usar com série específica 920-969 para emitente pessoa física com inscrição
 												<xs:whiteSpace value="preserve"/>
 											</xs:restriction>
 										</xs:simpleType>
+									</xs:element>
+									<xs:element name="tpRegimeIBSCBS" type="TRegimeIBSCBS" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tipo de Regime de Apuração do IBS e da CBS </xs:documentation>
+											<xs:documentation>1 - Contribuinte do Simples Nacional (CRT=1 ou 2) com opção pelo regime regular do IBS e da CBS; 
+
+2 - Contribuinte do Regime Normal (CRT=3) com opção pendente pelo CRT=”1 - Simples Nacional” sem regime regular do IBS e da CBS; 
+
+3 - Contribuinte do Regime Normal (CRT=3) com opção pendente pelo CRT=”2-Simples Nacional, excesso sublimite de receita bruta” sem regime regular do IBS e da CBS; 
+
+4 - Contribuinte do Regime Normal (CRT=3) com opção pendente pelo Simples Nacional (CRT=1 ou 2), com regime regular do IBS e da CBS. </xs:documentation>
+										</xs:annotation>
 									</xs:element>
 								</xs:sequence>
 							</xs:complexType>
@@ -2211,7 +2239,6 @@ Informar os zeros não significativos.</xs:documentation>
 									<xs:element name="vPrest" type="TDec_1302">
 										<xs:annotation>
 											<xs:documentation>Valorl da Prestação do Serviço</xs:documentation>
-											<xs:documentation>Observação: A partir 2027, os valores de IBS e CBS compõem o Valor da Prestação </xs:documentation>
 										</xs:annotation>
 									</xs:element>
 									<xs:element name="vPrestLiq" type="TDec_1302" minOccurs="0">
@@ -2630,7 +2657,7 @@ Onde v9.99 é a a designação genérica para a versão do arquivo. Por exemplo,
 									</xs:element>
 									<xs:element name="vTotDFe" type="TDec_1302" minOccurs="0">
 										<xs:annotation>
-											<xs:documentation>Valor total do documento fiscal (vTPrest) 
+											<xs:documentation>Valor total do documento fiscal (vTPrest + IBS + CBS) 
 </xs:documentation>
 										</xs:annotation>
 									</xs:element>
@@ -2872,9 +2899,11 @@ Onde v9.99 é a a designação genérica para a versão do arquivo. Por exemplo,
 											<xs:documentation>Preencher com:
 1 - Normal
 2 - Contingencia OffLine
+4 - EPEC - Em desativação
 3 - Regime Especial NFF
 7 - Autorização pela SVC-RS
-8 - Autorização pela SVC-SP</xs:documentation>
+8 - Autorização pela SVC-SP
+</xs:documentation>
 										</xs:annotation>
 										<xs:simpleType>
 											<xs:restriction base="xs:string">
@@ -2882,6 +2911,7 @@ Onde v9.99 é a a designação genérica para a versão do arquivo. Por exemplo,
 												<xs:enumeration value="1"/>
 												<xs:enumeration value="2"/>
 												<xs:enumeration value="3"/>
+												<xs:enumeration value="4"/>
 												<xs:enumeration value="7"/>
 												<xs:enumeration value="8"/>
 											</xs:restriction>
@@ -2909,9 +2939,9 @@ Onde v9.99 é a a designação genérica para a versão do arquivo. Por exemplo,
 										<xs:annotation>
 											<xs:documentation>Tipo do CT-e</xs:documentation>
 											<xs:documentation>Preencher com:
-	0 - CT-e Normal;
- 1 - CT-e de Complemento de Valores;
- 3 - CT-e de Substituição</xs:documentation>
+0 - CT-e Normal;
+1 - CT-e de Complemento de Valores;
+3 - CT-e de Substituição</xs:documentation>
 										</xs:annotation>
 									</xs:element>
 									<xs:element name="procEmi" type="TProcEmiCTe">
@@ -3254,6 +3284,20 @@ pagamento, conforme Art. 10. § 4º </xs:documentation>
 													<xs:annotation>
 														<xs:documentation>Chave de acesso do CTe de antecipação de pagamento</xs:documentation>
 														<xs:documentation>Referência a CTe emitido anteriormente, referente a pagamento antecipado</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="gMultaJuros" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Grupo de informações de multa e juros</xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="chCTeRef" type="TChDFe">
+													<xs:annotation>
+														<xs:documentation>Chave de acesso do CTe Referenciado para cobrar multa e juros</xs:documentation>
 													</xs:annotation>
 												</xs:element>
 											</xs:sequence>
@@ -3748,6 +3792,18 @@ Usar com série específica 920-969 para emitente pessoa física com inscrição
 											</xs:restriction>
 										</xs:simpleType>
 									</xs:element>
+									<xs:element name="tpRegimeIBSCBS" type="TRegimeIBSCBS" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tipo de Regime de Apuração do IBS e da CBS </xs:documentation>
+											<xs:documentation>1 - Contribuinte do Simples Nacional (CRT=1 ou 2) com opção pelo regime regular do IBS e da CBS; 
+
+2 - Contribuinte do Regime Normal (CRT=3) com opção pendente pelo CRT=”1 - Simples Nacional” sem regime regular do IBS e da CBS; 
+
+3 - Contribuinte do Regime Normal (CRT=3) com opção pendente pelo CRT=”2-Simples Nacional, excesso sublimite de receita bruta” sem regime regular do IBS e da CBS; 
+
+4 - Contribuinte do Regime Normal (CRT=3) com opção pendente pelo Simples Nacional (CRT=1 ou 2), com regime regular do IBS e da CBS. </xs:documentation>
+										</xs:annotation>
+									</xs:element>
 								</xs:sequence>
 							</xs:complexType>
 						</xs:element>
@@ -4024,7 +4080,6 @@ Usar com série específica 920-969 para emitente pessoa física com inscrição
 									<xs:element name="vTPrest" type="TDec_1302">
 										<xs:annotation>
 											<xs:documentation>Valor Total da Prestação do Serviço</xs:documentation>
-											<xs:documentation>Observação: A partir 2027, os valores de IBS e CBS compõem o Valor Total da Prestação </xs:documentation>
 										</xs:annotation>
 									</xs:element>
 									<xs:element name="vTPrestLiq" type="TDec_1302" minOccurs="0">
@@ -4151,7 +4206,7 @@ Usar com série específica 920-969 para emitente pessoa física com inscrição
 									</xs:element>
 									<xs:element name="vTotDFe" type="TDec_1302" minOccurs="0">
 										<xs:annotation>
-											<xs:documentation>Valor total do documento fiscal (vTPrest) 
+											<xs:documentation>Valor total do documento fiscal (vTPrest + IBS + CBS) 
 </xs:documentation>
 										</xs:annotation>
 									</xs:element>
@@ -5470,6 +5525,20 @@ pagamento, conforme Art. 10. § 4º </xs:documentation>
 											</xs:sequence>
 										</xs:complexType>
 									</xs:element>
+									<xs:element name="gMultaJuros" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Grupo de informações de multa e juros</xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="chCTeRef" type="TChDFe">
+													<xs:annotation>
+														<xs:documentation>Chave de acesso do CTe Referenciado para cobrar multa e juros</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
 								</xs:sequence>
 							</xs:complexType>
 						</xs:element>
@@ -5672,6 +5741,18 @@ REENTREGA; DEVOLUÇÃO; REFATURAMENTO; etc</xs:documentation>
 											</xs:restriction>
 										</xs:simpleType>
 									</xs:element>
+									<xs:element name="tpRegimeIBSCBS" type="TRegimeIBSCBS" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tipo de Regime de Apuração do IBS e da CBS </xs:documentation>
+											<xs:documentation>1 - Contribuinte do Simples Nacional (CRT=1 ou 2) com opção pelo regime regular do IBS e da CBS; 
+
+2 - Contribuinte do Regime Normal (CRT=3) com opção pendente pelo CRT=”1 - Simples Nacional” sem regime regular do IBS e da CBS; 
+
+3 - Contribuinte do Regime Normal (CRT=3) com opção pendente pelo CRT=”2-Simples Nacional, excesso sublimite de receita bruta” sem regime regular do IBS e da CBS; 
+
+4 - Contribuinte do Regime Normal (CRT=3) com opção pendente pelo Simples Nacional (CRT=1 ou 2), com regime regular do IBS e da CBS. </xs:documentation>
+										</xs:annotation>
+									</xs:element>
 								</xs:sequence>
 							</xs:complexType>
 						</xs:element>
@@ -5758,7 +5839,6 @@ REENTREGA; DEVOLUÇÃO; REFATURAMENTO; etc</xs:documentation>
 									<xs:element name="vTPrest" type="TDec_1302">
 										<xs:annotation>
 											<xs:documentation>Valor Total da Prestação do Serviço</xs:documentation>
-											<xs:documentation>Observação: A partir 2027, os valores de IBS e CBS compõem o Valor Total da Prestação </xs:documentation>
 										</xs:annotation>
 									</xs:element>
 									<xs:element name="vTPrestLiq" type="TDec_1302" minOccurs="0">
@@ -5920,7 +6000,7 @@ REENTREGA; DEVOLUÇÃO; REFATURAMENTO; etc</xs:documentation>
 									</xs:element>
 									<xs:element name="vTotDFe" type="TDec_1302" minOccurs="0">
 										<xs:annotation>
-											<xs:documentation>Valor total do documento fiscal (vTPrest) 
+											<xs:documentation>Valor total do documento fiscal (vTPrest + IBS + CBS) 
 </xs:documentation>
 										</xs:annotation>
 									</xs:element>
@@ -7037,9 +7117,9 @@ Somente para Transporte de Valores</xs:documentation>
 							<xs:annotation>
 								<xs:documentation>Classificação Tributária do Serviço</xs:documentation>
 								<xs:documentation>Preencher com:
-								40 - ICMS isenção;
-								41 - ICMS não tributada;
-								51 - ICMS diferido</xs:documentation>
+40 - ICMS isenção;
+41 - ICMS não tributada;
+51 - ICMS diferido</xs:documentation>
 							</xs:annotation>
 							<xs:simpleType>
 								<xs:restriction base="xs:string">
