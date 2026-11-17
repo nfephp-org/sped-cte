@@ -120,6 +120,11 @@ class MakeCTeOS
      */
     private $ISUFEmit = null;
     /**
+     * Tipo de regime de apuracao do IBS/CBS (NT 2026.005) - anexado depois do ISUFEmit no monta().
+     * @var \DOMElement|null
+     */
+    private $tpRegimeIBSCBS = null;
+    /**
      * Valores da Prestação de Serviço
      * @var \DOMNode
      */
@@ -264,6 +269,11 @@ class MakeCTeOS
      */
     protected $gEstornoCred;
     /**
+     * NT 2026.005
+     * @var DOMElement|null
+     */
+    protected $gTribSN;
+    /**
      * @var DOMElement
      */
     protected $gTribCompraGov;
@@ -375,6 +385,10 @@ class MakeCTeOS
         if (!empty($this->ISUFEmit)) {
             $this->dom->appChild($this->emit, $this->ISUFEmit, 'Falta tag "emit"');
         }
+        // NT 2026.005: tpRegimeIBSCBS e a ultima tag do emit
+        if (!empty($this->tpRegimeIBSCBS)) {
+            $this->dom->appChild($this->emit, $this->tpRegimeIBSCBS, 'Falta tag "emit"');
+        }
 
         $this->dom->appChild($this->infCte, $this->emit, 'Falta tag "infCte"');
         if (!empty($this->toma)) {
@@ -409,6 +423,9 @@ class MakeCTeOS
                 }
                 if (isset($this->gTribCompraGov)) {
                     $this->dom->appChild($node, $this->gTribCompraGov, 'Falta tag "gIBSCBS"');
+                }
+                if (isset($this->gTribSN)) {
+                    $this->dom->appChild($this->IBSCBS, $this->gTribSN, 'Falta tag "IBSCBS"');
                 }
                 if (isset($this->gEstornoCred)) {
                     $this->dom->appChild($this->IBSCBS, $this->gEstornoCred, 'Falta tag "IBSCBS"');
@@ -906,7 +923,8 @@ class MakeCTeOS
             'xNome',
             'xFant',
             'CRT',
-            'ISUFEmit'
+            'ISUFEmit',
+            'tpRegimeIBSCBS'
         ];
         $std = $this->equilizeParameters($std, $possible);
         $identificador = '#97 <emit> - ';
@@ -914,6 +932,10 @@ class MakeCTeOS
         // NT 2026.002 §4: criado aqui e anexado depois do CRT no monta() (ordem do XSD).
         $this->ISUFEmit = !empty($std->ISUFEmit)
             ? $this->dom->createElement('ISUFEmit', $std->ISUFEmit)
+            : null;
+        // NT 2026.005: anexado depois do ISUFEmit no monta() (ordem do XSD).
+        $this->tpRegimeIBSCBS = !empty($std->tpRegimeIBSCBS)
+            ? $this->dom->createElement('tpRegimeIBSCBS', $std->tpRegimeIBSCBS)
             : null;
         $this->dom->addChild(
             $this->emit,
@@ -3007,6 +3029,64 @@ class MakeCTeOS
         );
         $this->gEstornoCred = $estorno;
         return $estorno;
+    }
+
+    /**
+     * Grupo gTribSN do IBSCBS (NT 2026.005): IBS e CBS do Simples Nacional. gIBSSN e gCBSSN
+     * entram quando informados; quais sao exigidos depende do CRT e do tpRegimeIBSCBS (NT, item 2.2).
+     * @param stdClass $std
+     * @return DOMElement
+     * @throws DOMException
+     */
+    public function taggTribSN(stdClass $std): DOMElement
+    {
+        $possible = [
+            'pIBSSN',
+            'vIBSSN',
+            'pCBSSN',
+            'vCBSSN',
+        ];
+        $std = $this->equilizeParameters($std, $possible);
+        $identificador = "# <gTribSN> -";
+        $gTribSN = $this->dom->createElement("gTribSN");
+        if (isset($std->pIBSSN) || isset($std->vIBSSN)) {
+            $gIBSSN = $this->dom->createElement("gIBSSN");
+            $this->dom->addChild(
+                $gIBSSN,
+                "pIBSSN",
+                $this->conditionalNumberFormatting($std->pIBSSN, 4),
+                true,
+                "$identificador Aliquota efetiva do IBS para os optantes do Simples (pIBSSN)"
+            );
+            $this->dom->addChild(
+                $gIBSSN,
+                "vIBSSN",
+                $this->conditionalNumberFormatting($std->vIBSSN),
+                true,
+                "$identificador Valor do IBS para os optantes do Simples (vIBSSN)"
+            );
+            $gTribSN->appendChild($gIBSSN);
+        }
+        if (isset($std->pCBSSN) || isset($std->vCBSSN)) {
+            $gCBSSN = $this->dom->createElement("gCBSSN");
+            $this->dom->addChild(
+                $gCBSSN,
+                "pCBSSN",
+                $this->conditionalNumberFormatting($std->pCBSSN, 4),
+                true,
+                "$identificador Aliquota efetiva da CBS para os optantes do Simples (pCBSSN)"
+            );
+            $this->dom->addChild(
+                $gCBSSN,
+                "vCBSSN",
+                $this->conditionalNumberFormatting($std->vCBSSN),
+                true,
+                "$identificador Valor da CBS para os optantes do Simples (vCBSSN)"
+            );
+            $gTribSN->appendChild($gCBSSN);
+        }
+        $this->gTribSN = $gTribSN;
+        return $gTribSN;
     }
 
     /**

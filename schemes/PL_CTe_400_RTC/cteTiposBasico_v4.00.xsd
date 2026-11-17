@@ -1933,6 +1933,18 @@ Usar com série específica 920-969 para emitente pessoa física com inscrição
 											</xs:restriction>
 										</xs:simpleType>
 									</xs:element>
+									<xs:element name="tpRegimeIBSCBS" type="TRegimeIBSCBS" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tipo de Regime de Apuração do IBS e da CBS </xs:documentation>
+											<xs:documentation>1 - Contribuinte do Simples Nacional (CRT=1 ou 2) com opção pelo regime regular do IBS e da CBS; 
+
+2 - Contribuinte do Regime Normal (CRT=3) com opção pendente pelo CRT=”1 - Simples Nacional” sem regime regular do IBS e da CBS; 
+
+3 - Contribuinte do Regime Normal (CRT=3) com opção pendente pelo CRT=”2-Simples Nacional, excesso sublimite de receita bruta” sem regime regular do IBS e da CBS; 
+
+4 - Contribuinte do Regime Normal (CRT=3) com opção pendente pelo Simples Nacional (CRT=1 ou 2), com regime regular do IBS e da CBS. </xs:documentation>
+										</xs:annotation>
+									</xs:element>
 								</xs:sequence>
 							</xs:complexType>
 						</xs:element>
@@ -3779,6 +3791,18 @@ Usar com série específica 920-969 para emitente pessoa física com inscrição
 												<xs:whiteSpace value="preserve"/>
 											</xs:restriction>
 										</xs:simpleType>
+									</xs:element>
+									<xs:element name="tpRegimeIBSCBS" type="TRegimeIBSCBS" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tipo de Regime de Apuração do IBS e da CBS </xs:documentation>
+											<xs:documentation>1 - Contribuinte do Simples Nacional (CRT=1 ou 2) com opção pelo regime regular do IBS e da CBS; 
+
+2 - Contribuinte do Regime Normal (CRT=3) com opção pendente pelo CRT=”1 - Simples Nacional” sem regime regular do IBS e da CBS; 
+
+3 - Contribuinte do Regime Normal (CRT=3) com opção pendente pelo CRT=”2-Simples Nacional, excesso sublimite de receita bruta” sem regime regular do IBS e da CBS; 
+
+4 - Contribuinte do Regime Normal (CRT=3) com opção pendente pelo Simples Nacional (CRT=1 ou 2), com regime regular do IBS e da CBS. </xs:documentation>
+										</xs:annotation>
 									</xs:element>
 								</xs:sequence>
 							</xs:complexType>
@@ -5716,6 +5740,18 @@ REENTREGA; DEVOLUÇÃO; REFATURAMENTO; etc</xs:documentation>
 												<xs:whiteSpace value="preserve"/>
 											</xs:restriction>
 										</xs:simpleType>
+									</xs:element>
+									<xs:element name="tpRegimeIBSCBS" type="TRegimeIBSCBS" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tipo de Regime de Apuração do IBS e da CBS </xs:documentation>
+											<xs:documentation>1 - Contribuinte do Simples Nacional (CRT=1 ou 2) com opção pelo regime regular do IBS e da CBS; 
+
+2 - Contribuinte do Regime Normal (CRT=3) com opção pendente pelo CRT=”1 - Simples Nacional” sem regime regular do IBS e da CBS; 
+
+3 - Contribuinte do Regime Normal (CRT=3) com opção pendente pelo CRT=”2-Simples Nacional, excesso sublimite de receita bruta” sem regime regular do IBS e da CBS; 
+
+4 - Contribuinte do Regime Normal (CRT=3) com opção pendente pelo Simples Nacional (CRT=1 ou 2), com regime regular do IBS e da CBS. </xs:documentation>
+										</xs:annotation>
 									</xs:element>
 								</xs:sequence>
 							</xs:complexType>

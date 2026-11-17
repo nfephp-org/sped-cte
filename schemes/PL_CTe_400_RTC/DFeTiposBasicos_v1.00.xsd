@@ -170,6 +170,18 @@
 			<xs:minInclusive value="2025-01"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="TRegimeIBSCBS">
+		<xs:annotation>
+			<xs:documentation>Tipo de Regime de Apuração do IBS e da CBS </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:whiteSpace value="preserve"/>
+			<xs:enumeration value="1"/>
+			<xs:enumeration value="2"/>
+			<xs:enumeration value="3"/>
+			<xs:enumeration value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:complexType name="TTribNFCom">
 		<xs:annotation>
 			<xs:documentation>Grupo de informações da Tributação da NFCom</xs:documentation>
@@ -187,6 +199,7 @@
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="gIBSCBS" type="TCIBS" minOccurs="0"/>
+			<xs:element name="gTribSN" type="TTribSN" minOccurs="0"/>
 			<xs:element name="gEstornoCred" type="TEstornoCred" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Informado conforme indicador no cClassTrib</xs:documentation>
@@ -251,6 +264,7 @@
 			<xs:element name="cClassTrib" type="TcClassTrib"/>
 			<xs:element name="indDoacao" type="TIndDoacao" minOccurs="0"/>
 			<xs:element name="gIBSCBS" type="TCIBS" minOccurs="0"/>
+			<xs:element name="gTribSN" type="TTribSN" minOccurs="0"/>
 			<xs:element name="gEstornoCred" type="TEstornoCred" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Informado conforme indicador no cClassTrib</xs:documentation>
@@ -271,6 +285,7 @@
 			<xs:element name="cClassTrib" type="TcClassTrib"/>
 			<xs:element name="indDoacao" type="TIndDoacao" minOccurs="0"/>
 			<xs:element name="gIBSCBS" type="TCIBS" minOccurs="0"/>
+			<xs:element name="gTribSN" type="TTribSN" minOccurs="0"/>
 			<xs:element name="gEstornoCred" type="TEstornoCred" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Informado conforme indicador no cClassTrib</xs:documentation>
@@ -291,6 +306,7 @@
 			<xs:element name="cClassTrib" type="TcClassTrib"/>
 			<xs:element name="indDoacao" type="TIndDoacao" minOccurs="0"/>
 			<xs:element name="gIBSCBS" type="TCIBS" minOccurs="0"/>
+			<xs:element name="gTribSN" type="TTribSN" minOccurs="0"/>
 			<xs:element name="gEstornoCred" type="TEstornoCred" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Informado conforme indicador no cClassTrib</xs:documentation>
@@ -529,6 +545,25 @@
 						<xs:element name="vCBS" type="TDec1302RTC">
 							<xs:annotation>
 								<xs:documentation>Valor total da CBS</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="gTribSN" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Totalização da CBS</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="vIBSSN" type="TDec1302RTC">
+							<xs:annotation>
+								<xs:documentation>Valor total de IBS SN</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="vCBSSN" type="TDec1302RTC">
+							<xs:annotation>
+								<xs:documentation>Valor total da CBS SN</xs:documentation>
 							</xs:annotation>
 						</xs:element>
 					</xs:sequence>
@@ -880,6 +915,51 @@
 				<xs:annotation>
 					<xs:documentation>Total da CBS monofásica do item</xs:documentation>
 				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TTribSN">
+		<xs:annotation>
+			<xs:documentation>Tipo CBS IBS Completo</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="gIBSSN" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Tributação SN do IBS</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="pIBSSN" type="TDec_0302_04RTC">
+							<xs:annotation>
+								<xs:documentation>Aliquota do IBS SN</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="vIBSSN" type="TDec1302RTC">
+							<xs:annotation>
+								<xs:documentation>Valor do IBS SN</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="gCBSSN" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Tributação SN do CBS</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="pCBSSN" type="TDec_0302_04RTC">
+							<xs:annotation>
+								<xs:documentation>Aliquota do CBS SN</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="vCBSSN" type="TDec1302RTC">
+							<xs:annotation>
+								<xs:documentation>Valor do CBS SN</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
@@ -1351,7 +1431,7 @@
 4 – Recebimento do pagamento com fornecimento posterior;</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="refDFeAnt" minOccurs="0" maxOccurs="99" type="TChDFeRTC">
+			<xs:element name="refDFeAnt" type="TChDFeRTC" minOccurs="0" maxOccurs="99">
 				<xs:annotation>
 					<xs:documentation>Chave de acesso do documento fiscal anterior.
 
@@ -1395,7 +1475,7 @@ Obs: a chave de acesso deverá ser de um emitente com o mesmo CNPJ base</xs:docu
 4 – Recebimento do pagamento com fornecimento posterior;</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="refDFeAnt" minOccurs="0" maxOccurs="99" type="TChDFeRTC">
+			<xs:element name="refDFeAnt" type="TChDFeRTC" minOccurs="0" maxOccurs="99">
 				<xs:annotation>
 					<xs:documentation>Chave de acesso do documento fiscal anterior.
 
@@ -1414,7 +1494,7 @@ Obs: a chave de acesso deverá ser de um emitente com o mesmo CNPJ base</xs:docu
 			<xs:documentation>Informado para abater as parcelas de antecipação de pagamento, conforme art. 10 §4</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="refDFe" maxOccurs="99" type="TChDFeRTC">
+			<xs:element name="refDFe" type="TChDFeRTC" maxOccurs="99">
 				<xs:annotation>
 					<xs:documentation>Chave de acesso do documento fiscal de antecipação de pagamento
 
@@ -1474,7 +1554,7 @@ Obs: esse DFe deverá ter o indAntecipacaoPgto marcado no grupo ide</xs:document
 						<xs:enumeration value="1"/>
 						<xs:enumeration value="2"/>
 					</xs:restriction>
-				</xs:simpleType>				
+				</xs:simpleType>
 			</xs:element>
 			<xs:element name="nProcSuframa" minOccurs="0">
 				<xs:annotation>
@@ -1486,7 +1566,7 @@ comercializado.</xs:documentation>
 						<xs:minLength value="8"/>
 						<xs:maxLength value="12"/>
 					</xs:restriction>
-				</xs:simpleType>				
+				</xs:simpleType>
 			</xs:element>
 			<xs:element name="pAliqEfetRegCBS" type="TDec_0302_04RTC">
 				<xs:annotation>
