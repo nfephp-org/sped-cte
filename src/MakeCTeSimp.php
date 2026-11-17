@@ -339,21 +339,22 @@ class MakeCTeSimp
      */
     protected $ICMSUFFim;
     /**
-     * @var DOMElement
+     * IBSCBS por item, indexado como $this->det (NT 2026.004: o grupo fica em det, nao em imp).
+     * @var DOMElement[]
      */
-    protected $IBSCBS;
+    protected $IBSCBS = [];
     /**
-     * @var DOMElement
+     * @var DOMElement[]
      */
-    protected $gTribRegular;
+    protected $gTribRegular = [];
     /**
-     * @var DOMElement
+     * @var DOMElement[]
      */
-    protected $gEstornoCred;
+    protected $gEstornoCred = [];
     /**
-     * @var DOMElement
+     * @var DOMElement[]
      */
-    protected $gTribCompraGov;
+    protected $gTribCompraGov = [];
     /**
      * NT 2026.002
      * @var array
@@ -480,6 +481,10 @@ class MakeCTeSimp
                     $this->dom->appChild($this->det[$indiceDet], $comp, 'Falta tag "Comp"');
                 }
             }
+            // NT 2026.004 - IBS/CBS do item (depois de Comp e antes de infNFe/infDocAnt)
+            if ($this->schema == 'PL_CTe_400_RTC' && isset($this->IBSCBS[$indiceDet])) {
+                $this->dom->appChild($this->det[$indiceDet], $this->montaIBSCBS($indiceDet), 'Falta tag "det"');
+            }
             // Monta as "Informações das NF-e"
             if (array_key_exists($indiceDet, $this->infNFe)) {
                 foreach ($this->infNFe[$indiceDet] as $infNFe) {
@@ -579,21 +584,6 @@ class MakeCTeSimp
         if (isset($this->ICMSUFFim)) {
             $this->dom->appChild($this->imp, $this->ICMSUFFim, 'Falta tag "imp"');
         }
-        if ($this->schema == 'PL_CTe_400_RTC') {
-            if (isset($this->IBSCBS)) {
-                $node = $this->IBSCBS->getElementsByTagName("gIBSCBS")->item(0);
-                if (isset($this->gTribRegular)) {
-                    $this->dom->appChild($node, $this->gTribRegular, 'Falta tag "gIBSCBS"');
-                }
-                if (isset($this->gTribCompraGov)) {
-                    $this->dom->appChild($node, $this->gTribCompraGov, 'Falta tag "gIBSCBS"');
-                }
-                if (isset($this->gEstornoCred)) {
-                    $this->dom->appChild($this->IBSCBS, $this->gEstornoCred, 'Falta tag "IBSCBS"');
-                }
-                $this->dom->appChild($this->imp, $this->IBSCBS, 'Falta tag "imp"');
-            }
-        }
 
         $this->dom->appChild($this->infCte, $this->imp, 'Falta tag "imp"');
 
@@ -606,6 +596,11 @@ class MakeCTeSimp
             $this->dom->appChild($this->infCte, $pgtoVinc, 'Falta tag "pgtoVinc"');
         }
 
+        // NT 2026.004 - Totais do IBS/CBS declarado nos itens (depois de vTRec, antes de vTotDFe)
+        if ($this->schema == 'PL_CTe_400_RTC' && !empty($this->IBSCBS)) {
+            $vTotDFe = $this->total->getElementsByTagName('vTotDFe')->item(0);
+            $this->total->insertBefore($this->montaIBSCBSTot(), $vTotDFe);
+        }
         $this->dom->appChild($this->infCte, $this->total, 'Falta tag "total"');
 
         foreach ($this->autXML as $autXML) {
@@ -3733,6 +3728,13 @@ class MakeCTeSimp
         return $this->gMultaJuros;
     }
 
+    /**
+     * IBS/CBS do item (NT 2026.004): chamar depois do tagdet de cada item, assim como
+     * tagIBSCBSTribRegular, taggTribCompraGov e taggEstornoCred. O IBSCBSTot do total
+     * e calculado no montaCTe() a partir dos itens.
+     * @param stdClass $std
+     * @return DOMElement
+     */
     public function tagIBSCBS(stdClass $std): DOMElement
     {
         $possible = [
@@ -4055,7 +4057,7 @@ class MakeCTeSimp
             $gIBSCBS->appendChild($gCBS);
             $ibscbs->appendChild($gIBSCBS);
         }
-        $this->IBSCBS = $ibscbs;
+        $this->IBSCBS[$this->currentDetIndex('tagIBSCBS')] = $ibscbs;
         return $ibscbs;
     }
 
@@ -4139,7 +4141,7 @@ class MakeCTeSimp
             true,
             "$identificador Valor da CBS (vTribRegCB)"
         );
-        $this->gTribRegular = $gTribRegular;
+        $this->gTribRegular[$this->currentDetIndex('tagIBSCBSTribRegular')] = $gTribRegular;
         return $gTribRegular;
     }
 
@@ -4173,7 +4175,7 @@ class MakeCTeSimp
             true,
             "$identificador Valor do CBS a ser estornado (vCBSEstCred)"
         );
-        $this->gEstornoCred = $estorno;
+        $this->gEstornoCred[$this->currentDetIndex('taggEstornoCred')] = $estorno;
         return $estorno;
     }
 
@@ -4237,7 +4239,7 @@ class MakeCTeSimp
             true,
             "$identificador Valor do Tributo da CBS calculado. (vTribCBS)"
         );
-        $this->gTribCompraGov = $gTrib;
+        $this->gTribCompraGov[$this->currentDetIndex('taggTribCompraGov')] = $gTrib;
         return $gTrib;
     }
 
@@ -4378,5 +4380,199 @@ class MakeCTeSimp
             return number_format($value, $decimal, '.', '');
         }
         return null;
+    }
+
+    /**
+     * Indice do det corrente. No CT-e Simplificado o IBS/CBS pertence ao item (NT 2026.004),
+     * entao os grupos sao informados depois do tagdet de cada item, como Comp e infNFe.
+     * @param string $method
+     * @return int
+     * @throws RuntimeException
+     */
+    private function currentDetIndex(string $method): int
+    {
+        if (empty($this->det)) {
+            throw new RuntimeException(
+                "$method deve ser chamado depois do tagdet do item: no CT-e Simplificado "
+                . "o IBS/CBS e informado por item (NT 2026.004)."
+            );
+        }
+        return count($this->det) - 1;
+    }
+
+    /**
+     * IBSCBS do item com os subgrupos opcionais, na ordem do XSD.
+     * @param int $indiceDet
+     * @return DOMElement
+     * @throws RuntimeException
+     */
+    private function montaIBSCBS(int $indiceDet): DOMElement
+    {
+        $ibscbs = $this->IBSCBS[$indiceDet];
+        $gIBSCBS = $ibscbs->getElementsByTagName('gIBSCBS')->item(0);
+        foreach ([$this->gTribRegular, $this->gTribCompraGov] as $grupos) {
+            if (!isset($grupos[$indiceDet])) {
+                continue;
+            }
+            if (!$gIBSCBS instanceof DOMElement) {
+                throw new RuntimeException(
+                    "Item {$this->det[$indiceDet]->getAttribute('nItem')}: gTribRegular e gTribCompraGov "
+                    . "exigem o grupo gIBSCBS (informe vBC no tagIBSCBS)."
+                );
+            }
+            $this->dom->appChild($gIBSCBS, $grupos[$indiceDet], 'Falta tag "gIBSCBS"');
+        }
+        if (isset($this->gEstornoCred[$indiceDet])) {
+            $this->dom->appChild($ibscbs, $this->gEstornoCred[$indiceDet], 'Falta tag "IBSCBS"');
+        }
+        return $ibscbs;
+    }
+
+    /**
+     * IBSCBSTot (NT 2026.004): soma dos grupos IBSCBS dos itens. A SEFAZ rejeita total diferente
+     * da soma dos itens (cStat 350 a 359, 305 e 306), por isso a soma e feita em centavos.
+     * @return DOMElement
+     */
+    private function montaIBSCBSTot(): DOMElement
+    {
+        $campos = [
+            'vBC', 'vDifUF', 'vDevTribUF', 'vIBSUF', 'vDifMun', 'vDevTribMun', 'vIBSMun',
+            'vDifCBS', 'vDevTribCBS', 'vCBS', 'vIBSEstCred', 'vCBSEstCred',
+        ];
+        $soma = array_fill_keys($campos, 0);
+        $temEstorno = false;
+        foreach ($this->IBSCBS as $ibscbs) {
+            $gIBSCBS = $ibscbs->getElementsByTagName('gIBSCBS')->item(0);
+            if ($gIBSCBS instanceof DOMElement) {
+                $gIBSUF = $gIBSCBS->getElementsByTagName('gIBSUF')->item(0);
+                $gIBSMun = $gIBSCBS->getElementsByTagName('gIBSMun')->item(0);
+                $gCBS = $gIBSCBS->getElementsByTagName('gCBS')->item(0);
+                $soma['vBC'] += $this->centavos($gIBSCBS, 'vBC');
+                $soma['vDifUF'] += $this->centavos($gIBSUF, 'vDif');
+                $soma['vDevTribUF'] += $this->centavos($gIBSUF, 'vDevTrib');
+                $soma['vIBSUF'] += $this->centavos($gIBSUF, 'vIBSUF');
+                $soma['vDifMun'] += $this->centavos($gIBSMun, 'vDif');
+                $soma['vDevTribMun'] += $this->centavos($gIBSMun, 'vDevTrib');
+                $soma['vIBSMun'] += $this->centavos($gIBSMun, 'vIBSMun');
+                $soma['vDifCBS'] += $this->centavos($gCBS, 'vDif');
+                $soma['vDevTribCBS'] += $this->centavos($gCBS, 'vDevTrib');
+                $soma['vCBS'] += $this->centavos($gCBS, 'vCBS');
+            }
+            $estorno = $ibscbs->getElementsByTagName('gEstornoCred')->item(0);
+            if ($estorno instanceof DOMElement) {
+                $temEstorno = true;
+                $soma['vIBSEstCred'] += $this->centavos($estorno, 'vIBSEstCred');
+                $soma['vCBSEstCred'] += $this->centavos($estorno, 'vCBSEstCred');
+            }
+        }
+        $identificador = '# <IBSCBSTot> - ';
+        $tot = $this->dom->createElement('IBSCBSTot');
+        $this->dom->addChild(
+            $tot,
+            'vBCIBSCBS',
+            $this->formataCentavos($soma['vBC']),
+            true,
+            $identificador . 'Total da Base de calculo do IBS/CBS'
+        );
+        $gIBS = $this->dom->createElement('gIBS');
+        foreach (['gIBSUF' => 'UF', 'gIBSMun' => 'Mun'] as $grupo => $sufixo) {
+            $node = $this->dom->createElement($grupo);
+            $this->dom->addChild(
+                $node,
+                'vDif',
+                $this->formataCentavos($soma["vDif$sufixo"]),
+                true,
+                $identificador . "Total do Diferimento ($grupo)"
+            );
+            $this->dom->addChild(
+                $node,
+                'vDevTrib',
+                $this->formataCentavos($soma["vDevTrib$sufixo"]),
+                true,
+                $identificador . "Total de Devolucao de Tributo ($grupo)"
+            );
+            $this->dom->addChild(
+                $node,
+                "vIBS$sufixo",
+                $this->formataCentavos($soma["vIBS$sufixo"]),
+                true,
+                $identificador . "Total do IBS ($grupo)"
+            );
+            $gIBS->appendChild($node);
+        }
+        $this->dom->addChild(
+            $gIBS,
+            'vIBS',
+            $this->formataCentavos($soma['vIBSUF'] + $soma['vIBSMun']),
+            true,
+            $identificador . 'Total do IBS (IBS UF + IBS Mun)'
+        );
+        $tot->appendChild($gIBS);
+        $gCBS = $this->dom->createElement('gCBS');
+        $this->dom->addChild(
+            $gCBS,
+            'vDif',
+            $this->formataCentavos($soma['vDifCBS']),
+            true,
+            $identificador . 'Total do Diferimento (gCBS)'
+        );
+        $this->dom->addChild(
+            $gCBS,
+            'vDevTrib',
+            $this->formataCentavos($soma['vDevTribCBS']),
+            true,
+            $identificador . 'Total de Devolucao do tributo (gCBS)'
+        );
+        $this->dom->addChild(
+            $gCBS,
+            'vCBS',
+            $this->formataCentavos($soma['vCBS']),
+            true,
+            $identificador . 'Total da CBS'
+        );
+        $tot->appendChild($gCBS);
+        if ($temEstorno) {
+            $gEstornoCred = $this->dom->createElement('gEstornoCred');
+            $this->dom->addChild(
+                $gEstornoCred,
+                'vIBSEstCred',
+                $this->formataCentavos($soma['vIBSEstCred']),
+                true,
+                $identificador . 'Total do Estorno de credito IBS'
+            );
+            $this->dom->addChild(
+                $gEstornoCred,
+                'vCBSEstCred',
+                $this->formataCentavos($soma['vCBSEstCred']),
+                true,
+                $identificador . 'Total do Estorno de credito CBS'
+            );
+            $tot->appendChild($gEstornoCred);
+        }
+        return $tot;
+    }
+
+    /**
+     * Valor da primeira tag $tag dentro de $parent, em centavos (0 se ausente).
+     * @param DOMElement|null $parent
+     * @param string $tag
+     * @return int
+     */
+    private function centavos($parent, string $tag): int
+    {
+        if (!$parent instanceof DOMElement) {
+            return 0;
+        }
+        $node = $parent->getElementsByTagName($tag)->item(0);
+        return $node === null ? 0 : (int) round((float) $node->nodeValue * 100);
+    }
+
+    /**
+     * @param int $centavos
+     * @return string
+     */
+    private function formataCentavos(int $centavos): string
+    {
+        return sprintf('%d.%02d', intdiv($centavos, 100), $centavos % 100);
     }
 }
