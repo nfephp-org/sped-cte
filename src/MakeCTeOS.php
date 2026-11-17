@@ -227,6 +227,11 @@ class MakeCTeOS
      */
     protected $gPagAntecipado;
     /**
+     * Grupo de multa e juros (NT 2026.004 v1.01) - chave do CT-e referenciado.
+     * @var DOMElement|null
+     */
+    protected $gMultaJuros;
+    /**
      * @var DOMElement
      */
     protected $ICMS;
@@ -348,6 +353,10 @@ class MakeCTeOS
         }
         if (!empty($this->gPagAntecipado)) {
             $this->dom->appChild($this->ide, $this->gPagAntecipado, 'Falta tag "ide"');
+        }
+        // NT 2026.004 v1.01 - Multa e juros (ultimo grupo do ide, na ordem do XSD).
+        if (!empty($this->gMultaJuros)) {
+            $this->dom->appChild($this->ide, $this->gMultaJuros, 'Falta tag "ide"');
         }
         $this->dom->appChild($this->infCte, $this->ide, 'Falta tag "infCte"');
         if (!empty($this->compl)) {
@@ -2533,6 +2542,27 @@ class MakeCTeOS
             "# <gPagAntecipado> - Chave de acesso do CT-e de antecipacao de pagamento"
         );
         return $this->gPagAntecipado;
+    }
+
+    /**
+     * Grupo gMultaJuros (NT 2026.004 v1.01): CT-e de multa e juros referente a um CT-e
+     * emitido anteriormente. Anexado ao ide no monta(), depois do gPagAntecipado.
+     * @param stdClass $std
+     * @return DOMElement
+     */
+    public function taggMultaJuros($std)
+    {
+        $possible = ['chCTeRef'];
+        $std = $this->equilizeParameters($std, $possible);
+        $this->gMultaJuros = $this->dom->createElement("gMultaJuros");
+        $this->dom->addChild(
+            $this->gMultaJuros,
+            "chCTeRef",
+            $std->chCTeRef,
+            true,
+            "# <gMultaJuros> - Chave de acesso do CT-e referenciado para cobrar multa e juros"
+        );
+        return $this->gMultaJuros;
     }
 
     public function tagIBSCBS(stdClass $std): DOMElement
