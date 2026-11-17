@@ -27,6 +27,18 @@ use RuntimeException;
 class Tools extends ToolsCommon
 {
     /**
+     * Declaracao de pagamento ao TAC/MEI do evento 211110 (xDecPag), literal do XSD (NT 2026.004).
+     */
+    public const DECLARACAO_PAGAMENTO_CRED_PRES =
+        'Declaro, para fins de apropriacao do credito presumido solicitado, relativo a operacao '
+        . 'registrada no documento fiscal eletronico a que se refere este evento: I – ja ter efetuado o '
+        . 'pagamento integral do valor da prestacao do servico ao transportador, nos termos do art. 126, '
+        . 'paragrafo 5o, II, da Lei Complementar no 214, de 16 de janeiro de 2025; II – estar ciente de que'
+        . ' a prestacao de declaracao falsa sujeita-me as penalidades administrativas e sancoes penais '
+        . 'previstas na legislacao, sem prejuizo do estorno do credito indevidamente apropriado com os '
+        . 'acrescimos legais.';
+
+    /**
      * Request authorization to issue CTe in batch with one or more documents
      * @param string $xml string do xml
      * @return string soap response xml
@@ -934,6 +946,41 @@ class Tools extends ToolsCommon
     }
 
     /**
+     * Evento 211110 - Apropriacao do credito presumido (NT 2026.004), gerado pelo tomador do
+     * servico de CT-e emitido por TAC (tpEmis=3 ou procEmi=4) ou MEI (CRT=4).
+     * Autorizado exclusivamente na SVRS; nSeqEvento maximo 1.
+     * @param string $chave chave do CT-e
+     * @param float $vBCCredPres base de calculo do credito presumido
+     * @param string $cCredPres codigo da tabela cCredPres (2 digitos)
+     * @param array $ibs gIBSCredPres: ['pCredPres' => ..., 'vCredPres' => ...]; vazio se nao houver
+     * @param array $cbs gCBSCredPres: ['pCredPres' => ..., 'vCredPres' => ...]; vazio se nao houver
+     * @param bool $declaraPagamento inclui xDecPag (exigido conforme ind_xDecPag do cCredPres)
+     * @param int $nSeqEvento No. sequencial do evento
+     * @param string $ufEvento UF do ambiente autorizador (SVRS)
+     * @return string
+     */
+    public function sefazApropriaCredPres(
+        $chave,
+        $vBCCredPres,
+        $cCredPres,
+        array $ibs = [],
+        array $cbs = [],
+        $declaraPagamento = false,
+        $nSeqEvento = 1,
+        $ufEvento = 'RS'
+    ) {
+        $tpEvento = 211110;
+        $tagAdic = self::serializerApropriaCredPres($vBCCredPres, $cCredPres, $ibs, $cbs, $declaraPagamento);
+        return $this->sefazEvento(
+            $ufEvento,
+            $chave,
+            $tpEvento,
+            $nSeqEvento,
+            $tagAdic
+        );
+    }
+
+    /**
      *
      * @param int $tpEvento
      * @return \stdClass
@@ -1017,6 +1064,42 @@ class Tools extends ToolsCommon
                 "</pgto>";
         }
         return $pgtos;
+    }
+
+    /**
+     * Serializes the detEvento content of the presumed credit appropriation event (211110)
+     * NT 2026.004
+     * @param float $vBCCredPres
+     * @param string $cCredPres
+     * @param array $ibs
+     * @param array $cbs
+     * @param bool $declaraPagamento
+     * @return string
+     */
+    private static function serializerApropriaCredPres(
+        $vBCCredPres,
+        $cCredPres,
+        array $ibs,
+        array $cbs,
+        $declaraPagamento
+    ) {
+        $grupo = function ($tag, array $credPres) {
+            if (empty($credPres)) {
+                return '';
+            }
+            return "<$tag>"
+                . '<pCredPres>' . number_format($credPres['pCredPres'], 4, '.', '') . '</pCredPres>'
+                . '<vCredPres>' . number_format($credPres['vCredPres'], 2, '.', '') . '</vCredPres>'
+                . "</$tag>";
+        };
+        return '<evApropriaCredPres>'
+            . '<descEvento>Apropriacao Credito Presumido</descEvento>'
+            . '<vBCCredPres>' . number_format($vBCCredPres, 2, '.', '') . '</vBCCredPres>'
+            . '<cCredPres>' . str_pad((string) $cCredPres, 2, '0', STR_PAD_LEFT) . '</cCredPres>'
+            . $grupo('gIBSCredPres', $ibs)
+            . $grupo('gCBSCredPres', $cbs)
+            . ($declaraPagamento ? '<xDecPag>' . self::DECLARACAO_PAGAMENTO_CRED_PRES . '</xDecPag>' : '')
+            . '</evApropriaCredPres>';
     }
 
     private static function serializerCCe(array $infCorrecoes)
