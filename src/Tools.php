@@ -692,8 +692,10 @@ class Tools extends ToolsCommon
      * @param string|null $latitude Latitude do ponto da entrega
      * @param string|null $longitude Longitude do ponto da entrega
      * @param int $nSeqEvento No. sequencial do evento
-     * @param string $dhEventoEntrega Data e hora da geração do hash da entrega
+     * @param string $dhEventoEntrega Data e hora da conclusão da entrega
      * @param array $aNFes Chave das NFes entregues
+     * @param string|null $dhHashEntrega Data e hora da geração do hash da entrega
+     *                                   (se omitida, usa $dhEventoEntrega)
      * @return string
      */
     public function sefazCE(
@@ -706,10 +708,16 @@ class Tools extends ToolsCommon
         $longitude,
         $nSeqEvento,
         $dhEventoEntrega,
-        $aNFes = []
+        $aNFes = [],
+        $dhHashEntrega = null
     ) {
         $uf = $this->validKeyByUF($chave);
         $tpEvento = 110180;
+        $xNome = Strings::replaceUnacceptableCharacters($xNome);
+        $nDoc = Strings::replaceUnacceptableCharacters($nDoc);
+        if (empty($dhHashEntrega)) {
+            $dhHashEntrega = $dhEventoEntrega;
+        }
 
         /* relaciona as chaves das NFes */
         $infEntrega = '';
@@ -738,7 +746,7 @@ class Tools extends ToolsCommon
             . $infLatitude
             . $infLongitude
             . "<hashEntrega>$hash</hashEntrega>"
-            . "<dhHashEntrega>$dhEventoEntrega</dhHashEntrega>"
+            . "<dhHashEntrega>$dhHashEntrega</dhHashEntrega>"
             . $infEntrega
             . "</evCECTe>";
         return $this->sefazEvento(
@@ -787,8 +795,10 @@ class Tools extends ToolsCommon
      * @param string|null $latitude Latitude do ponto da entrega
      * @param string|null $longitude Longitude do ponto da entrega
      * @param int $nSeqEvento No. sequencial do evento
-     * @param string $dhTentativaEntrega Data e hora da geração do hash da tentativa de entrega
+     * @param string $dhTentativaEntrega Data e hora da tentativa de entrega
      * @param array $aNFes Chave das NFes entregues
+     * @param string|null $dhHashTentativaEntrega Data e hora da geração do hash da tentativa
+     *                                            (se omitida, usa $dhTentativaEntrega)
      * @return string
      */
     public function sefazIE(
@@ -802,10 +812,14 @@ class Tools extends ToolsCommon
         $longitude,
         $nSeqEvento,
         $dhTentativaEntrega,
-        $aNFes = []
+        $aNFes = [],
+        $dhHashTentativaEntrega = null
     ) {
         $uf = $this->validKeyByUF($chave);
         $tpEvento = 110190;
+        if (empty($dhHashTentativaEntrega)) {
+            $dhHashTentativaEntrega = $dhTentativaEntrega;
+        }
 
         /* relaciona as chaves das NFes */
         $infEntrega = '';
@@ -825,22 +839,33 @@ class Tools extends ToolsCommon
             $infLongitude = "<longitude>$longitude</longitude>";
         }
 
+        $infTentativa = '';
+        if ($nTentativa) {
+            $infTentativa = "<nTentativa>$nTentativa</nTentativa>";
+        }
+
         $infJustMotivo = '';
         if ($xJustMotivo) {
+            $xJustMotivo = Strings::replaceUnacceptableCharacters($xJustMotivo);
             $infJustMotivo = "<xJustMotivo>$xJustMotivo</xJustMotivo>";
+        }
+
+        $infHash = '';
+        if ($hash) {
+            $infHash = "<hashTentativaEntrega>$hash</hashTentativaEntrega>"
+                . "<dhHashTentativaEntrega>$dhHashTentativaEntrega</dhHashTentativaEntrega>";
         }
 
         $tagAdic = "<evIECTe>"
             . "<descEvento>Insucesso na Entrega do CT-e</descEvento>"
             . "<nProt>$nProt</nProt>"
             . "<dhTentativaEntrega>$dhTentativaEntrega</dhTentativaEntrega>"
-            . "<nTentativa>$nTentativa</nTentativa>"
+            . $infTentativa
             . "<tpMotivo>$tpMotivo</tpMotivo>"
             . $infJustMotivo
             . $infLatitude
             . $infLongitude
-            . "<hashTentativaEntrega>$hash</hashTentativaEntrega>"
-            . "<dhHashTentativaEntrega>$dhTentativaEntrega</dhHashTentativaEntrega>"
+            . $infHash
             . $infEntrega
             . "</evIECTe>";
 
